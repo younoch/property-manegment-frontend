@@ -1,0 +1,31 @@
+{
+  // Nuxt official TypeScript setup: https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+
+    // Important: add Nuxt/Vue/Node types so globals like `ref` work in editor
+    "types": ["@types/node", "nuxt", "vue"],
+
+    // Map Nuxt-generated type paths
+    "paths": {
+      "#imports": ["./.nuxt/imports.d.ts"],
+      "#app": ["./.nuxt/types/app"],
+      "#build": ["./.nuxt/types/build"]
+    }
+  },
+  "include": [
+    "types/vue-globals.d.ts",
+    ".nuxt",
+    "**/*.ts",
+    "**/*.vue",
+    "**/*.js",
+    ".nuxt/imports.d.ts"
+  ]
+}
