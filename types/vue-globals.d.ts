@@ -14,6 +14,44 @@ import type {
     const readonly: typeof import('vue')['readonly'];
     const watch: typeof import('vue')['watch'];
     const watchEffect: typeof import('vue')['watchEffect'];
+
+    // Nuxt composables
+    const useState: typeof import('#app')['useState'];
+    const computed: typeof import('vue')['computed'];
+    const defineNuxtPlugin: typeof import('#app')['defineNuxtPlugin'];
+    const defineNuxtRouteMiddleware: typeof import('#app')['defineNuxtRouteMiddleware'];
+    const navigateTo: typeof import('#app')['navigateTo'];
+    const useAuth: () => any;
+    const useUserStore: () => any;
+    const useCsrf: () => any;
+
+    // Nuxt types
+    interface RouteLocationNormalized {
+      path: string;
+      name?: string;
+      params: Record<string, string>;
+      query: Record<string, string>;
+      hash: string;
+      fullPath: string;
+      matched: any[];
+      meta: any;
+      redirectedFrom?: RouteLocationNormalized;
+    }
+
+    interface NuxtApp {
+      $router?: any;
+      $uiReady?: () => boolean;
+      $waitForUI?: () => Promise<void>;
+      vueApp?: {
+        config: {
+          errorHandler: (error: Error, instance: any, info: string) => boolean;
+        };
+      };
+      hook: (event: string, callback: () => void | Promise<void>) => void;
+      hook: (event: 'app:mounted', callback: () => void | Promise<void>) => void;
+      hook: (event: 'page:finish', callback: () => void | Promise<void>) => void;
+      hook: (event: 'app:unmount', callback: () => void) => void;
+    }
   
     // Vue lifecycle hooks
     const onMounted: typeof import('vue')['onMounted'];

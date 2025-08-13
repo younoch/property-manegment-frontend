@@ -2,18 +2,25 @@ import { defineStore } from 'pinia';
 import { useUserStore } from './user';
 import { createApiClient, createProtectedApiClient } from '../utils/api';
 import { getCookie, hasCookie, logCookies } from '../utils/cookies';
+import { getCacheDuration } from '../constants/cache';
 
 export interface AuthState {
   loading: boolean;
   error: string | null;
   lastAuthCheck: Date | null;
+  lastCsrfCheck: Date | null;
+  authCacheDuration: number; // Cache duration in milliseconds
+  csrfCacheDuration: number; // CSRF cache duration in milliseconds
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     loading: false,
     error: null,
-    lastAuthCheck: null
+    lastAuthCheck: null,
+    lastCsrfCheck: null,
+    authCacheDuration: getCacheDuration('auth'),
+    csrfCacheDuration: getCacheDuration('csrf'),
   }),
 
   getters: {
@@ -24,7 +31,23 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticating: (state) => state.loading,
     
     // Get last authentication check time
-    lastCheck: (state) => state.lastAuthCheck
+    lastCheck: (state) => state.lastAuthCheck,
+    
+    // Check if auth cache is still valid
+    isAuthCacheValid: (state) => {
+      if (!state.lastAuthCheck) return false;
+      const now = new Date();
+      const timeSinceLastCheck = now.getTime() - state.lastAuthCheck.getTime();
+      return timeSinceLastCheck < state.authCacheDuration;
+    },
+    
+    // Check if CSRF cache is still valid
+    isCsrfCacheValid: (state) => {
+      if (!state.lastCsrfCheck) return false;
+      const now = new Date();
+      const timeSinceLastCheck = now.getTime() - state.lastCsrfCheck.getTime();
+      return timeSinceLastCheck < state.csrfCacheDuration;
+    }
   },
 
   actions: {
@@ -46,6 +69,17 @@ export const useAuthStore = defineStore('auth', {
     // Update last auth check time
     updateLastAuthCheck() {
       this.lastAuthCheck = new Date();
+    },
+
+    // Update last CSRF check time
+    updateLastCsrfCheck() {
+      this.lastCsrfCheck = new Date();
+    },
+
+    // Set cache durations (configurable)
+    setCacheDurations(authDuration: number, csrfDuration: number) {
+      this.authCacheDuration = authDuration;
+      this.csrfCacheDuration = csrfDuration;
     },
 
     // User registration
@@ -125,7 +159,10 @@ export const useAuthStore = defineStore('auth', {
         userStore.clearUser();
         userStore.clearStorage();
         
-        this.updateLastAuthCheck();
+        // Clear cache timestamps
+        this.lastAuthCheck = null;
+        this.lastCsrfCheck = null;
+        
         return { success: true };
       } catch (error: any) {
         const errorMessage = error.data?.message || error.message || 'Logout failed';
@@ -136,9 +173,17 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Check authentication status (server-validated)
-    async checkAuth() {
+    // Check authentication status (server-validated) with smart caching
+    async checkAuth(force: boolean = false) {
       const userStore = useUserStore();
+      
+      // If cache is valid and not forcing, return cached result
+      if (!force && this.isAuthCacheValid) {
+        const hasUser = !!userStore.currentUser;
+        console.log(`✅ Auth cache valid, skipping API call (hasUser=${hasUser})`);
+        return { success: hasUser, user: userStore.currentUser, cached: true };
+      }
+      
       const apiClient = createApiClient();
       
       this.setLoading(true);
@@ -153,20 +198,22 @@ export const useAuthStore = defineStore('auth', {
           userStore.persistToStorage();
           
           this.updateLastAuthCheck();
-          return { success: true, user: (response as any).data };
+          return { success: true, user: (response as any).data, cached: false };
         }
         
         // No response means unauthenticated
         userStore.clearUser();
         userStore.clearStorage();
-        return { success: false, error: 'Not authenticated' };
+        this.updateLastAuthCheck();
+        return { success: false, error: 'Not authenticated', cached: false };
       } catch (error: any) {
         userStore.clearUser();
         userStore.clearStorage();
         
         const errorMessage = error?.data?.message || error?.message || 'Authentication check failed';
         this.setError(errorMessage);
-        return { success: false, error: errorMessage };
+        this.updateLastAuthCheck();
+        return { success: false, error: errorMessage, cached: false };
       } finally {
         this.setLoading(false);
       }
@@ -214,15 +261,33 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Initialize authentication - restore from storage then validate with server
+    // Initialize authentication - restore from storage then validate with server ONCE
     async initialize() {
       const userStore = useUserStore();
       
       // Try to restore user from storage first (optimistic UI)
       userStore.initializeFromStorage();
       
-      // Always validate with server on app start/refresh
-      await this.checkAuth();
+      // Only validate with server if cache is invalid or doesn't exist
+      if (!this.isAuthCacheValid) {
+        console.log('🔄 Initial auth check - cache invalid or missing');
+        await this.checkAuth();
+      } else {
+        console.log('✅ Initial auth check - using cached result');
+      }
+    },
+
+    // Force refresh authentication (bypasses cache)
+    async forceRefreshAuth() {
+      console.log('🔄 Force refreshing authentication');
+      return await this.checkAuth(true);
+    },
+
+    // Clear all caches (useful for testing or when you need fresh data)
+    clearCaches() {
+      this.lastAuthCheck = null;
+      this.lastCsrfCheck = null;
+      console.log('🧹 All auth caches cleared');
     }
   }
 });

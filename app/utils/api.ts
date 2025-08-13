@@ -27,6 +27,7 @@ export class ApiClient {
    */
   private showSuccessToast(message: string, title?: string) {
     const { success } = useApiToast();
+    // Intentionally do not await here to avoid blocking; composable defers until hydrated
     success(message, title);
   }
 
@@ -49,10 +50,7 @@ export class ApiClient {
         credentials: 'include',
         ...options
       });
-      
-      // Show success toast with response message, fallback to default if no message
-      const message = response.message || 'Data retrieved successfully';
-      this.showSuccessToast(message);
+      // Do not show success toast for GETs to reduce noise and avoid early hydration toasts
       return response;
     } catch (error: any) {
       const errorMessage = error?.data?.message || error?.message || 'Failed to retrieve data';
@@ -74,8 +72,6 @@ export class ApiClient {
         body: data,
         ...options
       });
-      
-      // Show success toast with response message, fallback to default if no message
       const message = response.message || 'Data created successfully';
       this.showSuccessToast(message);
       return response;
@@ -99,8 +95,6 @@ export class ApiClient {
         body: data,
         ...options
       });
-      
-      // Show success toast with response message, fallback to default if no message
       const message = response.message || 'Data updated successfully';
       this.showSuccessToast(message);
       return response;
@@ -124,8 +118,6 @@ export class ApiClient {
         body: data,
         ...options
       });
-      
-      // Show success toast with response message, fallback to default if no message
       const message = response.message || 'Data updated successfully';
       this.showSuccessToast(message);
       return response;
@@ -147,8 +139,6 @@ export class ApiClient {
         credentials: 'include',
         ...options
       });
-      
-      // Show success toast with response message, fallback to default if no message
       const message = response.message || 'Data deleted successfully';
       this.showSuccessToast(message);
       return response;
@@ -180,7 +170,6 @@ export const makeRequest = async <T>(
   options: Omit<RequestInit, 'method'> = {}
 ): Promise<T> => {
   const config = useApiConfig();
-  
   return await $fetch<T>(`${config.API_CONFIG.BASE_URL}${endpoint}`, {
     credentials: 'include',
     ...options
@@ -197,7 +186,6 @@ export const makeProtectedRequest = async <T>(
   const { useCsrf } = await import('../composables/useCsrf');
   const csrf = useCsrf();
   const config = useApiConfig();
-  
   return await csrf.protectedRequest<T>(`${config.API_CONFIG.BASE_URL}${endpoint}`, options);
 };
 
@@ -218,16 +206,13 @@ export class ProtectedApiClient {
       const token = await csrf.getToken();
       
       if (token) {
-        // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
+        // Do not toast on protected GETs to reduce noise/hydration load
         return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { method: 'GET' });
       } else {
-        // Fallback to regular API call if no CSRF token
-        console.warn('CSRF token not available, falling back to regular API call');
         return await this.apiClient.get<T>(endpoint);
       }
     } catch (error) {
-      console.warn('CSRF request failed, falling back to regular API call:', error);
       return await this.apiClient.get<T>(endpoint);
     }
   }
@@ -239,19 +224,15 @@ export class ProtectedApiClient {
       const token = await csrf.getToken();
       
       if (token) {
-        // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
         return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { 
           method: 'POST',
           body: JSON.stringify(data)
         });
       } else {
-        // Fallback to regular API call if no CSRF token
-        console.warn('CSRF token not available, falling back to regular API call');
         return await this.apiClient.post<T>(endpoint, data);
       }
     } catch (error) {
-      console.warn('CSRF request failed, falling back to regular API call:', error);
       return await this.apiClient.post<T>(endpoint, data);
     }
   }
@@ -263,19 +244,15 @@ export class ProtectedApiClient {
       const token = await csrf.getToken();
       
       if (token) {
-        // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
         return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { 
           method: 'PUT',
           body: JSON.stringify(data)
         });
       } else {
-        // Fallback to regular API call if no CSRF token
-        console.warn('CSRF token not available, falling back to regular API call');
         return await this.apiClient.put<T>(endpoint, data);
       }
     } catch (error) {
-      console.warn('CSRF request failed, falling back to regular API call:', error);
       return await this.apiClient.put<T>(endpoint, data);
     }
   }
@@ -287,19 +264,15 @@ export class ProtectedApiClient {
       const token = await csrf.getToken();
       
       if (token) {
-        // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
         return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { 
           method: 'PATCH',
           body: JSON.stringify(data)
         });
       } else {
-        // Fallback to regular API call if no CSRF token
-        console.warn('CSRF token not available, falling back to regular API call');
         return await this.apiClient.patch<T>(endpoint, data);
       }
     } catch (error) {
-      console.warn('CSRF request failed, falling back to regular API call:', error);
       return await this.apiClient.patch<T>(endpoint, data);
     }
   }
@@ -311,16 +284,12 @@ export class ProtectedApiClient {
       const token = await csrf.getToken();
       
       if (token) {
-        // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
         return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { method: 'DELETE' });
       } else {
-        // Fallback to regular API call if no CSRF token
-        console.warn('CSRF token not available, falling back to regular API call');
         return await this.apiClient.delete<T>(endpoint);
       }
     } catch (error) {
-      console.warn('CSRF request failed, falling back to regular API call:', error);
       return await this.apiClient.delete<T>(endpoint);
     }
   }

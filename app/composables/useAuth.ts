@@ -1,6 +1,5 @@
 import { computed } from 'vue';
 import { useCsrf } from './useCsrf';
-import { useRoute } from 'nuxt/app';
 import { useAuthStore } from '../stores/auth';
 import { useUserStore } from '../stores/user';
 
@@ -81,15 +80,8 @@ export const useAuth = () => {
     return result;
   };
 
-  // Check authentication status - now uses auth store
+  // Check authentication status - route-agnostic
   const checkAuth = async () => {
-    // Don't check auth on auth pages (login/register)
-    const route = useRoute();
-    if (route.path.startsWith('/auth/')) {
-      console.log('Skipping auth check on auth page:', route.path);
-      return { success: false, error: 'On auth page' };
-    }
-
     const result = await authStore.checkAuth();
     
     // If successful, try to get CSRF token

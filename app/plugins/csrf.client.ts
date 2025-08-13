@@ -11,6 +11,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     }
     
     refreshInterval = setInterval(async () => {
+      // Check authentication state each time instead of watching
       if (isAuthenticated.value) {
         await refreshToken();
       }
@@ -23,15 +24,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       refreshInterval = null;
     }
   };
-
-  // Watch authentication state to manage token refresh
-  watch(isAuthenticated, (authenticated) => {
-    if (authenticated) {
-      startTokenRefresh();
-    } else {
-      stopTokenRefresh();
-    }
-  });
 
   // Handle page visibility changes to refresh token when tab becomes visible
   if (process.client) {
