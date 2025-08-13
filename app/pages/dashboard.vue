@@ -60,7 +60,12 @@
               Welcome back, {{ displayName }}!
             </h3>
             <div class="mt-2 max-w-xl text-sm text-gray-500">
-              <p>You are logged in as a <span class="font-medium text-primary-600">{{ userRole }}</span></p>
+              <p>
+                You are logged in as a
+                <span class="font-medium text-primary-600">
+                  {{ userRole ? getRoleByValue(userRole)?.label : 'Unknown Role' }}
+                </span>
+              </p>
             </div>
           </div>
         </div>
@@ -172,6 +177,7 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { useUserStore } from '../stores/user'
 import { useAuthStore } from '../stores/auth'
+import { USER_ROLES, getRoleByValue, getRoleColor, getRolePermissions } from '../constants/roles'
 
 definePageMeta({
   middleware: 'auth'

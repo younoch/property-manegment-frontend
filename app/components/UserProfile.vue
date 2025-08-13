@@ -1,15 +1,15 @@
 <template>
-  <div class="bg-white shadow rounded-lg p-6">
-    <div class="flex items-center space-x-4">
-      <div class="flex-shrink-0">
+  <div class="bg-white shadow rounded-lg p-4 sm:p-6">
+    <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+      <div class="flex-shrink-0 flex justify-center sm:justify-start">
         <UIcon name="i-heroicons-user-circle" class="h-12 w-12 text-gray-400" />
       </div>
-      <div class="flex-1 min-w-0">
+      <div class="flex-1 min-w-0 text-center sm:text-left">
         <h3 class="text-lg font-medium text-gray-900">
           {{ displayName }}
         </h3>
         <p class="text-sm text-gray-500">{{ currentUser?.email }}</p>
-        <div class="flex items-center space-x-2 mt-2">
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 mt-2">
           <UBadge :color="getRoleColor(userRole)" variant="soft">
             {{ userRole }}
           </UBadge>
@@ -18,13 +18,14 @@
           </span>
         </div>
       </div>
-      <div class="flex-shrink-0">
+      <div class="flex-shrink-0 flex justify-center sm:justify-end">
         <UButton
           @click="handleSignout"
           variant="outline"
           color="red"
           size="sm"
           :loading="isAuthenticating"
+          class="w-full sm:w-auto"
         >
           Sign Out
         </UButton>
@@ -32,36 +33,37 @@
     </div>
     
     <!-- User Stats -->
-    <div class="mt-6 grid grid-cols-3 gap-4">
-      <div class="text-center">
-        <div class="text-2xl font-bold text-primary-600">
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="text-center p-3 bg-gray-50 rounded-lg">
+        <div class="text-xl sm:text-2xl font-bold text-primary-600">
           {{ isAdmin ? 'Admin' : 'User' }}
         </div>
-        <div class="text-sm text-gray-500">Access Level</div>
+        <div class="text-xs sm:text-sm text-gray-500">Access Level</div>
       </div>
-      <div class="text-center">
-        <div class="text-2xl font-bold text-green-600">
+      <div class="text-center p-3 bg-gray-50 rounded-lg">
+        <div class="text-xl sm:text-2xl font-bold text-green-600">
           {{ isLandlord ? 'Landlord' : isTenant ? 'Tenant' : isManager ? 'Manager' : 'User' }}
         </div>
-        <div class="text-sm text-gray-500">Role Type</div>
+        <div class="text-xs sm:text-sm text-gray-500">Role Type</div>
       </div>
-      <div class="text-center">
-        <div class="text-2xl font-bold text-blue-600">
+      <div class="text-center p-3 bg-gray-50 rounded-lg">
+        <div class="text-xl sm:text-2xl font-bold text-blue-600">
           {{ isSessionValid ? 'Active' : 'Expired' }}
         </div>
-        <div class="text-sm text-gray-500">Session Status</div>
+        <div class="text-xs sm:text-sm text-gray-500">Session Status</div>
       </div>
     </div>
     
     <!-- Quick Actions -->
     <div class="mt-6 border-t pt-6">
-      <h4 class="text-sm font-medium text-gray-900 mb-3">Quick Actions</h4>
-      <div class="flex space-x-3">
+      <h4 class="text-sm font-medium text-gray-900 mb-3 text-center sm:text-left">Quick Actions</h4>
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
         <UButton
           v-if="isAdmin"
           variant="outline"
           size="sm"
           @click="handleAdminAction"
+          class="w-full sm:w-auto"
         >
           Admin Panel
         </UButton>
@@ -70,6 +72,7 @@
           variant="outline"
           size="sm"
           @click="handleLandlordAction"
+          class="w-full sm:w-auto"
         >
           Manage Properties
         </UButton>
@@ -78,6 +81,7 @@
           variant="outline"
           size="sm"
           @click="handleTenantAction"
+          class="w-full sm:w-auto"
         >
           View Properties
         </UButton>
@@ -85,6 +89,7 @@
           variant="outline"
           size="sm"
           @click="handleProfileEdit"
+          class="w-full sm:w-auto"
         >
           Edit Profile
         </UButton>
@@ -139,15 +144,9 @@ const handleSignout = async () => {
   }
 };
 
-const getRoleColor = (role: string) => {
-  switch (role) {
-    case 'tenant': return 'blue';
-    case 'landlord': return 'green';
-    case 'manager': return 'yellow';
-    case 'super_admin': return 'red';
-    default: return 'gray';
-  }
-};
+import { getRoleColor } from '~/constants';
+
+// ... existing code ...
 
 const handleAdminAction = () => {
   // Handle admin-specific action

@@ -1,21 +1,21 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create your account
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          Or
-          <NuxtLink to="/auth/login" class="font-medium text-primary-600 hover:text-primary-500">
-            sign in to your existing account
-          </NuxtLink>
-        </p>
-      </div>
-      
-      <UCard class="mt-8">
-        <form @submit.prevent="handleRegister" class="space-y-6">
-          <div>
+  <div class="w-full">
+    <div class="text-center mb-6 sm:mb-8">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2 sm:mb-3">
+        Create your account
+      </h2>
+      <p class="text-sm sm:text-base text-gray-600">
+        Or
+        <NuxtLink to="/auth/login" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+          sign in to your existing account
+        </NuxtLink>
+      </p>
+    </div>
+    
+    <UCard class="w-full">
+      <form @submit.prevent="handleRegister" class="space-y-4 sm:space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div class="sm:col-span-2">
             <UFormGroup label="Full Name" name="name">
               <UInput
                 v-model="form.name"
@@ -23,6 +23,7 @@
                 placeholder="Enter your full name"
                 required
                 :error="errors.name"
+                class="w-full"
               />
             </UFormGroup>
           </div>
@@ -35,6 +36,7 @@
                 placeholder="Enter your email"
                 required
                 :error="errors.email"
+                class="w-full"
               />
             </UFormGroup>
           </div>
@@ -47,6 +49,7 @@
                 placeholder="Enter your phone number"
                 required
                 :error="errors.phone"
+                class="w-full"
               />
             </UFormGroup>
           </div>
@@ -59,6 +62,7 @@
                 placeholder="Create a password"
                 required
                 :error="errors.password"
+                class="w-full"
               />
             </UFormGroup>
           </div>
@@ -71,11 +75,12 @@
                 placeholder="Confirm your password"
                 required
                 :error="errors.confirmPassword"
+                class="w-full"
               />
             </UFormGroup>
           </div>
           
-          <div>
+          <div class="sm:col-span-2">
             <UFormGroup label="Role" name="role">
               <USelect
                 v-model="form.role"
@@ -83,46 +88,47 @@
                 placeholder="Select your role"
                 required
                 :error="errors.role"
+                class="w-full"
               />
             </UFormGroup>
           </div>
-          
-          <div v-if="errorMessage" class="rounded-md bg-red-50 p-4">
-            <div class="flex">
-              <UIcon name="i-heroicons-exclamation-triangle" class="h-5 w-5 text-red-400" />
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">
-                  {{ errorMessage }}
-                </h3>
-              </div>
+        </div>
+        
+        <div v-if="errorMessage" class="rounded-md bg-red-50 p-3 sm:p-4">
+          <div class="flex">
+            <UIcon name="i-heroicons-exclamation-triangle" class="h-4 w-4 sm:h-5 sm:w-5 text-red-400 flex-shrink-0 mt-0.5" />
+            <div class="ml-2 sm:ml-3">
+              <h3 class="text-xs sm:text-sm font-medium text-red-800">
+                {{ errorMessage }}
+              </h3>
             </div>
           </div>
-          
-          <div v-if="successMessage" class="rounded-md bg-green-50 p-4">
-            <div class="flex">
-              <UIcon name="i-heroicons-check-circle" class="h-5 w-5 text-green-400" />
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-green-800">
-                  {{ successMessage }}
-                </h3>
-              </div>
+        </div>
+        
+        <div v-if="successMessage" class="rounded-md bg-green-50 p-3 sm:p-4">
+          <div class="flex">
+            <UIcon name="i-heroicons-check-circle" class="h-4 w-4 sm:h-5 sm:w-5 text-green-400 flex-shrink-0 mt-0.5" />
+            <div class="ml-2 sm:ml-3">
+              <h3 class="text-xs sm:text-sm font-medium text-green-800">
+                {{ successMessage }}
+              </h3>
             </div>
           </div>
-          
-          <div>
-            <UButton
-              type="submit"
-              :loading="loading"
-              :disabled="loading"
-              class="w-full"
-              size="lg"
-            >
-              Create Account
-            </UButton>
-          </div>
-        </form>
-      </UCard>
-    </div>
+        </div>
+        
+        <div class="pt-2">
+          <UButton
+            type="submit"
+            :loading="loading"
+            :disabled="loading"
+            class="w-full text-sm sm:text-base"
+            size="lg"
+          >
+            Create Account
+          </UButton>
+        </div>
+      </form>
+    </UCard>
   </div>
 </template>
 
@@ -158,12 +164,9 @@ const loading = computed(() => isAuthenticating);
 const errorMessage = computed(() => currentError);
 const successMessage = ref('');
 
-const roleOptions = [
-  { label: 'Tenant', value: 'tenant' },
-  { label: 'Landlord', value: 'landlord' },
-  { label: 'Property Manager', value: 'manager' },
-  { label: 'Super Admin', value: 'super_admin' }
-];
+import { ROLE_OPTIONS } from '~/constants';
+
+const roleOptions = ROLE_OPTIONS;
 
 const validateForm = () => {
   errors.value = {

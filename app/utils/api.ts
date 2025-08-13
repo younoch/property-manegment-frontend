@@ -1,6 +1,16 @@
 import { useApiConfig } from '../composables/useApiConfig';
+import { useApiToast } from '../composables/useApiToast';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+/**
+ * Base API response interface that ensures all responses have a message field
+ */
+interface ApiResponse<T = any> {
+  message: string;
+  data?: T;
+  [key: string]: any;
+}
 
 /**
  * Utility class for making API requests (both public and protected)
@@ -13,69 +23,140 @@ export class ApiClient {
   }
 
   /**
+   * Show success toast
+   */
+  private showSuccessToast(message: string, title?: string) {
+    const { success } = useApiToast();
+    success(message, title);
+  }
+
+  /**
+   * Show error toast
+   */
+  private showErrorToast(message: string, title?: string) {
+    const { error } = useApiToast();
+    error(message, title);
+  }
+
+  /**
    * Make a GET request to a public endpoint
    */
-  async get<T>(endpoint: string, options: Omit<RequestInit, 'method'> = {}): Promise<T> {
-    const { API_CONFIG } = this.config;
-    return await $fetch<T>(`${API_CONFIG.BASE_URL}${endpoint}`, {
-      method: 'GET',
-      credentials: 'include',
-      ...options
-    });
+  async get<T>(endpoint: string, options: Omit<RequestInit, 'method'> = {}): Promise<ApiResponse<T>> {
+    try {
+      const { API_CONFIG } = this.config;
+      const response = await $fetch<ApiResponse<T>>(`${API_CONFIG.BASE_URL}${endpoint}`, {
+        method: 'GET',
+        credentials: 'include',
+        ...options
+      });
+      
+      // Show success toast with response message, fallback to default if no message
+      const message = response.message || 'Data retrieved successfully';
+      this.showSuccessToast(message);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to retrieve data';
+      this.showErrorToast(errorMessage);
+      throw error;
+    }
   }
 
   /**
    * Make a POST request to a public endpoint
    */
-  async post<T>(endpoint: string, data?: any, options: Omit<RequestInit, 'method'> = {}): Promise<T> {
-    const { API_CONFIG } = this.config;
-    return await $fetch<T>(`${API_CONFIG.BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: data,
-      ...options
-    });
+  async post<T>(endpoint: string, data?: any, options: Omit<RequestInit, 'method'> = {}): Promise<ApiResponse<T>> {
+    try {
+      const { API_CONFIG } = this.config;
+      const response = await $fetch<ApiResponse<T>>(`${API_CONFIG.BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: data,
+        ...options
+      });
+      
+      // Show success toast with response message, fallback to default if no message
+      const message = response.message || 'Data created successfully';
+      this.showSuccessToast(message);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to create data';
+      this.showErrorToast(errorMessage);
+      throw error;
+    }
   }
 
   /**
    * Make a PUT request to a public endpoint
    */
-  async put<T>(endpoint: string, data?: any, options: Omit<RequestInit, 'method'> = {}): Promise<T> {
-    const { API_CONFIG } = this.config;
-    return await $fetch<T>(`${API_CONFIG.BASE_URL}${endpoint}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: data,
-      ...options
-    });
+  async put<T>(endpoint: string, data?: any, options: Omit<RequestInit, 'method'> = {}): Promise<ApiResponse<T>> {
+    try {
+      const { API_CONFIG } = this.config;
+      const response = await $fetch<ApiResponse<T>>(`${API_CONFIG.BASE_URL}${endpoint}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: data,
+        ...options
+      });
+      
+      // Show success toast with response message, fallback to default if no message
+      const message = response.message || 'Data updated successfully';
+      this.showSuccessToast(message);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to update data';
+      this.showErrorToast(errorMessage);
+      throw error;
+    }
   }
 
   /**
    * Make a PATCH request to a public endpoint
    */
-  async patch<T>(endpoint: string, data?: any, options: Omit<RequestInit, 'method'> = {}): Promise<T> {
-    const { API_CONFIG } = this.config;
-    return await $fetch<T>(`${API_CONFIG.BASE_URL}${endpoint}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: data,
-      ...options
-    });
+  async patch<T>(endpoint: string, data?: any, options: Omit<RequestInit, 'method'> = {}): Promise<ApiResponse<T>> {
+    try {
+      const { API_CONFIG } = this.config;
+      const response = await $fetch<ApiResponse<T>>(`${API_CONFIG.BASE_URL}${endpoint}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: data,
+        ...options
+      });
+      
+      // Show success toast with response message, fallback to default if no message
+      const message = response.message || 'Data updated successfully';
+      this.showSuccessToast(message);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to update data';
+      this.showErrorToast(errorMessage);
+      throw error;
+    }
   }
 
   /**
    * Make a DELETE request to a public endpoint
    */
-  async delete<T>(endpoint: string, options: Omit<RequestInit, 'method'> = {}): Promise<T> {
-    const { API_CONFIG } = this.config;
-    return await $fetch<T>(`${API_CONFIG.BASE_URL}${endpoint}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      ...options
-    });
+  async delete<T>(endpoint: string, options: Omit<RequestInit, 'method'> = {}): Promise<ApiResponse<T>> {
+    try {
+      const { API_CONFIG } = this.config;
+      const response = await $fetch<ApiResponse<T>>(`${API_CONFIG.BASE_URL}${endpoint}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        ...options
+      });
+      
+      // Show success toast with response message, fallback to default if no message
+      const message = response.message || 'Data deleted successfully';
+      this.showSuccessToast(message);
+      return response;
+    } catch (error: any) {
+      const errorMessage = error?.data?.message || error?.message || 'Failed to delete data';
+      this.showErrorToast(errorMessage);
+      throw error;
+    }
   }
 
   /**
@@ -130,7 +211,7 @@ export class ProtectedApiClient {
     this.apiClient = new ApiClient();
   }
   
-  async get<T>(endpoint: string): Promise<T> {
+  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
     try {
       const { useCsrf } = await import('../composables/useCsrf');
       const csrf = useCsrf();
@@ -139,7 +220,7 @@ export class ProtectedApiClient {
       if (token) {
         // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
-        return await csrf.protectedRequest<T>(`${config.BASE_URL}${endpoint}`, { method: 'GET' });
+        return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { method: 'GET' });
       } else {
         // Fallback to regular API call if no CSRF token
         console.warn('CSRF token not available, falling back to regular API call');
@@ -151,7 +232,7 @@ export class ProtectedApiClient {
     }
   }
   
-  async post<T>(endpoint: string, data?: any): Promise<T> {
+  async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     try {
       const { useCsrf } = await import('../composables/useCsrf');
       const csrf = useCsrf();
@@ -160,7 +241,7 @@ export class ProtectedApiClient {
       if (token) {
         // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
-        return await csrf.protectedRequest<T>(`${config.BASE_URL}${endpoint}`, { 
+        return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { 
           method: 'POST',
           body: JSON.stringify(data)
         });
@@ -175,7 +256,7 @@ export class ProtectedApiClient {
     }
   }
   
-  async put<T>(endpoint: string, data?: any): Promise<T> {
+  async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     try {
       const { useCsrf } = await import('../composables/useCsrf');
       const csrf = useCsrf();
@@ -184,7 +265,7 @@ export class ProtectedApiClient {
       if (token) {
         // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
-        return await csrf.protectedRequest<T>(`${config.BASE_URL}${endpoint}`, { 
+        return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { 
           method: 'PUT',
           body: JSON.stringify(data)
         });
@@ -199,7 +280,7 @@ export class ProtectedApiClient {
     }
   }
   
-  async patch<T>(endpoint: string, data?: any): Promise<T> {
+  async patch<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     try {
       const { useCsrf } = await import('../composables/useCsrf');
       const csrf = useCsrf();
@@ -208,7 +289,7 @@ export class ProtectedApiClient {
       if (token) {
         // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
-        return await csrf.protectedRequest<T>(`${config.BASE_URL}${endpoint}`, { 
+        return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { 
           method: 'PATCH',
           body: JSON.stringify(data)
         });
@@ -223,7 +304,7 @@ export class ProtectedApiClient {
     }
   }
   
-  async delete<T>(endpoint: string): Promise<T> {
+  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
     try {
       const { useCsrf } = await import('../composables/useCsrf');
       const csrf = useCsrf();
@@ -232,7 +313,7 @@ export class ProtectedApiClient {
       if (token) {
         // Use CSRF protection if token is available
         const config = this.apiClient.getApiConfig();
-        return await csrf.protectedRequest<T>(`${config.BASE_URL}${endpoint}`, { method: 'DELETE' });
+        return await csrf.protectedRequest<ApiResponse<T>>(`${config.BASE_URL}${endpoint}`, { method: 'DELETE' });
       } else {
         // Fallback to regular API call if no CSRF token
         console.warn('CSRF token not available, falling back to regular API call');
