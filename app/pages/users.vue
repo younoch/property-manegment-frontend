@@ -18,9 +18,9 @@ definePageMeta({
 })
 
 const columns = [
-  { key: 'name', label: 'Name' },
-  { key: 'email', label: 'Email' },
-  { key: 'role', label: 'Role' }
+  { id: 'name', key: 'name', label: 'Name' },
+  { id: 'email', key: 'email', label: 'Email' },
+  { id: 'role', key: 'role', label: 'Role' }
 ]
 
 const rows = [

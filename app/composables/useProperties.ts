@@ -1,31 +1,7 @@
-export interface Property {
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  price: number;
-  bedrooms: number;
-  bathrooms: number;
-  area: number;
-  type: 'apartment' | 'house' | 'condo' | 'land';
-  status: 'available' | 'rented' | 'sold' | 'maintenance';
-  ownerId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Property, AddPropertyPayload } from '../../types/properties'
+import { createProtectedApiClient } from '../utils/api'
 
-export interface CreatePropertyData {
-  title: string;
-  description: string;
-  address: string;
-  price: number;
-  bedrooms: number;
-  bathrooms: number;
-  area: number;
-  type: Property['type'];
-}
-
-export interface UpdatePropertyData extends Partial<CreatePropertyData> {
+export interface UpdatePropertyData extends Partial<AddPropertyPayload> {
   id: string;
 }
 
@@ -71,7 +47,7 @@ export const useProperties = () => {
   };
 
   // Create new property - Uses CSRF protection
-  const createProperty = async (propertyData: CreatePropertyData) => {
+  const createProperty = async (propertyData: AddPropertyPayload) => {
     loading.value = true;
     error.value = null;
     
@@ -99,7 +75,7 @@ export const useProperties = () => {
       const data = await api.patch<Property>(`/properties/${propertyData.id}`, propertyData);
       
       // Update local state
-      const index = properties.value.findIndex(p => p.id === propertyData.id);
+      const index = properties.value.findIndex((p: Property) => p.id === propertyData.id);
       if (index !== -1) {
         properties.value[index] = data;
       }
@@ -122,7 +98,7 @@ export const useProperties = () => {
       await api.delete(`/properties/${id}`);
       
       // Remove from local state
-      properties.value = properties.value.filter(p => p.id !== id);
+      properties.value = properties.value.filter((p: Property) => p.id !== id);
       
       return { success: true };
     } catch (err: any) {

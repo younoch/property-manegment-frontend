@@ -14,10 +14,10 @@
 definePageMeta({ middleware: 'auth' })
 
 const columns = [
-  { key: 'date', label: 'Date' },
-  { key: 'tenant', label: 'Tenant' },
-  { key: 'amount', label: 'Amount' },
-  { key: 'method', label: 'Method' }
+  { id: 'date', key: 'date', label: 'Date' },
+  { id: 'tenant', key: 'tenant', label: 'Tenant' },
+  { id: 'amount', key: 'amount', label: 'Amount' },
+  { id: 'method', key: 'method', label: 'Method' }
 ]
 
 const rows = [

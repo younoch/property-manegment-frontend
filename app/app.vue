@@ -1,8 +1,8 @@
 <template>
   <UApp :ui="{ notifications: { toaster: false } }">
-   <template #notifications>
+       <template #notifications>
       <ClientOnly>
-        <UNotifications />
+        <UToaster />
       </ClientOnly>
     </template>
 

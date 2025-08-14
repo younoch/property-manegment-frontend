@@ -20,6 +20,7 @@ import type {
     const computed: typeof import('vue')['computed'];
     const defineNuxtPlugin: typeof import('#app')['defineNuxtPlugin'];
     const defineNuxtRouteMiddleware: typeof import('#app')['defineNuxtRouteMiddleware'];
+    const definePageMeta: typeof import('#app')['definePageMeta'];
     const navigateTo: typeof import('#app')['navigateTo'];
     const useAuth: () => any;
     const useUserStore: () => any;
