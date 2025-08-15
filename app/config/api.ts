@@ -37,25 +37,30 @@ const getApiConfig = () => {
     const frontendDomain = process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com';
     const backendDomain = process.env.NUXT_PUBLIC_BACKEND_DOMAIN || 'api.yourapp.com';
     
+    // Extract domain from full URLs if they contain protocol
+    const cleanFrontendDomain = frontendDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    const cleanBackendDomain = backendDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    
     // Check if same domain hosting
-    const isSameDomain = frontendDomain === backendDomain || 
-                        backendDomain.includes(frontendDomain) ||
-                        frontendDomain.includes(backendDomain);
+    const isSameDomain = cleanFrontendDomain === cleanBackendDomain || 
+                        cleanBackendDomain.includes(cleanFrontendDomain) ||
+                        cleanFrontendDomain.includes(cleanBackendDomain);
     
     if (isSameDomain) {
       // Same domain hosting - cookies work perfectly
       return {
-        BASE_URL: `https://${backendDomain}`,
-        COOKIE_DOMAIN: `.${frontendDomain}`,
+        BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || `https://${cleanBackendDomain}`,
+        COOKIE_DOMAIN: `.${cleanFrontendDomain}`,
         COOKIE_SECURE: true,
         COOKIE_SAME_SITE: 'strict' as const,
-        CORS_CREDENTIALS: true
+        CORS_CREDENTIALS: true,
+        IS_CROSS_ORIGIN: false
       };
     } else {
       // Different domains - need cross-origin cookies
       return {
-        BASE_URL: `https://${backendDomain}`,
-        COOKIE_DOMAIN: frontendDomain,
+        BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || `https://${cleanBackendDomain}`,
+        COOKIE_DOMAIN: cleanFrontendDomain,
         COOKIE_SECURE: true,
         COOKIE_SAME_SITE: 'none' as const,
         CORS_CREDENTIALS: true,
@@ -70,11 +75,27 @@ const getApiConfig = () => {
     COOKIE_DOMAIN: 'localhost',
     COOKIE_SECURE: false,
     COOKIE_SAME_SITE: 'lax' as const,
-    CORS_CREDENTIALS: true
+    CORS_CREDENTIALS: true,
+    IS_CROSS_ORIGIN: false
   };
 };
 
 export const API_CONFIG = getApiConfig();
+// Debug: surface computed API configuration at runtime
+try {
+  // Logs in both server and browser consoles
+  // Helpful to verify which backend/base URL and cookie strategy are active
+  console.log('[API_CONFIG]', {
+    NODE_ENV: process.env.NODE_ENV,
+    BASE_URL: API_CONFIG.BASE_URL,
+    FRONTEND_DOMAIN: process.env.NUXT_PUBLIC_FRONTEND_DOMAIN,
+    BACKEND_DOMAIN: process.env.NUXT_PUBLIC_BACKEND_DOMAIN,
+    COOKIE_DOMAIN: API_CONFIG.COOKIE_DOMAIN,
+    COOKIE_SAME_SITE: API_CONFIG.COOKIE_SAME_SITE,
+    COOKIE_SECURE: API_CONFIG.COOKIE_SECURE,
+    IS_CROSS_ORIGIN: API_CONFIG.IS_CROSS_ORIGIN
+  });
+} catch {}
 
 // API endpoints
 export const ENDPOINTS = {
@@ -122,7 +143,7 @@ export const COOKIE_CONFIG = {
   
   // Production - Same domain
   productionSameDomain: {
-    domain: `.${process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com'}`,
+    domain: `.${(process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com').replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
     secure: true,
     sameSite: 'strict' as const,
     httpOnly: true // Secure in production
@@ -130,7 +151,7 @@ export const COOKIE_CONFIG = {
   
   // Production - Different domains
   productionDifferentDomains: {
-    domain: process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com',
+    domain: (process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com').replace(/^https?:\/\//, '').replace(/\/$/, ''),
     secure: true,
     sameSite: 'none' as const,
     httpOnly: true, // Secure in production
@@ -142,8 +163,8 @@ export const COOKIE_CONFIG = {
 export const CROSS_ORIGIN_CONFIG = {
   // Frontend domains that can access the backend
   allowedOrigins: [
-    process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com',
-    `https://${process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com'}`,
+    (process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com').replace(/^https?:\/\//, '').replace(/\/$/, ''),
+    `https://${(process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com').replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
     'http://localhost:3000' // Development
   ],
   

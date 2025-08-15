@@ -105,3 +105,4 @@ Desktop.ini
 
 # Local development files
 *.local
+.vercel
