@@ -1,6 +1,6 @@
 export interface Property {
   id: number | string;
-  account_id: number;
+  account_id?: number; // Made optional since backend handles it
   name: string;
   address_line1: string;
   address_line2?: string | null;
@@ -18,7 +18,7 @@ export interface Property {
 }
 
 export interface AddPropertyPayload {
-  account_id: number;
+  account_id?: number; // Made optional since backend handles it
   name: string;
   address_line1: string;
   address_line2?: string | null;

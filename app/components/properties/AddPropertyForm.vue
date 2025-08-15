@@ -20,19 +20,6 @@
       <UPlaceholder class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <UFormField
-              label="Account ID"
-              name="account_id"
-              :error="errors.account_id"
-            >
-              <UInput
-                v-model.number="form.account_id"
-                type="number"
-                min="1"
-                placeholder="1"
-              />
-            </UFormField>
-    
             <UFormField label="Name" name="name" :error="errors.name">
               <UInput v-model="form.name" placeholder="Sunset Apartments" />
             </UFormField>
@@ -70,12 +57,50 @@
             <UFormField label="Country" name="country" :error="errors.country">
               <UInput v-model="form.country" placeholder="USA" />
             </UFormField>
+
+            <!-- Geocoding Button -->
+            <div class="sm:col-span-2">
+              <UButton
+                @click="geocodeAddress"
+                :loading="geocoding"
+                color="blue"
+                variant="soft"
+                class="w-full"
+                :disabled="!canGeocode"
+              >
+                <UIcon name="i-heroicons-map-pin" class="mr-2" />
+                {{ geocoding ? 'Getting coordinates...' : 'Get Coordinates from Address' }}
+              </UButton>
+              <p class="text-xs text-gray-500 mt-1">
+                Click to automatically get latitude and longitude from the address above
+              </p>
+            </div>
+
+            <!-- Map Preview -->
+            <div v-if="form.latitude && form.longitude" class="sm:col-span-2">
+              <div class="bg-gray-100 rounded-lg p-3">
+                <p class="text-sm font-medium mb-2">Location Preview:</p>
+                <div class="bg-white rounded border p-3 text-center">
+                  <a 
+                    :href="`https://www.openstreetmap.org/?mlat=${form.latitude}&mlon=${form.longitude}&zoom=15`"
+                    target="_blank"
+                    class="text-blue-600 hover:text-blue-800 text-sm"
+                  >
+                    <UIcon name="i-heroicons-map" class="inline mr-1" />
+                    View on OpenStreetMap
+                  </a>
+                  <p class="text-xs text-gray-600 mt-1">
+                    Coordinates: {{ form.latitude.toFixed(6) }}, {{ form.longitude.toFixed(6) }}
+                  </p>
+                </div>
+              </div>
+            </div>
     
             <UFormField label="Latitude" name="latitude" :error="errors.latitude">
               <UInput
                 v-model.number="form.latitude"
                 type="number"
-                step="0.0001"
+                step="0.000001"
                 placeholder="40.7128"
               />
             </UFormField>
@@ -88,7 +113,7 @@
               <UInput
                 v-model.number="form.longitude"
                 type="number"
-                step="0.0001"
+                step="0.000001"
                 placeholder="-74.0060"
               />
             </UFormField>
@@ -176,6 +201,7 @@ const isOpen = computed({
 });
 
 const submitting = ref(false);
+const geocoding = ref(false);
 const api = createProtectedApiClient();
 const { success: toastSuccess, error: toastError } = useApiToast();
 
@@ -187,7 +213,6 @@ const propertyTypeOptions = [
 ];
 
 const form = reactive<AddPropertyPayload>({
-  account_id: 1,
   name: "",
   address_line1: "",
   address_line2: "",
@@ -204,8 +229,61 @@ const form = reactive<AddPropertyPayload>({
 
 const errors = reactive<Record<string, string | undefined>>({});
 
+// Check if we have enough address info to geocode
+const canGeocode = computed(() => {
+  return form.address_line1 && form.city && form.state;
+});
+
+// Geocoding function using OpenStreetMap Nominatim
+const geocodeAddress = async () => {
+  if (!canGeocode.value) {
+    toastError("Please fill in at least Address Line 1, City, and State");
+    return;
+  }
+
+  geocoding.value = true;
+  try {
+    // Build address string
+    const addressParts = [
+      form.address_line1,
+      form.address_line2,
+      form.city,
+      form.state,
+      form.zip_code,
+      form.country
+    ].filter(Boolean);
+    
+    const addressString = addressParts.join(', ');
+    
+    // Use OpenStreetMap Nominatim API (free, no API key required)
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressString)}&limit=1`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Geocoding service unavailable');
+    }
+    
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      const location = data[0];
+      form.latitude = parseFloat(location.lat);
+      form.longitude = parseFloat(location.lon);
+      
+      toastSuccess(`Coordinates found: ${form.latitude.toFixed(6)}, ${form.longitude.toFixed(6)}`);
+    } else {
+      toastError("Address not found. Please check the address and try again.");
+    }
+  } catch (error: any) {
+    console.error('Geocoding error:', error);
+    toastError("Failed to get coordinates. Please enter them manually.");
+  } finally {
+    geocoding.value = false;
+  }
+};
+
 const Schema = object({
-  account_id: number(),
   name: pipe(string(), minLength(2, "Name must be at least 2 characters")),
   address_line1: pipe(
     string(),
@@ -261,7 +339,6 @@ const validate = (state: AddPropertyPayload) => {
 };
 
 const resetForm = () => {
-  form.account_id = 1;
   form.name = "";
   form.address_line1 = "";
   form.address_line2 = "";
@@ -298,7 +375,29 @@ const onSubmit = async () => {
   if (validation.length) return;
   submitting.value = true;
   try {
-    const response = await api.post<any>("/properties", { ...form });
+    // Send coordinates as numbers (international standard)
+    const payload = { ...form };
+    
+    // Enhanced debugging for backend issue
+    console.log('=== PROPERTY SUBMISSION DEBUG ===');
+    console.log('Full payload:', JSON.stringify(payload, null, 2));
+    console.log('Latitude:', {
+      value: payload.latitude,
+      type: typeof payload.latitude,
+      isNumber: typeof payload.latitude === 'number',
+      isFinite: Number.isFinite(payload.latitude),
+      precision: payload.latitude?.toString().split('.')[1]?.length || 0
+    });
+    console.log('Longitude:', {
+      value: payload.longitude,
+      type: typeof payload.longitude,
+      isNumber: typeof payload.longitude === 'number',
+      isFinite: Number.isFinite(payload.longitude),
+      precision: payload.longitude?.toString().split('.')[1]?.length || 0
+    });
+    console.log('=== END DEBUG ===');
+    
+    const response = await api.post<any>("/properties", payload);
     toastSuccess(response?.message || "Property created");
     emit("created", response?.data ?? { ...form });
     isOpen.value = false;
@@ -306,6 +405,14 @@ const onSubmit = async () => {
     const message =
       err?.data?.message || err?.message || "Failed to create property";
     toastError(message);
+    
+    // Enhanced error logging
+    console.error('=== BACKEND ERROR DEBUG ===');
+    console.error('Error object:', err);
+    console.error('Error message:', err?.message);
+    console.error('Response data:', err?.data);
+    console.error('Status code:', err?.status || err?.response?.status);
+    console.error('=== END ERROR DEBUG ===');
   } finally {
     submitting.value = false;
   }
