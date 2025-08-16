@@ -43,8 +43,8 @@ export const MAINTENANCE_PRIORITIES: MaintenancePriority[] = [
     responseTime: 'Within 24 hours'
   },
   {
-    value: 'critical',
-    label: 'Critical',
+    value: 'emergency',
+    label: 'Emergency',
     color: 'red',
     description: 'Emergency maintenance requiring immediate attention',
     responseTime: 'Within 4 hours'
@@ -53,22 +53,10 @@ export const MAINTENANCE_PRIORITIES: MaintenancePriority[] = [
 
 export const MAINTENANCE_STATUSES: MaintenanceStatus[] = [
   {
-    value: 'pending',
-    label: 'Pending',
+    value: 'open',
+    label: 'Open',
     color: 'gray',
     description: 'Request submitted, waiting for review'
-  },
-  {
-    value: 'approved',
-    label: 'Approved',
-    color: 'blue',
-    description: 'Request approved, waiting for scheduling'
-  },
-  {
-    value: 'scheduled',
-    label: 'Scheduled',
-    color: 'yellow',
-    description: 'Maintenance scheduled with contractor'
   },
   {
     value: 'in_progress',
@@ -83,8 +71,8 @@ export const MAINTENANCE_STATUSES: MaintenanceStatus[] = [
     description: 'Maintenance work completed'
   },
   {
-    value: 'cancelled',
-    label: 'Cancelled',
+    value: 'canceled',
+    label: 'Canceled',
     color: 'red',
     description: 'Request was cancelled'
   }

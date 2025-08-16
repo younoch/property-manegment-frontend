@@ -1,57 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white shadow">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center py-6">
-          <div class="flex items-center">
-            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-          </div>
-          
-          <div class="flex items-center space-x-4">
-            <div class="relative">
-              <UButton
-                variant="ghost"
-                class="flex items-center space-x-2"
-                @click="userMenuOpen = !userMenuOpen"
-              >
-                <UIcon name="i-heroicons-user-circle" class="h-6 w-6" />
-                <span>{{ displayName }}</span>
-                <UIcon name="i-heroicons-chevron-down" class="h-4 w-4" />
-              </UButton>
-              
-              <!-- Dropdown Menu -->
-              <div v-if="userMenuOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                <NuxtLink 
-                  to="/profile" 
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  @click="userMenuOpen = false"
-                >
-                  Profile
-                </NuxtLink>
-                <NuxtLink 
-                  to="/settings" 
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  @click="userMenuOpen = false"
-                >
-                  Settings
-                </NuxtLink>
-                <div class="border-t border-gray-100"></div>
-                <button
-                  @click="handleSignout"
-                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Sign out
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <!-- Page Title -->
+      <div class="px-4 sm:px-0 mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+      </div>
+      
       <!-- Welcome Section -->
       <div class="px-4 py-6 sm:px-0">
         <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -221,35 +176,10 @@ const recentActivities = ref([
   }
 ]);
 
-const userMenuOpen = ref(false);
-
-// Close menu when clicking outside
-const closeUserMenu = () => {
-  userMenuOpen.value = false;
-};
-
 // Close menu when route changes
 watch(() => router.currentRoute.value.fullPath, () => {
-  userMenuOpen.value = false;
+  // Route change handling if needed
 });
-
-const handleSignout = async () => {
-  try {
-    const result = await signout();
-    if (result.success) {
-      // Redirect to home page after successful logout
-      await router.push('/');
-    } else {
-      console.error('Logout failed:', result.error);
-      // Still redirect even if logout fails
-      await router.push('/');
-    }
-  } catch (error) {
-    console.error('Logout error:', error);
-    // Still redirect even if logout fails
-    await router.push('/');
-  }
-};
 
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {

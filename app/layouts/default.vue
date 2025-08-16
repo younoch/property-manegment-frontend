@@ -58,21 +58,44 @@
 
               <!-- Show when user IS authenticated -->
               <template v-else>
-                <div class="flex items-center space-x-4">
-                  <NuxtLink 
-                    to="/dashboard" 
-                    class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Dashboard
-                  </NuxtLink>
-                  
-                  <UButton
-                    variant="ghost"
-                    @click="handleLogout"
-                    class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                  >
-                    Logout
-                  </UButton>
+                <div class="flex items-center space-x-4">              
+                  <!-- User Menu Dropdown -->
+                  <div class="relative user-menu-dropdown">
+                    <UButton
+                      variant="ghost"
+                      class="flex items-center space-x-2"
+                      @click="userMenuOpen = !userMenuOpen"
+                    >
+                      <UIcon name="i-heroicons-user-circle" class="h-6 w-6" />
+                      <span>{{ userStore.displayName }}</span>
+                      <UIcon name="i-heroicons-chevron-down" class="h-4 w-4" />
+                    </UButton>
+                    
+                    <!-- Dropdown Menu -->
+                    <div v-if="userMenuOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                      <NuxtLink 
+                        to="/profile" 
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click="userMenuOpen = false"
+                      >
+                        Profile
+                      </NuxtLink>
+                      <NuxtLink 
+                        to="/settings" 
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        @click="userMenuOpen = false"
+                      >
+                        Settings
+                      </NuxtLink>
+                      <div class="border-t border-gray-100"></div>
+                      <button
+                        @click="handleLogout"
+                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </template>
             </div>
@@ -195,7 +218,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../stores/user'
@@ -204,6 +227,7 @@ import { getTopHeaderNav, getSidebarNav, type UserRole } from '~/utils/navigatio
 
 // Sidebar state
 const sidebarOpen = ref(false)
+const userMenuOpen = ref(false)
 
 // Stores
 const userStore = useUserStore()
@@ -223,6 +247,22 @@ const showSidebar = computed(() => {
 const route = useRoute()
 watch(() => route.fullPath, () => {
   sidebarOpen.value = false
+  userMenuOpen.value = false
+})
+
+// Close user menu when clicking outside
+const closeUserMenu = () => {
+  userMenuOpen.value = false
+}
+
+// Add click outside listener
+onMounted(() => {
+  document.addEventListener('click', (event) => {
+    const target = event.target as Element
+    if (!target.closest('.user-menu-dropdown')) {
+      userMenuOpen.value = false
+    }
+  })
 })
 
 // Logout handler

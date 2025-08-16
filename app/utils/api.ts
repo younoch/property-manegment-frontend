@@ -46,7 +46,7 @@ export class ApiClient {
     try {
       const { API_CONFIG } = this.config;
       const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-      console.log('[API GET]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL });
+      // console.log('[API GET]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL });
       const response = await $fetch<ApiResponse<T>>(url, {
         method: 'GET',
         credentials: 'include',
@@ -68,7 +68,7 @@ export class ApiClient {
     try {
       const { API_CONFIG } = this.config;
       const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-      console.log('[API POST]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL, hasBody: !!data });
+      // console.log('[API POST]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL, hasBody: !!data });
       const response = await $fetch<ApiResponse<T>>(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,7 +93,7 @@ export class ApiClient {
     try {
       const { API_CONFIG } = this.config;
       const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-      console.log('[API PUT]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL, hasBody: !!data });
+      // console.log('[API PUT]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL, hasBody: !!data });
       const response = await $fetch<ApiResponse<T>>(url, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -118,7 +118,7 @@ export class ApiClient {
     try {
       const { API_CONFIG } = this.config;
       const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-      console.log('[API PATCH]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL, hasBody: !!data });
+      // console.log('[API PATCH]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL, hasBody: !!data });
       const response = await $fetch<ApiResponse<T>>(url, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -143,7 +143,7 @@ export class ApiClient {
     try {
       const { API_CONFIG } = this.config;
       const url = `${API_CONFIG.BASE_URL}${endpoint}`;
-      console.log('[API DELETE]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL });
+      // console.log('[API DELETE]', { url, endpoint, baseUrl: API_CONFIG.BASE_URL });
       const response = await $fetch<ApiResponse<T>>(url, {
         method: 'DELETE',
         credentials: 'include',
@@ -181,7 +181,7 @@ export const makeRequest = async <T>(
 ): Promise<T> => {
   const config = useApiConfig();
   const url = `${config.API_CONFIG.BASE_URL}${endpoint}`;
-  console.log('[API makeRequest]', { url, endpoint, baseUrl: config.API_CONFIG.BASE_URL });
+  // console.log('[API makeRequest]', { url, endpoint, baseUrl: config.API_CONFIG.BASE_URL });
   return await $fetch<T>(url, {
     credentials: 'include',
     ...options
@@ -199,7 +199,7 @@ export const makeProtectedRequest = async <T>(
   const csrf = useCsrf();
   const config = useApiConfig();
   const url = `${config.API_CONFIG.BASE_URL}${endpoint}`;
-  console.log('[API makeProtectedRequest]', { url, endpoint, baseUrl: config.API_CONFIG.BASE_URL });
+  // console.log('[API makeProtectedRequest]', { url, endpoint, baseUrl: config.API_CONFIG.BASE_URL });
   return await csrf.protectedRequest<T>(url, options);
 };
 
@@ -223,7 +223,7 @@ export class ProtectedApiClient {
         const config = this.apiClient.getApiConfig();
         // Do not toast on protected GETs to reduce noise/hydration load
         const url = `${config.BASE_URL}${endpoint}`;
-        console.log('[API Protected GET]', { url, endpoint, baseUrl: config.BASE_URL });
+        // console.log('[API Protected GET]', { url, endpoint, baseUrl: config.BASE_URL });
         return await csrf.protectedRequest<ApiResponse<T>>(url, { method: 'GET' });
       } else {
         return await this.apiClient.get<T>(endpoint);
@@ -242,7 +242,7 @@ export class ProtectedApiClient {
       if (token) {
         const config = this.apiClient.getApiConfig();
         const url = `${config.BASE_URL}${endpoint}`;
-        console.log('[API Protected POST]', { url, endpoint, baseUrl: config.BASE_URL, hasBody: !!data });
+        // console.log('[API Protected POST]', { url, endpoint, baseUrl: config.BASE_URL, hasBody: !!data });
         return await csrf.protectedRequest<ApiResponse<T>>(url, { 
           method: 'POST',
           body: JSON.stringify(data)
@@ -264,7 +264,7 @@ export class ProtectedApiClient {
       if (token) {
         const config = this.apiClient.getApiConfig();
         const url = `${config.BASE_URL}${endpoint}`;
-        console.log('[API Protected PUT]', { url, endpoint, baseUrl: config.BASE_URL, hasBody: !!data });
+        // console.log('[API Protected PUT]', { url, endpoint, baseUrl: config.BASE_URL, hasBody: !!data });
         return await csrf.protectedRequest<ApiResponse<T>>(url, { 
           method: 'PUT',
           body: JSON.stringify(data)
@@ -286,7 +286,7 @@ export class ProtectedApiClient {
       if (token) {
         const config = this.apiClient.getApiConfig();
         const url = `${config.BASE_URL}${endpoint}`;
-        console.log('[API Protected PATCH]', { url, endpoint, baseUrl: config.BASE_URL, hasBody: !!data });
+        // console.log('[API Protected PATCH]', { url, endpoint, baseUrl: config.BASE_URL, hasBody: !!data });
         return await csrf.protectedRequest<ApiResponse<T>>(url, { 
           method: 'PATCH',
           body: JSON.stringify(data)
@@ -308,7 +308,7 @@ export class ProtectedApiClient {
       if (token) {
         const config = this.apiClient.getApiConfig();
         const url = `${config.BASE_URL}${endpoint}`;
-        console.log('[API Protected DELETE]', { url, endpoint, baseUrl: config.BASE_URL });
+        // console.log('[API Protected DELETE]', { url, endpoint, baseUrl: config.BASE_URL });
         return await csrf.protectedRequest<ApiResponse<T>>(url, { method: 'DELETE' });
       } else {
         return await this.apiClient.delete<T>(endpoint);

@@ -16,94 +16,106 @@
       <form @submit.prevent="handleRegister" class="space-y-4 sm:space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div class="sm:col-span-2">
-            <UFormGroup label="Full Name" name="name">
-              <UInput
-                v-model="form.name"
-                type="text"
-                placeholder="Enter your full name"
-                required
-                :error="errors.name"
-                class="w-full"
-              />
-            </UFormGroup>
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+            <UInput
+              v-model="form.name"
+              type="text"
+              placeholder="Enter your full name"
+              required
+              :error="errors.name"
+              class="w-full"
+            />
           </div>
           
           <div>
-            <UFormGroup label="Email address" name="email">
-              <UInput
-                v-model="form.email"
-                type="email"
-                placeholder="Enter your email"
-                required
-                :error="errors.email"
-                class="w-full"
-              />
-            </UFormGroup>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+            <UInput
+              v-model="form.email"
+              type="email"
+              placeholder="Enter your email"
+              required
+              :error="errors.email"
+              class="w-full"
+            />
           </div>
           
           <div>
-            <UFormGroup label="Phone Number" name="phone">
-              <UInput
-                v-model="form.phone"
-                type="tel"
-                placeholder="Enter your phone number"
-                required
-                :error="errors.phone"
-                class="w-full"
-              />
-            </UFormGroup>
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+            <UInput
+              v-model="form.phone"
+              type="tel"
+              placeholder="Enter your phone number"
+              required
+              :error="errors.phone"
+              class="w-full"
+            />
           </div>
           
           <div>
-            <UFormGroup label="Password" name="password">
-              <UInput
-                v-model="form.password"
-                type="password"
-                placeholder="Create a password"
-                required
-                :error="errors.password"
-                class="w-full"
-              />
-            </UFormGroup>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <UInput
+              v-model="form.password"
+              placeholder="Create a password"
+              :type="showPassword ? 'text' : 'password'"
+              required
+              :error="errors.password"
+              class="w-full"
+              :ui="{ trailing: 'pe-1' }"
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
+                  :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                  :aria-pressed="showPassword"
+                  aria-controls="password"
+                  @click="showPassword = !showPassword"
+                />
+              </template>
+            </UInput>
           </div>
           
           <div>
-            <UFormGroup label="Confirm Password" name="confirmPassword">
-              <UInput
-                v-model="form.confirmPassword"
-                type="password"
-                placeholder="Confirm your password"
-                required
-                :error="errors.confirmPassword"
-                class="w-full"
-              />
-            </UFormGroup>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+            <UInput
+              v-model="form.confirmPassword"
+              placeholder="Confirm your password"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              required
+              :error="errors.confirmPassword"
+              class="w-full"
+              :ui="{ trailing: 'pe-1' }"
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
+                  :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
+                  :aria-pressed="showConfirmPassword"
+                  aria-controls="password"
+                  @click="showConfirmPassword = !showConfirmPassword"
+                />
+              </template>
+            </UInput>
           </div>
           
           <div class="sm:col-span-2">
-            <UFormGroup label="Role" name="role">
-              <USelect
-                v-model="form.role"
-                :options="roleOptions"
-                placeholder="Select your role"
-                required
-                :error="errors.role"
-                class="w-full"
-              />
-            </UFormGroup>
+            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+            <USelect
+              v-model="form.role"
+              :items="roleOptions"
+              placeholder="Select your role"
+              required
+              :error="errors.role"
+              class="w-full"
+            />
           </div>
         </div>
         
-        <div v-if="errorMessage" class="rounded-md bg-red-50 p-3 sm:p-4">
-          <div class="flex">
-            <UIcon name="i-heroicons-exclamation-triangle" class="h-4 w-4 sm:h-5 sm:w-5 text-red-400 flex-shrink-0 mt-0.5" />
-            <div class="ml-2 sm:ml-3">
-              <h3 class="text-xs sm:text-sm font-medium text-red-800">
-                {{ errorMessage }}
-              </h3>
-            </div>
-          </div>
-        </div>
         
         <div v-if="successMessage" class="rounded-md bg-green-50 p-3 sm:p-4">
           <div class="flex">
@@ -121,7 +133,7 @@
             type="submit"
             :loading="loading"
             :disabled="loading"
-            class="w-full text-sm sm:text-base"
+            class="w-full text-sm sm:text-base flex items-center justify-center"
             size="lg"
           >
             Create Account
@@ -133,6 +145,7 @@
 </template>
 
 <script setup lang="ts">
+import { ROLE_OPTIONS } from '~/constants';
 definePageMeta({
   layout: 'auth',
   middleware: 'guest'
@@ -164,7 +177,12 @@ const loading = computed(() => isAuthenticating);
 const errorMessage = computed(() => currentError);
 const successMessage = ref('');
 
-import { ROLE_OPTIONS } from '~/constants';
+// Password visibility toggles
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+
+// Import constants
+
 
 const roleOptions = ROLE_OPTIONS;
 
@@ -251,3 +269,10 @@ const handleRegister = async () => {
   }
 };
 </script>
+
+<style>
+/* Hide the password reveal button in Edge */
+::-ms-reveal {
+  display: none;
+}
+</style>

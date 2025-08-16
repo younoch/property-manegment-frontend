@@ -125,7 +125,7 @@
             >
               <USelect
                 v-model="form.property_type"
-                :options="propertyTypeOptions"
+                :items="propertyTypeOptions"
                 placeholder="Select type"
               />
             </UFormField>

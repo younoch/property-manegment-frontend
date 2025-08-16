@@ -12,7 +12,7 @@
         </div>
         <div>
           <h2 class="text-sm font-semibold text-gray-700 mb-2">Appearance</h2>
-          <USelect v-model="settings.theme" :options="themes" class="w-48" />
+          <USelect v-model="settings.theme" :items="themes" class="w-48" />
         </div>
         <div>
           <UButton @click="save" :loading="saving">Save changes</UButton>

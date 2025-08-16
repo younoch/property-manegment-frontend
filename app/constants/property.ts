@@ -45,16 +45,16 @@ export const PROPERTY_TYPES: PropertyType[] = [
     description: 'Multi-story attached home'
   },
   {
-    value: 'duplex',
-    label: 'Duplex',
-    icon: 'i-heroicons-home-modern',
-    description: 'Two-unit residential building'
+    value: 'commercial',
+    label: 'Commercial',
+    icon: 'i-heroicons-building-storefront',
+    description: 'Commercial property for business use'
   },
   {
-    value: 'studio',
-    label: 'Studio',
+    value: 'other',
+    label: 'Other',
     icon: 'i-heroicons-home-modern',
-    description: 'Single-room apartment'
+    description: 'Other property types'
   }
 ];
 

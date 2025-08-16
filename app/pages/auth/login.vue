@@ -15,40 +15,41 @@
     <UCard class="w-full">
       <form @submit.prevent="handleLogin" class="space-y-4 sm:space-y-6">
         <div>
-          <UFormGroup label="Email address" name="email">
-            <UInput
-              v-model="form.email"
-              type="email"
-              placeholder="Enter your email"
-              required
-              :error="errors.email"
-              class="w-full"
-            />
-          </UFormGroup>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+          <UInput
+            v-model="form.email"
+            type="email"
+            placeholder="Enter your email"
+            required
+            :error="errors.email"
+            class="w-full"
+          />
         </div>
         
         <div>
-          <UFormGroup label="Password" name="password">
-            <UInput
-              v-model="form.password"
-              type="password"
-              placeholder="Enter your password"
-              required
-              :error="errors.password"
-              class="w-full"
-            />
-          </UFormGroup>
-        </div>
-        
-        <div v-if="errorMessage" class="rounded-md bg-red-50 p-3 sm:p-4">
-          <div class="flex">
-            <UIcon name="i-heroicons-exclamation-triangle" class="h-4 w-4 sm:h-5 sm:w-5 text-red-400 flex-shrink-0 mt-0.5" />
-            <div class="ml-2 sm:ml-3">
-              <h3 class="text-xs sm:text-sm font-medium text-red-800">
-                {{ errorMessage }}
-              </h3>
-            </div>
-          </div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <UInput
+            v-model="form.password"
+            placeholder="Enter your password"
+            :type="showPassword ? 'text' : 'password'"
+            required
+            :error="errors.password"
+            class="w-full"
+            :ui="{ trailing: 'pe-1' }"
+          >
+            <template #trailing>
+              <UButton
+                color="neutral"
+                variant="link"
+                size="sm"
+                :icon="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                :aria-pressed="showPassword"
+                aria-controls="password"
+                @click="showPassword = !showPassword"
+              />
+            </template>
+          </UInput>
         </div>
         
         <div class="pt-2">
@@ -56,7 +57,7 @@
             type="submit"
             :loading="loading"
             :disabled="loading"
-            class="w-full text-sm sm:text-base"
+            class="w-full text-sm sm:text-base flex items-center justify-center"
             size="lg"
           >
             Sign in
@@ -85,6 +86,8 @@ const errors = ref({
   email: '',
   password: ''
 });
+
+const showPassword = ref(false);
 
 const loading = computed(() => isAuthenticating);
 const errorMessage = computed(() => currentError);
@@ -129,3 +132,10 @@ const handleLogin = async () => {
   }
 };
 </script>
+
+<style>
+/* Hide the password reveal button in Edge */
+::-ms-reveal {
+  display: none;
+}
+</style>
