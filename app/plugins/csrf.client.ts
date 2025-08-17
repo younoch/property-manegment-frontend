@@ -2,7 +2,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { getToken, refreshToken } = useCsrf();
   const { isAuthenticated } = useAuth();
 
-  // Auto-refresh CSRF token every 30 minutes
+  // Auto-refresh CSRF token every 23 hours (before 24h expiry)
   let refreshInterval: NodeJS.Timeout | null = null;
 
   const startTokenRefresh = () => {
@@ -15,7 +15,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       if (isAuthenticated.value) {
         await refreshToken();
       }
-    }, 30 * 60 * 1000); // 30 minutes
+    }, 23 * 60 * 60 * 1000); // 23 hours
   };
 
   const stopTokenRefresh = () => {
@@ -26,11 +26,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   };
 
   // Handle page visibility changes to refresh token when tab becomes visible
+  // Note: This is now handled by the token manager with intelligent timing
   if (process.client) {
     document.addEventListener('visibilitychange', async () => {
       if (!document.hidden && isAuthenticated.value) {
-        // Refresh token when tab becomes visible
-        await refreshToken();
+        // Let token manager handle the refresh timing
+        // await refreshToken();
       }
     });
   }

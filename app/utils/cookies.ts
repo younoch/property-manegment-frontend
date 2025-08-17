@@ -104,23 +104,19 @@ export function logCookies(): void {
   if (typeof document === 'undefined') return; // SSR safety
   
   const cookies = getAllCookies();
-  console.log('All cookies:', cookies);
+
   
   // Log specific auth-related cookies
   const authCookies = ['access_token', 'refresh_token', 'token', 'auth_token', 'session'];
   authCookies.forEach(cookieName => {
     const value = getCookie(cookieName);
     if (value) {
-      console.log(`Auth cookie found: ${cookieName} = ${value.substring(0, 20)}...`);
+
     }
   });
   
   // Log cookie details for debugging
-  console.log('Cookie details:');
-  console.log('- document.cookie:', document.cookie);
-  console.log('- document.domain:', document.domain);
-  console.log('- window.location.hostname:', window.location.hostname);
-  console.log('- window.location.origin:', window.location.origin);
+
 }
 
 /**
@@ -130,7 +126,7 @@ export function logCookies(): void {
 export async function checkCookieAccessibility(): Promise<void> {
   if (typeof document === 'undefined') return; // SSR safety
   
-  console.log('=== Cookie Accessibility Check ===');
+
   
   // Check if we can access cookies at all
   try {
@@ -140,25 +136,23 @@ export async function checkCookieAccessibility(): Promise<void> {
     document.cookie = `${testCookie}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     
     if (canRead) {
-      console.log('✅ JavaScript can read and write cookies');
+      // JavaScript can read and write cookies
     } else {
-      console.log('❌ JavaScript cannot read cookies (might be HttpOnly)');
+      // JavaScript cannot read cookies (might be HttpOnly)
     }
   } catch (error) {
-    console.log('❌ Error accessing cookies:', error);
+    
   }
   
   // Check for common cookie issues
   const currentDomain = window.location.hostname;
   const currentOrigin = window.location.origin;
   
-  console.log('Current domain:', currentDomain);
-  console.log('Current origin:', currentOrigin);
-  console.log('Backend API URL:', process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000');
+
   
   // Check if we're on localhost vs production
   if (currentDomain === 'localhost' || currentDomain === '127.0.0.1') {
-    console.log('ℹ️ Running on localhost - cookies might have domain restrictions');
+
   }
   
   // Check for cross-origin issues
@@ -168,15 +162,15 @@ export async function checkCookieAccessibility(): Promise<void> {
     const backendOrigin = API_CONFIG.BASE_URL.replace('/api', '');
     
     if (frontendOrigin !== backendOrigin) {
-      console.log('⚠️ Cross-origin development detected');
-      console.log('Frontend origin:', frontendOrigin);
-      console.log('Backend origin:', backendOrigin);
-      console.log('Cross-origin cookies will require proper CORS setup');
+      // Cross-origin development detected
+      // Frontend origin: frontendOrigin
+      // Backend origin: backendOrigin
+      // Cross-origin cookies will require proper CORS setup
     } else {
-      console.log('✅ Same-origin development - cookies should work normally');
+      // Same-origin development - cookies should work normally
     }
   } catch (error) {
-    console.log('⚠️ Could not determine cross-origin status');
+    
   }
 }
 
@@ -186,7 +180,7 @@ export async function checkCookieAccessibility(): Promise<void> {
 export function testCookieSetting(): void {
   if (typeof document === 'undefined') return; // SSR safety
   
-  console.log('=== Testing Cookie Setting ===');
+
   
   const testCookies = [
     { name: 'test_basic', value: 'basic_value' },
@@ -202,15 +196,15 @@ export function testCookieSetting(): void {
       const readValue = getCookie(name);
       
       if (readValue === value) {
-        console.log(`✅ ${name}: Successfully set and read`);
+        // Successfully set and read
       } else {
-        console.log(`❌ ${name}: Set but couldn't read (got: ${readValue})`);
+        // Set but couldn't read
       }
       
       // Clean up
       deleteCookie(name, options);
     } catch (error) {
-      console.log(`❌ ${name}: Error setting cookie:`, error);
+      
     }
   });
 }

@@ -137,21 +137,15 @@ const formatLastAuthCheck = computed(() => {
 
 // Methods
 const testCheckAuth = async () => {
-  console.log('Testing checkAuth...');
   const result = await checkAuth();
-  console.log('Check auth result:', result);
 };
 
 const testClearError = () => {
-  console.log('Testing clearError...');
   clearError();
-  console.log('Error cleared');
 };
 
 const testSignout = async () => {
-  console.log('Testing signout...');
   const result = await signout();
-  console.log('Signout result:', result);
 };
 
 const getRoleColor = (role: string) => {
@@ -166,7 +160,6 @@ const getRoleColor = (role: string) => {
 
 // Check auth on page load
 onMounted(async () => {
-  console.log('Test page mounted, checking auth...');
   await testCheckAuth();
 });
 </script>

@@ -6,6 +6,8 @@ export interface User {
   name: string;
   phone: string;
   role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+  profile_image_url?: string;
+  is_active?: boolean;
 }
 
 export interface UserState {

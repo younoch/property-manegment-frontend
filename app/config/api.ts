@@ -81,30 +81,19 @@ const getApiConfig = () => {
 };
 
 export const API_CONFIG = getApiConfig();
-// Debug: surface computed API configuration at runtime
-try {
-  // Logs in both server and browser consoles
-  // Helpful to verify which backend/base URL and cookie strategy are active
-  console.log('[API_CONFIG]', {
-    NODE_ENV: process.env.NODE_ENV,
-    BASE_URL: API_CONFIG.BASE_URL,
-    FRONTEND_DOMAIN: process.env.NUXT_PUBLIC_FRONTEND_DOMAIN,
-    BACKEND_DOMAIN: process.env.NUXT_PUBLIC_BACKEND_DOMAIN,
-    COOKIE_DOMAIN: API_CONFIG.COOKIE_DOMAIN,
-    COOKIE_SAME_SITE: API_CONFIG.COOKIE_SAME_SITE,
-    COOKIE_SECURE: API_CONFIG.COOKIE_SECURE,
-    IS_CROSS_ORIGIN: API_CONFIG.IS_CROSS_ORIGIN
-  });
-} catch {}
 
-// API endpoints
+
+// API endpoints according to backend specification
 export const ENDPOINTS = {
   AUTH: {
     SIGNUP: '/auth/signup',
     SIGNIN: '/auth/signin',
     SIGNOUT: '/auth/signout',
     REFRESH: '/auth/refresh',
-    WHOAMI: '/auth/whoami'
+    WHOAMI: '/auth/whoami',
+    // Optional endpoints (may not exist on backend yet)
+    VALIDATE: '/auth/validate',
+    STATUS: '/auth/status'
   },
   CSRF: {
     TOKEN: '/csrf/token',

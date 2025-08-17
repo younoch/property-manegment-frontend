@@ -59,32 +59,54 @@ export const useCsrf = () => {
     inFlight.value = true;
 
     try {
-      const response = await apiClient.get<any>('/csrf/token');
-
-      let csrfToken: string | undefined;
-      if (response && typeof response === 'object') {
-        if ('token' in response && (response as any).token) csrfToken = (response as any).token as string;
-        else if ('csrf_token' in response && (response as any).csrf_token) csrfToken = (response as any).csrf_token as string;
-        else if ('csrfToken' in response && (response as any).csrfToken) csrfToken = (response as any).csrfToken as string;
-        else if ('value' in response && (response as any).value) csrfToken = (response as any).value as string;
-      } else if (typeof response === 'string' && response.length > 0) {
-        csrfToken = response;
-      }
-
-      if (csrfToken) {
-        token.value = csrfToken;
+      const { tokenManager } = await import('../services/tokenManager');
+      const maybeExisting = tokenManager.getCsrfTokenValue();
+      if (maybeExisting && !force) {
+        token.value = maybeExisting;
         lastFetch.value = new Date();
         backoffUntil.value = null;
-        return csrfToken;
+        return maybeExisting;
       }
 
-      // Cookie-based flow: treat success as valid via lastFetch
+      const fetched = await tokenManager.getCsrfToken();
+      if (fetched) {
+        token.value = fetched;
+        lastFetch.value = new Date();
+        backoffUntil.value = null;
+        return fetched;
+      }
+
+      // Cookie-based success without explicit token body
       lastFetch.value = new Date();
       backoffUntil.value = null;
       return null;
     } catch (err: any) {
       error.value = err?.data?.message || err?.message || 'Failed to get CSRF token';
       const status = err?.status || err?.response?.status;
+      
+      // If we get a 401/403 error, try to refresh the token first
+      if (status === 401 || status === 403) {
+
+        try {
+          const refreshResult = await refreshToken();
+          if (refreshResult) {
+
+            const { tokenManager } = await import('../services/tokenManager');
+            const retried = await tokenManager.getCsrfToken();
+            if (retried) {
+              token.value = retried;
+              lastFetch.value = new Date();
+              backoffUntil.value = null;
+              return retried;
+            }
+          }
+        } catch (refreshError) {
+          console.error('❌ Token refresh failed during CSRF fetch:', refreshError);
+          // If refresh fails, force navigation to login page
+          await handleAuthFailure();
+        }
+      }
+      
       backoffUntil.value = Date.now() + (status === 401 || status === 403 ? 60_000 : 10_000);
       return null;
     } finally {
@@ -94,51 +116,44 @@ export const useCsrf = () => {
   };
 
   const refreshToken = async (): Promise<string | null> => {
-    if (!token.value) return await getToken();
     if (isBackoffActive()) return null;
 
     loading.value = true;
     error.value = null;
 
     try {
-      const response = await apiClient.post<any>('/csrf/refresh', null, {
-        headers: token.value ? { 'X-CSRF-Token': token.value } : undefined
-      });
 
-      let newToken: string | undefined;
-      if (response && typeof response === 'object' && 'token' in response) newToken = (response as any).token as string;
-
-      if (newToken) token.value = newToken;
-      lastFetch.value = new Date();
-      backoffUntil.value = null;
-      return newToken || null;
+      const { tokenManager } = await import('../services/tokenManager');
+      const ok = await tokenManager.refreshCsrfToken();
+      if (ok) {
+        const value = tokenManager.getCsrfTokenValue();
+        if (value) {
+          token.value = value;
+        }
+        lastFetch.value = new Date();
+        backoffUntil.value = null;
+        return token.value;
+      }
+      return token.value;
     } catch (err: any) {
+      console.error('❌ CSRF token refresh failed:', err);
       error.value = err?.data?.message || err?.message || 'Failed to refresh CSRF token';
+      
       if (err?.status === 401) {
+
         token.value = null;
         lastFetch.value = null;
         backoffUntil.value = Date.now() + 60_000;
         return await getToken();
       }
+      
       return null;
     } finally {
       loading.value = false;
     }
   };
 
-  const protectedRequest = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
-    if (!isCacheValid.value) await getToken();
-    const response = await $fetch<T>(url, {
-      ...options,
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token.value ? { 'X-CSRF-Token': token.value } : {}),
-        ...options.headers
-      }
-    });
-    return response;
-  };
+
 
   const clearToken = () => {
     token.value = null;
@@ -159,6 +174,39 @@ export const useCsrf = () => {
     lastFetch.value = null;
   };
 
+  const handleAuthFailure = async () => {
+
+    
+    // Clear all tokens and state
+    clearToken();
+    
+    try {
+      // Clear user store
+      const { useUserStore } = await import('../stores/user');
+      const userStore = useUserStore();
+      userStore.setUser(null);
+      userStore.persistToStorage();
+      
+      // Clear auth store
+      const { useAuthStore } = await import('../stores/auth');
+      const authStore = useAuthStore();
+      authStore.clearError();
+      authStore.clearCaches();
+      
+      // Force navigation to login page
+      if (process.client) {
+        const { navigateTo } = await import('nuxt/app');
+        await navigateTo('/auth/login');
+      }
+    } catch (error) {
+      console.error('❌ Error during auth failure handling:', error);
+      // Fallback: force page reload to login
+      if (process.client) {
+        window.location.href = '/auth/login';
+      }
+    }
+  };
+
   return {
     token: readonly(token),
     loading: readonly(loading),
@@ -170,10 +218,10 @@ export const useCsrf = () => {
 
     getToken,
     refreshToken,
-    protectedRequest,
     clearToken,
     setCacheDuration,
     forceRefresh,
-    clearCache
+    clearCache,
+    handleAuthFailure
   };
 };

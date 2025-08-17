@@ -4,18 +4,20 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return;
   }
 
-  const { checkAuth } = useAuth();
   const userStore = useUserStore();
   
   // If already authenticated, redirect to dashboard
   if (userStore.isLoggedIn) {
+
     return navigateTo('/dashboard');
   }
   
-  // For auth pages, check if user is authenticated and redirect to dashboard
+  // For auth pages, only do a quick check to avoid interfering with login process
   if (to.path.startsWith('/auth/')) {
-    const result = await checkAuth();
-    if (result?.success) {
+    // Only check if we have a user in storage, don't make API calls
+    // This prevents interference with the login process
+    if (userStore.currentUser) {
+
       return navigateTo('/dashboard');
     }
     return;

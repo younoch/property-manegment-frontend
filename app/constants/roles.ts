@@ -55,3 +55,8 @@ export const getRolePermissions = (value: string): string[] => {
   const role = getRoleByValue(value);
   return role?.permissions || [];
 };
+
+export const getRoleLabel = (value: string): string => {
+  const role = getRoleByValue(value);
+  return role?.label || value;
+};

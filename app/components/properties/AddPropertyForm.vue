@@ -378,24 +378,7 @@ const onSubmit = async () => {
     // Send coordinates as numbers (international standard)
     const payload = { ...form };
     
-    // Enhanced debugging for backend issue
-    console.log('=== PROPERTY SUBMISSION DEBUG ===');
-    console.log('Full payload:', JSON.stringify(payload, null, 2));
-    console.log('Latitude:', {
-      value: payload.latitude,
-      type: typeof payload.latitude,
-      isNumber: typeof payload.latitude === 'number',
-      isFinite: Number.isFinite(payload.latitude),
-      precision: payload.latitude?.toString().split('.')[1]?.length || 0
-    });
-    console.log('Longitude:', {
-      value: payload.longitude,
-      type: typeof payload.longitude,
-      isNumber: typeof payload.longitude === 'number',
-      isFinite: Number.isFinite(payload.longitude),
-      precision: payload.longitude?.toString().split('.')[1]?.length || 0
-    });
-    console.log('=== END DEBUG ===');
+
     
     const response = await api.post<any>("/properties", payload);
     toastSuccess(response?.message || "Property created");

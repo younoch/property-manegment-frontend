@@ -150,21 +150,17 @@ import { getRoleColor } from '~/constants';
 
 const handleAdminAction = () => {
   // Handle admin-specific action
-  console.log('Admin action triggered');
 };
 
 const handleLandlordAction = () => {
   // Handle landlord-specific action
-  console.log('Landlord action triggered');
 };
 
 const handleTenantAction = () => {
   // Handle tenant-specific action
-  console.log('Tenant action triggered');
 };
 
 const handleProfileEdit = () => {
   // Handle profile editing
-  console.log('Profile edit triggered');
 };
 </script>

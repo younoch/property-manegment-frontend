@@ -7,128 +7,173 @@
         <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
       </div>
       
-      <!-- Welcome Section -->
-      <div class="px-4 py-6 sm:px-0">
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-          <div class="px-4 py-5 sm:p-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
-              Welcome back, {{ displayName }}!
-            </h3>
-            <div class="mt-2 max-w-xl text-sm text-gray-500">
-              <p>
-                You are logged in as a
-                <span class="font-medium text-primary-600">
-                  {{ userRole ? getRoleByValue(userRole)?.label : 'Unknown Role' }}
-                </span>
-              </p>
+      <!-- Client-only content to prevent SSR issues -->
+      <ClientOnly>
+        <template #default>
+          <!-- Welcome Section -->
+          <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                  Welcome back, {{ displayName }}!
+                </h3>
+                <div class="mt-2 max-w-xl text-sm text-gray-500">
+                  <p>
+                    You are logged in as a
+                    <span class="font-medium text-primary-600">
+                      {{ userRole ? getRoleByValue(userRole)?.label : 'Unknown Role' }}
+                    </span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Stats Grid -->
-      <div class="mt-8 px-4 sm:px-0">
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <!-- Properties Card -->
-          <UCard>
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <UIcon name="i-heroicons-home" class="h-8 w-8 text-primary-600" />
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Total Properties
-                  </dt>
-                  <dd class="text-lg font-medium text-gray-900">
-                    {{ stats.properties }}
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </UCard>
-
-          <!-- Tenants Card -->
-          <UCard>
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <UIcon name="i-heroicons-users" class="h-8 w-8 text-green-600" />
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Active Tenants
-                  </dt>
-                  <dd class="text-lg font-medium text-gray-900">
-                    {{ stats.tenants }}
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </UCard>
-
-          <!-- Revenue Card -->
-          <UCard>
-            <div class="flex items-center">
-              <div class="flex-shrink-0">
-                <UIcon name="i-heroicons-currency-dollar" class="h-8 w-8 text-yellow-600" />
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Monthly Revenue
-                  </dt>
-                  <dd class="text-lg font-medium text-gray-900">
-                    ${{ stats.revenue.toLocaleString() }}
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </UCard>
-        </div>
-      </div>
-
-      <!-- Recent Activity -->
-      <div class="mt-8 px-4 sm:px-0">
-        <UCard>
-          <template #header>
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
-              Recent Activity
-            </h3>
-          </template>
-          
-          <div class="flow-root">
-            <ul class="-mb-8">
-              <li v-for="(activity, index) in recentActivities" :key="activity.id" class="relative pb-8">
-                <div v-if="index !== recentActivities.length - 1" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" />
-                <div class="relative flex space-x-3">
-                  <div>
-                    <span class="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center ring-8 ring-white">
-                      <UIcon :name="activity.icon" class="h-5 w-5 text-white" />
-                    </span>
+          <!-- Stats Grid -->
+          <div class="mt-8 px-4 sm:px-0">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <!-- Properties Card -->
+              <UCard>
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <UIcon name="i-heroicons-home" class="h-8 w-8 text-primary-600" />
                   </div>
-                  <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
-                    <div>
-                      <p class="text-sm text-gray-500">
-                        {{ activity.description }}
-                      </p>
-                    </div>
-                    <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                      <time :datetime="activity.date">{{ formatDate(activity.date) }}</time>
-                    </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="text-sm font-medium text-gray-500 truncate">
+                        Total Properties
+                      </dt>
+                      <dd class="text-lg font-medium text-gray-900">
+                        {{ stats.properties }}
+                      </dd>
+                    </dl>
                   </div>
                 </div>
-              </li>
-            </ul>
+              </UCard>
+
+              <!-- Tenants Card -->
+              <UCard>
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <UIcon name="i-heroicons-users" class="h-8 w-8 text-green-600" />
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="text-sm font-medium text-gray-500 truncate">
+                        Active Tenants
+                      </dt>
+                      <dd class="text-lg font-medium text-gray-900">
+                        {{ stats.tenants }}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </UCard>
+
+              <!-- Revenue Card -->
+              <UCard>
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <UIcon name="i-heroicons-currency-dollar" class="h-8 w-8 text-yellow-600" />
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt class="text-sm font-medium text-gray-500 truncate">
+                        Monthly Revenue
+                      </dt>
+                      <dd class="text-lg font-medium text-gray-900">
+                        ${{ stats.revenue.toLocaleString() }}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </UCard>
+            </div>
           </div>
-        </UCard>
-      </div>
+
+          <!-- Recent Activity -->
+          <div class="mt-8 px-4 sm:px-0">
+            <UCard>
+              <template #header>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                  Recent Activity
+                </h3>
+              </template>
+              
+              <div class="flow-root">
+                <ul class="-mb-8">
+                  <li v-for="(activity, index) in recentActivities" :key="activity.id" class="relative pb-8">
+                    <div v-if="index !== recentActivities.length - 1" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" />
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center ring-8 ring-white">
+                          <UIcon :name="activity.icon" class="h-5 w-5 text-white" />
+                        </span>
+                      </div>
+                      <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                        <div>
+                          <p class="text-sm text-gray-500">
+                            {{ activity.description }}
+                          </p>
+                        </div>
+                        <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                          <time :datetime="activity.date">{{ formatDate(activity.date) }}</time>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </UCard>
+          </div>
+        </template>
+        
+        <!-- Fallback for SSR -->
+        <template #fallback>
+          <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <div class="animate-pulse">
+                  <div class="h-6 bg-gray-200 rounded w-1/3 mb-2"></div>
+                  <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-8 px-4 sm:px-0">
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div class="bg-white rounded-lg shadow p-6">
+                <div class="animate-pulse">
+                  <div class="h-8 w-8 bg-gray-200 rounded mb-4"></div>
+                  <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                  <div class="h-6 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow p-6">
+                <div class="animate-pulse">
+                  <div class="h-8 w-8 bg-gray-200 rounded mb-4"></div>
+                  <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                  <div class="h-6 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow p-6">
+                <div class="animate-pulse">
+                  <div class="h-8 w-8 bg-gray-200 rounded mb-4"></div>
+                  <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                  <div class="h-6 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </ClientOnly>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { useUserStore } from '../stores/user'
 import { useAuthStore } from '../stores/auth'
@@ -138,9 +183,29 @@ definePageMeta({
   middleware: 'auth'
 });
 
-const { currentUser, displayName, userRole, hasRole } = useUserStore();
-const { signout, isAuthenticating } = useAuthStore();
+// Only access stores on client side to avoid SSR issues
+const userStore = useUserStore();
+const authStore = useAuthStore();
 const router = useRouter();
+
+// Computed properties with null safety
+const currentUser = computed(() => userStore.currentUser);
+const displayName = computed(() => userStore.displayName);
+const userRole = computed(() => userStore.userRole);
+const isAuthenticated = computed(() => userStore.isLoggedIn);
+
+
+
+// Force refresh auth if no user data
+onMounted(async () => {
+  if (!currentUser.value) {
+    try {
+      const result = await authStore.checkAuth(true);
+    } catch (error) {
+      console.error('❌ Auth check failed:', error);
+    }
+  }
+});
 
 // Mock data - replace with real API calls
 const stats = ref({

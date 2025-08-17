@@ -3,6 +3,7 @@ import { useUserStore } from './user';
 import { createApiClient, createProtectedApiClient } from '../utils/api';
 import { getCookie, hasCookie, logCookies } from '../utils/cookies';
 import { getCacheDuration } from '../constants/cache';
+import { ENDPOINTS } from '../config/api';
 
 export interface AuthState {
   loading: boolean;
@@ -100,12 +101,31 @@ export const useAuthStore = defineStore('auth', {
         const response = await apiClient.post<any>('/auth/signup', userData);
         
         if (response) {
-          // Set user in store
-          userStore.setUser(response as any);
-          userStore.persistToStorage();
+          // Handle different response structures
+          let userDataFromResponse: any;
+          if (response.data) {
+            // Response has data wrapper: { data: { user info } }
+            userDataFromResponse = response.data;
+          } else if (response.user) {
+            // Response has user wrapper: { user: { user info } }
+            userDataFromResponse = response.user;
+          } else {
+            // Response is direct user data
+            userDataFromResponse = response;
+          }
           
-          this.updateLastAuthCheck();
-          return { success: true, user: response };
+          // Ensure userDataFromResponse has required fields
+          if (userDataFromResponse && (userDataFromResponse.id || userDataFromResponse.email)) {
+            // Set user in store
+            userStore.setUser(userDataFromResponse);
+            userStore.persistToStorage();
+            
+            this.updateLastAuthCheck();
+
+            return { success: true, user: userDataFromResponse };
+          } else {
+            throw new Error('Invalid user data received from server');
+          }
         }
       } catch (error: any) {
         const errorMessage = error.data?.message || error.message || 'Registration failed';
@@ -125,15 +145,38 @@ export const useAuthStore = defineStore('auth', {
       this.clearError();
       
       try {
-        const response = await apiClient.post<any>('/auth/signin', credentials);
+        const response = await apiClient.post<any>(ENDPOINTS.AUTH.SIGNIN, credentials);
         
         if (response) {
-          // Set user in store
-          userStore.setUser(response as any);
-          userStore.persistToStorage();
+          // Handle different response structures
+          let userData: any;
+          if (response.data) {
+            // Response has data wrapper: { data: { user info } }
+            userData = response.data;
+          } else if (response.user) {
+            // Response has user wrapper: { user: { user info } }
+            userData = response.user;
+          } else {
+            // Response is direct user data
+            userData = response;
+          }
           
-          this.updateLastAuthCheck();
-          return { success: true, user: response };
+          // Ensure userData has required fields
+          if (userData && (userData.id || userData.email)) {
+            // Set user in store
+            userStore.setUser(userData);
+            userStore.persistToStorage();
+            
+            // Initialize CSRF token after successful login
+            const { tokenManager } = await import('../services/tokenManager');
+            await tokenManager.getCsrfToken();
+            
+            this.updateLastAuthCheck();
+
+            return { success: true, user: userData };
+          } else {
+            throw new Error('Invalid user data received from server');
+          }
         }
       } catch (error: any) {
         const errorMessage = error.data?.message || error.message || 'Login failed';
@@ -147,15 +190,21 @@ export const useAuthStore = defineStore('auth', {
     // User logout
     async signout() {
       const userStore = useUserStore();
-      const protectedApiClient = createProtectedApiClient();
       
+
       this.setLoading(true);
       this.clearError();
       
       try {
-        await protectedApiClient.post('/auth/signout');
+        // Revoke JWT token using the new endpoint
+
+        const { tokenManager } = await import('../services/tokenManager');
+        const revokeResult = await tokenManager.revokeJwtToken();
+        
+
         
         // Clear user from store
+
         userStore.clearUser();
         userStore.clearStorage();
         
@@ -163,49 +212,53 @@ export const useAuthStore = defineStore('auth', {
         this.lastAuthCheck = null;
         this.lastCsrfCheck = null;
         
+
         return { success: true };
       } catch (error: any) {
+        console.error('[AuthStore] Signout error:', error);
         const errorMessage = error.data?.message || error.message || 'Logout failed';
         this.setError(errorMessage);
         return { success: false, error: errorMessage };
       } finally {
         this.setLoading(false);
+
       }
     },
 
-    // Check authentication status (server-validated) with smart caching
+    // Check authentication status using new /auth/validate endpoint
     async checkAuth(force: boolean = false) {
       const userStore = useUserStore();
       
       // If cache is valid and not forcing, return cached result
       if (!force && this.isAuthCacheValid) {
         const hasUser = !!userStore.currentUser;
-        console.log(`✅ Auth cache valid, skipping API call (hasUser=${hasUser})`);
+
         return { success: hasUser, user: userStore.currentUser, cached: true };
       }
-      
-      const apiClient = createApiClient();
       
       this.setLoading(true);
       this.clearError();
       
       try {
-        const response = await apiClient.get<any>('/auth/whoami');
+        // Use the new token manager to validate JWT
+        const { tokenManager } = await import('../services/tokenManager');
+        const validation = await tokenManager.validateJwtToken();
         
-        if (response && (response as any).data) {
+        if (validation.valid && validation.user) {
           // Set user in store
-          userStore.setUser((response as any).data);
+          userStore.setUser(validation.user);
           userStore.persistToStorage();
           
           this.updateLastAuthCheck();
-          return { success: true, user: (response as any).data, cached: false };
+
+          return { success: true, user: validation.user, cached: false };
+        } else {
+          // Invalid or expired JWT
+          userStore.clearUser();
+          userStore.clearStorage();
+          this.updateLastAuthCheck();
+          return { success: false, error: validation.message || 'Token validation failed', cached: false };
         }
-        
-        // No response means unauthenticated
-        userStore.clearUser();
-        userStore.clearStorage();
-        this.updateLastAuthCheck();
-        return { success: false, error: 'Not authenticated', cached: false };
       } catch (error: any) {
         userStore.clearUser();
         userStore.clearStorage();
@@ -221,7 +274,7 @@ export const useAuthStore = defineStore('auth', {
 
     // Quick authentication check using only cookies (no API call)
     checkAuthFromCookies() {
-      console.log('=== Quick auth check from cookies only ===');
+
       logCookies();
       
       const possibleAuthCookies = ['access_token', 'refresh_token', 'token', 'auth_token', 'session'];
@@ -229,28 +282,34 @@ export const useAuthStore = defineStore('auth', {
       for (const cookieName of possibleAuthCookies) {
         if (hasCookie(cookieName)) {
           const cookieValue = getCookie(cookieName);
-          console.log(`✅ Quick auth: Found ${cookieName} = ${cookieValue?.substring(0, 20)}...`);
+
           return { success: true, cookieName, cookieValue };
         }
       }
       
-      console.log('❌ Quick auth: No auth cookies found');
+
       return { success: false, error: 'No authentication cookies found' };
     },
 
-    // Refresh tokens
+    // Refresh tokens using new token manager
     async refreshTokens() {
-      const protectedApiClient = createProtectedApiClient();
-      
       this.setLoading(true);
       this.clearError();
       
       try {
-        const response = await protectedApiClient.post('/auth/refresh');
+        const { tokenManager } = await import('../services/tokenManager');
         
-        if (response) {
+        // Refresh both JWT and CSRF tokens
+        const [jwtSuccess, csrfSuccess] = await Promise.all([
+          tokenManager.refreshJwtToken(),
+          tokenManager.refreshCsrfToken()
+        ]);
+        
+        if (jwtSuccess || csrfSuccess) {
           this.updateLastAuthCheck();
           return { success: true, message: 'Tokens refreshed successfully' };
+        } else {
+          throw new Error('Failed to refresh tokens');
         }
       } catch (error: any) {
         const errorMessage = error.data?.message || error.message || 'Token refresh failed';
@@ -270,16 +329,16 @@ export const useAuthStore = defineStore('auth', {
       
       // Only validate with server if cache is invalid or doesn't exist
       if (!this.isAuthCacheValid) {
-        console.log('🔄 Initial auth check - cache invalid or missing');
+
         await this.checkAuth();
       } else {
-        console.log('✅ Initial auth check - using cached result');
+
       }
     },
 
     // Force refresh authentication (bypasses cache)
     async forceRefreshAuth() {
-      console.log('🔄 Force refreshing authentication');
+
       return await this.checkAuth(true);
     },
 
@@ -287,7 +346,7 @@ export const useAuthStore = defineStore('auth', {
     clearCaches() {
       this.lastAuthCheck = null;
       this.lastCsrfCheck = null;
-      console.log('🧹 All auth caches cleared');
+
     }
   }
 });

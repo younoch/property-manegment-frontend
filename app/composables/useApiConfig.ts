@@ -89,19 +89,7 @@ export const useApiConfig = () => {
 
   const API_CONFIG = computeConfig();
 
-  try {
-    console.log('[API_CONFIG runtime]', {
-      NODE_ENV: process.env.NODE_ENV,
-      RUNTIME_apiBase: runtimePublic.apiBase,
-      RUNTIME_frontendDomain: runtimePublic.frontendDomain,
-      RUNTIME_backendDomain: runtimePublic.backendDomain,
-      BASE_URL: API_CONFIG.BASE_URL,
-      COOKIE_DOMAIN: API_CONFIG.COOKIE_DOMAIN,
-      COOKIE_SAME_SITE: API_CONFIG.COOKIE_SAME_SITE,
-      COOKIE_SECURE: API_CONFIG.COOKIE_SECURE,
-      IS_CROSS_ORIGIN: API_CONFIG.IS_CROSS_ORIGIN
-    });
-  } catch {}
+
 
   return { API_CONFIG };
 };

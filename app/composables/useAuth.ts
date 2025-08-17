@@ -29,6 +29,7 @@ export const useAuth = () => {
   const loading = computed(() => authStore.isAuthenticating);
   const isAuthenticated = computed(() => userStore.isLoggedIn);
   const error = computed(() => authStore.currentError);
+  const isAuthCacheValid = computed(() => authStore.isAuthCacheValid);
 
   // User registration - now uses auth store
   const signup = async (userData: {
@@ -124,6 +125,7 @@ export const useAuth = () => {
     loading: readonly(loading),
     isAuthenticated: readonly(isAuthenticated),
     error: readonly(error),
+    isAuthCacheValid: readonly(isAuthCacheValid),
     
     // Methods
     signup,

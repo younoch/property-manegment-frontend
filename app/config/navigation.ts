@@ -11,7 +11,8 @@ export const sidebarNav = [
   { label: 'Maintenance', to: '/maintenance', icon: 'i-heroicons-wrench-screwdriver' },
   { label: 'Payments', to: '/payments', icon: 'i-heroicons-banknotes' },
   { label: 'Reports', to: '/reports', icon: 'i-heroicons-chart-bar' },
-  { label: 'User Management', to: '/users', icon: 'i-heroicons-identification', roles: ['super_admin'] }
+  { label: 'User Management', to: '/users', icon: 'i-heroicons-identification', roles: ['super_admin'] },
+  { label: 'Token Refresh Demo', to: '/token-refresh-demo', icon: 'i-heroicons-arrow-path', roles: ['super_admin', 'landlord', 'manager'] }
 ]
 
 

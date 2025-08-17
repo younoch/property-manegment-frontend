@@ -267,21 +267,26 @@ onMounted(() => {
 
 // Logout handler
 const handleLogout = async () => {
+
   try {
+
     const result = await signout()
+
+    
     if (result.success) {
+
       userStore.clearUser()
       userStore.clearStorage()
       sidebarOpen.value = false
       await router.push('/')
     } else {
-      console.error('Logout failed:', result.error)
+      console.error('[Layout] Logout failed:', result.error)
       userStore.clearUser()
       userStore.clearStorage()
       await router.push('/')
     }
   } catch (error) {
-    console.error('Logout error:', error)
+    console.error('[Layout] Logout error:', error)
     userStore.clearUser()
     userStore.clearStorage()
     await router.push('/')
