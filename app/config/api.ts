@@ -1,86 +1,62 @@
-// Environment-based API configuration
+import { useRuntimeConfig } from '#imports';
+// Environment-based API configuration (unified with runtime config)
 const getApiConfig = () => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const runtimePublic = useRuntimeConfig().public as unknown as {
+    apiBase?: string;
+    apiBaseUrl?: string;
+    frontendDomain?: string;
+    backendDomain?: string;
+  };
+
   const isProduction = process.env.NODE_ENV === 'production';
-  
-  // Development: Different ports to simulate different hosting
-  if (isDevelopment) {
-    const frontendPort = process.env.NUXT_PUBLIC_FRONTEND_PORT || '3000';
-    const backendPort = process.env.NUXT_PUBLIC_BACKEND_PORT || '8000';
-    const isSamePort = frontendPort === backendPort;
-    
-    if (isSamePort) {
-      // Same port development (simplest)
-      return {
-        BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000',
-        COOKIE_DOMAIN: 'localhost',
-        COOKIE_SECURE: false,
-        COOKIE_SAME_SITE: 'lax' as const,
-        CORS_CREDENTIALS: true,
-        IS_CROSS_ORIGIN: false
-      };
-    } else {
-      // Different ports development (simulating different hosting)
-      return {
-        BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
-        COOKIE_DOMAIN: 'localhost',
-        COOKIE_SECURE: false,
-        COOKIE_SAME_SITE: 'lax' as const,
-        CORS_CREDENTIALS: true,
-        IS_CROSS_ORIGIN: true
-      };
-    }
+
+  // Prefer env-provided base URL from runtime config
+  const baseFromEnv = (runtimePublic.apiBase && runtimePublic.apiBase.length > 0)
+    ? runtimePublic.apiBase
+    : (runtimePublic.apiBaseUrl && runtimePublic.apiBaseUrl.length > 0)
+    ? runtimePublic.apiBaseUrl
+    : undefined;
+
+  if (baseFromEnv) {
+    return {
+      BASE_URL: baseFromEnv,
+      COOKIE_DOMAIN: isProduction ? (runtimePublic.frontendDomain || 'yourapp.com') : 'localhost',
+      COOKIE_SECURE: !!isProduction,
+      COOKIE_SAME_SITE: (isProduction ? 'strict' : 'lax'),
+      CORS_CREDENTIALS: true,
+      IS_CROSS_ORIGIN: true
+    };
   }
-  
-  // Production: Flexible configuration
+
+  // Fallbacks when no explicit base URL provided
   if (isProduction) {
-    const frontendDomain = process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com';
-    const backendDomain = process.env.NUXT_PUBLIC_BACKEND_DOMAIN || 'api.yourapp.com';
-    
-    // Extract domain from full URLs if they contain protocol
-    const cleanFrontendDomain = frontendDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
-    const cleanBackendDomain = backendDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
-    
-    // Check if same domain hosting
-    const isSameDomain = cleanFrontendDomain === cleanBackendDomain || 
-                        cleanBackendDomain.includes(cleanFrontendDomain) ||
-                        cleanFrontendDomain.includes(cleanBackendDomain);
-    
-    if (isSameDomain) {
-      // Same domain hosting - cookies work perfectly
-      return {
-        BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || `https://${cleanBackendDomain}`,
-        COOKIE_DOMAIN: `.${cleanFrontendDomain}`,
-        COOKIE_SECURE: true,
-        COOKIE_SAME_SITE: 'strict' as const,
-        CORS_CREDENTIALS: true,
-        IS_CROSS_ORIGIN: false
-      };
-    } else {
-      // Different domains - need cross-origin cookies
-      return {
-        BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || `https://${cleanBackendDomain}`,
-        COOKIE_DOMAIN: cleanFrontendDomain,
-        COOKIE_SECURE: true,
-        COOKIE_SAME_SITE: 'none' as const,
-        CORS_CREDENTIALS: true,
-        IS_CROSS_ORIGIN: true
-      };
-    }
+    const frontendDomain = (runtimePublic.frontendDomain || 'yourapp.com')
+      .replace(/^https?:\/\//, '')
+      .replace(/\/$/, '');
+    const backendDomain = (runtimePublic.backendDomain || 'api.yourapp.com')
+      .replace(/^https?:\/\//, '')
+      .replace(/\/$/, '');
+    return {
+      BASE_URL: `https://${backendDomain}`,
+      COOKIE_DOMAIN: `.${frontendDomain}`,
+      COOKIE_SECURE: true,
+      COOKIE_SAME_SITE: 'strict',
+      CORS_CREDENTIALS: true,
+      IS_CROSS_ORIGIN: frontendDomain !== backendDomain
+    };
   }
-  
-  // Fallback
+
   return {
-    BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:3000',
+    BASE_URL: 'http://localhost:8000',
     COOKIE_DOMAIN: 'localhost',
     COOKIE_SECURE: false,
-    COOKIE_SAME_SITE: 'lax' as const,
+    COOKIE_SAME_SITE: 'lax',
     CORS_CREDENTIALS: true,
-    IS_CROSS_ORIGIN: false
+    IS_CROSS_ORIGIN: true
   };
 };
 
-export const API_CONFIG = getApiConfig();
+export const getRuntimeApiConfig = () => getApiConfig();
 
 
 // API endpoints according to backend specification

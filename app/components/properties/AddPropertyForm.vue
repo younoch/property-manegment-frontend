@@ -1,27 +1,20 @@
 <template>
-  <UModal v-model:open="isOpen" title="Add Property" :close="{
-      color: 'primary',
+  <UModal 
+    v-model:open="isOpen" 
+    title="Add Property" 
+    :ui="{  content: 'w-full sm:max-w-4xl',  header: 'p-2 sm:p-4 min-h-14', body: 'p-2 sm:p-4 ', width: 'w-full sm:max-w-4xl' }" 
+    :close="{
+      color: 'error',
       variant: 'outline',
       class: 'rounded-full'
     }">
-    <template #header>
-      <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold"></h3>
-        <UButton
-          icon="i-heroicons-x-mark"
-          color="gray"
-          variant="ghost"
-          @click="onClose"
-        />
-      </div>
-    </template>
     
     <template #body>
       <UPlaceholder class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Name" name="name" :error="errors.name">
-              <UInput v-model="form.name" placeholder="Sunset Apartments" />
+              <UInput v-model="form.name" placeholder="Sunset Apartments" class="w-full" />
             </UFormField>
     
             <UFormField
@@ -30,7 +23,7 @@
               :error="errors.address_line1"
               class="sm:col-span-2"
             >
-              <UInput v-model="form.address_line1" placeholder="123 Main Street" />
+              <UInput v-model="form.address_line1" placeholder="123 Main Street" class="w-full" />
             </UFormField>
     
             <UFormField
@@ -39,23 +32,23 @@
               :error="errors.address_line2"
               class="sm:col-span-2"
             >
-              <UInput v-model="form.address_line2" placeholder="Apt 4B" />
+              <UInput v-model="form.address_line2" placeholder="Apt 4B" class="w-full" />
             </UFormField>
     
             <UFormField label="City" name="city" :error="errors.city">
-              <UInput v-model="form.city" placeholder="New York" />
+              <UInput v-model="form.city" placeholder="New York" class="w-full" />
             </UFormField>
     
             <UFormField label="State" name="state" :error="errors.state">
-              <UInput v-model="form.state" placeholder="NY" />
+              <UInput v-model="form.state" placeholder="NY" class="w-full" />
             </UFormField>
     
             <UFormField label="Zip Code" name="zip_code" :error="errors.zip_code">
-              <UInput v-model="form.zip_code" placeholder="10001" />
+              <UInput v-model="form.zip_code" placeholder="10001" class="w-full" />
             </UFormField>
     
             <UFormField label="Country" name="country" :error="errors.country">
-              <UInput v-model="form.country" placeholder="USA" />
+              <UInput v-model="form.country" placeholder="USA" class="w-full" />
             </UFormField>
 
             <!-- Geocoding Button -->
@@ -102,6 +95,7 @@
                 type="number"
                 step="0.000001"
                 placeholder="40.7128"
+                class="w-full"
               />
             </UFormField>
     
@@ -115,6 +109,7 @@
                 type="number"
                 step="0.000001"
                 placeholder="-74.0060"
+                class="w-full"
               />
             </UFormField>
     
@@ -127,6 +122,7 @@
                 v-model="form.property_type"
                 :items="propertyTypeOptions"
                 placeholder="Select type"
+                class="w-full"
               />
             </UFormField>
     
@@ -140,6 +136,7 @@
                 type="number"
                 min="0"
                 placeholder="24"
+                class="w-full"
               />
             </UFormField>
     
@@ -153,6 +150,7 @@
                 v-model="form.description"
                 :rows="3"
                 placeholder="Modern apartment complex with amenities"
+                class="w-full"
               />
             </UFormField>
           </div>

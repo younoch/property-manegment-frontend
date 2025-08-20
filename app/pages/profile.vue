@@ -76,7 +76,7 @@
 import { ref, computed } from 'vue'
 import { ROLE_OPTIONS, getRoleColor, getRoleLabel } from '../constants'
 import { useUserStore } from '../stores/user'
-import UserProfileUpdateModal from '../components/UserProfileUpdateModal.vue'
+import UserProfileUpdateModal from '../components/profile/UserProfileUpdateModal.vue'
 
 definePageMeta({ middleware: 'auth' })
 

@@ -22,6 +22,7 @@ import type {
     const defineNuxtRouteMiddleware: typeof import('#app')['defineNuxtRouteMiddleware'];
     const definePageMeta: typeof import('#app')['definePageMeta'];
     const navigateTo: typeof import('#app')['navigateTo'];
+    const useAsyncData: typeof import('#app')['useAsyncData'];
     const useAuth: () => any;
     const useUserStore: () => any;
     const useCsrf: () => any;

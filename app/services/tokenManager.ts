@@ -171,7 +171,18 @@ export class TokenManager {
     
     try {
       // Use native fetch to access response headers per backend guidance
-      const apiConfig = (this.apiClient as any).getApiConfig?.() || (await import('../config/api')).API_CONFIG;
+      let apiConfig = (this.apiClient as any).getApiConfig?.();
+      if (!apiConfig) {
+        // Safe import: in Nitro/server where composables are not available, use getRuntimeApiConfig
+        try {
+          const { getRuntimeApiConfig } = await import('../config/api');
+          apiConfig = getRuntimeApiConfig();
+        } catch {
+          // Fallback to client composable when available
+          const { useApiConfig } = await import('../composables/useApiConfig');
+          apiConfig = useApiConfig().API_CONFIG;
+        }
+      }
       const url = `${apiConfig.BASE_URL}${ENDPOINTS.CSRF.REFRESH}`;
 
       const fetchResponse = await fetch(url, {

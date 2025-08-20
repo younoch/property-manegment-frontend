@@ -157,20 +157,23 @@ export async function checkCookieAccessibility(): Promise<void> {
   
   // Check for cross-origin issues
   try {
-    const { API_CONFIG } = await import('../config/api');
+    let baseUrl: string | undefined;
+    try {
+      const { getRuntimeApiConfig } = await import('../config/api');
+      baseUrl = getRuntimeApiConfig().BASE_URL;
+    } catch {
+      const { useApiConfig } = await import('../composables/useApiConfig');
+      baseUrl = useApiConfig().API_CONFIG.BASE_URL;
+    }
     const frontendOrigin = window.location.origin;
-    const backendOrigin = API_CONFIG.BASE_URL.replace('/api', '');
-    
+    const backendOrigin = (baseUrl || '').replace('/api', '');
     if (frontendOrigin !== backendOrigin) {
       // Cross-origin development detected
-      // Frontend origin: frontendOrigin
-      // Backend origin: backendOrigin
-      // Cross-origin cookies will require proper CORS setup
     } else {
-      // Same-origin development - cookies should work normally
+      // Same-origin development
     }
   } catch (error) {
-    
+    // ignore
   }
 }
 

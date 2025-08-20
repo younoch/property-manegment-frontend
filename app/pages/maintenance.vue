@@ -5,7 +5,7 @@
       <UButton icon="i-heroicons-wrench-screwdriver">New Request</UButton>
     </div>
     <UCard>
-      <UTable :rows="rows" :columns="columns" />
+      <UTable :data="rows" :columns="columns" />
     </UCard>
   </div>
 </template>
@@ -20,11 +20,11 @@ const columns = [
   { id: 'status', key: 'status', label: 'Status' }
 ]
 
-const rows = [
-  { ticket: 'MT-1001', property: 'Greenwood', issue: 'Leaky faucet', status: 'Open' },
-  { ticket: 'MT-1002', property: 'Maple Court', issue: 'Broken AC', status: 'In Progress' },
-  { ticket: 'MT-1003', property: 'Sunset Villas', issue: 'Electrical issue', status: 'Closed' }
-]
+const rows = reactive([
+  { id: 1, ticket: 'MT-1001', property: 'Greenwood', issue: 'Leaky faucet', status: 'Open' },
+  { id: 2, ticket: 'MT-1002', property: 'Maple Court', issue: 'Broken AC', status: 'In Progress' },
+  { id: 3, ticket: 'MT-1003', property: 'Sunset Villas', issue: 'Electrical issue', status: 'Closed' }
+])
 </script>
 
 

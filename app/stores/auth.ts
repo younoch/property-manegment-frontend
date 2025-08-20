@@ -10,8 +10,8 @@ export interface AuthState {
   error: string | null;
   lastAuthCheck: Date | null;
   lastCsrfCheck: Date | null;
-  authCacheDuration: number; // Cache duration in milliseconds
-  csrfCacheDuration: number; // CSRF cache duration in milliseconds
+  authCacheDuration: number;
+  csrfCacheDuration: number;
 }
 
 export const useAuthStore = defineStore('auth', {

@@ -8,6 +8,7 @@ export * from './leases';
 export * from './invoices';
 export * from './payments';
 export * from './documents';
+export * from './subscription';
 
 // Re-export commonly used constants for convenience
 export { USER_ROLES, ROLE_OPTIONS, getRoleByValue, getRoleColor, getRolePermissions } from './roles';

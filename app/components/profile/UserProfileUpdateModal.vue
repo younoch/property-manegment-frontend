@@ -1,20 +1,13 @@
 <template>
-  <UModal v-model:open="isOpen" title="Update Profile" :close="{
-      color: 'primary',
+  <UModal 
+    v-model:open="isOpen" 
+    title="Update Profile" 
+    :ui="{ body: 'p-3', content: 'w-full sm:max-w-3xl' }"
+   :close="{
+      color: 'error',
       variant: 'outline',
       class: 'rounded-full'
     }">
-    <template #header>
-      <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold">Update Profile</h3>
-        <UButton
-          icon="i-heroicons-x-mark"
-          color="gray"
-          variant="ghost"
-          @click="onClose"
-        />
-      </div>
-    </template>
     
     <template #body>
       <UPlaceholder class="h-fit">
@@ -190,10 +183,10 @@ import {
   maxLength,
   email
 } from "valibot";
-import { createProtectedApiClient } from "../utils/api";
-import { useApiToast } from "../composables/useApiToast";
-import { ROLE_OPTIONS, getRoleLabel } from "../constants/roles";
-import { useUserStore } from "../stores/user";
+import { createProtectedApiClient } from "../../utils/api";
+import { useApiToast } from "../../composables/useApiToast";
+import { ROLE_OPTIONS, getRoleLabel } from "../../constants/roles";
+import { useUserStore } from "../../stores/user";
 
 interface ProfileUpdatePayload {
   email: string;
