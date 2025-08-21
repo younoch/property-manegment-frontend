@@ -22,6 +22,7 @@
   },
   "include": [
     "types/vue-globals.d.ts",
+    // "types/google-charts.d",
     ".nuxt",
     "**/*.ts",
     "**/*.vue",
