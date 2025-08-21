@@ -1,6 +1,7 @@
 export interface Property {
   id: number | string;
   account_id?: number; // Made optional since backend handles it
+  portfolio_id?: number; // Owning portfolio
   name: string;
   address_line1: string;
   address_line2?: string | null;
@@ -19,6 +20,7 @@ export interface Property {
 
 export interface AddPropertyPayload {
   account_id?: number; // Made optional since backend handles it
+  portfolio_id: number; // Required: property must belong to a portfolio
   name: string;
   address_line1: string;
   address_line2?: string | null;
@@ -29,7 +31,6 @@ export interface AddPropertyPayload {
   latitude?: number | null;
   longitude?: number | null;
   property_type: string;
-  number_of_units: number;
   description?: string | null;
 }
 

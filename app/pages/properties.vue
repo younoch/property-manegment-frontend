@@ -1,47 +1,266 @@
 <template>
   <div class="max-w-6xl mx-auto p-4 sm:p-6">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-2xl font-semibold">Properties</h1>
-      <UButton icon="i-heroicons-plus" @click="isAddOpen = true">Add Property</UButton>
+    <div class="flex items-center justify-between gap-2">
+      <UTooltip
+        text="Manage your buildings and addresses. Properties contain one or more units."
+        :content="{ side: 'right' }"
+      >
+        <div class="flex gap-2 cursor-pointer">
+          <h1 class="text-2xl font-semibold">Properties</h1>
+          <UButton
+            icon="i-heroicons-information-circle"
+            color="neutral"
+            variant="ghost"
+            aria-label="About Properties"
+            class="p-1"
+          />
+        </div>
+      </UTooltip>
+      <UButton icon="i-heroicons-plus" @click="() => { formModel = null; isViewing = false; isFormOpen = true }" :disabled="!selectedPortfolioId" >Add Property</UButton>
     </div>
+
+    <div class="flex items-center gap-2 px-4 py-3.5 overflow-x-auto">
+      <UInput v-model="searchQuery" color="neutral" highlight placeholder="Search...">
+        <template v-if="searchQuery?.length" #trailing>
+          <UButton
+            color="neutral"
+            variant="link"
+            size="sm"
+            icon="i-lucide-circle-x"
+            aria-label="Clear input"
+            @click="() => { searchQuery = '' }"
+          />
+        </template>
+      </UInput>
+
+      <UButton color="primary" icon="i-lucide-search" label="Search" @click="search" />
+
+      <!-- Parent-level Portfolio Filter/Selector -->
+      <USelect
+        v-model.number="selectedPortfolioId"
+        :items="portfolioOptions"
+        placeholder="All Portfolios"
+        class="min-w-[220px]"
+      />
+    </div>
+
     <UCard>
-      <UTable :rows="rows" :columns="columns" />
+      <UTable
+        :data="rowsArray"
+        :columns="columns"
+        class="flex-1"
+        :loading="pending"
+        loading-color="primary"
+        loading-animation="carousel"
+      />
     </UCard>
 
-    <AddPropertyForm v-model:open="isAddOpen" @created="onCreated" />
+    <div class="mt-2 text-xs text-gray-500">
+      <div v-if="error">Error: {{ error?.message || error }}</div>
+    </div>
+
+    <ConfirmDeleteModal
+      :open="isDeleteOpen"
+      :loading="isDeleting"
+      title="Delete Property"
+      :message="`Are you sure you want to delete property #${deletingId}? This action cannot be undone.`"
+      @update:open="(v: boolean) => { if (!v) { isDeleteOpen = false; deletingId = null } }"
+      @confirm="confirmDelete"
+      @cancel="() => { isDeleteOpen = false; deletingId = null }"
+    />
+
+    <PropertyForm
+      v-model:open="isFormOpen"
+      :model="formModel"
+      :view="isViewing"
+      :selected-portfolio-id="selectedPortfolioId"
+      @created="onCreated"
+      @updated="onUpdated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ middleware: ['auth'] })
 
-import { ref } from 'vue'
-import AddPropertyForm from '../components/properties/AddPropertyForm.vue'
-import type { CreatedProperty } from '../../types/properties'
+import { h, resolveComponent, nextTick } from 'vue'
+import { useToast } from '#imports'
+import type { TableColumn } from '@nuxt/ui'
+import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
+import PropertyForm from '../components/properties/PropertyForm.vue'
+import { createProtectedApiClient } from '../utils/api'
+import { useAuth } from '../composables/useAuth'
 
-const columns = [
-  { id: 'name', key: 'name', label: 'Name' },
-  { id: 'units', key: 'units', label: 'Units' },
-  { id: 'city', key: 'city', label: 'City' },
-  { id: 'status', key: 'status', label: 'Status' }
+// We will pass full property items to the table (no mapping)
+
+const UButton = resolveComponent('UButton')
+const UDropdownMenu = resolveComponent('UDropdownMenu')
+
+const columns: TableColumn<any>[] = [
+  { accessorKey: 'id', header: 'ID' },
+  { accessorKey: 'name', header: 'Name' },
+  // Units: read from number_of_units or fallback to units
+  { id: 'units', header: 'Units', cell: ({ row }) => String(row.original?.number_of_units ?? row.original?.units ?? 0) },
+  { accessorKey: 'city', header: 'City' },
+  { accessorKey: 'status', header: 'Status' },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      return h(
+        'div',
+        { class: 'text-right' },
+        h(
+          UDropdownMenu,
+          {
+            content: { align: 'end' },
+            items: getRowItems(row),
+            'aria-label': 'Actions dropdown'
+          },
+          () =>
+            h(UButton, {
+              icon: 'i-lucide-ellipsis-vertical',
+              color: 'neutral',
+              variant: 'ghost',
+              class: 'ml-auto',
+              'aria-label': 'Actions dropdown'
+            })
+        )
+      )
+    }
+  }
 ]
 
-const rows = ref([
-  { name: 'Greenwood Apartments', units: 24, city: 'Seattle', status: 'Active' },
-  { name: 'Maple Court', units: 12, city: 'Portland', status: 'Active' },
-  { name: 'Sunset Villas', units: 8, city: 'San Diego', status: 'Inactive' }
-])
+const api = createProtectedApiClient()
+const { user, checkAuth } = useAuth()
+const landlordId = computed(() => {
+  const id = user.value?.id
+  return typeof id === 'string' ? Number(id) : id
+})
 
-const isAddOpen = ref(false)
-const onCreated = (created: CreatedProperty) => {
-  rows.value.unshift({
-    name: created?.name ?? 'New Property',
-    units: created?.number_of_units ?? 0,
-    city: created?.city ?? '',
-    status: 'Active'
-  })
+await checkAuth()
+
+const searchQuery = ref('')
+
+// Fetch portfolios (includes properties arrays) and derive rows from selection
+const { data: portfoliosResponse, pending, error } = await useAsyncData(
+  'landlord-portfolios',
+  async () => {
+    if (!landlordId.value) return []
+    const endpoint = `/portfolios/landlord/${landlordId.value}`
+    const res = await api.get<any>(endpoint)
+    return res
+  },
+  {
+    watch: [landlordId],
+    server: false,
+    immediate: true,
+    transform: (res: any) => {
+      const payload = res?.data ?? res
+      const list = Array.isArray(payload) ? payload : (payload?.data ?? [])
+      if (process.client) {
+        console.log('[Portfolios] Loaded:', list?.length)
+      }
+      return list
+    }
+  }
+)
+
+const portfolios = computed(() => Array.isArray(portfoliosResponse.value) ? portfoliosResponse.value : [])
+const rowsArray = computed(() => {
+  const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value) || portfolios.value[0]
+  const props = Array.isArray(selected?.properties) ? selected.properties : []
+  const q = (searchQuery.value || '').toLowerCase()
+  const filtered = q
+    ? props.filter((p: any) => String(p?.name || '').toLowerCase().includes(q) || String(p?.city || '').toLowerCase().includes(q))
+    : props
+  // Return full property objects (no mapping)
+  return filtered || []
+})
+
+// Portfolio options for AddPropertyForm
+const portfolioOptions = computed(() => (portfolios.value || []).map((p: any) => ({
+  label: p?.name ?? `Portfolio #${p?.id}`,
+  value: typeof p?.id === 'string' ? Number(p.id) : (p?.id ?? 0)
+})))
+const selectedPortfolioId = ref<number | undefined>(undefined)
+watch(portfolios, (list) => {
+  const options = (list || []).map((p: any) => (typeof p?.id === 'string' ? Number(p.id) : p?.id)).filter((id: any) => Number.isFinite(id))
+  if ((!selectedPortfolioId.value || !options.includes(selectedPortfolioId.value)) && options.length > 0) {
+    selectedPortfolioId.value = options[0]
+  }
+})
+
+const isFormOpen = ref(false)
+const formModel = ref<any | null>(null)
+const isViewing = ref(false)
+const isDeleteOpen = ref(false)
+const deletingId = ref<number | string | null>(null)
+const isDeleting = ref(false)
+
+function search() {
+  // Filtering handled by rowsArray computed
+}
+
+const toast = useToast()
+function getRowItems(row: any) {
+  return [
+    { type: 'label', label: 'Actions' },
+    { label: 'View', icon: 'i-lucide-eye', color: 'info', class: 'text-info', onSelect() {
+      formModel.value = { ...row.original }
+      isViewing.value = true
+      isFormOpen.value = true
+    } },
+    { label: 'Edit', icon: 'i-lucide-pencil', color: 'primary', class: 'text-primary', onSelect() {
+      formModel.value = { ...row.original }
+      isViewing.value = false
+      isFormOpen.value = true
+    } },
+    { type: 'separator' },
+    { label: 'Delete', icon: 'i-lucide-trash', color: 'error', class: 'text-error', onSelect() {
+      deletingId.value = row.original.id
+      isDeleteOpen.value = true
+    } }
+  ]
+}
+
+async function confirmDelete() {
+  if (!deletingId.value) return
+  try {
+    isDeleting.value = true
+    await api.delete(`/properties/${deletingId.value}`)
+    toast.add({ title: `Property #${deletingId.value} deleted`, color: 'success', icon: 'i-lucide-check' })
+    // No server refresh; remove locally from selected portfolio if present
+    const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value) || portfolios.value[0]
+    if (selected && Array.isArray(selected.properties)) {
+      const idx = selected.properties.findIndex((r: any) => r?.id === deletingId.value)
+      if (idx >= 0) selected.properties.splice(idx, 1)
+    }
+  } catch (e: any) {
+    toast.add({ title: e?.data?.message || e?.message || 'Delete failed', color: 'error', icon: 'i-lucide-x' })
+  } finally {
+    isDeleting.value = false
+    isDeleteOpen.value = false
+    deletingId.value = null
+  }
+}
+
+const onCreated = (created: any) => {
+  const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value) || portfolios.value[0]
+  if (selected) {
+    if (!Array.isArray(selected.properties)) selected.properties = []
+    // Insert full created item as-is
+    selected.properties.unshift({ ...created })
+  }
+}
+  
+const onUpdated = (updated: any) => {
+  const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value) || portfolios.value[0]
+  if (selected && Array.isArray(selected.properties)) {
+    const idx = selected.properties.findIndex((r: any) => r?.id === updated?.id)
+    if (idx >= 0) {
+      // Replace with full updated item
+      selected.properties[idx] = { ...updated }
+    }
+  }
 }
 </script>
-
-
-

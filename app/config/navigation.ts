@@ -8,6 +8,8 @@ export const topHeaderNav = [
 export const sidebarNav = [
   { label: 'Portfolios', to: '/portfolios', icon: 'i-heroicons-briefcase' },
   { label: 'Properties', to: '/properties', icon: 'i-heroicons-building-office' },
+  { label: 'Units', to: '/units', icon: 'i-heroicons-home-modern' },
+  { label: 'Leases', to: '/leases', icon: 'i-heroicons-document-text' },
   { label: 'Tenants', to: '/tenants', icon: 'i-heroicons-users' },
   { label: 'Maintenance', to: '/maintenance', icon: 'i-heroicons-wrench-screwdriver' },
   { label: 'Payments', to: '/payments', icon: 'i-heroicons-banknotes' },

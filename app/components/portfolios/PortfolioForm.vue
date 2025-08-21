@@ -1,7 +1,7 @@
 <template>
   <UModal 
     v-model:open="isOpen" 
-    title="Create Portfolio" 
+    :title="isViewing ? 'View Portfolio' : (isEditing ? 'Edit Portfolio' : 'Create Portfolio')" 
     :ui="{  content: 'w-full sm:max-w-2xl',  header: 'p-2 sm:p-4 min-h-14', body: 'p-2 sm:p-4 ', width: 'w-full sm:max-w-2xl' }" 
     :close="{
       color: 'error',
@@ -14,26 +14,27 @@
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Name" name="name" :error="errors.name" class="sm:col-span-2">
-              <UInput v-model="form.name" placeholder="Rental Portfolio A" class="w-full" />
+              <UInput v-model="form.name" :disabled="isViewing" placeholder="Rental Portfolio A" class="w-full" />
             </UFormField>
 
             <UFormField label="Subscription Plan" name="subscription_plan" :error="errors.subscription_plan">
               <USelect
                 v-model="form.subscription_plan"
                 :items="subscriptionPlanOptions"
+                :disabled="isViewing"
                 placeholder="Select plan"
                 class="w-full"
               />
             </UFormField>
 
             <UFormField label="Provider Customer ID" name="provider_customer_id" :error="errors.provider_customer_id">
-              <UInput v-model="form.provider_customer_id" placeholder="Optional external customer id" class="w-full" />
+              <UInput v-model="form.provider_customer_id" :disabled="isViewing" placeholder="Optional external customer id" class="w-full" />
             </UFormField>
           </div>
 
           <div class="flex items-center justify-end gap-2 mt-6">
-            <UButton color="gray" variant="soft" @click.prevent="onClose">Cancel</UButton>
-            <UButton type="submit" :loading="submitting">Create</UButton>
+            <UButton color="gray" variant="soft" @click.prevent="onClose">{{ isViewing ? 'Close' : 'Cancel' }}</UButton>
+            <UButton v-if="!isViewing" type="submit" :loading="submitting">{{ isEditing ? 'Save' : 'Create' }}</UButton>
           </div>
         </UForm>
       </UPlaceholder>
@@ -43,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { object, string, minLength, safeParse, optional } from 'valibot'
+import { object, string, minLength, safeParse, optional, pipe } from 'valibot'
 import { createProtectedApiClient } from '../../utils/api'
 import { useApiToast } from '../../composables/useApiToast'
 import { useAuth } from '../../composables/useAuth'
@@ -65,8 +66,12 @@ interface CreatedPortfolio {
   [key: string]: any
 }
 
-const props = defineProps<{ open: boolean }>()
-const emit = defineEmits<{ 'update:open': [value: boolean]; created: [value: CreatedPortfolio] }>()
+const props = defineProps<{ open: boolean; model?: Partial<CreatedPortfolio> | null; view?: boolean }>()
+const emit = defineEmits<{
+  'update:open': [value: boolean];
+  created: [value: CreatedPortfolio];
+  updated: [value: CreatedPortfolio];
+}>()
 
 const isOpen = computed({
   get: () => props.open,
@@ -88,9 +93,12 @@ const form = reactive<Pick<AddPortfolioPayload, 'name' | 'subscription_plan' | '
 
 const errors = reactive<Record<string, string | undefined>>({})
 
+const isEditing = computed(() => !!props.model?.id)
+const isViewing = computed(() => !!props.view)
+
 const Schema = object({
-  name: string([minLength(2, 'Name must be at least 2 characters')]),
-  subscription_plan: string([minLength(1, 'Please select a plan')]),
+  name: pipe(string(), minLength(2, 'Name must be at least 2 characters')),
+  subscription_plan: pipe(string(), minLength(1, 'Please select a plan')),
   provider_customer_id: optional(string())
 })
 
@@ -125,7 +133,13 @@ watch(
   () => props.open,
   (newValue) => {
     if (newValue) {
-      resetForm()
+      if (props.model && props.model.id) {
+        form.name = String(props.model.name || '')
+        form.subscription_plan = String(props.model.subscription_plan || 'basic')
+        form.provider_customer_id = String(props.model.provider_customer_id || '')
+      } else {
+        resetForm()
+      }
     }
   }
 )
@@ -145,10 +159,18 @@ const onSubmit = async () => {
       provider_customer_id: form.provider_customer_id || ''
     }
 
-    const response = await api.post<CreatedPortfolio>('/portfolios', payload)
-    toastSuccess(response?.message || 'Portfolio created')
-    emit('created', response?.data ?? { ...payload })
-    isOpen.value = false
+    // Update if editing, else create
+    if (isEditing.value && props.model?.id) {
+      const response = await api.patch<CreatedPortfolio>(`/portfolios/${props.model.id}`, payload)
+      toastSuccess(response?.message || 'Portfolio updated')
+      emit('updated', response?.data ?? { id: props.model.id, ...payload })
+      isOpen.value = false
+    } else {
+      const response = await api.post<CreatedPortfolio>('/portfolios', payload)
+      toastSuccess(response?.message || 'Portfolio created')
+      emit('created', response?.data ?? { ...payload })
+      isOpen.value = false
+    }
   } catch (err: any) {
     const message = err?.data?.message || err?.message || 'Failed to create portfolio'
     toastError(message)
@@ -158,5 +180,3 @@ const onSubmit = async () => {
   }
 }
 </script>
-
-
