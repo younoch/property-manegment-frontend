@@ -6,11 +6,10 @@
     :close="{
       color: 'error',
       variant: 'outline',
-      class: 'rounded-full'
-    }">
+      class: 'rounded-full'}"
+    >
     
     <template #body>
-      <UPlaceholder class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Portfolio" name="portfolio_id" :error="errors.portfolio_id">
@@ -61,7 +60,6 @@
             <UButton type="submit" :loading="submitting">Create</UButton>
           </div>
         </UForm>
-      </UPlaceholder>
     </template>
   </UModal>
 </template>

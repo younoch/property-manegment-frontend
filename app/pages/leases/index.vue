@@ -1,3 +1,4 @@
+<!-- app/pages/leases/index.vue -->
 <template>
   <div class="max-w-6xl mx-auto p-4 sm:p-6">
     <div class="flex items-center justify-between gap-2">
@@ -72,12 +73,12 @@ definePageMeta({ middleware: ['auth'] })
 
 import { h, resolveComponent, defineAsyncComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import { createProtectedApiClient } from '../utils/api'
-import { useAuth } from '../composables/useAuth'
-import { LEASE_STATUSES, getLeaseStatusColor } from '../constants/leases'
+import { createProtectedApiClient } from '../../utils/api'
+import { useAuth } from '../../composables/useAuth'
+import { LEASE_STATUSES, getLeaseStatusColor } from '../../constants/leases'
 
 // @ts-ignore - type shim for .vue handled globally
-const LeaseForm = defineAsyncComponent(() => import('../components/leases/LeaseForm.vue'))
+const LeaseForm = defineAsyncComponent(() => import('../../components/leases/LeaseForm.vue'))
 
 const UButton = resolveComponent('UButton')
 

@@ -176,7 +176,6 @@ const { data: rows, pending, error, refresh } = await useAsyncData(
         status: p?.status ? (String(p.status).charAt(0).toUpperCase() + String(p.status).slice(1)) : 'Active'
       }))
       if (process.client) {
-        console.log('[Portfolios] Mapped rows:', mapped)
         nextTick(() => console.log('[Portfolios] rows length after set:', mapped.length))
       }
       return mapped

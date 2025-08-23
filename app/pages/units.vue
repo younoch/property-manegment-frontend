@@ -1,12 +1,11 @@
 <template>
   <div class="max-w-6xl mx-auto p-4 sm:p-6">
     <div class="flex items-center justify-between gap-2">
-      <UTooltip text="Here you can add and manage the apartments or rooms you rent out. Each unit belongs to one of your properties."
+      <UTooltip 
+      text="Here you can add and manage the apartments or rooms you rent out. Each unit belongs to one of your properties."
       :content="{side: 'right'}"
-      :ui="{
-      content: 'text-sm text-primary-800 bg-white shadow-lg rounded-md p-3'
-    }"
-      >
+      :ui="{content: 'text-sm text-primary-800 bg-white shadow-lg rounded-md p-3'}"
+    >
       <div class="flex gap-2 cursor-pointer">
         <h1 class="text-2xl font-semibold">Units</h1>
         <UButton
@@ -54,6 +53,8 @@
 
     <UnitForm
       v-model:open="isFormOpen"
+      :model="formModel"
+      :view="isViewing"
       :portfolio-id="selectedPortfolioId"
       :property-id="selectedPropertyId"
       :portfolio-options="portfolioOptions"
@@ -73,8 +74,11 @@ import { createProtectedApiClient } from '../utils/api'
 // @ts-ignore - .vue type shim handles this at runtime
 const UnitForm = defineAsyncComponent(() => import('../components/units/UnitForm.vue'))
 import { useAuth } from '../composables/useAuth'
+import { getUnitStatusColor } from '../constants/units'
 
 const UButton = resolveComponent('UButton')
+const UBadge = resolveComponent('UBadge')
+const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const columns: TableColumn<any>[] = [
   { accessorKey: 'id', header: 'ID' },
@@ -83,8 +87,51 @@ const columns: TableColumn<any>[] = [
   { accessorKey: 'bedrooms', header: 'Beds' },
   { accessorKey: 'bathrooms', header: 'Baths' },
   { accessorKey: 'sqft', header: 'Sqft' },
-  { accessorKey: 'market_rent', header: 'Market Rent' }
+  { accessorKey: 'market_rent', header: 'Market Rent' },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: (cell: any) => {
+      const status = cell.getValue() as string | undefined
+      return h(
+        UBadge,
+        {
+          color: getUnitStatusColor(status || 'vacant'),
+          variant: 'soft',
+        },
+        {
+          default: () => status || 'vacant',
+        }
+      )
+    }
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      return h(
+        'div',
+        { class: 'text-right' },
+        h(
+          UDropdownMenu,
+          {
+            content: { align: 'end' },
+            items: getRowItems(row),
+            'aria-label': 'Actions dropdown'
+          },
+          () =>
+            h(UButton, {
+              icon: 'i-lucide-ellipsis-vertical',
+              color: 'neutral',
+              variant: 'ghost',
+              class: 'ml-auto',
+              'aria-label': 'Actions dropdown'
+            })
+        )
+      )
+    }
+  }
 ]
+
 
 const api = createProtectedApiClient()
 const { user, checkAuth } = useAuth()
@@ -97,6 +144,8 @@ const landlordId = computed(() => {
 
 const selectedPortfolioId = ref<number | undefined>(undefined)
 const selectedPropertyId = ref<number | undefined>(undefined)
+const isViewing = ref(false)
+const isDeleteOpen = ref(false)
 
 const { data: portfoliosResponse, pending, error } = await useAsyncData(
   'landlord-portfolios-for-units',
@@ -154,11 +203,68 @@ async function loadUnits() {
     const res = await api.get<any>(`/portfolios/${pid}/properties/${propId}/units`)
     const list = Array.isArray(res?.data) ? res.data : (res?.data?.data ?? [])
     units.value = list || []
+
   } catch (e) {
     // error toast handled in api client
   } finally {
     pendingUnits.value = false
   }
+}
+
+function getRowItems(row: any) {
+  const items = [
+    { type: 'label', label: 'Actions' },
+    {
+      label: 'View',
+      icon: 'i-lucide-eye',
+      color: 'info',
+      class: 'text-info',
+      onSelect() {
+        formModel.value = { ...row.original }
+        isViewing.value = true
+        isFormOpen.value = true
+      }
+    },
+    {
+      label: 'Edit',
+      icon: 'i-lucide-pencil',
+      color: 'primary',
+      class: 'text-primary',
+      onSelect() {
+        formModel.value = { ...row.original }
+        isViewing.value = false
+        isFormOpen.value = true
+      }
+    }
+  ]
+  if (row.original.status === 'vacant') {
+    items.push({
+      label: 'Lease unit',
+      icon: 'i-lucide-key',
+      color: 'secondary',
+      class: 'text-secondary',
+      onSelect() {
+        navigateTo(`/leases/new?unitId=${row.original.id}&propertyId=${row.original.property_id}&portfolioId=${row.original.portfolio_id}`)
+        // formModel.value = { ...row.original }
+        // isViewing.value = false
+        // isFormOpen.value = true
+      }
+    })
+  }
+  items.push(
+    { type: 'separator' },
+    {
+      label: 'Delete',
+      icon: 'i-lucide-trash',
+      color: 'error',
+      class: 'text-error',
+      onSelect() {
+        deletingId.value = row.original.id
+        isDeleteOpen.value = true
+      }
+    }
+  )
+  return items
 }
 
 watch(selectedPortfolioId, async (id, oldId) => {
@@ -185,10 +291,9 @@ const loading = computed(() => pending.value || pendingUnits.value)
 const isFormOpen = ref(false)
 const formModel = ref<any | null>(null)
 
+
 const onCreated = (created: any) => {
   units.value.unshift({ ...created })
 }
 
 </script>
-
-

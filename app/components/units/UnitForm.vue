@@ -1,3 +1,4 @@
+<!-- app/components/units -->
 <template>
   <UModal 
     v-model:open="isOpen" 
@@ -6,11 +7,10 @@
     :close="{
       color: 'error',
       variant: 'outline',
-      class: 'rounded-full'
-    }">
+      class: 'rounded-full'}"
+    >
     
     <template #body>
-      <UPlaceholder class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Portfolio" name="portfolio_id" :error="errors.portfolio_id">
@@ -34,45 +34,48 @@
             </UFormField>
 
             <UFormField label="Label" name="label" :error="errors.label">
-              <UInput v-model="form.label" placeholder="Unit 2B" class="w-full" />
+              <UInput v-model="form.label" placeholder="Unit 2B" class="w-full" :disabled="isViewing"/>
             </UFormField>
 
             <UFormField label="Bedrooms" name="bedrooms" :error="errors.bedrooms">
-              <UInput v-model.number="form.bedrooms" type="number" min="0" step="1" class="w-full" />
+              <UInput v-model.number="form.bedrooms" type="number" min="0" step="1" class="w-full" :disabled="isViewing"/>
             </UFormField>
 
             <UFormField label="Bathrooms" name="bathrooms" :error="errors.bathrooms">
-              <UInput v-model.number="form.bathrooms" type="number" min="0" step="0.5" class="w-full" />
+              <UInput v-model.number="form.bathrooms" type="number" min="0" step="0.5" class="w-full"  :disabled="isViewing"/>
             </UFormField>
 
             <UFormField label="Square Feet" name="sqft" :error="errors.sqft">
-              <UInput v-model.number="form.sqft" type="number" min="0" step="1" class="w-full" />
+              <UInput v-model.number="form.sqft" type="number" min="0" step="1" class="w-full" :disabled="isViewing" />
             </UFormField>
 
             <UFormField label="Market Rent" name="market_rent" :error="errors.market_rent">
-              <UInput v-model.number="form.market_rent" type="number" min="0" step="1" class="w-full" />
+              <UInput v-model.number="form.market_rent" type="number" min="0" step="1" class="w-full" :disabled="isViewing" />
             </UFormField>
           </div>
 
-          <div class="flex items-center justify-end gap-2 mt-6">
-            <UButton color="gray" variant="soft" @click.prevent="onClose">Cancel</UButton>
-            <UButton type="submit" :loading="submitting">Create</UButton>
+          <div class="flex items-center justify-end gap-2 mt-6" v-if="!isViewing">
+            <UButton color="gray" variant="soft" @click.prevent="onClose">{{ isViewing ? 'Close' : 'Cancel' }}</UButton>
+            <UButton type="submit" :loading="submitting">{{ isEditing ? 'Save' : 'Create' }}</UButton>
           </div>
         </UForm>
-      </UPlaceholder>
     </template>
   </UModal>
 </template>
 
 <script setup lang="ts">
-import { object, number, string, minLength, pipe, safeParse, nullable, optional } from 'valibot'
+import { object, number, string, minLength, pipe, safeParse, nullable, optional, message } from 'valibot'
 import { createProtectedApiClient } from '../../utils/api'
+import { UNIT_STATUSES } from '../../constants/units'
 
-const props = defineProps<{ open: boolean; portfolioId?: number; propertyId?: number; portfolioOptions?: any[]; propertyOptions?: any[] }>()
+const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: number; propertyId?: number; portfolioOptions?: any[]; propertyOptions?: any[] }>()
 const emit = defineEmits<{
   'update:open': [value: boolean];
   created: [value: any];
+  updated: [value: any];
 }>()
+const isEditing = computed(() => !!props.model?.id)
+const isViewing = computed(() => !!props.view)
 
 const isOpen = computed({
   get: () => props.open,
@@ -89,8 +92,26 @@ const form = reactive({
   bedrooms: 0,
   bathrooms: 0,
   sqft: 0,
-  market_rent: 0
+  market_rent: 0,
 })
+watch(
+  () => props.open,
+  (newValue) => {
+    if (newValue) {
+      if (props.model && props.model.id) {
+        form.portfolio_id = props.model.portfolio_id ?? props.portfolioId ?? 0
+        form.property_id = props.model.property_id ?? props.propertyId ?? 0
+        form.label = String(props.model.label ?? '')
+        form.bedrooms = Number(props.model.bedrooms ?? 0)
+        form.bathrooms = Number(props.model.bathrooms ?? 0)
+        form.sqft = Number(props.model.sqft ?? 0)
+        form.market_rent = Number(props.model.market_rent ?? 0)
+      } else {
+        resetForm()
+      }
+    }
+  }
+)
 
 watch(() => props.portfolioId, (id) => {
   if (typeof id === 'number' && id > 0) form.portfolio_id = id
@@ -105,7 +126,7 @@ const errors = reactive<Record<string, string | undefined>>({})
 const Schema = object({
   portfolio_id: number(),
   property_id: number(),
-  label: pipe(string(), minLength(1, 'Label is required')),
+  label: pipe(string(), minLength(1)),
   bedrooms: number(),
   bathrooms: number(),
   sqft: number(),
@@ -126,18 +147,37 @@ const validate = (state: any) => {
   return result.issues
 }
 
-const onClose = () => { isOpen.value = false }
+const resetForm = () => {
+  form.portfolio_id = props.portfolioId ?? 0
+  form.property_id = props.propertyId ?? 0
+  form.label = ''
+  form.bedrooms = 0
+  form.bathrooms = 0
+  form.sqft = 0
+  form.market_rent = 0
+}
+
+const onClose = () => {
+  isOpen.value = false
+  resetForm()
+}
 
 const onSubmit = async () => {
   const validation = validate(form)
   if (validation.length) return
   submitting.value = true
   try {
-    const portfolioId = form.portfolio_id
-    const propertyId = form.property_id
-    const response = await api.post<any>(`/portfolios/${portfolioId}/properties/${propertyId}/units`, { ...form })
-    emit('created', response?.data ?? { ...form, id: response?.data?.id })
-    isOpen.value = false
+    if (isEditing.value && props.model?.id) {
+      const response = await api.patch<any>(`/units/${props.model.id}`, { ...form })
+      emit('updated', response?.data ?? { ...form, id: props.model.id })
+      isOpen.value = false
+    } else {
+      const portfolioId = form.portfolio_id
+      const propertyId = form.property_id
+      const response = await api.post<any>(`/portfolios/${portfolioId}/properties/${propertyId}/units`, { ...form })
+      emit('created', response?.data ?? { ...form, id: response?.data?.id })
+      isOpen.value = false
+    }
   } catch (err: any) {
     // Error toast handled by api client
   } finally {
@@ -147,6 +187,7 @@ const onSubmit = async () => {
 
 const portfolioOptions = computed(() => Array.isArray(props.portfolioOptions) ? props.portfolioOptions : (form.portfolio_id ? [{ label: `Portfolio #${form.portfolio_id}`, value: form.portfolio_id }] : []))
 const propertyOptions = computed(() => Array.isArray(props.propertyOptions) ? props.propertyOptions : [])
+const statusOptions = computed(() => UNIT_STATUSES.map(s => ({ label: s.label, value: s.value })))
 
 </script>
 

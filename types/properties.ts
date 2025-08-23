@@ -18,6 +18,20 @@ export interface Property {
   updated_at?: string;
 }
 
+export interface Unit {
+  id: number | string;
+  portfolio_id: number;
+  property_id: number;
+  label: string;
+  bedrooms: number;
+  bathrooms: number;
+  sqft: number;
+  market_rent: number;
+  status: 'vacant' | 'occupied' | 'maintenance' | 'offmarket';
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface AddPropertyPayload {
   account_id?: number; // Made optional since backend handles it
   portfolio_id: number; // Required: property must belong to a portfolio
@@ -34,6 +48,18 @@ export interface AddPropertyPayload {
   description?: string | null;
 }
 
+export interface AddUnitPayload {
+  portfolio_id: number;
+  property_id: number;
+  label: string;
+  bedrooms: number;
+  bathrooms: number;
+  sqft: number;
+  market_rent: number;
+  status: 'vacant' | 'occupied' | 'maintenance' | 'offmarket';
+}
+
 export type CreatedProperty = Property;
+export type CreatedUnit = Unit;
 
 
