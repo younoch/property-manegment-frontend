@@ -5,11 +5,12 @@ import { createProtectedApiClient } from '../../utils/api'
 import { useAuth } from '../../composables/useAuth'
 import { useApiToast } from '../../composables/useApiToast'
 
+
 // Step components
-import StepUnit from '../../components/leases/StepUnit.vue'
-import StepTenants from '../../components/leases/StepTenants.vue'
-import StepDetails from '../../components/leases/StepDetails.vue'
-import StepReview from '../../components/leases/StepReview.vue'
+import StepUnit from '@/components/leases/StepUnit.vue'
+import StepTenants from '~/components/leases/StepTenants.vue'
+import StepDetails from '@/components/leases/StepDetails.vue'
+import StepReview from '@/components/leases/StepReview.vue'
 
 const api = createProtectedApiClient()
 const { checkAuth } = useAuth()
@@ -17,6 +18,7 @@ await checkAuth()
 
 const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 const { success: toastSuccess, error: toastError, info: toastInfo } = useApiToast()
 
 const prefill = reactive({
@@ -148,13 +150,13 @@ async function goNext() {
   if (activeStep.value === 0) {
     await loadUnitContext()
     if (!canLeaseThisUnit.value) {
-      useToast().add({ title: 'Unit not vacant', description: 'This unit is no longer vacant. Please pick another.', color: 'warning' })
+      toast.add({ title: 'Unit not vacant', description: 'This unit is no longer vacant. Please pick another.', color: 'warning' })
       return
     }
     if (!canGoTenants()) return
   }
   if (activeStep.value === 1 && !canGoDetails()) {
-    useToast().add({ title: 'Select tenants', description: 'Pick at least one tenant to continue.', color: 'error' })
+    toast.add({ title: 'Select tenants', description: 'Pick at least one tenant to continue.', color: 'error' })
     return
   }
   activeStep.value = Math.min(activeStep.value + 1, steps.length - 1)
@@ -176,7 +178,6 @@ function goBack() {
 
     <UStepper :items="steps" v-model="activeStep" orientation="horizontal" />
 
-    <!-- Step 0 -->
     <StepUnit
       v-if="activeStep === 0"
       :unit-info="unitInfo"

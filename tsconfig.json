@@ -1,3 +1,4 @@
+// tsconfig.json
 {
   // Nuxt official TypeScript setup: https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
@@ -18,8 +19,8 @@
       "#imports": ["./.nuxt/imports.d.ts"],
       "#app": ["./.nuxt/types/app"],
       "#build": ["./.nuxt/types/build"],
-      "~/*": ["./*"],
-      "@/*": ["./*"]
+      "@/*": ["app/*"],
+      "~/*": ["app/*"],
     }
   },
   "include": [

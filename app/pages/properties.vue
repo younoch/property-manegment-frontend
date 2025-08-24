@@ -100,7 +100,7 @@ const columns: TableColumn<any>[] = [
   { accessorKey: 'id', header: 'ID' },
   { accessorKey: 'name', header: 'Name' },
   // Units: read from number_of_units or fallback to units
-  { id: 'units', header: 'Units', cell: ({ row }) => String(row.original?.number_of_units ?? row.original?.units ?? 0) },
+  { accessorKey: 'units', header: 'Units', cell: ({ row }) => String(row.original?.number_of_units ?? row.original?.units ?? 0) },
   { accessorKey: 'city', header: 'City' },
   { accessorKey: 'status', header: 'Status' },
   {

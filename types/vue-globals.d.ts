@@ -1,3 +1,4 @@
+// types/vue-globals.d.ts
 import type {
     Ref,
     ComputedRef,

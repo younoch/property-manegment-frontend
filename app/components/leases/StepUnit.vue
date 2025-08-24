@@ -1,4 +1,6 @@
 <script setup lang="ts">
+
+import { getUnitStatusColor } from '@/constants/units'
 const props = defineProps<{
   unitInfo: any | null
   unitLoading: boolean
@@ -37,7 +39,7 @@ const fmtBDT = (n: number | string | null | undefined) =>
           <span class="text-gray-400">(#{{ unitInfo.id }})</span>
         </div>
         <UBadge
-          :color="unitInfo.status === 'vacant' ? 'primary' : unitInfo.status === 'occupied' ? 'secondary' : unitInfo.status === 'maintenance' ? 'warning' : 'neutral'"
+          :color="getUnitStatusColor(unitInfo.status)"
           variant="soft"
           class="capitalize"
         >

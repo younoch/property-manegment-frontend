@@ -75,6 +75,7 @@ import { LEASE_STATUSES, getLeaseStatusColor } from '../../constants/leases'
 
 const UButton = resolveComponent('UButton')
 const ULink = resolveComponent('ULink')
+const UBadge = resolveComponent('UBadge')
 
 const columns: TableColumn<any>[] = [
   {
@@ -94,7 +95,14 @@ const columns: TableColumn<any>[] = [
   { accessorKey: 'end_date', header: 'End' },
   { accessorKey: 'rent', header: 'Rent' },
   { accessorKey: 'deposit', header: 'Deposit' },
-  { accessorKey: 'status', header: 'Status' }
+  { accessorKey: 'status', header: 'Status', 
+    cell: ({ row }) => 
+      h(
+        UBadge,
+        { color: getLeaseStatusColor(row.original.status), variant: 'soft', class: 'capitalize' },
+        () => row.original.status || 'draft'
+      )
+  },
 ]
 
 const api = createProtectedApiClient()

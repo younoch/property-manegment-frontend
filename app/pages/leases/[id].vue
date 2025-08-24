@@ -5,7 +5,7 @@
       <div>
         <div class="flex items-center gap-3">
           <h1 class="text-2xl font-semibold">Lease #{{ leaseId }}</h1>
-          <UBadge :color="statusColor(lease?.status)" variant="soft" class="capitalize">
+          <UBadge :color="getLeaseStatusColor(lease?.status)" variant="soft" class="capitalize">
             {{ lease?.status || 'draft' }}
           </UBadge>
         </div>
@@ -236,6 +236,7 @@ import { createProtectedApiClient } from '../../utils/api'
 import { useAuth } from '../../composables/useAuth'
 import { useApiToast } from '../../composables/useApiToast'
 import type { TabsItem } from '@nuxt/ui'
+import { getLeaseStatusColor } from '../../constants/leases'
 
 const api = createProtectedApiClient()
 const { checkAuth } = useAuth()
@@ -266,15 +267,15 @@ const invoices = ref<any[]>([])
 const payments = ref<any[]>([])
 
 // Tabs
-const tab = ref(0)
 
 const tabItems = [
-  { label: 'Overview',  icon: 'i-lucide-layout-dashboard', slot: 'overview'  as const },
-  { label: 'Invoices',  icon: 'i-lucide-receipt',          slot: 'invoices'  as const },
-  { label: 'Payments',  icon: 'i-lucide-banknote',         slot: 'payments'  as const },
-  { label: 'Tenants',   icon: 'i-lucide-users',            slot: 'tenants'   as const },
-  { label: 'Documents', icon: 'i-lucide-file',             slot: 'documents' as const }
+  { label: 'Overview',  icon: 'i-lucide-layout-dashboard', value: 'overview', slot: 'overview'  as const },
+  { label: 'Invoices',  icon: 'i-lucide-receipt', value: 'invoices', slot: 'invoices'  as const },
+  { label: 'Payments',  icon: 'i-lucide-banknote', value: 'payments', slot: 'payments'  as const },
+  { label: 'Tenants',   icon: 'i-lucide-users', value: 'tenants', slot: 'tenants'   as const },
+  { label: 'Documents', icon: 'i-lucide-file', value: 'documents', slot: 'documents' as const }
 ] satisfies TabsItem[]
+const tab = ref<String>(tabItems[0]?.value as String ?? 'overview')
 
 // formatters
 const fmtBDT = (n: number | string | null | undefined) =>
@@ -284,15 +285,6 @@ const fmtBDT = (n: number | string | null | undefined) =>
 
 const fmtDate = (iso?: string) =>
   iso ? new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Dhaka' }).format(new Date(iso)) : '—'
-
-const statusColor = (s?: string) => {
-  switch (s) {
-    case 'active': return 'primary'
-    case 'draft': return 'neutral'
-    case 'ended': return 'secondary'
-    default: return 'neutral'
-  }
-}
 
 // load lease + related
 async function reload() {

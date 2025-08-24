@@ -15,31 +15,31 @@ export const LEASE_STATUSES: LeaseStatus[] = [
   {
     value: 'draft',
     label: 'Draft',
-    color: 'gray',
+    color: 'neutral', // gray badge
     description: 'Lease is in draft form, not yet active'
   },
   {
     value: 'active',
     label: 'Active',
-    color: 'green',
+    color: 'primary', // blue (theme primary)
     description: 'Lease is currently active and in force'
   },
   {
     value: 'ended',
     label: 'Ended',
-    color: 'blue',
+    color: 'success', // green = completed successfully
     description: 'Lease has ended naturally'
   },
   {
     value: 'evicted',
     label: 'Evicted',
-    color: 'red',
+    color: 'error', // red = negative outcome
     description: 'Tenant was evicted from the property'
   },
   {
     value: 'broken',
     label: 'Broken',
-    color: 'orange',
+    color: 'warning', // amber/yellow = caution
     description: 'Lease was broken by either party'
   }
 ];
@@ -68,11 +68,9 @@ export const getLeaseStatusByValue = (value: string): LeaseStatus | undefined =>
 
 export const getLeaseStatusColor = (value: string): string => {
   const status = getLeaseStatusByValue(value);
-  return status?.color || 'gray';
+  return status?.color || 'neutral';
 };
 
 export const getLeaseChargeCadenceByValue = (value: string): LeaseChargeCadence | undefined => {
   return LEASE_CHARGE_CADENCES.find(cadence => cadence.value === value);
 };
-
-

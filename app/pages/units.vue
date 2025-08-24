@@ -71,8 +71,7 @@ definePageMeta({ middleware: ['auth'] })
 import { h, resolveComponent, defineAsyncComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { createProtectedApiClient } from '../utils/api'
-// @ts-ignore - .vue type shim handles this at runtime
-const UnitForm = defineAsyncComponent(() => import('../components/units/UnitForm.vue'))
+const UnitForm = defineAsyncComponent(() => import('~/components/units/UnitForm.vue'))
 import { useAuth } from '../composables/useAuth'
 import { getUnitStatusColor } from '../constants/units'
 

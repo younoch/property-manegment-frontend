@@ -1,3 +1,4 @@
+// nuxt.config.ts
 import 'dotenv/config'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -5,12 +6,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   components: [
     { path: '~/components', pathPrefix: false },
-    { path: '~/app/components', pathPrefix: false }
   ],
   modules: ['@nuxt/ui', '@pinia/nuxt'],
   css: [
     '~/assets/css/main.css'
   ],
+  srcDir: 'app',
   runtimeConfig: {
     public: {
       // Support both apiBase and apiBaseUrl to match env var NUXT_PUBLIC_API_BASE_URL

@@ -95,8 +95,7 @@ import { useAuth } from '../composables/useAuth'
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
-// @ts-ignore - type shim for .vue handled globally
-const TenantForm = defineAsyncComponent(() => import('../components/tenants/TenantForm.vue'))
+const TenantForm = defineAsyncComponent(() => import('@/components/tenants/TenantForm.vue'))
 
 const columns: TableColumn<any>[] = [
   { accessorKey: 'id', header: 'ID' },
