@@ -17,7 +17,6 @@ import type {
 
     // Nuxt composables
     const useState: typeof import('#app')['useState'];
-    const computed: typeof import('vue')['computed'];
     const defineNuxtPlugin: typeof import('#app')['defineNuxtPlugin'];
     const defineNuxtRouteMiddleware: typeof import('#app')['defineNuxtRouteMiddleware'];
     const definePageMeta: typeof import('#app')['definePageMeta'];

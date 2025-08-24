@@ -67,129 +67,130 @@
     </UCard>
 
     <!-- Tabs -->
-    <UTabs v-model="tab" :items="tabs" class="w-full" />
+    <UTabs v-model="tab" :items="tabItems" variant="link" :ui="{ trigger: 'grow' }" class="gap-4 w-full">
 
-    <div v-if="tab === 0">
       <!-- Overview -->
-      <UCard>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <h3 class="text-sm font-medium mb-2">Dates</h3>
-            <div class="text-sm text-gray-600">
-              Start: <span class="font-medium">{{ lease?.start_date }}</span><br>
-              End: <span class="font-medium">{{ lease?.end_date || '—' }}</span>
+      <template #overview>
+        <UCard>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-sm font-medium mb-2">Dates</h3>
+              <div class="text-sm text-gray-600">
+                Start: <span class="font-medium">{{ lease?.start_date }}</span><br>
+                End: <span class="font-medium">{{ lease?.end_date || '—' }}</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium mb-2">Finance</h3>
+              <div class="text-sm text-gray-600">
+                Rent: <span class="font-medium">{{ fmtBDT(lease?.rent) }}</span><br>
+                Deposit: <span class="font-medium">{{ fmtBDT(lease?.deposit) }}</span><br>
+                Billing Day: <span class="font-medium">{{ lease?.billing_day }}</span>
+                · Grace: <span class="font-medium">{{ lease?.grace_days }}d</span>
+              </div>
+            </div>
+
+            <div class="sm:col-span-2">
+              <h3 class="text-sm font-medium mb-2">Tenants</h3>
+              <div v-if="(lease?.leaseTenants || []).length === 0" class="text-sm text-gray-500">No tenants linked.</div>
+              <ul v-else class="text-sm text-gray-700 list-disc list-inside">
+                <li v-for="t in lease.leaseTenants" :key="t.id">
+                  {{ t.tenant.first_name }} {{ t.tenant.last_name }}
+                  <span v-if="t.tenant.phone" class="text-gray-500">· {{ t.tenant.phone }}</span>
+                  <span v-if="t.tenant.email" class="text-gray-500">· {{ t.tenant.email }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="sm:col-span-2">
+              <h3 class="text-sm font-medium mb-2">Notes</h3>
+              <p class="text-sm text-gray-600 whitespace-pre-wrap">{{ lease?.notes || '—' }}</p>
             </div>
           </div>
-          <div>
-            <h3 class="text-sm font-medium mb-2">Finance</h3>
-            <div class="text-sm text-gray-600">
-              Rent: <span class="font-medium">{{ fmtBDT(lease?.rent) }}</span><br>
-              Deposit: <span class="font-medium">{{ fmtBDT(lease?.deposit) }}</span><br>
-              Billing Day: <span class="font-medium">{{ lease?.billing_day }}</span>
-              · Grace: <span class="font-medium">{{ lease?.grace_days }}d</span>
-            </div>
-          </div>
+        </UCard>
+      </template>
 
-          <div class="sm:col-span-2">
-            <h3 class="text-sm font-medium mb-2">Tenants</h3>
-            <div v-if="(lease?.tenants || []).length === 0" class="text-sm text-gray-500">No tenants linked.</div>
-            <ul v-else class="text-sm text-gray-700 list-disc list-inside">
-              <li v-for="t in lease.tenants" :key="t.id">
-                {{ t.first_name }} {{ t.last_name }}
-                <span v-if="t.phone" class="text-gray-500">· {{ t.phone }}</span>
-                <span v-if="t.email" class="text-gray-500">· {{ t.email }}</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="sm:col-span-2">
-            <h3 class="text-sm font-medium mb-2">Notes</h3>
-            <p class="text-sm text-gray-600 whitespace-pre-wrap">{{ lease?.notes || '—' }}</p>
-          </div>
-        </div>
-      </UCard>
-    </div>
-
-    <div v-else-if="tab === 1">
       <!-- Invoices -->
-      <UCard>
-        <div class="text-sm text-gray-500" v-if="invoices.length === 0">No invoices yet.</div>
-        <div v-else class="overflow-hidden rounded-md ring-1 ring-black/5 dark:ring-white/10">
-          <table class="w-full text-sm">
-            <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
-              <tr>
-                <th class="py-2 px-3 text-left">Invoice</th>
-                <th class="py-2 px-3 text-left">Type</th>
-                <th class="py-2 px-3 text-left">Period</th>
-                <th class="py-2 px-3 text-right">Amount</th>
-                <th class="py-2 px-3 text-left">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100/70 dark:divide-white/10">
-              <tr v-for="inv in invoices" :key="inv.id" class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition">
-                <td class="py-2 px-3 font-medium">#{{ inv.id }}</td>
-                <td class="py-2 px-3 capitalize">{{ inv.type || 'rent' }}</td>
-                <td class="py-2 px-3">{{ inv.period || '—' }}</td>
-                <td class="py-2 px-3 text-right font-medium">{{ fmtBDT(inv.amount) }}</td>
-                <td class="py-2 px-3">
-                  <UBadge :color="inv.status === 'paid' ? 'primary' : inv.status === 'overdue' ? 'warning' : 'neutral'" variant="soft" class="capitalize">
-                    {{ inv.status || 'open' }}
-                  </UBadge>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </UCard>
-    </div>
+      <template #invoices>
+        <UCard>
+          <div class="text-sm text-gray-500" v-if="invoices.length === 0">No invoices yet.</div>
+          <div v-else class="overflow-hidden rounded-md ring-1 ring-black/5 dark:ring-white/10">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
+                <tr>
+                  <th class="py-2 px-3 text-left">Invoice</th>
+                  <th class="py-2 px-3 text-left">Type</th>
+                  <th class="py-2 px-3 text-left">Period</th>
+                  <th class="py-2 px-3 text-right">Amount</th>
+                  <th class="py-2 px-3 text-left">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100/70 dark:divide-white/10">
+                <tr v-for="inv in invoices" :key="inv.id" class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition">
+                  <td class="py-2 px-3 font-medium">#{{ inv.id }}</td>
+                  <td class="py-2 px-3 capitalize">{{ inv.type || 'rent' }}</td>
+                  <td class="py-2 px-3">{{ inv.period || '—' }}</td>
+                  <td class="py-2 px-3 text-right font-medium">{{ fmtBDT(inv.amount) }}</td>
+                  <td class="py-2 px-3">
+                    <UBadge :color="inv.status === 'paid' ? 'primary' : inv.status === 'overdue' ? 'warning' : 'neutral'" variant="soft" class="capitalize">
+                      {{ inv.status || 'open' }}
+                    </UBadge>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </UCard>
+      </template>
 
-    <div v-else-if="tab === 2">
       <!-- Payments -->
-      <UCard>
-        <div class="text-sm text-gray-500" v-if="payments.length === 0">No payments yet.</div>
-        <div v-else class="overflow-hidden rounded-md ring-1 ring-black/5 dark:ring-white/10">
-          <table class="w-full text-sm">
-            <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
-              <tr>
-                <th class="py-2 px-3 text-left">Payment</th>
-                <th class="py-2 px-3 text-left">Method</th>
-                <th class="py-2 px-3 text-left">Date</th>
-                <th class="py-2 px-3 text-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100/70 dark:divide-white/10">
-              <tr v-for="p in payments" :key="p.id" class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition">
-                <td class="py-2 px-3 font-medium">#{{ p.id }}</td>
-                <td class="py-2 px-3 capitalize">{{ (p.method || '').replace('_',' ') }}</td>
-                <td class="py-2 px-3">{{ fmtDate(p.at || p.created_at) }}</td>
-                <td class="py-2 px-3 text-right font-medium">{{ fmtBDT(p.amount) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </UCard>
-    </div>
+      <template #payments>
+        <UCard>
+          <div class="text-sm text-gray-500" v-if="payments.length === 0">No payments yet.</div>
+          <div v-else class="overflow-hidden rounded-md ring-1 ring-black/5 dark:ring-white/10">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
+                <tr>
+                  <th class="py-2 px-3 text-left">Payment</th>
+                  <th class="py-2 px-3 text-left">Method</th>
+                  <th class="py-2 px-3 text-left">Date</th>
+                  <th class="py-2 px-3 text-right">Amount</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100/70 dark:divide-white/10">
+                <tr v-for="p in payments" :key="p.id" class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition">
+                  <td class="py-2 px-3 font-medium">#{{ p.id }}</td>
+                  <td class="py-2 px-3 capitalize">{{ (p.method || '').replace('_',' ') }}</td>
+                  <td class="py-2 px-3">{{ fmtDate(p.at || p.created_at) }}</td>
+                  <td class="py-2 px-3 text-right font-medium">{{ fmtBDT(p.amount) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </UCard>
+      </template>
 
-    <div v-else-if="tab === 3">
       <!-- Tenants -->
-      <UCard>
-        <div class="text-sm text-gray-500" v-if="(lease?.tenants || []).length === 0">No tenants linked.</div>
-        <ul v-else class="text-sm text-gray-700 list-disc list-inside">
-          <li v-for="t in lease.tenants" :key="t.id">
-            {{ t.first_name }} {{ t.last_name }}
-            <span v-if="t.phone" class="text-gray-500">· {{ t.phone }}</span>
-            <span v-if="t.email" class="text-gray-500">· {{ t.email }}</span>
-          </li>
-        </ul>
-      </UCard>
-    </div>
+      <template #tenants>
+        <UCard>
+          <div class="text-sm text-gray-500" v-if="(lease?.leaseTenants || []).length === 0">No tenants linked.</div>
+          <ul v-else class="text-sm text-gray-700 list-disc list-inside">
+            <li v-for="t in lease.leaseTenants" :key="t.id">
+              {{ t.tenant.first_name }} {{ t.tenant.last_name }}
+              <span v-if="t.tenant.phone" class="text-gray-500">· {{ t.tenant.phone }}</span>
+              <span v-if="t.tenant.email" class="text-gray-500">· {{ t.tenant.email }}</span>
+            </li>
+          </ul>
+        </UCard>
+      </template>
 
-    <div v-else>
       <!-- Documents -->
-      <UCard>
-        <div class="text-sm text-gray-500">No documents yet.</div>
-      </UCard>
-    </div>
+      <template #documents>
+        <UCard>
+          <div class="text-sm text-gray-500">No documents yet.</div>
+        </UCard>
+      </template>
+    </UTabs>
 
     <!-- Activate modal -->
     <UModal v-model:open="openActivate" title="Activate Lease">
@@ -234,13 +235,13 @@ definePageMeta({ middleware: ['auth'] })
 import { createProtectedApiClient } from '../../utils/api'
 import { useAuth } from '../../composables/useAuth'
 import { useApiToast } from '../../composables/useApiToast'
+import type { TabsItem } from '@nuxt/ui'
 
 const api = createProtectedApiClient()
 const { checkAuth } = useAuth()
 await checkAuth()
 
 const route = useRoute()
-const router = useRouter()
 const { success: toastSuccess, error: toastError } = useApiToast()
 
 const leaseId = Number(route.params.id)
@@ -266,13 +267,14 @@ const payments = ref<any[]>([])
 
 // Tabs
 const tab = ref(0)
-const tabs = [
-  { label: 'Overview' },
-  { label: 'Invoices' },
-  { label: 'Payments' },
-  { label: 'Tenants' },
-  { label: 'Documents' }
-]
+
+const tabItems = [
+  { label: 'Overview',  icon: 'i-lucide-layout-dashboard', slot: 'overview'  as const },
+  { label: 'Invoices',  icon: 'i-lucide-receipt',          slot: 'invoices'  as const },
+  { label: 'Payments',  icon: 'i-lucide-banknote',         slot: 'payments'  as const },
+  { label: 'Tenants',   icon: 'i-lucide-users',            slot: 'tenants'   as const },
+  { label: 'Documents', icon: 'i-lucide-file',             slot: 'documents' as const }
+] satisfies TabsItem[]
 
 // formatters
 const fmtBDT = (n: number | string | null | undefined) =>

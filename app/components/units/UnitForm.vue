@@ -67,6 +67,7 @@
 import { object, number, string, minLength, pipe, safeParse, nullable, optional, message } from 'valibot'
 import { createProtectedApiClient } from '../../utils/api'
 import { UNIT_STATUSES } from '../../constants/units'
+import { useApiToast } from '../../composables/useApiToast'
 
 const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: number; propertyId?: number; portfolioOptions?: any[]; propertyOptions?: any[] }>()
 const emit = defineEmits<{
@@ -74,6 +75,8 @@ const emit = defineEmits<{
   created: [value: any];
   updated: [value: any];
 }>()
+
+const { success: toastSuccess, error: toastError } = useApiToast()
 const isEditing = computed(() => !!props.model?.id)
 const isViewing = computed(() => !!props.view)
 
@@ -175,6 +178,7 @@ const onSubmit = async () => {
       const portfolioId = form.portfolio_id
       const propertyId = form.property_id
       const response = await api.post<any>(`/portfolios/${portfolioId}/properties/${propertyId}/units`, { ...form })
+      toastSuccess(response?.message || 'unit updated')
       emit('created', response?.data ?? { ...form, id: response?.data?.id })
       isOpen.value = false
     }

@@ -17,7 +17,12 @@
           />
         </div>
       </UTooltip>
-      <UButton icon="i-heroicons-plus" :disabled="!selectedPortfolioId || !selectedUnitId" @click="() => { formModel = null; isFormOpen = true }">Add Lease</UButton>
+      <UButton 
+        icon="i-heroicons-plus" 
+        :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
+        :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
+      >Add Lease
+      </UButton>
     </div>
 
     <div class="flex items-center gap-2 px-4 py-3.5 overflow-x-auto">
@@ -56,34 +61,35 @@
     <div class="mt-2 text-xs text-gray-500">
       <div v-if="error">Error: {{ error?.message || error }}</div>
     </div>
-
-    <LeaseForm
-      v-model:open="isFormOpen"
-      :portfolio-id="selectedPortfolioId"
-      :unit-id="selectedUnitId"
-      :portfolio-options="portfolioOptions"
-      :unit-options="unitOptions"
-      @created="onCreated"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ middleware: ['auth'] })
 
-import { h, resolveComponent, defineAsyncComponent } from 'vue'
+import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { createProtectedApiClient } from '../../utils/api'
 import { useAuth } from '../../composables/useAuth'
 import { LEASE_STATUSES, getLeaseStatusColor } from '../../constants/leases'
 
-// @ts-ignore - type shim for .vue handled globally
-const LeaseForm = defineAsyncComponent(() => import('../../components/leases/LeaseForm.vue'))
-
 const UButton = resolveComponent('UButton')
+const ULink = resolveComponent('ULink')
 
 const columns: TableColumn<any>[] = [
-  { accessorKey: 'id', header: 'ID' },
+  {
+    accessorKey: 'id',
+    header: 'ID',
+    cell: ({ row }) =>
+      h(
+        ULink,
+        { 
+          to: `/leases/${row.original.id}`, 
+          class: 'text-primary-600 hover:underline cursor-pointer' 
+        },
+        () => `#${row.original.id}`
+      )
+  },
   { accessorKey: 'start_date', header: 'Start' },
   { accessorKey: 'end_date', header: 'End' },
   { accessorKey: 'rent', header: 'Rent' },
@@ -198,12 +204,8 @@ watch(selectedUnitId, async () => {
 const rowsArray = computed(() => leases.value || [])
 const loading = computed(() => pending.value || pendingLeases.value)
 
-const isFormOpen = ref(false)
-const formModel = ref<any | null>(null)
 
-const onCreated = (created: any) => {
-  leases.value.unshift({ ...created })
-}
+
 
 </script>
 

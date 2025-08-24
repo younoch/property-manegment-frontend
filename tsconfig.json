@@ -17,12 +17,13 @@
     "paths": {
       "#imports": ["./.nuxt/imports.d.ts"],
       "#app": ["./.nuxt/types/app"],
-      "#build": ["./.nuxt/types/build"]
+      "#build": ["./.nuxt/types/build"],
+      "~/*": ["./*"],
+      "@/*": ["./*"]
     }
   },
   "include": [
-    "types/vue-globals.d.ts",
-    // "types/google-charts.d",
+    "types/**/*.d.ts",
     ".nuxt",
     "**/*.ts",
     "**/*.vue",

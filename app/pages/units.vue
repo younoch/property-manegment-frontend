@@ -245,9 +245,6 @@ function getRowItems(row: any) {
       class: 'text-secondary',
       onSelect() {
         navigateTo(`/leases/new?unitId=${row.original.id}&propertyId=${row.original.property_id}&portfolioId=${row.original.portfolio_id}`)
-        // formModel.value = { ...row.original }
-        // isViewing.value = false
-        // isFormOpen.value = true
       }
     })
   }
