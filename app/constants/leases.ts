@@ -27,7 +27,7 @@ export const LEASE_STATUSES: LeaseStatus[] = [
   {
     value: 'ended',
     label: 'Ended',
-    color: 'success', // green = completed successfully
+    color: 'secondary', // green = completed successfully
     description: 'Lease has ended naturally'
   },
   {
