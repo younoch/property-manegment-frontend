@@ -41,6 +41,40 @@ const unitInfo = ref<any | null>(null)
 const unitLoading = ref(false)
 const unitError = ref<string | null>(null)
 
+/** Details */
+const details = reactive({
+  start_date: '',
+  end_date: '',
+  rent: 0,
+  deposit: 0,
+  billing_day: 1,
+  grace_days: 3,
+  late_fee_flat: 0,
+  late_fee_percent: 0,
+  notes: '',
+  market_rent: null,
+  timezone: ''
+})
+
+function updateDetails(newDetails: any) {
+  // Only update the fields we expect in the details object
+  const expectedFields = [
+    'start_date', 'end_date', 'rent', 'deposit', 'billing_day',
+    'grace_days', 'late_fee_flat', 'late_fee_percent', 'notes'
+  ]
+  
+  // Create a clean object with only the expected fields
+  const cleanDetails: Record<string, any> = {}
+  expectedFields.forEach(field => {
+    if (field in newDetails) {
+      cleanDetails[field] = newDetails[field]
+    }
+  })
+  
+  // Apply the cleaned details
+  Object.assign(details, cleanDetails)
+}
+
 async function loadUnitContext() {
   unitInfo.value = null
   unitError.value = null
@@ -54,6 +88,8 @@ async function loadUnitContext() {
       bathrooms: raw?.bathrooms != null ? Number(raw.bathrooms) : null,
       market_rent: raw?.market_rent != null ? Number(raw.market_rent) : null
     }
+    details.rent = unitInfo.value.market_rent || 0
+    details.deposit = unitInfo.value.market_rent || 0
   } catch (e: any) {
     unitError.value = e?.message || 'Failed to load unit'
   } finally {
@@ -67,19 +103,6 @@ const canLeaseThisUnit = computed(() => unitInfo.value?.status === 'vacant')
 /** Tenants */
 type Tenant = { id: number; first_name: string; last_name: string; email?: string | null; phone?: string | null }
 const selectedTenants = ref<Tenant[]>([])
-
-/** Details */
-const details = reactive({
-  start_date: '',
-  end_date: '',
-  rent: 0,
-  deposit: 0,
-  billing_day: 1,
-  grace_days: 3,
-  late_fee_flat: 0,
-  late_fee_percent: 0,
-  notes: ''
-})
 
 /** Draft + activate */
 const creating = ref(false)
@@ -97,22 +120,37 @@ async function createDraftLeaseIfNeeded() {
   if (draftLeaseId.value) return draftLeaseId.value
   creating.value = true
   try {
-    const payload = {
-      unit_id: prefill.unitId,
-      start_date: details.start_date,
-      end_date: details.end_date,
-      rent: details.rent,
-      deposit: details.deposit,
-      billing_day: details.billing_day,
-      grace_days: details.grace_days,
-      late_fee_flat: details.late_fee_flat,
-      late_fee_percent: details.late_fee_percent,
-      notes: details.notes
+    // Create a copy of details to avoid reactivity issues
+    const leaseDetails = { ...details }
+    
+    // Format payload according to API expectations
+    const payload: Record<string, any> = {
+      start_date: leaseDetails.start_date,
+      end_date: leaseDetails.end_date,
+      rent: Number(leaseDetails.rent) || 0,
+      deposit: Number(leaseDetails.deposit) || 0,
+      billing_day: Number(leaseDetails.billing_day) || 1,
+      grace_days: Number(leaseDetails.grace_days) || 0,
+      late_fee_flat: Number(leaseDetails.late_fee_flat) || 0,
+      late_fee_percent: Number(leaseDetails.late_fee_percent) || 0,
+      notes: leaseDetails.notes || ''
     }
+    
+    // Remove any null/undefined values
+    Object.keys(payload).forEach(key => {
+      if (payload[key] === null || payload[key] === undefined) {
+        delete payload[key]
+      }
+    })
+    
+    console.log('Creating lease with payload:', payload)
     const res = await api.post<any>(`/portfolios/${prefill.portfolioId}/units/${prefill.unitId}/leases`, payload)
     const created = res?.data?.data ?? res?.data ?? res
     draftLeaseId.value = typeof created?.id === 'string' ? Number(created.id) : created?.id
     return draftLeaseId.value
+  } catch (error) {
+    console.error('Error creating lease:', error)
+    throw error
   } finally {
     creating.value = false
   }
@@ -203,7 +241,8 @@ function goBack() {
       v-else-if="activeStep === 2"
       :unit-info="unitInfo"
       :tenants="selectedTenants"
-      v-model="details"
+      :model-value="details"
+      @update:modelValue="updateDetails"
       @back="goBack"
       @next="goNext"
     />

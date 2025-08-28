@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto p-4 sm:p-6">
+  <div class="max-w-6xl mx-auto p-4 sm:p-6 overflow-scroll">
     <div class="flex items-center justify-between gap-2">
       <UTooltip
         text="Manage tenant information and contact details. Tenants are associated with portfolios and can be assigned to units."

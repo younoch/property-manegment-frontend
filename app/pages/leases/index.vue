@@ -1,6 +1,6 @@
 <!-- app/pages/leases/index.vue -->
 <template>
-  <div class="max-w-6xl mx-auto p-4 sm:p-6">
+  <div class="max-w-6xl mx-auto p-4 sm:p-6 overflow-scroll">
     <div class="flex items-center justify-between gap-2">
       <UTooltip
         text="Create and manage lease agreements for a unit."
@@ -71,7 +71,7 @@ import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { createProtectedApiClient } from '../../utils/api'
 import { useAuth } from '../../composables/useAuth'
-import { LEASE_STATUSES, getLeaseStatusColor } from '../../constants/leases'
+import { getLeaseStatusColor } from '../../constants/leases'
 
 const UButton = resolveComponent('UButton')
 const ULink = resolveComponent('ULink')
@@ -146,11 +146,29 @@ const portfolioOptions = computed(() => (portfolios.value || []).map((p: any) =>
 })))
 
 watch(portfolios, (list) => {
-  const options = (list || []).map((p: any) => (typeof p?.id === 'string' ? Number(p.id) : p?.id)).filter((id: any) => Number.isFinite(id))
-  if ((!selectedPortfolioId.value || !options.includes(selectedPortfolioId.value)) && options.length > 0) {
-    selectedPortfolioId.value = options[0]
+  const options = (list || []).map((p: any) => ({
+    id: typeof p?.id === 'string' ? Number(p.id) : p?.id,
+    properties: p?.properties || []
+  })).filter((p: any) => Number.isFinite(p.id))
+  
+  // Auto-select first portfolio if none selected
+  if ((!selectedPortfolioId.value || !options.some((p: any) => p.id === selectedPortfolioId.value)) && options.length > 0) {
+    const firstPortfolio = options[0]
+    selectedPortfolioId.value = firstPortfolio.id
+    
+    // Auto-select first property if available
+    if (firstPortfolio.properties?.length > 0) {
+      const firstProperty = firstPortfolio.properties[0]
+      selectedPropertyId.value = typeof firstProperty.id === 'string' ? Number(firstProperty.id) : firstProperty.id
+      
+      // Auto-select first unit if available
+      if (firstProperty.units?.length > 0) {
+        const firstUnit = firstProperty.units[0]
+        selectedUnitId.value = typeof firstUnit.id === 'string' ? Number(firstUnit.id) : firstUnit.id
+      }
+    }
   }
-})
+}, { immediate: true, deep: true })
 
 const propertyOptions = computed(() => {
   const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value)
@@ -192,18 +210,72 @@ async function loadLeases() {
   }
 }
 
+interface Portfolio {
+  id: number | string;
+  name?: string;
+  properties?: Array<{
+    id: number | string;
+    name?: string;
+    units?: Array<{
+      id: number | string;
+      label?: string;
+    }>;
+  }>;
+}
+
+const findPortfolioById = (id: number | string | undefined): Portfolio | undefined => {
+  return portfolios.value.find((p: Portfolio) => {
+    const pid = typeof p?.id === 'string' ? Number(p.id) : p?.id;
+    const searchId = typeof id === 'string' ? Number(id) : id;
+    return pid === searchId;
+  });
+};
+
 watch(selectedPortfolioId, async (id, oldId) => {
   if (id !== oldId) {
-    selectedPropertyId.value = undefined
-    selectedUnitId.value = undefined
+    selectedPropertyId.value = undefined;
+    selectedUnitId.value = undefined;
+    
+    // Auto-select first property when portfolio changes
+    if (id) {
+      const portfolio = findPortfolioById(id);
+      const firstProperty = portfolio?.properties?.[0];
+      if (firstProperty?.id !== undefined) {
+        selectedPropertyId.value = typeof firstProperty.id === 'string' 
+          ? Number(firstProperty.id) 
+          : firstProperty.id;
+      } else {
+        selectedPropertyId.value = undefined;
+      }
+    }
   }
-  await loadLeases()
-}, { immediate: true })
+  await loadLeases();
+}, { immediate: true });
 
-watch(selectedPropertyId, async (id, oldId) => {
-  if (id !== oldId) selectedUnitId.value = undefined
-  await loadLeases()
-}, { immediate: true })
+watch(selectedPropertyId, (id, oldId) => {
+  if (id === oldId) return;
+  
+  selectedUnitId.value = undefined;
+  
+  // Auto-select first unit when property changes
+  if (id && selectedPortfolioId.value) {
+    const portfolio = findPortfolioById(selectedPortfolioId.value);
+    const property = portfolio?.properties?.find((p: any) => {
+      const pid = typeof p?.id === 'string' ? Number(p.id) : p?.id;
+      const searchId = typeof id === 'string' ? Number(id) : id;
+      return pid === searchId;
+    });
+    
+    const firstUnit = property?.units?.[0];
+    if (firstUnit?.id !== undefined) {
+      selectedUnitId.value = typeof firstUnit.id === 'string' 
+        ? Number(firstUnit.id) 
+        : firstUnit.id;
+    } else {
+      selectedUnitId.value = undefined;
+    }
+  }
+}, { immediate: true });
 
 watch(selectedUnitId, async () => {
   await loadLeases()
@@ -211,10 +283,6 @@ watch(selectedUnitId, async () => {
 
 const rowsArray = computed(() => leases.value || [])
 const loading = computed(() => pending.value || pendingLeases.value)
-
-
-
-
 </script>
 
 

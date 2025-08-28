@@ -45,8 +45,19 @@
               <UInput v-model.number="form.bathrooms" type="number" min="0" step="0.5" class="w-full"  :disabled="isViewing"/>
             </UFormField>
 
-            <UFormField label="Square Feet" name="sqft" :error="errors.sqft">
-              <UInput v-model.number="form.sqft" type="number" min="0" step="1" class="w-full" :disabled="isViewing" />
+            <UFormField label="Size " name="sqft" :error="errors.sqft">
+              <UInput v-model.number="form.sqft" type="number" min="0" step="1" class="w-full" :disabled="isViewing" >
+                <template #trailing>
+                  <div
+                    id="sqft"
+                    class="tabular-nums"
+                    aria-live="polite"
+                    role="status"
+                  >
+                  (ft²)
+                  </div>
+                </template>
+              </UInput>
             </UFormField>
 
             <UFormField label="Market Rent" name="market_rent" :error="errors.market_rent">

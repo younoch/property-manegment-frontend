@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto p-4 sm:p-6 space-y-4">
+  <div class="max-w-6xl mx-auto p-4 sm:p-6 overflow-scroll space-y-4">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Reports</h1>
       <UButton icon="i-heroicons-arrow-down-tray">Export</UButton>
