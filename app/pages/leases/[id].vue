@@ -11,7 +11,7 @@
       @open-end="openEnd = true"
       @generate-next="onGenerateNext"
       @refresh="reload"
-      @open-payment="openPayment = true"
+      @open-payment="openPaymentModal"
     />
 
     <UTabs v-model="tab" :items="tabs" variant="link" :ui="{ trigger: 'grow' }" class="gap-4 w-full">
@@ -27,7 +27,7 @@
           :fmtBDT="fmtBDT"
           :fmtDate="fmtDate"
           @generate-next="onGenerateNext"
-          @pay-clicked="openPayment = true"
+          @pay-clicked="openPaymentModal"
         />
       </template>
 
@@ -42,9 +42,9 @@
 
       <template #tenants>
         <UCard>
-          <div class="text-sm text-gray-500" v-if="(lease?.leaseTenants || []).length === 0">No tenants linked.</div>
+          <div class="text-sm text-gray-500" v-if="(lease?.lease_tenants || []).length === 0">No tenants linked.</div>
           <ul v-else class="text-sm text-gray-700 list-disc list-inside">
-            <li v-for="t in lease.leaseTenants" :key="t.id">
+            <li v-for="t in lease.lease_tenants" :key="t.id">
               {{ t.tenant.first_name }} {{ t.tenant.last_name }}
               <span v-if="t.tenant.phone" class="text-gray-500">· {{ t.tenant.phone }}</span>
               <span v-if="t.tenant.email" class="text-gray-500">· {{ t.tenant.email }}</span>
@@ -74,7 +74,12 @@
     <RecordPaymentModal
       v-model:open="openPayment"
       :loading="submittingPayment"
-      @submit="submitPayment"
+      :portfolio-id="lease?.portfolio_id"
+      :lease-id="leaseId"
+      :invoice="selectedInvoice"
+      @submitted="onPaymentSubmitted"
+      @error="onPaymentError"
+      @close="selectedInvoice = {}"
     />
   </div>
 </template>
@@ -106,8 +111,60 @@ const {
   reload, doActivate, doEndLease, generateNextInvoice, submitPayment
 } = useLeaseDetail(leaseId)
 
-// ui
+// UI state
 const tab = ref<'overview'|'invoices'|'payments'|'tenants'|'documents'>('overview')
+const toast = useToast()
+
+// Payment modal state
+const selectedInvoice = ref<any>({})
+const openPayment = ref(false)
+
+// Open payment modal with invoice data
+function openPaymentModal(invoice: any = null) {
+  selectedInvoice.value = invoice
+  openPayment.value = true
+}
+
+// Handle payment submission
+async function onPaymentSubmitted(paymentData: any) {
+  try {
+    // If paying an invoice, include the invoice ID
+    if (selectedInvoice.value) {
+      paymentData.invoice_id = selectedInvoice.value.id
+    }
+    
+    await submitPayment(paymentData)
+    toast.add({
+      title: 'Payment recorded',
+      color: 'green',
+      icon: 'i-lucide-check-circle',
+      timeout: 3000
+    })
+    
+    // Reset the selected invoice after successful payment
+    selectedInvoice.value = null
+  } catch (error) {
+    console.error('Payment submission failed:', error)
+    toast.add({
+      title: 'Failed to record payment',
+      description: 'Please try again',
+      color: 'red',
+      icon: 'i-lucide-alert-circle',
+      timeout: 5000
+    })
+  }
+}
+
+// Handle payment errors
+function onPaymentError(message: string) {
+  toast.add({
+    title: 'Validation Error',
+    description: message,
+    color: 'red',
+    icon: 'i-lucide-alert-circle',
+    timeout: 5000
+  })
+}
 const tabs = [
   { label:'Overview',  icon:'i-lucide-layout-dashboard', value:'overview',  slot:'overview'  as const },
   { label:'Invoices',  icon:'i-lucide-receipt',          value:'invoices',  slot:'invoices'  as const },
@@ -118,7 +175,6 @@ const tabs = [
 
 const openActivate = ref(false)
 const openEnd = ref(false)
-const openPayment = ref(false)
 
 onMounted(reload)
 

@@ -15,7 +15,7 @@
           Refresh
         </UButton>
       </div>
-      <UButton v-if="lease?.status==='active'" variant="soft" color="primary" icon="i-lucide-wallet" @click="$emit('open-payment')">
+      <UButton v-if="lease?.status==='active'" variant="soft" color="primary" icon="i-lucide-wallet" @click="onRecordPayment">
         Record Payment
       </UButton>
     </div>
@@ -23,6 +23,17 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ lease: any | null; loading: boolean; generatingInvoice: boolean; activating: boolean }>()
-defineEmits(['open-activate','open-end','generate-next','refresh','open-payment'])
+const emit = defineEmits(['open-activate','open-end','generate-next','refresh','open-payment'])
+
+defineProps<{ 
+  lease: any | null; 
+  loading: boolean; 
+  generatingInvoice: boolean; 
+  activating: boolean 
+}>()
+
+function onRecordPayment() {
+  // Emit with null to indicate a regular payment (not tied to an invoice)
+  emit('open-payment', null)
+}
 </script>

@@ -1,6 +1,7 @@
 <template>
   <UCard>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <pre>{{ lease?.lease_tenants }}</pre>
       <div>
         <h3 class="text-sm font-medium mb-2">Dates</h3>
         <div class="text-sm text-gray-600">
@@ -23,9 +24,9 @@
 
       <div class="sm:col-span-2">
         <h3 class="text-sm font-medium mb-2">Tenants</h3>
-        <div v-if="(lease?.leaseTenants || []).length === 0" class="text-sm text-gray-500">No tenants linked.</div>
+        <div v-if="(lease?.lease_tenants || []).length === 0" class="text-sm text-gray-500">No tenants linked.</div>
         <ul v-else class="text-sm text-gray-700 list-disc list-inside">
-          <li v-for="t in lease.leaseTenants" :key="t.id">
+          <li v-for="t in lease.lease_tenants" :key="t.id">
             {{ t.tenant.first_name }} {{ t.tenant.last_name }}
             <span v-if="t.tenant.phone" class="text-gray-500">· {{ t.tenant.phone }}</span>
             <span v-if="t.tenant.email" class="text-gray-500">· {{ t.tenant.email }}</span>
@@ -42,5 +43,5 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ lease: any | null; balanceBDT: string; fmtBDT: (n:any)=>string }>()
+  const props = defineProps<{ lease: any | null; balanceBDT: string; fmtBDT: (n:any)=>string }>()
 </script>

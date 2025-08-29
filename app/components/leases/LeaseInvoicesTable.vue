@@ -36,7 +36,7 @@
               </UBadge>
             </td>
             <td class="py-2 px-3 text-right">
-              <UButton size="xs" variant="soft" icon="i-lucide-banknote" :disabled="inv.status==='paid' || inv.status==='void'" @click="$emit('pay-clicked', inv.id)">
+              <UButton size="xs" variant="soft" icon="i-lucide-banknote" :disabled="inv.status==='paid' || inv.status==='void'" @click="$emit('pay-clicked', inv)">
                 Pay
               </UButton>
             </td>

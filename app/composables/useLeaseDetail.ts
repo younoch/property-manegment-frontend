@@ -112,15 +112,40 @@ export function useLeaseDetail(leaseId: number) {
     }
   }
 
-  async function submitPayment(payload: { amount: number; method: string; at: string; reference?: string; notes?: string }) {
+  async function submitPayment(payload: { 
+    portfolio_id: number;
+    lease_id: number;
+    user_id?: number | null;
+    invoice_id?: number | null;
+    received_at: string;
+    method: string;
+    amount: number;
+    reference?: string;
+    notes?: string;
+  }) {
     if (!lease.value) return
     submittingPayment.value = true
     try {
-      await api.post(`/leases/${leaseId}/payments`, payload)
-      toastSuccess('Payment recorded')
+      // Extract only the fields we want to send to the API
+      const { portfolio_id, ...paymentData } = payload;
+      await api.post(`/portfolios/${portfolio_id}/payments`, {
+        ...paymentData,
+        // Ensure we're sending the correct field names expected by the API
+        received_at: paymentData.received_at,
+        method: paymentData.method,
+        amount: paymentData.amount,
+        reference: paymentData.reference,
+        notes: paymentData.notes,
+        lease_id: paymentData.lease_id,
+        invoice_id: paymentData.invoice_id || null,
+        user_id: paymentData.user_id || null
+      })
+      toastSuccess('Payment recorded successfully')
       await reload()
     } catch (e: any) {
-      toastError(e?.message || 'Failed to record payment')
+      const errorMessage = e?.response?.data?.message || e?.message || 'Failed to record payment'
+      toastError(errorMessage)
+      throw e // Re-throw to allow the caller to handle the error
     } finally {
       submittingPayment.value = false
     }
