@@ -57,18 +57,30 @@
       <!-- View toggle -->
       <div class="flex items-center">
         <UButtonGroup size="sm">
-          <UButton
-            :variant="viewMode === 'grid' ? 'solid' : 'ghost'"
-            icon="i-lucide-layout-grid"
+          <button 
+            :class="[
+              'p-2 rounded-md',
+              viewMode === 'grid' 
+                ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/50 dark:text-primary-400' 
+                : 'text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/50'
+            ]"
             @click="viewMode = 'grid'"
             aria-label="Grid view"
-          />
-          <UButton
-            :variant="viewMode === 'list' ? 'solid' : 'ghost'"
-            icon="i-lucide-list"
+          >
+            <UIcon name="i-lucide-layout-grid" class="w-5 h-5" />
+          </button>
+          <button
+            :class="[
+              'p-2 rounded-md',
+              viewMode === 'list' 
+                ? 'bg-primary-50 text-primary-600 dark:bg-primary-900/50 dark:text-primary-400' 
+                : 'text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800/50'
+            ]"
             @click="viewMode = 'list'"
             aria-label="List view"
-          />
+          >
+            <UIcon name="i-lucide-list" class="w-5 h-5" />
+          </button>
         </UButtonGroup>
       </div>
     </div>
@@ -178,8 +190,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, h, resolveComponent, nextTick } from 'vue'
-import { useAsyncData, useNuxtApp } from '#imports'
 import type { TableColumn } from '@nuxt/ui'
 import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
 import PortfolioForm from '../components/portfolios/PortfolioForm.vue'
@@ -187,9 +197,7 @@ import { createProtectedApiClient } from '../utils/api'
 import { useAuth } from '../composables/useAuth'
 import { useToast } from '#imports'
 
-const { $resolveComponent } = useNuxtApp()
-const UButton = $resolveComponent('UButton')
-const UDropdownMenu = $resolveComponent('UDropdownMenu')
+// Components are auto-imported in Nuxt 3
 
 definePageMeta({ middleware: ['auth'] })
 
@@ -300,33 +308,103 @@ const filteredAndSorted = computed<PortfolioRow[]>(() => {
 
 /** --- Columns for list view --- */
 const columns: TableColumn<PortfolioRow>[] = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'subscription_plan', header: 'Plan' },
+  { 
+    accessorKey: 'name', 
+    header: 'Name',
+    cell: ({ row }) => h('div', row.original.name)
+  },
+  { 
+    accessorKey: 'subscription_plan', 
+    header: 'Plan',
+    cell: ({ row }) => h('div', row.original.subscription_plan || '—')
+  },
   {
     accessorKey: 'provider_customer_id',
     header: 'External ID',
-    cell: ({ row }) => (row.original.provider_customer_id || '—')
+    cell: ({ row }) => h('div', row.original.provider_customer_id || '—')
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => h('div', {}, [
-      h(resolveComponent('UBadge') as any, { color: row.original.status === 'Active' ? 'primary' : 'neutral' }, () => row.original.status)
+    cell: ({ row }) => h('div', { class: 'flex items-center' }, [
+      h('span', {
+        class: [
+          'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+          row.original.status === 'Active' 
+            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+            : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200'
+        ]
+      }, row.original.status)
     ])
   },
   {
     id: 'actions',
     header: '',
-    meta: { class: 'w-1' },
-    cell: ({ row }) => h(
-      'div',
-      { class: 'text-right' },
-      h(
-        UDropdownMenu as any,
-        { content: { align: 'end' }, items: getRowItems(row), 'aria-label': 'Actions dropdown' },
-        () => h(UButton as any, { icon: 'i-lucide-ellipsis-vertical', color: 'neutral', variant: 'ghost', class: 'ml-auto', 'aria-label': 'Actions' })
-      )
-    )
+    cell: ({ row }) => {
+      const items = getRowItems(row)
+      return h('div', { class: 'text-right' }, [
+        h('div', { class: 'relative inline-block text-left' }, [
+          h('div', [
+            h('button', {
+              class: 'flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
+              'aria-label': 'Actions',
+              onClick: (e: Event) => {
+                e.stopPropagation()
+                // Handle click to show dropdown
+                const dropdown = document.getElementById(`dropdown-${row.original.id}`)
+                if (dropdown) {
+                  dropdown.classList.toggle('hidden')
+                }
+              }
+            }, [
+              h('span', { class: 'h-5 w-5 flex items-center justify-center' }, [
+                h('svg', { 
+                  xmlns: 'http://www.w3.org/2000/svg',
+                  width: '20',
+                  height: '20',
+                  viewBox: '0 0 24 24',
+                  fill: 'none',
+                  stroke: 'currentColor',
+                  'stroke-width': '2',
+                  'stroke-linecap': 'round',
+                  'stroke-linejoin': 'round',
+                  class: 'lucide lucide-ellipsis-vertical'
+                }, [
+                  h('circle', { cx: '12', cy: '12', r: '1' }),
+                  h('circle', { cx: '12', cy: '5', r: '1' }),
+                  h('circle', { cx: '12', cy: '19', r: '1' })
+                ])
+              ])
+            ])
+          ]),
+          h('div', {
+            id: `dropdown-${row.original.id}`,
+            class: 'hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10',
+            role: 'menu',
+            'aria-orientation': 'vertical',
+            'aria-labelledby': 'menu-button',
+            tabindex: -1
+          }, items.map((item: any) => 
+            h('div', { class: 'py-1', role: 'none' }, [
+              h('a', {
+                href: item.to || '#',
+                class: [
+                  'text-gray-700 dark:text-gray-200 block px-4 py-2 text-sm',
+                  item.danger ? 'text-red-600 dark:text-red-400' : ''
+                ],
+                onClick: (e: Event) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  if (item.click) item.click()
+                  const dropdown = document.getElementById(`dropdown-${row.original.id}`)
+                  if (dropdown) dropdown.classList.add('hidden')
+                }
+              }, item.label)
+            ])
+          ))
+        ])
+      ])
+    }
   }
 ]
 

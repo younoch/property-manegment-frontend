@@ -48,7 +48,28 @@
     </div>
 
     <UCard>
+      <div v-if="loading">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <USkeleton class="h-28 rounded-xl" v-for="i in 3" :key="i" />
+        </div>
+      </div>
+      <div v-else-if="rowsArray.length === 0" class="py-10 flex flex-col items-center text-center gap-3">
+        <div class="i-lucide-file-text h-12 w-12 text-primary/80" aria-hidden="true" />
+        <p class="text-lg font-medium">No leases yet</p>
+        <p class="text-sm text-gray-500 max-w-md">
+          Create your first lease agreement to start tracking rent payments and lease terms.
+        </p>
+        <UButton 
+          icon="i-heroicons-plus" 
+          class="mt-2" 
+          :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
+          :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
+        >
+          Create Your First Lease
+        </UButton>
+      </div>
       <UTable
+        v-else
         :data="rowsArray"
         :columns="columns"
         class="flex-1"

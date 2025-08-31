@@ -7,7 +7,7 @@
       <div class="mt-10 grid lg:grid-cols-3 gap-6">
         <PricingTeaserCard
           title="Starter"
-          price="৳0"
+          price="$0"
           :features="[
             'Up to 2 units',
             'Unlimited leases & invoices',
@@ -20,7 +20,7 @@
         />
         <PricingTeaserCard
           title="Pro"
-          price="৳990"
+          price="$9"
           :features="[
             'Up to 20 units',
             'Auto late fees & grace logic',
@@ -34,7 +34,7 @@
         />
         <PricingTeaserCard
           title="Business"
-          price="৳2,990"
+          price="$29"
           :features="[
             'Unlimited units',
             'Multi-portfolio roles & permissions',

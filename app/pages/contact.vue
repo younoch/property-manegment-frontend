@@ -98,10 +98,11 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { z } from 'zod'
+import { object, string, minLength, email, safeParse, pipe } from 'valibot'
 import { defineComponent } from 'vue'
 import { useHead } from '#imports'
 
+definePageMeta({ layout: 'public' })
 // Page metadata
 useHead({
   title: 'Contact LeaseTrack — We’d love to hear from you',
@@ -126,7 +127,7 @@ const ContactCard = defineComponent({
   </div>`
 })
 
-// Form state & validation
+// Form state
 const state = reactive({
   name: '',
   email: '',
@@ -141,38 +142,49 @@ const unitOptions = ['1-2', '3-10', '11-20', '21-50', '51+']
 const topics = ['Product question', 'Billing', 'Onboarding', 'Bug report', 'Partnership']
 const priorities = ['Normal', 'High']
 
-const schema = z.object({
-  name: z.string().min(2, 'Please enter your name'),
-  email: z.string().email('Enter a valid email'),
-  message: z.string().min(10, 'Tell us a bit more (10+ chars)'),
+// Validation schema using Valibot
+const Schema = object({
+  name: pipe(string(), minLength(1, 'Please enter your name')),
+  email: pipe(string(), email('Please enter a valid email address')),
+  message: pipe(string(), minLength(10, 'Please enter a message (at least 10 characters)'))
 })
 
-const errors = reactive<{ [k: string]: string | undefined }>({})
+const errors = reactive<Record<string, string | undefined>>({})
 const submitting = ref(false)
 const submitted = ref(false)
 
-function validate() {
-  errors.name = errors.email = errors.message = undefined
-  const result = schema.safeParse({ name: state.name, email: state.email, message: state.message })
-  if (!result.success) {
-    for (const issue of result.error.issues) {
-      errors[issue.path[0] as string] = issue.message
-    }
-    return false
+// Validation function
+const validate = (formState: any) => {
+  const result = safeParse(Schema, formState)
+  if (result.success) {
+    Object.keys(errors).forEach((k) => delete errors[k])
+    return []
   }
-  return true
+  Object.keys(errors).forEach((k) => delete errors[k])
+  result.issues.forEach((issue: any) => {
+    const path = Array.isArray(issue.path) && issue.path.length > 0 ? issue.path[0]?.key : undefined
+    if (path && typeof path === 'string') errors[path] = issue.message
+  })
+  return result.issues
 }
 
 async function onSubmit() {
-  if (!validate()) return
+  const validationResult = validate({
+    name: state.name,
+    email: state.email,
+    message: state.message
+  })
+  
+  if (validationResult.length > 0) return
+  
   submitting.value = true
   try {
     // TODO: Replace with your API endpoint or email integration
     // await $fetch('/api/contact', { method: 'POST', body: state })
     await new Promise(r => setTimeout(r, 900))
     submitted.value = true
-  } catch (e) {
-    // You may show a toast or error banner here
+  } catch (error: any) {
+    console.error('Form submission error:', error)
   } finally {
     submitting.value = false
   }

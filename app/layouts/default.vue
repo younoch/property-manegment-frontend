@@ -58,7 +58,66 @@
 
               <!-- Show when user IS authenticated -->
               <template v-else>
-                <div class="flex items-center space-x-4">              
+                <div class="flex items-center space-x-4">
+                  <!-- Notifications -->
+                  <div class="relative">
+                    <UButton
+                      variant="ghost"
+                      color="gray"
+                      icon="i-heroicons-bell"
+                      aria-label="Notifications"
+                      class="notifications-button"
+                      @click="notificationOpen = !notificationOpen"
+                    />
+                    <div v-if="hasUnreadNotifications" class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
+                    
+                    <!-- Notifications Dropdown -->
+                    <div v-if="notificationOpen" class="notifications-dropdown absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                      <div class="px-4 py-2 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                          <h3 class="font-medium">Notifications</h3>
+                          <UButton
+                            variant="ghost"
+                            color="gray"
+                            size="sm"
+                            icon="i-heroicons-x-mark"
+                            @click="notificationOpen = false"
+                            aria-label="Close notifications"
+                          />
+                        </div>
+                      </div>
+                      <div class="max-h-96 overflow-y-auto">
+                        <div v-if="notifications.length === 0" class="px-4 py-8 text-center text-gray-500">
+                          No new notifications
+                        </div>
+                        <div v-else>
+                          <div v-for="notification in notifications" :key="notification.id" 
+                               class="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                            <div class="flex items-start">
+                              <div class="flex-shrink-0">
+                                <UIcon :name="notification.icon" class="h-5 w-5 text-gray-400" />
+                              </div>
+                              <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium text-gray-900">{{ notification.title }}</p>
+                                <p class="text-sm text-gray-500">{{ notification.message }}</p>
+                                <p class="text-xs text-gray-400 mt-1">{{ notification.time }}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div v-if="notifications.length > 0" class="px-4 py-2 border-t border-gray-100 text-center">
+                        <UButton
+                          variant="ghost"
+                          size="sm"
+                          color="primary"
+                          label="Mark all as read"
+                          @click="markAllAsRead"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
                   <!-- User Menu Dropdown -->
                   <div class="relative user-menu-dropdown">
                     <UButton
@@ -220,6 +279,59 @@
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'nuxt/app'
+
+// Notification state
+const notificationOpen = ref(false)
+const notifications = ref([
+  {
+    id: 1,
+    title: 'New message',
+    message: 'You have a new message from John Doe',
+    time: '2m ago',
+    icon: 'i-heroicons-envelope',
+    read: false
+  },
+  {
+    id: 2,
+    title: 'Payment received',
+    message: 'Rent payment received for Unit #42',
+    time: '1h ago',
+    icon: 'i-heroicons-currency-dollar',
+    read: true
+  },
+  {
+    id: 3,
+    title: 'Maintenance update',
+    message: 'Your maintenance request #1234 has been completed',
+    time: '5h ago',
+    icon: 'i-heroicons-wrench-screwdriver',
+    read: true
+  }
+])
+
+const hasUnreadNotifications = computed(() => {
+  return notifications.value.some(notification => !notification.read)
+})
+
+const markAllAsRead = () => {
+  notifications.value = notifications.value.map(notification => ({
+    ...notification,
+    read: true
+  }))
+}
+
+// Close notifications when clicking outside
+const closeNotifications = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  const notificationsEl = document.querySelector('.notifications-dropdown')
+  const buttonEl = document.querySelector('.notifications-button')
+  
+  if (notificationsEl && buttonEl && 
+      !notificationsEl.contains(target) && 
+      !buttonEl.contains(target)) {
+    notificationOpen.value = false
+  }
+}
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../stores/user'
 import { useAuthStore } from '../stores/auth'
@@ -255,13 +367,19 @@ const closeUserMenu = () => {
   userMenuOpen.value = false
 }
 
-// Add click outside listener
+// Add click outside listeners
 onMounted(() => {
   document.addEventListener('click', (event) => {
     const target = event.target as Element
-    if (!target.closest('.user-menu-dropdown')) {
+    const userMenu = document.querySelector('.user-menu-dropdown')
+    
+    // Close user menu when clicking outside
+    if (userMenu && !userMenu.contains(target)) {
       userMenuOpen.value = false
     }
+    
+    // Close notifications when clicking outside
+    closeNotifications(event as MouseEvent)
   })
 })
 

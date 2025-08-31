@@ -45,7 +45,28 @@
     </div>
 
     <UCard>
+      <div v-if="pending">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <USkeleton class="h-28 rounded-xl" v-for="i in 3" :key="i" />
+        </div>
+      </div>
+      <div v-else-if="rowsArray.length === 0" class="py-10 flex flex-col items-center text-center gap-3">
+        <div class="i-lucide-building-2 h-12 w-12 text-primary/80" aria-hidden="true" />
+        <p class="text-lg font-medium">No properties yet</p>
+        <p class="text-sm text-gray-500 max-w-md">
+          Start by adding your first property to manage units, leases, and collect rent.
+        </p>
+        <UButton 
+          icon="i-heroicons-plus" 
+          class="mt-2" 
+          @click="() => { formModel = null; isViewing = false; isFormOpen = true }"
+          :disabled="!selectedPortfolioId"
+        >
+          Add Your First Property
+        </UButton>
+      </div>
       <UTable
+        v-else
         :data="rowsArray"
         :columns="columns"
         class="flex-1"

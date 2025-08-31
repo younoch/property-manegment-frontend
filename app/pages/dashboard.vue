@@ -23,10 +23,10 @@ const selectedRange = ref(ranges[2]);
 
 // Table columns for recent activities
 const activityColumns = [
-  { key: 'description', label: 'Activity', sortable: true },
-  { key: 'property', label: 'Property', sortable: true },
-  { key: 'date', label: 'Date', sortable: true },
-  { key: 'status', label: 'Status', sortable: true }
+  { id: 'description', key: 'description', label: 'Activity', sortable: true },
+  { id: 'property', key: 'property', label: 'Property', sortable: true },
+  { id: 'date', key: 'date', label: 'Date', sortable: true },
+  { id: 'status', key: 'status', label: 'Status', sortable: true }
 ];
 
 // KPIs

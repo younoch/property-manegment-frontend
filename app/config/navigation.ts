@@ -1,7 +1,6 @@
 export const topHeaderNav = [
   { label: 'Dashboard', to: '/dashboard', icon: 'i-heroicons-home' },
   { label: 'Messages', to: '/messages', icon: 'i-heroicons-chat-bubble-left' },
-  { label: 'Profile', to: '/profile', icon: 'i-heroicons-user-circle' },
   { label: 'Settings', to: '/settings', icon: 'i-heroicons-cog-6-tooth' }
 ]
 
