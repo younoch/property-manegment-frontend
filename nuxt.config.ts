@@ -1,5 +1,8 @@
 // nuxt.config.ts
 import 'dotenv/config'
+import { defineNuxtConfig } from 'nuxt/config'
+import type { ModuleOptions } from '@nuxt/ui'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -7,10 +10,22 @@ export default defineNuxtConfig({
   components: [
     { path: '~/components', pathPrefix: false },
   ],
-  modules: ['@nuxt/ui', '@pinia/nuxt'],
+  modules: [
+    ['@nuxt/ui', {
+      icons: ['mdi', 'heroicons']
+    } as Partial<ModuleOptions>],
+    '@pinia/nuxt'
+  ],
   css: [
     '~/assets/css/main.css'
   ],
+  appConfig: {
+    ui: {
+      colors: {
+        primary: 'emerald'   // <- your brand
+      }
+    }
+  },
   srcDir: 'app',
   runtimeConfig: {
     public: {

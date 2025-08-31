@@ -9,7 +9,7 @@ export const UNIT_STATUSES: UnitStatus[] = [
   {
     value: 'vacant',
     label: 'Vacant',
-    color: 'primary',
+    color: 'success',
     description: 'Unit is available for rent'
   },
   {

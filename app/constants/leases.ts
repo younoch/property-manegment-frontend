@@ -15,31 +15,31 @@ export const LEASE_STATUSES: LeaseStatus[] = [
   {
     value: 'draft',
     label: 'Draft',
-    color: 'neutral', // gray badge
+    color: 'neutral',
     description: 'Lease is in draft form, not yet active'
   },
   {
     value: 'active',
     label: 'Active',
-    color: 'primary', // blue (theme primary)
+    color: 'success', 
     description: 'Lease is currently active and in force'
   },
   {
     value: 'ended',
     label: 'Ended',
-    color: 'secondary', // green = completed successfully
+    color: 'secondary', 
     description: 'Lease has ended naturally'
   },
   {
     value: 'evicted',
     label: 'Evicted',
-    color: 'error', // red = negative outcome
+    color: 'error',
     description: 'Tenant was evicted from the property'
   },
   {
     value: 'broken',
     label: 'Broken',
-    color: 'warning', // amber/yellow = caution
+    color: 'warning',
     description: 'Lease was broken by either party'
   }
 ];

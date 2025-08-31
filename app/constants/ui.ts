@@ -29,7 +29,7 @@ export interface Breakpoints {
 // Color schemes for different themes
 export const COLOR_SCHEMES: Record<string, ColorScheme> = {
   default: {
-    primary: 'green',
+    primary: 'emerald',
     secondary: 'blue',
     accent: 'purple',
     success: 'green',
