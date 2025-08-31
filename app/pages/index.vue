@@ -42,19 +42,20 @@
 </template>
 
 <script setup lang="ts">
+import { useHead } from '#imports'
 
-import HeroSection from '@/components/home/HeroSection.vue'
-import ProblemSolution from '@/components/home/ProblemSolution.vue'
-import FeatureGrid from '@/components/home/FeatureGrid.vue'
-import SecurityIntegrations from '@/components/home/SecurityIntegrations.vue'
-import AudienceSection from '@/components/home/AudienceSection.vue'
-import ComparisonTable from '@/components/home/ComparisonTable.vue'
-import TestimonialGrid from '@/components/home/TestimonialGrid.vue'
-import StepsSection from '@/components/home/StepsSection.vue'
-import PricingTeaserGrid from '@/components/home/PricingTeaserGrid.vue'
-import FinalCta from '@/components/home/FinalCta.vue'
-import LogoCloud from '@/components/home/LogoCloud.vue'
-import StatCard from '@/components/home/StatCard.vue'
+import HeroSection from '~/components/home/HeroSection.vue'
+import ProblemSolution from '~/components/home/ProblemSolution.vue'
+import FeatureGrid from '~/components/home/FeatureGrid.vue'
+import SecurityIntegrations from '~/components/home/SecurityIntegrations.vue'
+import AudienceSection from '~/components/home/AudienceSection.vue'
+import ComparisonTable from '~/components/home/ComparisonTable.vue'
+import TestimonialGrid from '~/components/home/TestimonialGrid.vue'
+import StepsSection from '~/components/home/StepsSection.vue'
+import PricingTeaserGrid from '~/components/home/PricingTeaserGrid.vue'
+import FinalCta from '~/components/home/FinalCta.vue'
+import LogoCloud from '~/components/home/LogoCloud.vue'
+import StatCard from '~/components/home/StatCard.vue'
 
 definePageMeta({ layout: 'public' })
 

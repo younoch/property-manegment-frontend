@@ -178,15 +178,20 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: ['auth'] })
-
-import { h, resolveComponent, nextTick } from 'vue'
+import { ref, computed, h, resolveComponent, nextTick } from 'vue'
+import { useAsyncData, useNuxtApp } from '#imports'
 import type { TableColumn } from '@nuxt/ui'
 import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
 import PortfolioForm from '../components/portfolios/PortfolioForm.vue'
 import { createProtectedApiClient } from '../utils/api'
 import { useAuth } from '../composables/useAuth'
 import { useToast } from '#imports'
+
+const { $resolveComponent } = useNuxtApp()
+const UButton = $resolveComponent('UButton')
+const UDropdownMenu = $resolveComponent('UDropdownMenu')
+
+definePageMeta({ middleware: ['auth'] })
 
 type PortfolioRow = {
   id: number | string
@@ -195,9 +200,6 @@ type PortfolioRow = {
   provider_customer_id: string
   status: string
 }
-
-const UButton = resolveComponent('UButton')
-const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 /** --- State --- */
 const api = createProtectedApiClient()

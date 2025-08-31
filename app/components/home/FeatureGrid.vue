@@ -20,6 +20,6 @@
     </div>
   </section>
 </template>
-<script lang="ts" setup>
-import FeatureCard from '@/components/home/FeatureCard.vue'
+<script setup lang="ts">
+import FeatureCard from '~/components/home/FeatureCard.vue'
 </script>

@@ -85,14 +85,17 @@
 </template>
 
 <script setup lang="ts">
-import LeaseHeader from '@/components/leases/LeaseHeader.vue'
-import LeaseActions from '@/components/leases/LeaseActions.vue'
-import LeaseOverview from '@/components/leases/LeaseOverview.vue'
-import LeaseInvoicesTable from '@/components/leases/LeaseInvoicesTable.vue'
-import LeasePaymentsTable from '@/components/leases/LeasePaymentsTable.vue'
-import RecordPaymentModal from '@/components/leases/modals/RecordPaymentModal.vue'
-import ActivateLeaseModal from '@/components/leases/modals/ActivateLeaseModal.vue'
-import EndLeaseModal from '@/components/leases/modals/EndLeaseModal.vue'
+import { useToast } from '#imports'
+import { useLeaseDetail } from '~/composables/useLeaseDetail'
+
+import LeaseHeader from '~/components/leases/LeaseHeader.vue'
+import LeaseActions from '~/components/leases/LeaseActions.vue'
+import LeaseOverview from '~/components/leases/LeaseOverview.vue'
+import LeaseInvoicesTable from '~/components/leases/LeaseInvoicesTable.vue'
+import LeasePaymentsTable from '~/components/leases/LeasePaymentsTable.vue'
+import RecordPaymentModal from '~/components/leases/modals/RecordPaymentModal.vue'
+import ActivateLeaseModal from '~/components/leases/modals/ActivateLeaseModal.vue'
+import EndLeaseModal from '~/components/leases/modals/EndLeaseModal.vue'
 
 definePageMeta({ middleware: ['auth'] })
 
@@ -137,8 +140,7 @@ async function onPaymentSubmitted(paymentData: any) {
     toast.add({
       title: 'Payment recorded',
       color: 'green',
-      icon: 'i-lucide-check-circle',
-      timeout: 3000
+      icon: 'i-lucide-check-circle'
     })
     
     // Reset the selected invoice after successful payment
@@ -149,8 +151,7 @@ async function onPaymentSubmitted(paymentData: any) {
       title: 'Failed to record payment',
       description: 'Please try again',
       color: 'red',
-      icon: 'i-lucide-alert-circle',
-      timeout: 5000
+      icon: 'i-lucide-alert-circle'
     })
   }
 }
@@ -161,8 +162,7 @@ function onPaymentError(message: string) {
     title: 'Validation Error',
     description: message,
     color: 'red',
-    icon: 'i-lucide-alert-circle',
-    timeout: 5000
+    icon: 'i-lucide-alert-circle'
   })
 }
 const tabs = [

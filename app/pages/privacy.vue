@@ -158,6 +158,16 @@
 
 <script setup lang="ts">
 import { defineComponent } from 'vue'
+import { useHead } from '#imports'
+
+definePageMeta({ layout: 'public' })
+
+useHead({
+  title: 'LeaseTrack — Privacy Policy',
+  meta: [
+    { name: 'description', content: 'How LeaseTrack collects, uses, and protects your information. Learn about data, security, cookies, retention, rights, and contact details.' }
+  ]
+})
 
 const effectiveDate = 'August 30, 2025'
 
@@ -173,17 +183,6 @@ const PolicySection = defineComponent({
     </section>
   `
 })
-</script>
-
-<script lang="ts">
-export default {
-  head: {
-    title: 'LeaseTrack — Privacy Policy',
-    meta: [
-      { name: 'description', content: 'How LeaseTrack collects, uses, and protects your information. Learn about data, security, cookies, retention, rights, and contact details.' }
-    ]
-  }
-}
 </script>
 
 <style scoped>

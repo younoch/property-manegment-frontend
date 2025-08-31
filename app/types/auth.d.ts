@@ -1,0 +1,21 @@
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  phone: string;
+  role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+  profile_image_url?: string;
+  is_active?: boolean;
+}
+
+export interface AuthState {
+  user: User | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  lastActivity?: Date | null;
+  error?: string | null;
+  lastAuthCheck?: Date | null;
+  lastCsrfCheck?: Date | null;
+  authCacheDuration?: number;
+  csrfCacheDuration?: number;
+}

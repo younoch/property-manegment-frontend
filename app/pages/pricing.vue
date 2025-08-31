@@ -61,13 +61,13 @@
         <h2 class="text-2xl md:text-3xl font-bold">How our pricing works</h2>
         <p class="mt-3 text-gray-600">
           LeaseTrack pricing is based on the number of <strong>units</strong> you manage,
-          not the number of users. Invite unlimited teammates at no extra cost. Start free with 2 units, upgrade as you grow.
+          not the number of users. Invite unlimited teammates at no extra cost. Start free with 5 units, upgrade as you grow.
         </p>
         <ul class="mt-6 text-gray-700 text-left max-w-md mx-auto space-y-2">
           <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Units drive pricing, not users</li>
           <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Unlimited users per portfolio</li>
           <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Cancel or upgrade anytime</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Free forever for 2 units</li>
+          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Free forever for 5 units</li>
         </ul>
       </div>
     </section>
@@ -98,6 +98,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'public' })
 
 useHead({
   title: 'LeaseTrack — Pricing',
@@ -116,12 +117,12 @@ const periodLabel = computed(() => {
 const plans = [
   {
     name: 'Starter',
-    desc: 'Get started with up to 2 units',
+    desc: 'Get started with up to 5 units',
     cta: 'Get Started Free',
     highlight: false,
     price: { monthly: '$0', quarterly: '$0', yearly: '$0' },
     features: [
-      '2 units included',
+      '5 units included',
       'Unlimited leases & invoices',
       'Partial payments',
       'Portfolio timezone',
@@ -162,7 +163,7 @@ const plans = [
 ]
 
 const faqLeft = [
-  { label: 'Is there a free plan?', content: 'Yes—the Starter plan is free for up to 2 units.' },
+  { label: 'Is there a free plan?', content: 'Yes—the Starter plan is free for up to 5 units.' },
   { label: 'Can I cancel anytime?', content: 'Yes—you can cancel your subscription at any time from your account settings.' },
   { label: 'Do you charge per user?', content: 'No—all plans include unlimited users per portfolio.' }
 ]

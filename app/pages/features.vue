@@ -7,6 +7,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: 'public' })
+
 // Placeholder page
 </script>
 

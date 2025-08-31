@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import { useToast } from '#imports'
+import { useApiToast } from '~/composables/useApiToast'
+
 definePageMeta({ middleware: ['auth'] })
 
 import { createProtectedApiClient } from '../../utils/api'
-import { useAuth } from '../../composables/useAuth'
-import { useApiToast } from '../../composables/useApiToast'
 
 
 // Step components
-import StepUnit from '@/components/leases/StepUnit.vue'
+import StepUnit from '~/components/leases/StepUnit.vue'
 import StepTenants from '~/components/leases/StepTenants.vue'
-import StepDetails from '@/components/leases/StepDetails.vue'
-import StepReview from '@/components/leases/StepReview.vue'
+import StepDetails from '~/components/leases/StepDetails.vue'
+import StepReview from '~/components/leases/StepReview.vue'
 
 const api = createProtectedApiClient()
 const { checkAuth } = useAuth()
@@ -19,7 +20,7 @@ await checkAuth()
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
-const { success: toastSuccess, error: toastError, info: toastInfo } = useApiToast()
+const { success: toastSuccess, error: toastError } = useApiToast()
 
 const prefill = reactive({
   portfolioId: route.query.portfolioId ? Number(route.query.portfolioId) : undefined,

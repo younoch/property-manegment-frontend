@@ -173,53 +173,18 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent } from 'vue'
+import ValueCard from '~/components/about/ValueCard.vue'
+import TeamCard from '~/components/about/TeamCard.vue'
+import StackCard from '~/components/about/StackCard.vue'
 
-const ValueCard = defineComponent({
-  name: 'ValueCard',
-  props: { icon: String, title: String, desc: String },
-  template: `<div class='group relative p-5 rounded-2xl bg-white/70 backdrop-blur border border-gray-200 shadow-sm hover:shadow-md transition'>
-    <div class='absolute inset-0 rounded-2xl bg-gradient-to-br from-emerald-50 to-transparent opacity-0 group-hover:opacity-100 transition'></div>
-    <div class='relative flex items-start gap-3'>
-      <UIcon :name="icon" class='text-emerald-600 mt-1' />
-      <div>
-        <h3 class='font-semibold'>{{ title }}</h3>
-        <p class='mt-1 text-sm text-gray-600'>{{ desc }}</p>
-      </div>
-    </div>
-  </div>`
+definePageMeta({ layout: 'public' })
+
+useHead({
+  title: 'About LeaseTrack — Smart Property Management for Small Landlords',
+  meta: [
+    { name: 'description', content: 'LeaseTrack is built for independent landlords and small property teams. Learn our mission, values, team, and how we build.' }
+  ]
 })
-
-const TeamCard = defineComponent({
-  name: 'TeamCard',
-  props: { name: String, role: String, img: String, bio: String },
-  template: `<div class='p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm'>
-    <img :src="img" class='w-full h-44 object-cover rounded-xl border border-gray-200' alt='team'/>
-    <h3 class='mt-3 font-semibold'>{{ name }}</h3>
-    <p class='text-xs text-gray-500'>{{ role }}</p>
-    <p class='mt-2 text-sm text-gray-700'>{{ bio }}</p>
-  </div>`
-})
-
-const StackCard = defineComponent({
-  name: 'StackCard',
-  props: { title: String, items: String },
-  template: `<div class='p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm'>
-    <h3 class='font-semibold'>{{ title }}</h3>
-    <p class='mt-2 text-sm text-gray-700'>{{ items }}</p>
-  </div>`
-})
-</script>
-
-<script lang="ts">
-export default {
-  head: {
-    title: 'About LeaseTrack — Smart Property Management for Small Landlords',
-    meta: [
-      { name: 'description', content: 'LeaseTrack is built for independent landlords and small property teams. Learn our mission, values, team, and how we build.' }
-    ]
-  }
-}
 </script>
 
 <style scoped>

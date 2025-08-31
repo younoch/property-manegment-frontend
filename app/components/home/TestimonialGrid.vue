@@ -27,6 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-import TestimonialCard from '@/components/home/TestimonialCard.vue'
+import TestimonialCard from '~/components/home/TestimonialCard.vue'
 </script>
 

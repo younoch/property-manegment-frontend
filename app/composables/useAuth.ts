@@ -2,20 +2,7 @@ import { computed } from 'vue';
 import { useCsrf } from './useCsrf';
 import { useAuthStore } from '../stores/auth';
 import { useUserStore } from '../stores/user';
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  phone: string;
-  role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-}
-
-export interface AuthState {
-  user: User | null;
-  loading: boolean;
-  isAuthenticated: boolean;
-}
+import type { User, AuthState } from '../types/auth';
 
 export const useAuth = () => {
   const authStore = useAuthStore();

@@ -4,20 +4,15 @@ import { createApiClient, createProtectedApiClient } from '../utils/api';
 import { getCookie, hasCookie, logCookies } from '../utils/cookies';
 import { getCacheDuration } from '../constants/cache';
 import { ENDPOINTS } from '../config/api';
-
-export interface AuthState {
-  loading: boolean;
-  error: string | null;
-  lastAuthCheck: Date | null;
-  lastCsrfCheck: Date | null;
-  authCacheDuration: number;
-  csrfCacheDuration: number;
-}
+import type { AuthState } from '../types/auth';
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
+    user: null,
     loading: false,
+    isAuthenticated: false,
     error: null,
+    lastActivity: null,
     lastAuthCheck: null,
     lastCsrfCheck: null,
     authCacheDuration: getCacheDuration('auth'),
@@ -36,18 +31,14 @@ export const useAuthStore = defineStore('auth', {
     
     // Check if auth cache is still valid
     isAuthCacheValid: (state) => {
-      if (!state.lastAuthCheck) return false;
-      const now = new Date();
-      const timeSinceLastCheck = now.getTime() - state.lastAuthCheck.getTime();
-      return timeSinceLastCheck < state.authCacheDuration;
+      if (!state.lastAuthCheck || !state.authCacheDuration) return false;
+      return (Date.now() - state.lastAuthCheck.getTime()) < (state.authCacheDuration * 1000);
     },
     
     // Check if CSRF cache is still valid
     isCsrfCacheValid: (state) => {
-      if (!state.lastCsrfCheck) return false;
-      const now = new Date();
-      const timeSinceLastCheck = now.getTime() - state.lastCsrfCheck.getTime();
-      return timeSinceLastCheck < state.csrfCacheDuration;
+      if (!state.lastCsrfCheck || !state.csrfCacheDuration) return false;
+      return (Date.now() - state.lastCsrfCheck.getTime()) < (state.csrfCacheDuration * 1000);
     }
   },
 

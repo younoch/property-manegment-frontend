@@ -83,7 +83,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // This layout is for public-facing pages like home, about, contact, etc.
 </script>
 

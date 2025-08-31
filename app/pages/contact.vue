@@ -100,6 +100,15 @@
 import { reactive, ref } from 'vue'
 import { z } from 'zod'
 import { defineComponent } from 'vue'
+import { useHead } from '#imports'
+
+// Page metadata
+useHead({
+  title: 'Contact LeaseTrack — We’d love to hear from you',
+  meta: [
+    { name: 'description', content: 'Contact LeaseTrack for product questions, pricing, onboarding, or support. We usually respond within one business day.' }
+  ]
+})
 
 // Local contact card component
 const ContactCard = defineComponent({
@@ -180,17 +189,6 @@ const faqItemsRight = [
   { label: 'Where are you hosted?', content: 'We run on secure cloud infrastructure with daily backups.' },
   { label: 'Do you support receipts?', content: 'Receipts PDF is on our roadmap; payments are recorded today.' }
 ]
-</script>
-
-<script lang="ts">
-export default {
-  head: {
-    title: 'Contact LeaseTrack — We’d love to hear from you',
-    meta: [
-      { name: 'description', content: 'Contact LeaseTrack for product questions, pricing, onboarding, or support. We usually respond within one business day.' }
-    ]
-  }
-}
 </script>
 
 <style scoped>

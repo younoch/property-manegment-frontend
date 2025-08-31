@@ -50,5 +50,5 @@
   </section>
 </template>
 <script setup lang>
-  import PricingTeaserCard from '@/components/home/PricingTeaserCard.vue'
+  import PricingTeaserCard from '~/components/home/PricingTeaserCard.vue'
 </script>

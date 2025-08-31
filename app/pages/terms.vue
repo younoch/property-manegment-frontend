@@ -125,33 +125,17 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent } from 'vue'
+import { useHead } from '#imports'
+import TermsSection from '~/components/terms/TermsSection.vue'
 
-const effectiveDate = 'August 30, 2025'
+const effectiveDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
-const TermsSection = defineComponent({
-  name: 'TermsSection',
-  props: { id: String, title: String },
-  template: `
-    <section :id="id" class='mt-10'>
-      <div class='p-6 md:p-7 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm'>
-        <h2 class='text-xl md:text-2xl font-bold'>{{ title }}</h2>
-        <div class='mt-3'><slot /></div>
-      </div>
-    </section>
-  `
+useHead({
+  title: 'LeaseTrack — Terms & Conditions',
+  meta: [
+    { name: 'description', content: 'Terms & Conditions governing the use of LeaseTrack. Learn about accounts, subscriptions, acceptable use, liability, and legal details.' }
+  ]
 })
-</script>
-
-<script lang="ts">
-export default {
-  head: {
-    title: 'LeaseTrack — Terms & Conditions',
-    meta: [
-      { name: 'description', content: 'Terms & Conditions governing the use of LeaseTrack. Learn about accounts, subscriptions, acceptable use, liability, and legal details.' }
-    ]
-  }
-}
 </script>
 
 <style scoped>
