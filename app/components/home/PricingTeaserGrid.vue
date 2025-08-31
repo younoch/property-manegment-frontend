@@ -16,7 +16,7 @@
             'Email support (48h)'
           ]"
           cta-text="Get Started"
-          cta-to="/signup"
+          cta-to="/auth/register"
         />
         <PricingTeaserCard
           title="Pro"

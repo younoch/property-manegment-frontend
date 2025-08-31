@@ -14,7 +14,7 @@
           </nav>
           <div class="flex items-center space-x-4">
             <NuxtLink to="/auth/login" class="text-sm font-medium hover:text-emerald-600 transition-colors">Log in</NuxtLink>
-            <NuxtLink to="/auth/signup" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">
+            <NuxtLink to="auth/register" class="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors">
               Get Started
             </NuxtLink>
           </div>

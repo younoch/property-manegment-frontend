@@ -164,7 +164,7 @@
         <h3 class="text-2xl md:text-3xl font-bold">Join LeaseTrack</h3>
         <p class="mt-2 text-gray-600">Start free, send your first invoice in minutes, and keep your records clean.</p>
         <div class="mt-6 flex justify-center gap-3">
-          <UButton color="emerald" size="lg" to="/signup" class="shadow-lg shadow-emerald-200 hover:shadow-emerald-300">Get Started Free</UButton>
+          <UButton color="emerald" size="lg" to="/auth/register" class="shadow-lg shadow-emerald-200 hover:shadow-emerald-300">Get Started Free</UButton>
           <UButton variant="soft" color="gray" size="lg" to="/demo">See Live Demo</UButton>
         </div>
       </div>
