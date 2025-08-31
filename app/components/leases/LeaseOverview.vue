@@ -1,7 +1,6 @@
 <template>
   <UCard>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-      <pre>{{ lease?.lease_tenants }}</pre>
       <div>
         <h3 class="text-sm font-medium mb-2">Dates</h3>
         <div class="text-sm text-gray-600">
