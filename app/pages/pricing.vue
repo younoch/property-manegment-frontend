@@ -89,7 +89,7 @@
         <h3 class="text-2xl md:text-3xl font-bold">Start managing smarter today</h3>
         <p class="mt-2 text-gray-600">Sign up free. Upgrade only when you need more.</p>
         <div class="mt-6 flex justify-center gap-3">
-          <UButton color="emerald" size="lg" to="/signup">Get Started Free</UButton>
+          <UButton color="emerald" size="lg" to="/auth/register">Get Started Free</UButton>
           <UButton variant="soft" color="gray" size="lg" to="/demo">See Live Demo</UButton>
         </div>
       </div>

@@ -8,7 +8,7 @@
 
         <h1 class="mt-5 text-4xl md:text-6xl font-extrabold leading-tight">
           Manage leases, send invoices,
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">get paid—fast.</span>
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">manage payments—fast.</span>
         </h1>
 
         <p class="mt-4 text-gray-700 text-lg md:text-xl max-w-xl">

@@ -6,6 +6,11 @@ export interface SubscriptionPlan {
 
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   {
+    value: 'free',
+    label: 'Free',
+    description: 'Free plan for individuals or small portfolios'
+  },
+  {
     value: 'basic',
     label: 'Basic',
     description: 'Core features for individuals or small portfolios'

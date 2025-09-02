@@ -29,7 +29,7 @@
             'Priority email support (24h)'
           ]"
           cta-text="Upgrade to Pro"
-          cta-to="/signup"
+          cta-to="/auth/register"
           highlight
         />
         <PricingTeaserCard

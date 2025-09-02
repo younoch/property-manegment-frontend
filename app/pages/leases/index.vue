@@ -298,6 +298,13 @@ watch(selectedPropertyId, (id, oldId) => {
   }
 }, { immediate: true });
 
+// Watch for unit changes and load leases
+watch(selectedUnitId, async (newId, oldId) => {
+  if (newId !== oldId && newId) {
+    await loadLeases();
+  }
+});
+
 watch(selectedUnitId, async () => {
   await loadLeases()
 })

@@ -89,7 +89,7 @@ export const useAuthStore = defineStore('auth', {
       this.clearError();
       
       try {
-        const response = await apiClient.post<any>('/auth/register', userData);
+        const response = await apiClient.post<any>('/auth/signup', userData);
         
         if (response) {
           // Handle different response structures

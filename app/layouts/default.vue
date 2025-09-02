@@ -29,6 +29,12 @@
 
       <main class="flex-1">
         <slot />
+        <OnboardingWizard 
+          v-if="showOnboardingWizard"
+          :open="showOnboardingWizard"
+          @update:open="showOnboardingWizard = $event"
+          @completed="handleOnboardingComplete"
+        />
       </main>
     </div>
 
@@ -75,6 +81,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
 import AppHeader from '~/components/layout/AppHeader.vue'
+import OnboardingWizard from '~/components/ui/OnboardingWizard.vue'
 import { useUserStore } from '~/stores/user'
 import { getSidebarNav, type UserRole } from '~/utils/navigation'
 
@@ -82,6 +89,12 @@ const userStore = useUserStore()
 const { userRole } = storeToRefs(userStore)
 
 const sidebarOpen = ref(false)
+const showOnboardingWizard = ref(true)
+
+function handleOnboardingComplete() {
+  // Handle any completion logic here
+  console.log('Onboarding completed')
+}
 const route = useRoute()
 watch(() => route.fullPath, () => { sidebarOpen.value = false })
 

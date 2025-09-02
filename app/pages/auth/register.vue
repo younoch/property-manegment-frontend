@@ -27,7 +27,7 @@
             />
           </div>
           
-          <div>
+          <div class="">
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
             <UInput
               v-model="form.email"
@@ -38,15 +38,14 @@
               class="w-full"
             />
           </div>
-          
-          <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-            <UInput
-              v-model="form.phone"
-              type="tel"
-              placeholder="Enter your phone number"
+          <div class="">
+            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+            <USelect
+              v-model="form.role"
+              :items="roleOptions"
+              placeholder="Select your role"
               required
-              :error="errors.phone"
+              :error="errors.role"
               class="w-full"
             />
           </div>
@@ -103,17 +102,6 @@
             </UInput>
           </div>
           
-          <div class="sm:col-span-2">
-            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-            <USelect
-              v-model="form.role"
-              :items="roleOptions"
-              placeholder="Select your role"
-              required
-              :error="errors.role"
-              class="w-full"
-            />
-          </div>
         </div>
         
         
@@ -158,7 +146,6 @@ const router = useRouter();
 const form = ref({
   name: '',
   email: '',
-  phone: '',
   password: '',
   confirmPassword: '',
   role: 'tenant' as 'tenant' | 'landlord' | 'manager' | 'super_admin'
@@ -167,7 +154,6 @@ const form = ref({
 const errors = ref({
   name: '',
   email: '',
-  phone: '',
   password: '',
   confirmPassword: '',
   role: ''
@@ -190,7 +176,6 @@ const validateForm = () => {
   errors.value = {
     name: '',
     email: '',
-    phone: '',
     password: '',
     confirmPassword: '',
     role: ''
@@ -211,10 +196,6 @@ const validateForm = () => {
     isValid = false;
   }
   
-  if (!form.value.phone.trim()) {
-    errors.value.phone = 'Phone number is required';
-    isValid = false;
-  }
   
   if (!form.value.password) {
     errors.value.password = 'Password is required';
@@ -248,7 +229,6 @@ const handleRegister = async () => {
     const result = await signup({
       name: form.value.name,
       email: form.value.email,
-      phone: form.value.phone,
       password: form.value.password,
       role: form.value.role
     });

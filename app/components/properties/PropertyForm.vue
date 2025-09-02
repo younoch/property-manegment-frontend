@@ -112,6 +112,7 @@ import {
 } from "valibot";
 import { createProtectedApiClient } from "../../utils/api";
 import { useApiToast } from "../../composables/useApiToast";
+import { PROPERTY_TYPES } from "../../constants/property";
 import type {
   AddPropertyPayload,
   CreatedProperty,
@@ -136,12 +137,7 @@ const isEditing = computed(() => !!props.model?.id)
 const isViewing = computed(() => !!props.view)
 
 
-const propertyTypeOptions = [
-  { label: "Apartment", value: "apartment" },
-  { label: "House", value: "house" },
-  { label: "Condo", value: "condo" },
-  { label: "Land", value: "land" },
-];
+const propertyTypeOptions = PROPERTY_TYPES;
 
 // Sync portfolio_id with parent selection immediately and on change
 watch(() => props.selectedPortfolioId, (id) => {
