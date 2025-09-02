@@ -77,9 +77,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
+import { useStorage } from '@vueuse/core'
 import AppHeader from '~/components/layout/AppHeader.vue'
 import OnboardingWizard from '~/components/ui/OnboardingWizard.vue'
 import { useUserStore } from '~/stores/user'
@@ -89,11 +90,28 @@ const userStore = useUserStore()
 const { userRole } = storeToRefs(userStore)
 
 const sidebarOpen = ref(false)
-const showOnboardingWizard = ref(true)
+const showOnboardingWizard = ref(false)
+
+// Check for onboarding wizard flag using useStorage
+const shouldShowWizard = useStorage('showOnboardingWizard', false)
+
+// Show wizard if flag is set
+doOnceOnClient(() => {
+  if (shouldShowWizard.value) {
+    showOnboardingWizard.value = true
+    shouldShowWizard.value = false
+  }
+})
+
+// Helper to run code once on client side
+function doOnceOnClient(fn: () => void) {
+  if (process.client) {
+    onMounted(fn)
+  }
+}
 
 function handleOnboardingComplete() {
-  // Handle any completion logic here
-  console.log('Onboarding completed')
+  navigateTo('/units/?onboarding=true')
 }
 const route = useRoute()
 watch(() => route.fullPath, () => { sidebarOpen.value = false })

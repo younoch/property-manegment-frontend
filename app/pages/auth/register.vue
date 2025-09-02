@@ -13,95 +13,79 @@
     </div>
     
     <UCard class="w-full">
-      <form @submit.prevent="handleRegister" class="space-y-4 sm:space-y-6">
+      <UForm :state="form" :validate="validate" @submit="handleRegister" class="space-y-4 sm:space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <div class="sm:col-span-2">
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+          <UFormField label="Full Name" name="name" :error="errors.name" class="sm:col-span-2">
             <UInput
               v-model="form.name"
               type="text"
               placeholder="Enter your full name"
               required
-              :error="errors.name"
               class="w-full"
             />
-          </div>
+          </UFormField>
           
-          <div class="">
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+          <UFormField label="Email Address" name="email" :error="errors.email">
             <UInput
               v-model="form.email"
               type="email"
               placeholder="Enter your email"
               required
-              :error="errors.email"
               class="w-full"
             />
-          </div>
-          <div class="">
-            <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+          </UFormField>
+          
+          <UFormField label="Role" name="role" :error="errors.role">
             <USelect
               v-model="form.role"
               :items="roleOptions"
               placeholder="Select your role"
               required
-              :error="errors.role"
               class="w-full"
             />
-          </div>
+          </UFormField>
           
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-            <UInput
-              v-model="form.password"
-              placeholder="Create a password"
-              :type="showPassword ? 'text' : 'password'"
-              required
-              :error="errors.password"
-              class="w-full"
-              :ui="{ trailing: 'pe-1' }"
-            >
-              <template #trailing>
-                <UButton
-                  color="neutral"
-                  variant="link"
-                  size="sm"
-                  :icon="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
-                  :aria-label="showPassword ? 'Hide password' : 'Show password'"
-                  :aria-pressed="showPassword"
-                  aria-controls="password"
-                  @click="showPassword = !showPassword"
-                />
-              </template>
-            </UInput>
-          </div>
+          <UFormField label="Password" name="password" :error="errors.password">
+            <UInputGroup>
+              <UInput
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                required
+                class="w-full pr-10"
+              />
+              <UButton
+                type="button"
+                variant="ghost"
+                color="gray"
+                :icon="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
+                class="absolute right-1 top-1/2 -translate-y-1/2"
+                @click="showPassword = !showPassword"
+                :padded="false"
+              />
+            </UInputGroup>
+          </UFormField>
           
-          <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-            <UInput
-              v-model="form.confirmPassword"
-              placeholder="Confirm your password"
-              :type="showConfirmPassword ? 'text' : 'password'"
-              required
-              :error="errors.confirmPassword"
-              class="w-full"
-              :ui="{ trailing: 'pe-1' }"
-            >
-              <template #trailing>
-                <UButton
-                  color="neutral"
-                  variant="link"
-                  size="sm"
-                  :icon="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
-                  :aria-label="showConfirmPassword ? 'Hide password' : 'Show password'"
-                  :aria-pressed="showConfirmPassword"
-                  aria-controls="password"
-                  @click="showConfirmPassword = !showConfirmPassword"
-                />
-              </template>
-            </UInput>
-          </div>
-          
+          <UFormField label="Confirm Password" name="confirmPassword" :error="errors.confirmPassword">
+            <UInputGroup>
+              <UInput
+                v-model="form.confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                required
+                class="w-full pr-10"
+              />
+              <UButton
+                type="button"
+                variant="ghost"
+                color="gray"
+                :icon="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
+                class="absolute right-1 top-1/2 -translate-y-1/2"
+                @click="showConfirmPassword = !showConfirmPassword"
+                :padded="false"
+              />
+            </UInputGroup>
+          </UFormField>
         </div>
         
         
@@ -117,17 +101,26 @@
         </div>
         
         <div class="pt-2">
-          <UButton
-            type="submit"
-            :loading="loading"
-            :disabled="loading"
-            class="w-full text-sm sm:text-base flex items-center justify-center"
-            size="lg"
-          >
-            Create Account
-          </UButton>
+          <div class="flex items-center justify-between pt-2">
+            <div class="text-sm">
+              <span class="text-gray-600">
+                Already have an account? 
+              </span>
+              <NuxtLink to="/auth/login" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+                Sign in
+              </NuxtLink>
+            </div>
+            <UButton
+              type="submit"
+              :loading="loading"
+              :disabled="loading"
+              class="px-6 py-2"
+            >
+              Create Account
+            </UButton>
+          </div>
         </div>
-      </form>
+      </UForm>
     </UCard>
   </div>
 </template>
@@ -148,10 +141,19 @@ const form = ref({
   email: '',
   password: '',
   confirmPassword: '',
-  role: 'tenant' as 'tenant' | 'landlord' | 'manager' | 'super_admin'
+  role: 'landlord' as 'tenant' | 'landlord' | 'manager' | 'super_admin'
 });
 
-const errors = ref({
+interface FormErrors {
+  [key: string]: string;
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: string;
+}
+
+const errors = ref<FormErrors>({
   name: '',
   email: '',
   password: '',
@@ -172,54 +174,51 @@ const showConfirmPassword = ref(false);
 
 const roleOptions = ROLE_OPTIONS;
 
-const validateForm = () => {
-  errors.value = {
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: ''
-  };
+const validate = (state: any) => {
+  const issues: Array<{ path: string[]; message: string }> = [];
   
-  let isValid = true;
-  
-  if (!form.value.name.trim()) {
-    errors.value.name = 'Name is required';
-    isValid = false;
+  if (!state.name?.trim()) {
+    issues.push({ path: ['name'], message: 'Name is required' });
   }
   
-  if (!form.value.email) {
-    errors.value.email = 'Email is required';
-    isValid = false;
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
-    errors.value.email = 'Please enter a valid email';
-    isValid = false;
+  if (!state.email) {
+    issues.push({ path: ['email'], message: 'Email is required' });
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+    issues.push({ path: ['email'], message: 'Please enter a valid email' });
   }
   
-  
-  if (!form.value.password) {
-    errors.value.password = 'Password is required';
-    isValid = false;
-  } else if (form.value.password.length < 6) {
-    errors.value.password = 'Password must be at least 6 characters';
-    isValid = false;
+  if (!state.password) {
+    issues.push({ path: ['password'], message: 'Password is required' });
+  } else if (state.password.length < 6) {
+    issues.push({ path: ['password'], message: 'Password must be at least 6 characters' });
   }
   
-  if (form.value.password !== form.value.confirmPassword) {
-    errors.value.confirmPassword = 'Passwords do not match';
-    isValid = false;
+  if (state.password !== state.confirmPassword) {
+    issues.push({ path: ['confirmPassword'], message: 'Passwords do not match' });
   }
   
-  if (!form.value.role) {
-    errors.value.role = 'Role is required';
-    isValid = false;
+  if (!state.role) {
+    issues.push({ path: ['role'], message: 'Role is required' });
   }
   
-  return isValid;
+  // Clear previous errors
+  Object.keys(errors.value).forEach(key => {
+    errors.value[key] = '';
+  });
+  
+  // Set new errors
+  issues.forEach(issue => {
+    if (issue.path?.[0]) {
+      errors.value[issue.path[0]] = issue.message;
+    }
+  });
+  
+  return issues;
 };
 
 const handleRegister = async () => {
-  if (!validateForm()) return;
+  const validationIssues = validate(form.value);
+  if (validationIssues.length > 0) return;
   
   loading.value = true;
   errorMessage.value = '';

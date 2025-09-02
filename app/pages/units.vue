@@ -87,19 +87,33 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: ['auth'] })
-
-import { h, resolveComponent, defineAsyncComponent } from 'vue'
+// ======================
+// 1. Imports
+// ======================
+import { h, resolveComponent, defineAsyncComponent, ref, computed, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { createProtectedApiClient } from '../utils/api'
-const UnitForm = defineAsyncComponent(() => import('~/components/units/UnitForm.vue'))
 import { useAuth } from '../composables/useAuth'
 import { getUnitStatusColor } from '../constants/units'
 
+// Lazy load components
+const UnitForm = defineAsyncComponent(() => import('~/components/units/UnitForm.vue'))
 const UButton = resolveComponent('UButton')
 const UBadge = resolveComponent('UBadge')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 
+const route = useRoute()
+
+const router = useRouter()
+
+// ======================
+// 2. Component Configuration
+// ======================
+definePageMeta({ middleware: ['auth'] })
+
+// ======================
+// 3. Table Configuration
+// ======================
 const columns: TableColumn<any>[] = [
   { accessorKey: 'id', header: 'ID' },
   { accessorKey: 'label', header: 'Label' },
@@ -119,54 +133,71 @@ const columns: TableColumn<any>[] = [
           color: getUnitStatusColor(status || 'vacant'),
           variant: 'soft',
         },
-        {
-          default: () => status || 'vacant',
-        }
+        { default: () => status || 'vacant' }
       )
     }
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
-      return h(
-        'div',
-        { class: 'text-right' },
-        h(
-          UDropdownMenu,
-          {
-            content: { align: 'end' },
-            items: getRowItems(row),
-            'aria-label': 'Actions dropdown'
-          },
-          () =>
-            h(UButton, {
-              icon: 'i-lucide-ellipsis-vertical',
-              color: 'neutral',
-              variant: 'ghost',
-              class: 'ml-auto',
-              'aria-label': 'Actions dropdown'
-            })
-        )
+    cell: ({ row }) => h(
+      'div',
+      { class: 'text-right' },
+      h(
+        UDropdownMenu,
+        {
+          content: { align: 'end' },
+          items: getRowItems(row),
+          'aria-label': 'Actions dropdown'
+        },
+        () => h(UButton, {
+          icon: 'i-lucide-ellipsis-vertical',
+          color: 'neutral',
+          variant: 'ghost',
+          class: 'ml-auto',
+          'aria-label': 'Actions dropdown'
+        })
       )
-    }
+    )
   }
 ]
 
 
+// ======================
+// 4. Initial Setup
+// ======================
 const api = createProtectedApiClient()
 const { user, checkAuth } = useAuth()
 await checkAuth()
 
+// ======================
+// 5. Refs and Reactive State
+// ======================
+// UI State
+const isViewing = ref(false)
+const isDeleteOpen = ref(false)
+const isFormOpen = ref(false)
+const formModel = ref<any | null>(null)
+const deletingId = ref<number | null>(null)
+
+// Selection State
+const selectedPortfolioId = ref<number | undefined>(undefined)
+const selectedPropertyId = ref<number | undefined>(undefined)
+
+// Data State
+const units = ref<any[]>([])
+const pendingUnits = ref(false)
+
+// ======================
+// 6. Computed Properties
+// ======================
 const landlordId = computed(() => {
   const id = user.value?.id
   return typeof id === 'string' ? Number(id) : id
 })
 
-const selectedPortfolioId = ref<number | undefined>(undefined)
-const selectedPropertyId = ref<number | undefined>(undefined)
-const isViewing = ref(false)
-const isDeleteOpen = ref(false)
-
+// ======================
+// 7. Data Fetching
+// ======================
 const { data: portfoliosResponse, pending, error } = await useAsyncData(
   'landlord-portfolios-for-units',
   async () => {
@@ -181,58 +212,75 @@ const { data: portfoliosResponse, pending, error } = await useAsyncData(
     immediate: true,
     transform: (res: any) => {
       const payload = res?.data ?? res
-      const list = Array.isArray(payload) ? payload : (payload?.data ?? [])
-      return list
+      return Array.isArray(payload) ? payload : (payload?.data ?? [])
     }
   }
 )
 
+// ======================
+// 8. Computed Selections
+// ======================
+// Portfolios
 const portfolios = computed(() => Array.isArray(portfoliosResponse.value) ? portfoliosResponse.value : [])
-const portfolioOptions = computed(() => (portfolios.value || []).map((p: any) => ({
-  label: p?.name ?? `Portfolio #${p?.id}`,
-  value: typeof p?.id === 'string' ? Number(p.id) : (p?.id ?? 0)
+const portfolioOptions = computed(() => portfolios.value.map((p: any) => ({
+  label: p.name,
+  value: p.id,
+  icon: 'i-heroicons-briefcase',
 })))
 
-watch(portfolios, (list) => {
-  const options = (list || []).map((p: any) => (typeof p?.id === 'string' ? Number(p.id) : p?.id)).filter((id: any) => Number.isFinite(id))
-  if ((!selectedPortfolioId.value || !options.includes(selectedPortfolioId.value)) && options.length > 0) {
-    selectedPortfolioId.value = options[0]
+// Properties
+const properties = computed(() => {
+  if (!selectedPortfolioId.value) return []
+  const portfolio = portfolios.value.find((p: any) => p.id === selectedPortfolioId.value)
+  return portfolio?.properties || []
+})
+
+const propertyOptions = computed(() => properties.value.map((p: any) => ({
+  label: p.name,
+  value: p.id,
+})))
+
+// Units
+const rowsArray = computed(() => {
+  const allUnits = units.value || []
+  if (selectedPropertyId.value) {
+    return allUnits.filter((u: any) => 
+      (typeof u?.property_id === 'string' ? Number(u.property_id) : u?.property_id) === selectedPropertyId.value
+    )
   }
+  return allUnits
 })
 
-const propertyOptions = computed(() => {
-  const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value)
-  const props = Array.isArray(selected?.properties) ? selected.properties : []
-  return props.map((prop: any) => ({
-    label: prop?.name ? `${prop.name} (#${prop.id})` : `Property #${prop.id}`,
-    value: typeof prop?.id === 'string' ? Number(prop.id) : (prop?.id ?? 0)
-  }))
-})
+const loading = computed(() => pending.value || pendingUnits.value)
 
-// Units for selected portfolio & property
-const units = ref<any[]>([])
-const pendingUnits = ref(false)
-
+// ======================
+// 9. Methods
+// ======================
 async function loadUnits() {
-  units.value = []
   const pid = selectedPortfolioId.value
   const propId = selectedPropertyId.value
-  if (!pid || !propId) return
+  if (!pid || !propId) {
+    units.value = []
+    return
+  }
+
   try {
     pendingUnits.value = true
+    units.value = []
+    
     const res = await api.get<any>(`/portfolios/${pid}/properties/${propId}/units`)
     const list = Array.isArray(res?.data) ? res.data : (res?.data?.data ?? [])
     units.value = list || []
-
   } catch (e) {
-    // error toast handled in api client
+    // Error toast is handled in the API client
+    console.error('Failed to load units:', e)
   } finally {
     pendingUnits.value = false
   }
 }
 
 function getRowItems(row: any) {
-  const items = [
+  const baseActions = [
     { type: 'label', label: 'Actions' },
     {
       label: 'View',
@@ -257,8 +305,10 @@ function getRowItems(row: any) {
       }
     }
   ]
+
+  // Add lease option for vacant units
   if (row.original.status === 'vacant') {
-    items.push({
+    baseActions.push({
       label: 'Lease unit',
       icon: 'i-lucide-key',
       color: 'secondary',
@@ -268,7 +318,9 @@ function getRowItems(row: any) {
       }
     })
   }
-  items.push(
+
+  // Add delete action
+  baseActions.push(
     { type: 'separator' },
     {
       label: 'Delete',
@@ -281,35 +333,61 @@ function getRowItems(row: any) {
       }
     }
   )
-  return items
+
+  return baseActions
 }
 
-watch(selectedPortfolioId, async (id, oldId) => {
-  if (id !== oldId) {
-    selectedPropertyId.value = undefined
+onMounted(() => {
+  console.log(route)
+  if (route.query.onboarding) {
+    isFormOpen.value = true
   }
-  await loadUnits()
+})
+
+// ======================
+// 10. Watchers
+// ======================
+// Watch for portfolio changes
+watch(portfolios, (newPortfolios) => {
+  if (newPortfolios.length > 0 && !selectedPortfolioId.value) {
+    selectedPortfolioId.value = newPortfolios[0]?.id
+  }
 }, { immediate: true })
 
+// Watch for property changes based on portfolio
+watch(properties, (newProperties) => {
+  if (newProperties.length > 0 && !selectedPropertyId.value) {
+    selectedPropertyId.value = newProperties[0]?.id
+  }
+}, { immediate: true })
+
+// Watch for portfolio selection changes
+watch(selectedPortfolioId, async (id, oldId) => {
+  if (id === oldId) return;
+  
+  // Reset selected property when portfolio changes
+  selectedPropertyId.value = undefined;
+  
+  // If we have properties for the new portfolio, select the first one
+  if (properties.value.length > 0) {
+    selectedPropertyId.value = properties.value[0]?.id;
+  }
+  
+  await loadUnits();
+}, { immediate: true })
+
+// Watch for property selection changes
 watch(selectedPropertyId, async () => {
   await loadUnits()
 })
 
-const rowsArray = computed(() => {
-  const allUnits = units.value || []
-  if (selectedPropertyId.value) {
-    return allUnits.filter((u: any) => (typeof u?.property_id === 'string' ? Number(u.property_id) : u?.property_id) === selectedPropertyId.value)
-  }
-  return allUnits
-})
-
-const loading = computed(() => pending.value || pendingUnits.value)
-
-const isFormOpen = ref(false)
-const formModel = ref<any | null>(null)
-
-
+// ======================
+// 11. Event Handlers
+// ======================
 const onCreated = (created: any) => {
+  if (route.query.onboarding) {
+    navigateTo(`/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&portfolioId=${selectedPortfolioId.value}&onboarding=true`)
+  }
   units.value.unshift({ ...created })
 }
 

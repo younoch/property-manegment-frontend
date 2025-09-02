@@ -87,6 +87,8 @@ const emit = defineEmits<{
   updated: [value: any];
 }>()
 
+const route = useRoute()
+
 const { success: toastSuccess, error: toastError } = useApiToast()
 const isEditing = computed(() => !!props.model?.id)
 const isViewing = computed(() => !!props.view)

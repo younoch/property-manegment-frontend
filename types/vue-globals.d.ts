@@ -57,6 +57,7 @@ import type {
   
     // Vue lifecycle hooks
     const onMounted: typeof import('vue')['onMounted'];
+    const onCreated: typeof import('vue')['onCreated'];
     const onBeforeMount: typeof import('vue')['onBeforeMount'];
     const onUnmounted: typeof import('vue')['onUnmounted'];
     const onBeforeUnmount: typeof import('vue')['onBeforeUnmount'];

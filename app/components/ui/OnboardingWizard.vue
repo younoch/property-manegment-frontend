@@ -99,6 +99,8 @@ function validateCurrentStep() {
 
 function next() {
   if (!validateCurrentStep()) return
+  // Clear all errors when moving to next step
+  Object.keys(errors).forEach(key => delete errors[key])
   if (step.value < 3) step.value++
 }
 function back() {
@@ -123,28 +125,56 @@ async function submitForm() {
     // Create portfolio
     const portfolioResponse = await api.post<PortfolioResponse>('/portfolios', {
       name: form.portfolio.name.trim(),
-      subscription_plan: 'free', // Default plan for onboarding
+      subscription_plan: 'free', 
       landlord_id: user.value?.id
     }) as ApiResponse<PortfolioResponse>
 
-    // Create property if not skipped
-    if (!skippedSteps.value.includes(2) && portfolioResponse?.data?.id) {
+    // Create property if user filled in property details (name is required)
+    console.log('Property creation - Checking conditions:', {
+      hasPropertyName: !!form.property.name.trim(),
+      portfolioId: portfolioResponse?.data?.id,
+      propertyData: form.property
+    });
+    
+    if (form.property.name.trim() && portfolioResponse?.data?.id) {
       try {
-        await api.post(`/portfolios/${portfolioResponse.data.id}/properties`, {
+        console.log('Attempting to create property with data:', {
           name: form.property.name.trim(),
           property_type: form.property.type,
           portfolio_id: portfolioResponse.data.id,
-          status: 'active' // Default status for new properties
-        })
+          status: 'active'
+        });
+        
+        const propertyResponse = await api.post(`/portfolios/${portfolioResponse.data.id}/properties`, {
+          name: form.property.name.trim(),
+          property_type: form.property.type,
+          portfolio_id: portfolioResponse.data.id, 
+        });
+        
+        console.log('Property created successfully:', propertyResponse);
       } catch (error) {
-        console.error('Error creating property:', error)
-        throw error // Re-throw to be caught by the outer try-catch
+        console.error('Error creating property:', error);
+        if (error.response) {
+          console.error('Error response data:', error.response.data);
+          console.error('Error status:', error.response.status);
+          console.error('Error headers:', error.response.headers);
+        } else if (error.request) {
+          console.error('No response received:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+        throw error; 
       }
+    } else {
+      console.log('Property not created. Conditions not met:', {
+        hasPropertyName: !!form.property.name.trim(),
+        hasPortfolioId: !!portfolioResponse?.data?.id
+      });
     }
 
     // Create tenant if not skipped
     if (!skippedSteps.value.includes(3) && form.tenant.email && portfolioResponse?.data?.id) {
-      // Split full name into first and last name
+      
       const [first_name, ...lastNameParts] = form.tenant.name.trim().split(' ')
       const last_name = lastNameParts.join(' ')
       
@@ -222,40 +252,42 @@ async function submitForm() {
         <div class="bg-white rounded-xl p-4 space-y-4">
           <!-- Step 1: Portfolio -->
           <UForm v-if="step === 1" :state="form.portfolio">
-            <UFormField label="Portfolio Name" name="name" :error="errors.name" required>
-              <UInput v-model="form.portfolio.name" placeholder="e.g. My Rental Portfolio" />
+            <UFormField label="Portfolio Name" name="name" :error="errors.name" required help="Pick something recognizable.">
+              <UInput v-model="form.portfolio.name" class="w-full" placeholder="e.g. My Rental Portfolio" />
             </UFormField>
           </UForm>
 
           <!-- Step 2: Property -->
-          <UForm v-if="step === 2" :state="form.property">
-            <UFormField label="Property Name" name="name" :error="errors.name" required>
+          <UForm v-if="step === 2" :state="form.property" class="grid sm:grid-cols-2 gap-2 sm:gap-4">
+            <UFormField label="Property Name" name="name" :error="errors.name" required help="Pick something recognizable.">
               <UInput 
                 v-model="form.property.name" 
                 placeholder="e.g. Greenview Apartments"
                 :disabled="submitting"
+                class="w-full"
               />
             </UFormField>
-            <UFormField label="Property Type" name="type" :error="errors.type" required>
+            <UFormField label="Property Type" name="type" :error="errors.type" required help="You can change this later.">
               <USelect 
                 v-model="form.property.type" 
                 :options="propertyTypeOptions.map(t => ({ label: t.label, value: t.value }))"
                 :disabled="submitting"
                 placeholder="Select property type"
+                class="w-full"
               />
             </UFormField>
           </UForm>
 
           <!-- Step 3: Tenant -->
-          <UForm v-if="step === 3" :state="form.tenant">
-            <UFormField label="Tenant Name" name="name" :error="errors.name" required>
-              <UInput v-model="form.tenant.name" placeholder="e.g. John Doe" />
+          <UForm v-if="step === 3" :state="form.tenant" class="grid sm:grid-cols-2 gap-2 sm:gap-4">
+            <UFormField label="Tenant Name" class="sm:col-span-2" name="name" :error="errors.name" required>
+              <UInput v-model="form.tenant.name" class="w-full" placeholder="e.g. John Doe" />
             </UFormField>
             <UFormField label="Tenant Email" name="email" :error="errors.email" required>
-              <UInput type="email" v-model="form.tenant.email" placeholder="e.g. john@email.com" />
+              <UInput type="email" v-model="form.tenant.email" class="w-full" placeholder="e.g. john@email.com" />
             </UFormField>
             <UFormField label="Tenant Phone" name="phone" :error="errors.phone">
-              <UInput v-model="form.tenant.phone" placeholder="+880 123-456-789" />
+              <UInput v-model="form.tenant.phone" class="w-full" placeholder="+880 123-456-789" />
             </UFormField>
           </UForm>
         </div>

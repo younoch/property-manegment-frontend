@@ -12,6 +12,7 @@ import StepUnit from '~/components/leases/StepUnit.vue'
 import StepTenants from '~/components/leases/StepTenants.vue'
 import StepDetails from '~/components/leases/StepDetails.vue'
 import StepReview from '~/components/leases/StepReview.vue'
+import CelebrationOverlay from '@/components/ui/CelebrationOverlay.vue'
 
 const api = createProtectedApiClient()
 const { checkAuth } = useAuth()
@@ -109,6 +110,11 @@ const selectedTenants = ref<Tenant[]>([])
 const creating = ref(false)
 const activating = ref(false)
 const draftLeaseId = ref<number | null>(null)
+const showCelebration = ref(false)
+
+if (route.query.onboarding) {
+  showCelebration.value = true
+}
 
 function canGoTenants() {
   return !!prefill.portfolioId && !!prefill.propertyId && !!prefill.unitId && canLeaseThisUnit.value
@@ -260,5 +266,6 @@ function goBack() {
       @cancel="() => router.back()"
       @activate="activateLease"
     />
+    <CelebrationOverlay :show="showCelebration" @close="showCelebration = false" />
   </div>
 </template>
