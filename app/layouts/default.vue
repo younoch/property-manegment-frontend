@@ -68,11 +68,10 @@
     </ClientOnly>
 
     <!-- Footer (unchanged) -->
-    <footer class="bg-gray-800 text-white">
+    <!-- <footer class="bg-gray-800 text-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- ... your footer content ... -->
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 

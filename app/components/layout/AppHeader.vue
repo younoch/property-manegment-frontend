@@ -40,28 +40,6 @@
           </template>
 
           <div class="flex items-center gap-3">
-                        <!-- Theme color popover -->
-                        <UPopover :content="{ align: 'end' }">
-              <UButton variant="ghost" class="gap-2" aria-label="Theme color">
-                <span class="h-3 w-3 rounded-full border border-black/10" :class="options[current].bgClass" />
-                <span class="hidden sm:inline text-sm">{{ labelMap[current] }}</span>
-              </UButton>
-              <template #content>
-                <div class="p-3">
-                  <p class="text-xs mb-2 text-gray-500">Theme color</p>
-                  <div class="grid grid-cols-6 gap-2">
-                    <button
-                      v-for="c in keys"
-                      :key="c"
-                      class="h-7 w-7 rounded-full border border-black/10 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-black/20"
-                      :class="[options[c].bgClass, c === current ? 'ring-2 ring-offset-2 ring-black/20' : '']"
-                      :aria-label="`Set ${labelMap[c]}`"
-                      @click="pick(c)"
-                    />
-                  </div>
-                </div>
-              </template>
-            </UPopover>
             <!-- Auth (signed out) -->
             <template v-if="!isLoggedIn">
               <NuxtLink
@@ -198,19 +176,9 @@ import { useRouter } from 'nuxt/app'
 import { useUserStore } from '~/stores/user'
 import { useAuthStore } from '~/stores/auth'
 import { getTopHeaderNav } from '~/utils/navigation'
-import { useThemeColor, type ThemeKey } from '~/composables/useThemeColor'
 
 defineProps<{ showSidebar?: boolean }>()
 defineEmits<{ (e: 'openSidebar'): void }>()
-
-/** Theme picker */
-const { current, setTheme, keys, options } = useThemeColor()
-const labelMap: Record<ThemeKey, string> = {
-  black: 'Black', red: 'Red', orange: 'Orange', amber: 'Amber', yellow: 'Yellow', lime: 'Lime',
-  green: 'Green', primary: 'Emerald', teal: 'Teal', cyan: 'Cyan', sky: 'Sky', blue: 'Blue',
-  indigo: 'Indigo', violet: 'Violet', purple: 'Purple', fuchsia: 'Fuchsia', pink: 'Pink', rose: 'Rose'
-}
-function pick(c: ThemeKey) { setTheme(c) }
 
 /** Auth + user */
 const userStore = useUserStore()
