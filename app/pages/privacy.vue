@@ -3,9 +3,9 @@
   <div class="min-h-screen bg-white text-gray-900 relative overflow-hidden">
     <!-- Decorative background (subtle) -->
     <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/30 blur-3xl rounded-full"></div>
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-300/30 blur-3xl rounded-full"></div>
       <div class="absolute top-40 -right-24 w-[28rem] h-[28rem] bg-teal-200/30 blur-3xl rounded-full"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-emerald-50/50 via-white to-white"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary-50/50 via-white to-white"></div>
     </div>
 
     <section class="container mx-auto px-4 pt-16 md:pt-24">
@@ -35,7 +35,7 @@
         <!-- TOC -->
         <nav class="mt-10 p-5 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
           <h3 class="font-semibold">In this policy</h3>
-          <ul class="mt-2 text-sm text-emerald-700 grid sm:grid-cols-2 gap-y-1">
+          <ul class="mt-2 text-sm text-primary-700 grid sm:grid-cols-2 gap-y-1">
             <li><a href="#info-we-collect" class="hover:underline">1. Information we collect</a></li>
             <li><a href="#how-we-use" class="hover:underline">2. How we use information</a></li>
             <li><a href="#legal-bases" class="hover:underline">3. Legal bases</a></li>
@@ -69,7 +69,7 @@
             <li>Detect, prevent, and respond to fraud, abuse, or security incidents.</li>
             <li>Improve the product (e.g., troubleshooting, analytics, new features).</li>
             <li>Communicate with you (service updates, transactional emails, support).</li>
-            <li>Comply with legal obligations and enforce our <NuxtLink to="/terms" class="text-emerald-700 underline">Terms</NuxtLink>.</li>
+            <li>Comply with legal obligations and enforce our <NuxtLink to="/terms" class="text-primary-700 underline">Terms</NuxtLink>.</li>
           </ul>
         </PolicySection>
 
@@ -125,7 +125,7 @@
             <li>Port data in a structured, machine‑readable format</li>
             <li>Withdraw consent where processing relies on consent</li>
           </ul>
-          <p class="text-gray-700 mt-2">To exercise these rights, contact us at <NuxtLink to="#contact" class="text-emerald-700 underline">privacy@leasetrack.app</NuxtLink>. We will verify your request and respond within applicable timeframes.</p>
+          <p class="text-gray-700 mt-2">To exercise these rights, contact us at <NuxtLink to="#contact" class="text-primary-700 underline">privacy@leasetrack.app</NuxtLink>. We will verify your request and respond within applicable timeframes.</p>
         </PolicySection>
 
         <PolicySection id="children" title="10. Children">
@@ -139,14 +139,14 @@
         <PolicySection id="contact" title="12. Contact us">
           <div class="text-gray-700 space-y-1">
             <p><strong>Email:</strong> privacy@leasetrack.app</p>
-            <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-emerald-700 underline">Contact form</NuxtLink></p>
-            <p><strong>Legal & Terms:</strong> <NuxtLink to="/terms" class="text-emerald-700 underline">Terms of Service</NuxtLink></p>
-            <p><strong>Status:</strong> <NuxtLink to="/status" class="text-emerald-700 underline">Status page</NuxtLink></p>
+            <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 underline">Contact form</NuxtLink></p>
+            <p><strong>Legal & Terms:</strong> <NuxtLink to="/terms" class="text-primary-700 underline">Terms of Service</NuxtLink></p>
+            <p><strong>Status:</strong> <NuxtLink to="/status" class="text-primary-700 underline">Status page</NuxtLink></p>
           </div>
         </PolicySection>
 
         <!-- Final note -->
-        <div class="mt-10 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900">
+        <div class="mt-10 p-5 rounded-2xl bg-primary-50 border border-primary-200 text-primary-900">
           <p class="text-sm">If anything here is unclear, please reach out. We’re happy to explain how we handle data in your specific use case.</p>
         </div>
 

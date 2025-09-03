@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col lg:flex-row">
     <!-- Left Side - Branding/Info -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-600 to-teal-800">
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 to-teal-800">
       <div class="flex flex-col justify-center px-8 xl:px-12 py-12 xl:py-16 text-white">
         <div class="mb-8">
           <h1 class="text-3xl xl:text-4xl font-bold mb-4">Property Management</h1>

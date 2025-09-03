@@ -70,7 +70,7 @@ const formattedDelta = computed(() => {
 // Determine delta styling
 const deltaClass = computed(() => {
   return kpi.value.delta >= 0 
-    ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20' 
+    ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/20' 
     : 'text-rose-600 bg-rose-50 dark:bg-rose-900/20';
 });
 

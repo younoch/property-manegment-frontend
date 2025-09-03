@@ -7,10 +7,10 @@
           A simple flow: <span class="font-medium">Lease → Invoice → Payment</span> with automatic status updates, grace periods, and idempotent late fees.
         </p>
         <ul class="mt-6 space-y-3 text-gray-700">
-          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-emerald-600 mt-0.5"/> Auto-generate monthly rent invoices (with proration)</li>
-          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-emerald-600 mt-0.5"/> One-click payment recording + partials + credits</li>
-          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-emerald-600 mt-0.5"/> Grace-aware overdue & idempotent late fees</li>
-          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-emerald-600 mt-0.5"/> Immutable paid/void invoices with full audit trail</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-primary-600 mt-0.5"/> Auto-generate monthly rent invoices (with proration)</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-primary-600 mt-0.5"/> One-click payment recording + partials + credits</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-primary-600 mt-0.5"/> Grace-aware overdue & idempotent late fees</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-primary-600 mt-0.5"/> Immutable paid/void invoices with full audit trail</li>
         </ul>
 
         <div class="mt-6 grid grid-cols-2 gap-3">

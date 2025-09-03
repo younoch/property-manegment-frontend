@@ -2,13 +2,13 @@
   <section class="container mx-auto px-4 pt-16 md:pt-24">
     <div class="grid lg:grid-cols-2 gap-10 items-center">
       <div>
-        <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-semibold bg-emerald-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-emerald-200/60">
+        <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
           LeaseTrack · Smart Property Management
         </span>
 
         <h1 class="mt-5 text-4xl md:text-6xl font-extrabold leading-tight">
           Manage leases, send invoices,
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">manage payments—fast.</span>
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">manage payments—fast.</span>
         </h1>
 
         <p class="mt-4 text-gray-700 text-lg md:text-xl max-w-xl">
@@ -17,7 +17,7 @@
         </p>
 
         <div class="mt-7 flex flex-col sm:flex-row gap-3">
-          <UButton color="primary" size="lg" to="/auth/register" class="shadow-lg shadow-emerald-200 hover:shadow-emerald-300">
+          <UButton color="primary" size="lg" to="/auth/register" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">
             Get Started Free
           </UButton>
           <UButton variant="soft" color="gray" size="lg" to="/demo">See Live Demo</UButton>

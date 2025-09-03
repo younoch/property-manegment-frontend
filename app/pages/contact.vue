@@ -3,15 +3,15 @@
   <div class="min-h-screen bg-white text-gray-900 relative overflow-hidden">
     <!-- Decorative background -->
     <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/40 blur-3xl rounded-full animate-slow-float"></div>
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-300/40 blur-3xl rounded-full animate-slow-float"></div>
       <div class="absolute top-40 -right-24 w-[28rem] h-[28rem] bg-teal-200/40 blur-3xl rounded-full animate-slow-float-rev"></div>
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-emerald-100/60 blur-3xl rounded-full"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-emerald-50/60 via-white to-white"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-primary-100/60 blur-3xl rounded-full"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary-50/60 via-white to-white"></div>
     </div>
 
     <!-- Hero / Intro -->
     <section class="container mx-auto px-4 pt-16 md:pt-24 text-center">
-      <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-semibold bg-emerald-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-emerald-200/60">Contact</span>
+      <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">Contact</span>
       <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">We'd love to hear from you</h1>
       <p class="mt-3 text-gray-600 max-w-2xl mx-auto text-lg">Questions about LeaseTrack, pricing, or onboarding? Send us a note—our team usually replies within one business day.</p>
     </section>
@@ -65,8 +65,8 @@
                 <UTextarea v-model="state.message" placeholder="How can we help?" :rows="6"/>
               </UFormGroup>
               <div class="flex flex-col sm:flex-row items-center gap-3">
-                <UButton type="submit" color="emerald" size="lg" :loading="submitting">Send message</UButton>
-                <p v-if="submitted" class="text-sm text-emerald-700">Thanks! We received your message and will reply soon.</p>
+                <UButton type="submit" color="primary" size="lg" :loading="submitting">Send message</UButton>
+                <p v-if="submitted" class="text-sm text-primary-700">Thanks! We received your message and will reply soon.</p>
               </div>
             </UForm>
           </div>
@@ -88,8 +88,8 @@
       <div class="container mx-auto px-4 max-w-4xl">
         <h2 class="text-2xl md:text-3xl font-bold text-center">Before you send</h2>
         <div class="mt-6 grid md:grid-cols-2 gap-4">
-          <UAccordion :items="faqItemsLeft" color="emerald" variant="soft"/>
-          <UAccordion :items="faqItemsRight" color="emerald" variant="soft"/>
+          <UAccordion :items="faqItemsLeft" color="primary" variant="soft"/>
+          <UAccordion :items="faqItemsRight" color="primary" variant="soft"/>
         </div>
       </div>
     </section>
@@ -117,10 +117,10 @@ const ContactCard = defineComponent({
   props: { icon: String, title: String, subtitle: String, desc: String },
   template: `<div class='p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm'>
     <div class='flex items-start gap-3'>
-      <UIcon :name="icon" class='text-emerald-600 mt-1'/>
+      <UIcon :name="icon" class='text-primary-600 mt-1'/>
       <div>
         <h3 class='font-semibold'>{{ title }}</h3>
-        <p class='text-sm text-emerald-700'>{{ subtitle }}</p>
+        <p class='text-sm text-primary-700'>{{ subtitle }}</p>
         <p class='text-sm text-gray-600 mt-1'>{{ desc }}</p>
       </div>
     </div>

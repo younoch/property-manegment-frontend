@@ -4,7 +4,7 @@
       <div class="text-sm text-gray-600">
         Open: <span class="font-medium">{{ totals.open }}</span> ·
         Overdue: <span class="font-medium text-amber-600">{{ totals.overdue }}</span> ·
-        Paid: <span class="font-medium text-emerald-600">{{ totals.paid }}</span>
+        Paid: <span class="font-medium text-primary-600">{{ totals.paid }}</span>
       </div>
       <UButton icon="i-lucide-file-plus" :loading="generating" @click="$emit('generate-next')">Generate next invoice</UButton>
     </div>

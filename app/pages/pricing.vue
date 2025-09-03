@@ -3,9 +3,9 @@
   <div class="min-h-screen bg-white text-gray-900 relative overflow-hidden">
     <!-- Decorative background -->
     <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/30 blur-3xl rounded-full"></div>
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-300/30 blur-3xl rounded-full"></div>
       <div class="absolute top-40 -right-24 w-[28rem] h-[28rem] bg-teal-200/30 blur-3xl rounded-full"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-emerald-50/50 via-white to-white"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary-50/50 via-white to-white"></div>
     </div>
 
     <!-- Hero -->
@@ -15,9 +15,9 @@
 
       <!-- Billing cycle toggle -->
       <div class="mt-6 flex justify-center gap-3">
-        <UButton :variant="billing==='monthly' ? 'solid' : 'soft'" color="emerald" @click="billing='monthly'">Monthly</UButton>
-        <UButton :variant="billing==='quarterly' ? 'solid' : 'soft'" color="emerald" @click="billing='quarterly'">Quarterly <span class='hidden sm:inline'>(save 20%)</span></UButton>
-        <UButton :variant="billing==='yearly' ? 'solid' : 'soft'" color="emerald" @click="billing='yearly'">Yearly <span class='hidden sm:inline'>(save 30%)</span></UButton>
+        <UButton :variant="billing==='monthly' ? 'solid' : 'soft'" color="primary" @click="billing='monthly'">Monthly</UButton>
+        <UButton :variant="billing==='quarterly' ? 'solid' : 'soft'" color="primary" @click="billing='quarterly'">Quarterly <span class='hidden sm:inline'>(save 20%)</span></UButton>
+        <UButton :variant="billing==='yearly' ? 'solid' : 'soft'" color="primary" @click="billing='yearly'">Yearly <span class='hidden sm:inline'>(save 30%)</span></UButton>
       </div>
     </section>
 
@@ -28,7 +28,7 @@
       v-for="plan in plans"
       :key="plan.name"
       class="relative p-6 rounded-2xl border shadow-sm bg-white/80 backdrop-blur transition"
-      :class="plan.highlight ? 'border-emerald-500 shadow-lg md:scale-105' : 'border-gray-200'"
+      :class="plan.highlight ? 'border-primary-500 shadow-lg md:scale-105' : 'border-gray-200'"
     >
       <h3 class="text-xl font-bold">{{ plan.name }}</h3>
       <p class="text-sm text-gray-600 mt-1">{{ plan.desc }}</p>
@@ -42,12 +42,12 @@
 
       <ul class="mt-5 space-y-2 text-sm text-gray-700">
         <li v-for="f in plan.features" :key="f" class="flex items-center gap-2">
-          <UIcon name="i-heroicons-check-circle" class="text-emerald-600" /> {{ f }}
+          <UIcon name="i-heroicons-check-circle" class="text-primary-600" /> {{ f }}
         </li>
       </ul>
 
       <div class="mt-6">
-        <UButton :color="plan.highlight ? 'emerald' : 'gray'" size="lg" class="w-full">
+        <UButton :color="plan.highlight ? 'primary' : 'gray'" size="lg" class="w-full">
           {{ plan.cta }}
         </UButton>
       </div>
@@ -64,10 +64,10 @@
           not the number of users. Invite unlimited teammates at no extra cost. Start free with 5 units, upgrade as you grow.
         </p>
         <ul class="mt-6 text-gray-700 text-left max-w-md mx-auto space-y-2">
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Units drive pricing, not users</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Unlimited users per portfolio</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Cancel or upgrade anytime</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-emerald-600"/> Free forever for 5 units</li>
+          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Units drive pricing, not users</li>
+          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Unlimited users per portfolio</li>
+          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Cancel or upgrade anytime</li>
+          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Free forever for 5 units</li>
         </ul>
       </div>
     </section>
@@ -77,8 +77,8 @@
       <div class="container mx-auto px-4 max-w-4xl">
         <h2 class="text-2xl md:text-3xl font-bold text-center">Pricing FAQ</h2>
         <div class="mt-6 grid md:grid-cols-2 gap-4">
-          <UAccordion :items="faqLeft" color="emerald" variant="soft"/>
-          <UAccordion :items="faqRight" color="emerald" variant="soft"/>
+          <UAccordion :items="faqLeft" color="primary" variant="soft"/>
+          <UAccordion :items="faqRight" color="primary" variant="soft"/>
         </div>
       </div>
     </section>
@@ -89,7 +89,7 @@
         <h3 class="text-2xl md:text-3xl font-bold">Start managing smarter today</h3>
         <p class="mt-2 text-gray-600">Sign up free. Upgrade only when you need more.</p>
         <div class="mt-6 flex justify-center gap-3">
-          <UButton color="emerald" size="lg" to="/auth/register">Get Started Free</UButton>
+          <UButton color="primary" size="lg" to="/auth/register">Get Started Free</UButton>
           <UButton variant="soft" color="gray" size="lg" to="/demo">See Live Demo</UButton>
         </div>
       </div>

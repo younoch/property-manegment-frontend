@@ -3,20 +3,20 @@
   <div class="min-h-screen bg-white text-gray-900 relative overflow-hidden">
     <!-- Decorative background -->
     <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/40 blur-3xl rounded-full animate-slow-float"></div>
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-300/40 blur-3xl rounded-full animate-slow-float"></div>
       <div class="absolute top-40 -right-24 w-[28rem] h-[28rem] bg-teal-200/40 blur-3xl rounded-full animate-slow-float-rev"></div>
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-emerald-100/60 blur-3xl rounded-full"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-emerald-50/60 via-white to-white"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-primary-100/60 blur-3xl rounded-full"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary-50/60 via-white to-white"></div>
     </div>
 
     <!-- HERO (no site header) -->
     <section class="container mx-auto px-4 pt-16 md:pt-24">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
-          <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-semibold bg-emerald-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-emerald-200/60">About LeaseTrack</span>
+          <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">About LeaseTrack</span>
           <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">
             Built for small landlords.
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">Obsessed with accuracy.</span>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Obsessed with accuracy.</span>
           </h1>
           <p class="mt-4 text-gray-700 text-lg md:text-xl max-w-xl">
             We created <strong>LeaseTrack</strong> to make rent operations simple, reliable, and audit‑friendly. No bloated features. Just the right workflows—leases, invoices, and payments—done right.
@@ -52,19 +52,19 @@
       <div class="container mx-auto px-4">
         <h2 class="text-3xl md:text-4xl font-bold text-center">Our story</h2>
         <div class="mt-10 max-w-3xl mx-auto">
-          <ol class="relative border-s-2 border-emerald-100">
+          <ol class="relative border-s-2 border-primary-100">
             <li class="mb-10 ms-6">
-              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white text-xs">1</span>
+              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white text-xs">1</span>
               <h3 class="font-semibold">Frustration with spreadsheets</h3>
               <p class="text-gray-600 text-sm mt-1">We managed a handful of units and saw the same issues: duplicate invoices, missed grace windows, messy partial payments.</p>
             </li>
             <li class="mb-10 ms-6">
-              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white text-xs">2</span>
+              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white text-xs">2</span>
               <h3 class="font-semibold">An MVP focused on the money flow</h3>
               <p class="text-gray-600 text-sm mt-1">Lease → Invoice → Payment. We shipped the core with proration, partials, credits, and TZ‑aware overdue logic.</p>
             </li>
             <li class="ms-6">
-              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white text-xs">3</span>
+              <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white text-xs">3</span>
               <h3 class="font-semibold">Growing with users</h3>
               <p class="text-gray-600 text-sm mt-1">Now we’re adding receipts, a tenant portal, and deeper reporting—guided by real landlord workflows.</p>
             </li>
@@ -107,9 +107,9 @@
         <div class="p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
           <h2 class="text-2xl font-bold">How we build</h2>
           <ul class="mt-3 space-y-2 text-gray-700 text-sm">
-            <li class="flex gap-2"><UIcon name="i-heroicons-rocket-launch" class="text-emerald-600"/> Ship weekly, with small, reversible changes.</li>
-            <li class="flex gap-2"><UIcon name="i-heroicons-queue-list" class="text-emerald-600"/> Document policies (overdue, late fees, credits) as code & guides.</li>
-            <li class="flex gap-2"><UIcon name="i-heroicons-wrench" class="text-emerald-600"/> Measure twice—migrations and money math are atomic.</li>
+            <li class="flex gap-2"><UIcon name="i-heroicons-rocket-launch" class="text-primary-600"/> Ship weekly, with small, reversible changes.</li>
+            <li class="flex gap-2"><UIcon name="i-heroicons-queue-list" class="text-primary-600"/> Document policies (overdue, late fees, credits) as code & guides.</li>
+            <li class="flex gap-2"><UIcon name="i-heroicons-wrench" class="text-primary-600"/> Measure twice—migrations and money math are atomic.</li>
           </ul>
         </div>
         <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm bg-white/70 backdrop-blur">
@@ -148,7 +148,7 @@
           <h2 class="text-3xl font-bold">Want to help landlords run smarter?</h2>
           <p class="mt-2 text-gray-600">We’re always curious to meet builders and customer champions. Even if there isn’t an open role listed, reach out.</p>
           <div class="mt-5 flex gap-3">
-            <UButton color="emerald" to="/contact">Contact us</UButton>
+            <UButton color="primary" to="/contact">Contact us</UButton>
             <UButton variant="soft" color="gray" to="/careers">View roles</UButton>
           </div>
         </div>
@@ -164,7 +164,7 @@
         <h3 class="text-2xl md:text-3xl font-bold">Join LeaseTrack</h3>
         <p class="mt-2 text-gray-600">Start free, send your first invoice in minutes, and keep your records clean.</p>
         <div class="mt-6 flex justify-center gap-3">
-          <UButton color="emerald" size="lg" to="/auth/register" class="shadow-lg shadow-emerald-200 hover:shadow-emerald-300">Get Started Free</UButton>
+          <UButton color="primary" size="lg" to="/auth/register" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">Get Started Free</UButton>
           <UButton variant="soft" color="gray" size="lg" to="/demo">See Live Demo</UButton>
         </div>
       </div>

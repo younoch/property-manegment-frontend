@@ -2,10 +2,10 @@
   <div class="relative min-h-screen bg-white text-gray-900 overflow-hidden">
     <!-- Decorative animated background -->
     <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/40 blur-3xl rounded-full animate-slow-float"></div>
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-300/40 blur-3xl rounded-full animate-slow-float"></div>
       <div class="absolute top-40 -right-24 w-[28rem] h-[28rem] bg-teal-200/40 blur-3xl rounded-full animate-slow-float-rev"></div>
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-emerald-100/60 blur-3xl rounded-full"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-emerald-50/60 via-white to-white"></div>
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-primary-100/60 blur-3xl rounded-full"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary-50/60 via-white to-white"></div>
     </div>
 
     <HeroSection />

@@ -3,9 +3,9 @@
   <div class="min-h-screen bg-white text-gray-900 relative overflow-hidden">
     <!-- Decorative background -->
     <div class="pointer-events-none absolute inset-0 -z-10">
-      <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/30 blur-3xl rounded-full"></div>
+      <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-300/30 blur-3xl rounded-full"></div>
       <div class="absolute top-40 -right-24 w-[28rem] h-[28rem] bg-teal-200/30 blur-3xl rounded-full"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-emerald-50/50 via-white to-white"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary-50/50 via-white to-white"></div>
     </div>
 
     <section class="container mx-auto px-4 pt-16 md:pt-24">
@@ -19,7 +19,7 @@
         <!-- TOC -->
         <nav class="mt-10 p-5 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
           <h3 class="font-semibold">Contents</h3>
-          <ul class="mt-2 text-sm text-emerald-700 grid sm:grid-cols-2 gap-y-1">
+          <ul class="mt-2 text-sm text-primary-700 grid sm:grid-cols-2 gap-y-1">
             <li><a href="#acceptance" class="hover:underline">1. Acceptance of Terms</a></li>
             <li><a href="#eligibility" class="hover:underline">2. Eligibility</a></li>
             <li><a href="#accounts" class="hover:underline">3. Accounts & Security</a></li>
@@ -39,7 +39,7 @@
 
         <!-- Sections -->
         <TermsSection id="acceptance" title="1. Acceptance of Terms">
-          <p class="text-gray-700">By creating an account or using LeaseTrack, you confirm that you accept and will comply with these Terms, our <NuxtLink to="/privacy" class="text-emerald-700 underline">Privacy Policy</NuxtLink>, and any additional policies we provide.</p>
+          <p class="text-gray-700">By creating an account or using LeaseTrack, you confirm that you accept and will comply with these Terms, our <NuxtLink to="/privacy" class="text-primary-700 underline">Privacy Policy</NuxtLink>, and any additional policies we provide.</p>
         </TermsSection>
 
         <TermsSection id="eligibility" title="2. Eligibility">
@@ -109,12 +109,12 @@
         <TermsSection id="contact" title="14. Contact">
           <div class="text-gray-700 space-y-1">
             <p><strong>Email:</strong> legal@leasetrack.app</p>
-            <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-emerald-700 underline">Contact form</NuxtLink></p>
-            <p><strong>Privacy:</strong> <NuxtLink to="/privacy" class="text-emerald-700 underline">Privacy Policy</NuxtLink></p>
+            <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 underline">Contact form</NuxtLink></p>
+            <p><strong>Privacy:</strong> <NuxtLink to="/privacy" class="text-primary-700 underline">Privacy Policy</NuxtLink></p>
           </div>
         </TermsSection>
 
-        <div class="mt-10 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900">
+        <div class="mt-10 p-5 rounded-2xl bg-primary-50 border border-primary-200 text-primary-900">
           <p class="text-sm">If you have any questions about these Terms, please contact us before using the service.</p>
         </div>
 

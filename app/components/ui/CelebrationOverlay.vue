@@ -16,7 +16,7 @@
 
         <!-- Action Button -->
         <button @click="close"
-          class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300">
+          class="px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-teal-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition-transform duration-300">
           Start Managing Properties
         </button>
       </div>

@@ -4,9 +4,9 @@
       <div>
         <h2 class="text-3xl md:text-4xl font-bold">Built for independent landlords & small teams</h2>
         <ul class="mt-5 space-y-3 text-gray-700">
-          <li class="flex gap-3"><UIcon name="i-heroicons-home-modern" class="text-emerald-600 mt-0.5"/> Single-property owners who need simple rent tracking</li>
-          <li class="flex gap-3"><UIcon name="i-heroicons-building-office" class="text-emerald-600 mt-0.5"/> Small portfolios (5–50 units) with recurring invoicing</li>
-          <li class="flex gap-3"><UIcon name="i-heroicons-queue-list" class="text-emerald-600 mt-0.5"/> Teams that require an audit trail and clear roles</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-home-modern" class="text-primary-600 mt-0.5"/> Single-property owners who need simple rent tracking</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-building-office" class="text-primary-600 mt-0.5"/> Small portfolios (5–50 units) with recurring invoicing</li>
+          <li class="flex gap-3"><UIcon name="i-heroicons-queue-list" class="text-primary-600 mt-0.5"/> Teams that require an audit trail and clear roles</li>
         </ul>
       </div>
       <div class="grid grid-cols-2 gap-3">
