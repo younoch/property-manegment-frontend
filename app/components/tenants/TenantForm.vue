@@ -19,15 +19,15 @@
               />
             </UFormField>
 
-            <UFormField label="First Name" name="first_name" :error="errors.first_name">
+            <UFormField label="First Name" name="first_name" :error="errors.first_name" required>
               <UInput v-model="form.first_name" placeholder="Enter first name" :disabled="props.view" class="w-full" />
             </UFormField>
 
-            <UFormField label="Last Name" name="last_name" :error="errors.last_name">
+            <UFormField label="Last Name" name="last_name" :error="errors.last_name" required>
               <UInput v-model="form.last_name" placeholder="Enter last name" :disabled="props.view" class="w-full" />
             </UFormField>
 
-            <UFormField label="Email" name="email" :error="errors.email">
+            <UFormField label="Email" name="email" :error="errors.email" required>
               <UInput v-model="form.email" type="email" placeholder="Enter email address" :disabled="props.view" class="w-full" />
             </UFormField>
 

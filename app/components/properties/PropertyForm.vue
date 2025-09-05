@@ -14,7 +14,7 @@
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
-            <UFormField label="Name" name="name" :error="errors.name">
+            <UFormField label="Name" name="name" :error="errors.name" required>
               <UInput v-model="form.name" :disabled="isViewing" placeholder="Sunset Apartments" class="w-full" />
             </UFormField>
     

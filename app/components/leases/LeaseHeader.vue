@@ -14,13 +14,20 @@
       </p>
     </div>
     <div class="flex items-center gap-2">
-      <UButton variant="ghost" to="/leases" icon="i-heroicons-arrow-left">Back</UButton>
+      <UButton variant="ghost" @click="goBack" icon="i-heroicons-arrow-left">Back</UButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from '#imports'
 import { getLeaseStatusColor } from '@/constants/leases'
+
+const router = useRouter()
 const props = defineProps<{ leaseId: number; lease: any | null }>()
 const statusColor = computed(() => getLeaseStatusColor(props.lease?.status))
+
+const goBack = () => {
+  router.go(-1)
+}
 </script>

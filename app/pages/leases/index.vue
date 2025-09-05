@@ -88,7 +88,8 @@
 <script setup lang="ts">
 definePageMeta({ middleware: ['auth'] })
 
-import { h, resolveComponent } from 'vue'
+import { h, resolveComponent, onMounted, nextTick } from 'vue'
+import { useRoute } from '#imports'
 import type { TableColumn } from '@nuxt/ui'
 import { createProtectedApiClient } from '../../utils/api'
 import { useAuth } from '../../composables/useAuth'
@@ -311,6 +312,31 @@ watch(selectedUnitId, async () => {
 
 const rowsArray = computed(() => leases.value || [])
 const loading = computed(() => pending.value || pendingLeases.value)
+
+// Handle initial load and query parameters
+onMounted(async () => {
+  const route = useRoute()
+  const query = route.query
+  
+  // If we have query params, set the selected values
+  if (query.portfolioId) {
+    selectedPortfolioId.value = Number(query.portfolioId)
+  }
+  if (query.propertyId) {
+    selectedPropertyId.value = Number(query.propertyId)
+  }
+  if (query.unitId) {
+    selectedUnitId.value = Number(query.unitId)
+  }
+  
+  // Wait for the next tick to ensure all refs are updated
+  await nextTick()
+  
+  // If we have a unit ID, load the leases
+  if (selectedUnitId.value) {
+    await loadLeases()
+  }
+})
 </script>
 
 

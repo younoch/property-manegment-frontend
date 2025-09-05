@@ -1,4 +1,5 @@
 import { createProtectedApiClient } from '@/utils/api'
+import { h, resolveComponent } from 'vue'
 import { useApiToast } from '@/composables/useApiToast'
 
 export function useLeaseDetail(leaseId: number) {
@@ -98,15 +99,31 @@ export function useLeaseDetail(leaseId: number) {
   }
 
   async function generateNextInvoice() {
+    console.log('Generating next invoice for lease', leaseId)
     if (!lease.value) return
     generatingInvoice.value = true
     try {
-      const res = await api.post(`/leases/${leaseId}/invoices/generate-next`, {})
-      const created = res?.data?.data ?? res?.data ?? res
-      toastSuccess('Next invoice generated')
-      return created // caller decides to navigate or refresh
+      // Make the API request using the existing API client
+      const response = await api.post(`/leases/${leaseId}/invoices/generate-next`, {})
+      
+      // Handle successful response
+      const responseData = response as any;
+      const created = responseData?.data?.data ?? responseData?.data ?? responseData;
+      toastSuccess('Next invoice generated');
+      return created; // caller decides to navigate or refresh
     } catch (e: any) {
-      toastError(e?.message || 'Failed to generate invoice')
+      console.error('Error generating invoice:', e);
+      
+      // Extract error message from the error object
+      const errorMessage = 
+        e?.response?.data?.message || 
+        e?.data?.message ||
+        e?.message || 
+        'Failed to generate invoice';
+      
+      console.log('Error message to display:', errorMessage);
+      toastError(String(errorMessage));
+      throw e; // Re-throw to allow caller to handle the error if needed
     } finally {
       generatingInvoice.value = false
     }

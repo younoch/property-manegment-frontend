@@ -13,7 +13,7 @@
 
         <UForm :state="form" :validate="validate" @submit.prevent="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <UFormField label="Name" name="name" :error="errors.name" class="sm:col-span-2" help="Pick something recognizable.">
+            <UFormField label="Name" name="name" :error="errors.name" class="sm:col-span-2" help="Pick something recognizable." required>
               <UInput
                 v-model="form.name"
                 :disabled="isViewing"
@@ -42,7 +42,7 @@
               />
             </UFormField>
 
-            <UFormField label="Timezone" name="timezone" :error="errors.timezone" class="sm:col-span-2" required>
+            <UFormField label="Timezone" name="timezone" :error="errors.timezone" class="sm:col-span-2">
               <USelectMenu
                 v-model="selectedTimezone"
                 :items="timezoneOptions"
