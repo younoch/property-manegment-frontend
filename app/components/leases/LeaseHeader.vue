@@ -10,7 +10,7 @@
       <p class="text-sm text-gray-500 mt-1">
         Unit: <span class="font-medium">{{ lease?.unit?.label ?? ('#' + lease?.unit_id) }}</span>
         · Property: <span class="font-medium">{{ lease?.property?.name ?? ('#' + lease?.property_id) }}</span>
-        · Portfolio: <span class="font-medium">#{{ lease?.portfolio_id }}</span>
+        · Portfolio: <span class="font-medium">#{{ lease?.portfolio?.name ?? ('#' + lease?.portfolio_id) }}</span>
       </p>
     </div>
     <div class="flex items-center gap-2">

@@ -5,16 +5,16 @@
       <div>
         <div class="flex items-center gap-3">
           <h1 class="text-2xl font-semibold">Invoice #{{ invoiceId }}</h1>
-          <UBadge :color="badgeColor" variant="soft" class="capitalize">{{ invoice?.status || 'open' }}</UBadge>
+          <UBadge :color="badgeColor" variant="soft" class="capitalize">{{ model?.status || 'open' }}</UBadge>
         </div>
         <p class="text-sm text-gray-500 mt-1">
-          Lease: <span class="font-medium">#{{ invoice?.lease_id }}</span> ·
-          Portfolio: <span class="font-medium">#{{ invoice?.portfolio_id }}</span>
+          Lease: <span class="font-medium">#{{ model?.lease_id }}</span> ·
+          Portfolio: <span class="font-medium">#{{ model?.portfolio_id }}</span>
         </p>
       </div>
 
       <div class="flex items-center gap-2">
-        <UButton variant="ghost" to="/leases" icon="i-heroicons-arrow-left">Back</UButton>
+        <UButton variant="ghost" :to="`/leases/${model?.lease_id}`" icon="i-heroicons-arrow-left">Back</UButton>
         <UButton
           v-if="!editMode"
           :disabled="!canEdit"
