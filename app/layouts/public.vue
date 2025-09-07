@@ -1,6 +1,9 @@
 <template>
   <div class="min-h-screen bg-white text-gray-900">
     <!-- Public header -->
+    <ClientOnly>
+      <FeedbackButton v-if="!route.path.includes('onboarding')" />
+    </ClientOnly>
     <header class="border-b border-gray-100">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
@@ -84,6 +87,9 @@
 </template>
 
 <script setup lang="ts">
+import FeedbackButton from '~/components/feedback/FeedbackButton.vue'
+
+const route = useRoute()
 // This layout is for public-facing pages like home, about, contact, etc.
 </script>
 

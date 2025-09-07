@@ -1,5 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 relative">
+    <!-- Feedback Button -->
+    <ClientOnly>
+      <FeedbackButton v-if="!route.path.includes('onboarding')" />
+    </ClientOnly>
     <!-- New header component -->
     <AppHeader :show-sidebar="showSidebar" @openSidebar="sidebarOpen = true" />
 
@@ -79,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
+import FeedbackButton from '~/components/feedback/FeedbackButton.vue'
 import AppHeader from '~/components/layout/AppHeader.vue'
 import OnboardingWizard from '~/components/ui/OnboardingWizard.vue'
 import { useUserStore } from '~/stores/user'
