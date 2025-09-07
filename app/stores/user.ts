@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import type { User } from '../types/auth';
+import { createApiClient } from '../utils/api';
 
 export interface UserState {
   user: User | null;
@@ -9,12 +10,42 @@ export interface UserState {
 }
 
 export const useUserStore = defineStore('user', {
-  state: (): UserState => ({
-    user: null,
-    loading: true,
-    isAuthenticated: false,
-    lastActivity: null
-  }),
+  state: (): UserState => {
+    // Try to initialize from localStorage if available
+    let initialState = {
+      user: null,
+      loading: false,
+      isAuthenticated: false,
+      lastActivity: null
+    };
+
+    if (process.client) {
+      try {
+        const stored = localStorage.getItem('user-store');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed === 'object') {
+            // Only use stored state if it's not too old (e.g., less than 1 day)
+            const oneDayAgo = new Date();
+            oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+            
+            if (parsed.lastActivity && new Date(parsed.lastActivity) > oneDayAgo) {
+              return {
+                user: parsed.user,
+                loading: false,
+                isAuthenticated: !!parsed.user,
+                lastActivity: new Date(parsed.lastActivity)
+              };
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to parse stored user state', e);
+      }
+    }
+    
+    return initialState;
+  },
 
   getters: {
     // Get current user
@@ -52,10 +83,32 @@ export const useUserStore = defineStore('user', {
   actions: {
     // Set user data
     setUser(user: User | null) {
+      console.log('Current user set:', user);
       this.user = user;
       this.isAuthenticated = !!user;
-      this.lastActivity = user ? new Date() : null;
       this.loading = false;
+      this.lastActivity = new Date();
+      this.persistToStorage();
+    },
+    
+    // Fetch user data from API
+    async fetchUser() {
+      console.log('Fetching user data from /auth/whoami...');
+      this.loading = true;
+      const api = createApiClient();
+      try {
+        const response = await api.get('/auth/whoami');
+        if (response.data) {
+          this.setUser(response.data as User);
+        } else {
+          this.clearUser();
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        this.clearUser();
+      } finally {
+        this.loading = false;
+      }
     },
 
     // Set loading state
@@ -95,17 +148,17 @@ export const useUserStore = defineStore('user', {
 
     // Initialize store from localStorage (if available)
     initializeFromStorage() {
-      if (process.client) {
-        try {
-          const storedUser = localStorage.getItem('user');
-          if (storedUser) {
-            const user = JSON.parse(storedUser);
-            this.setUser(user);
-          }
-        } catch (error) {
-          console.error('Failed to restore user from storage:', error);
-          this.clearUser();
+      try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          this.setUser(user);
+        } else {
+          console.log('No stored user data found');
         }
+      } catch (error) {
+        console.error('Failed to initialize user from storage:', error);
+        this.clearStorage();
       }
     },
 

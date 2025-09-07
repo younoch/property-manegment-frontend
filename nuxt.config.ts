@@ -14,8 +14,20 @@ export default defineNuxtConfig({
     ['@nuxt/ui', {
       icons: ['mdi', 'heroicons']
     } as Partial<ModuleOptions>],
-    '@pinia/nuxt'
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          'defineStore',
+          'storeToRefs',
+          'acceptHMRUpdate'
+        ]
+      }
+    ]
   ],
+  imports: {
+    dirs: ['stores']
+  },
   css: [
     '~/assets/css/main.css'
   ],

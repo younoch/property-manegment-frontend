@@ -1,50 +1,38 @@
-export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalized) => {
-  // Avoid running authentication checks on server during SSR
-  if (import.meta.server) {
-    return;
-  }
+// @ts-nocheck
+import { useUserStore } from '../stores/user';
 
-  // Ensure we're on the client side and DOM is ready
-  if (process.server || !process.client) {
-    return;
-  }
-
-  // Wait briefly for hydration when applicable
-  if (typeof window !== 'undefined' && (window as any).__NUXT__ && !(window as any).__NUXT__.isHydrating) {
-    await new Promise(resolve => setTimeout(resolve, 100));
-  }
+export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
+  // Skip middleware on server-side
+  if (process.server) return;
   
+  // Skip for auth routes
+  if (to.path.startsWith('/auth/')) return;
+  
+  const userStore = useUserStore();
+  
+  // If we're already authenticated, continue
+  if (userStore.isLoggedIn) return;
+  
+  // Try to restore session from localStorage
   try {
-    const { checkAuth } = useAuth();
-    const authStore = useAuthStore();
-    const userStore = useUserStore();
-    const csrf = useCsrf();
+    await userStore.initializeFromStorage();
     
-    // Don't check auth on auth pages
-    if (to.path.startsWith('/auth/')) {
+    // If we have a valid user in storage, continue
+    if (userStore.isLoggedIn) {
+      console.log('User session restored from storage');
       return;
     }
     
-    // Only validate session if cache is invalid or user is not logged in
-    if (!authStore.isAuthCacheValid || !userStore.isLoggedIn) {
-      await checkAuth();
-    }
+    // If no valid session, redirect to login
+    console.log('No valid session, redirecting to login');
+    return navigateTo('/auth/login');
     
-    // If not authenticated, redirect to login
-    if (!userStore.isLoggedIn) {
-      return navigateTo('/auth/login');
-    }
-    
-    // Only fetch CSRF token if cache is invalid and user is logged in
-    if (userStore.isLoggedIn && !csrf.hasToken.value && !csrf.isCacheValid.value) {
-      try {
-        await csrf.getToken();
-      } catch {
-        // proceed without CSRF; required only for protected mutations
-      }
-    }
-  } catch {
-    // Don't block navigation on middleware errors
+  } catch (error) {
+    console.error('Error in auth middleware:', error);
+    // On error, clear any potentially invalid auth state
+    userStore.clearUser();
+    userStore.clearStorage();
+    return navigateTo('/auth/login');
   }
 });
 

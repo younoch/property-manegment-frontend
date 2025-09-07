@@ -4,7 +4,7 @@
       <div>
         <h2 class="text-3xl md:text-4xl font-bold">Spreadsheets cause missed payments. We fix that.</h2>
         <p class="mt-3 text-gray-600">
-          A simple flow: <span class="font-medium">Lease → Invoice → Payment</span> with automatic status updates, grace periods, and idempotent late fees.
+          A simple flow: <span class="font-medium">Unit → Lease → Invoice → Payment</span> with automatic status updates, grace periods, and idempotent late fees.
         </p>
         <ul class="mt-6 space-y-3 text-gray-700">
           <li class="flex gap-3"><UIcon name="i-heroicons-check-circle" class="text-primary-600 mt-0.5"/> Auto-generate monthly rent invoices (with proration)</li>

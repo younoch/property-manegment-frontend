@@ -196,16 +196,16 @@ const handleSignout = async () => {
     const result = await signout();
     if (result.success) {
       // Redirect to home page after successful logout
-      await router.push('/');
+      await navigateTo('/');
     } else {
       console.error('Logout failed:', result.error);
       // Still redirect even if logout fails
-      await router.push('/');
+      await navigateTo('/');
     }
   } catch (error) {
     console.error('Logout error:', error);
     // Still redirect even if logout fails
-    await router.push('/');
+    await navigateTo('/');
   }
 };
 

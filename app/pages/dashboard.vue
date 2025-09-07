@@ -9,6 +9,8 @@ import KPICard from '~/components/dashboard/KPICard.vue';
 import DashboardChart from '~/components/dashboard/DashboardChart.vue';
 import DataTable from '~/components/dashboard/DataTable.vue';
 
+definePageMeta({ middleware: ['auth'] })
+
 // Router
 const router = useRouter();
 const authStore = useAuthStore();

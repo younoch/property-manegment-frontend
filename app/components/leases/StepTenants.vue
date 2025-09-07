@@ -49,7 +49,10 @@ const newTenant = reactive({ first_name: '', last_name: '', email: '', phone: ''
 const addingTenant = ref(false)
 async function addTenantInline() {
   if (!props.portfolioId) return
-  if (!newTenant.first_name || !newTenant.last_name) return
+  if (!newTenant.first_name || !newTenant.last_name || !newTenant.email) {
+    toastError('First name, last name, and email are required')
+    return
+  }
   addingTenant.value = true
   try {
     const payload = {
@@ -113,9 +116,11 @@ async function addTenantInline() {
       <!-- Add new inline -->
       <div class="space-y-3">
         <div class="text-sm font-medium">Add New Tenant</div>
-        <UFormField label="First Name"><UInput v-model="newTenant.first_name" /></UFormField>
-        <UFormField label="Last Name"><UInput v-model="newTenant.last_name" /></UFormField>
-        <UFormField label="Email (optional)"><UInput v-model="newTenant.email" /></UFormField>
+        <UFormField label="First Name" required><UInput v-model="newTenant.first_name" /></UFormField>
+        <UFormField label="Last Name" required><UInput v-model="newTenant.last_name" /></UFormField>
+        <UFormField label="Email" required>
+          <UInput v-model="newTenant.email" type="email" required />
+        </UFormField>
         <UFormField label="Phone (optional)"><UInput v-model="newTenant.phone" /></UFormField>
         <UButton :loading="addingTenant" @click="addTenantInline">Add & Select</UButton>
       </div>

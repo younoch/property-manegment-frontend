@@ -12,7 +12,7 @@ export const useActivePortfolio = () => {
     try {
       await portfolioStore.loadPortfolio(portfolioId)
       if (redirectPath) {
-        await router.push(redirectPath)
+        await navigateTo(redirectPath)
       }
       return true
     } catch (err) {
@@ -26,7 +26,7 @@ export const useActivePortfolio = () => {
   const requireActivePortfolio = (redirectPath: string = '/portfolios') => {
     if (!portfolioStore.activePortfolio) {
       if (process.client) {
-        router.push(redirectPath)
+        navigateTo(redirectPath)
       }
       return null
     }

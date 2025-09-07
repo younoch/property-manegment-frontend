@@ -83,7 +83,7 @@ onMounted(() => {
   }
 
   // Auto close modal after 5s
-  setTimeout(() => close(), 7000)
+  setTimeout(() => close(), 10000)
 })
 
 watch(() => props.show, async val => {

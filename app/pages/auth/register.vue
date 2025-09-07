@@ -35,6 +35,16 @@
             />
           </UFormField>
           
+          <UFormField label="Phone Number" name="phone" :error="errors.phone">
+            <UInput
+              v-model="form.phone"
+              type="tel"
+              placeholder="Enter your phone number"
+              required
+              class="w-full"
+            />
+          </UFormField>
+          
           <UFormField label="Role" name="role" :error="errors.role">
             <USelect
               v-model="form.role"
@@ -45,8 +55,8 @@
             />
           </UFormField>
           
-          <UFormField label="Password" name="password" :error="errors.password">
-            <UInputGroup>
+          <UFormField label="Password" name="password" :error="errors.password" class="relative">
+            <UInputGroup class="relative">
               <UInput
                 v-model="form.password"
                 :type="showPassword ? 'text' : 'password'"
@@ -62,12 +72,13 @@
                 class="absolute right-1 top-1/2 -translate-y-1/2"
                 @click="showPassword = !showPassword"
                 :padded="false"
+                tabindex="-1"
               />
             </UInputGroup>
           </UFormField>
           
-          <UFormField label="Confirm Password" name="confirmPassword" :error="errors.confirmPassword">
-            <UInputGroup>
+          <UFormField label="Confirm Password" name="confirmPassword" :error="errors.confirmPassword" class="relative">
+            <UInputGroup class="relative">
               <UInput
                 v-model="form.confirmPassword"
                 :type="showConfirmPassword ? 'text' : 'password'"
@@ -83,6 +94,7 @@
                 class="absolute right-1 top-1/2 -translate-y-1/2"
                 @click="showConfirmPassword = !showConfirmPassword"
                 :padded="false"
+                tabindex="-1"
               />
             </UInputGroup>
           </UFormField>
@@ -126,21 +138,28 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth';
 import { ROLE_OPTIONS } from '~/constants';
 definePageMeta({
   layout: 'auth',
   middleware: 'guest'
 });
 
-const { signup, isAuthenticating, currentError } = useAuthStore();
-const { isLoggedIn } = useUserStore();
+const authStore = useAuthStore();
+const userStore = useUserStore();
 const router = useRouter();
+
+// Destructure store values with proper typing
+const { signup } = authStore;
+const isAuthenticating = computed(() => authStore.isAuthenticating);
+const currentError = computed(() => authStore.currentError);
 
 const form = ref({
   name: '',
   email: '',
   password: '',
   confirmPassword: '',
+  phone: '',
   role: 'landlord' as 'tenant' | 'landlord' | 'manager' | 'super_admin'
 });
 
@@ -150,6 +169,7 @@ interface FormErrors {
   email: string;
   password: string;
   confirmPassword: string;
+  phone: string;
   role: string;
 }
 
@@ -158,16 +178,23 @@ const errors = ref<FormErrors>({
   email: '',
   password: '',
   confirmPassword: '',
+  phone: '',
   role: ''
 });
 
-const loading = computed(() => isAuthenticating);
-const errorMessage = computed(() => currentError);
+const loading = ref(false);
+const errorMessage = ref('');
 const successMessage = ref('');
 
 // Password visibility toggles
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+
+// Watch for auth store changes
+watchEffect(() => {
+  errorMessage.value = currentError.value || '';
+  loading.value = isAuthenticating.value;
+});
 
 // Import constants
 
@@ -217,32 +244,36 @@ const validate = (state: any) => {
 };
 
 const handleRegister = async () => {
-  const validationIssues = validate(form.value);
-  if (validationIssues.length > 0) return;
-  
-  loading.value = true;
-  errorMessage.value = '';
-  successMessage.value = '';
-  
   try {
+    loading.value = true;
+    errorMessage.value = '';
+    successMessage.value = '';
+
     const result = await signup({
       name: form.value.name,
       email: form.value.email,
       password: form.value.password,
-      role: form.value.role
+      phone: form.value.phone,
+      role: form.value.role,
     });
     
-    if (result.success) {
+    if (result?.success) {
       successMessage.value = 'Account created successfully! Redirecting to dashboard...';
+      
+      // Update the user store with the returned user data
+      if (result.user) {
+        userStore.setUser(result.user);
+      }
+      
       // Redirect to dashboard after a short delay
       setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
+        navigateTo('/dashboard');
+      }, 1500);
     } else {
-      errorMessage.value = result.error || 'Registration failed';
+      errorMessage.value = result?.error || 'Registration failed';
     }
   } catch (error: any) {
-    errorMessage.value = error.message || 'An unexpected error occurred';
+    errorMessage.value = error?.message || 'An unexpected error occurred';
   } finally {
     loading.value = false;
   }

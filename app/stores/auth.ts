@@ -1,88 +1,119 @@
 import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
 import { useUserStore } from './user';
 import { createApiClient, createProtectedApiClient } from '../utils/api';
-import { getCookie, hasCookie, logCookies } from '../utils/cookies';
-import { getCacheDuration } from '../constants/cache';
-import { ENDPOINTS } from '../config/api';
-import type { AuthState } from '../types/auth';
+import type { User } from '../types/auth';
+
+type SignupData = {
+  email: string;
+  password: string;
+  name: string;
+  phone: string;
+  role?: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+};
+
+type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+interface AuthState {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+}
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
     loading: false,
-    isAuthenticated: false,
     error: null,
-    lastActivity: null,
-    lastAuthCheck: null,
-    lastCsrfCheck: null,
-    authCacheDuration: getCacheDuration('auth'),
-    csrfCacheDuration: getCacheDuration('csrf'),
   }),
 
   getters: {
-    // Get current error
     currentError: (state) => state.error,
-    
-    // Check if authentication is in progress
     isAuthenticating: (state) => state.loading,
-    
-    // Get last authentication check time
-    lastCheck: (state) => state.lastAuthCheck,
-    
-    // Check if auth cache is still valid
+    isAuthenticated: (state) => !!state.user,
     isAuthCacheValid: (state) => {
-      if (!state.lastAuthCheck || !state.authCacheDuration) return false;
-      return (Date.now() - state.lastAuthCheck.getTime()) < (state.authCacheDuration * 1000);
-    },
-    
-    // Check if CSRF cache is still valid
-    isCsrfCacheValid: (state) => {
-      if (!state.lastCsrfCheck || !state.csrfCacheDuration) return false;
-      return (Date.now() - state.lastCsrfCheck.getTime()) < (state.csrfCacheDuration * 1000);
+      if (!state.user) return false;
+      // Consider the cache valid for 5 minutes
+      const lastActivity = state.user.last_activity ? new Date(state.user.last_activity) : null;
+      return lastActivity ? (Date.now() - lastActivity.getTime()) < (5 * 60 * 1000) : false;
     }
   },
 
   actions: {
-    // Set loading state
-    setLoading(loading: boolean) {
-      this.loading = loading;
+    setLoading(value: boolean) {
+      this.loading = value;
     },
 
-    // Set error message
-    setError(error: string | null) {
-      this.error = error;
+    setError(message: string | null) {
+      this.error = message;
     },
 
-    // Clear error
     clearError() {
       this.error = null;
     },
 
-    // Update last auth check time
-    updateLastAuthCheck() {
-      this.lastAuthCheck = new Date();
+    async checkAuth() {
+      try {
+        this.setLoading(true);
+        this.clearError();
+        
+        const api = createProtectedApiClient();
+        const response = await api.get<{
+          id: string;
+          email: string;
+          name: string;
+          phone: string;
+          role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+          profile_image_url?: string;
+          is_active?: boolean;
+          requires_onboarding?: boolean;
+          onboarding_completed_at?: string | null;
+        }>('/auth/whoami');
+        
+        if (response.data) {
+          const userData = response.data;
+          this.user = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            phone: userData.phone,
+            role: userData.role,
+            profile_image_url: userData.profile_image_url,
+            is_active: userData.is_active,
+            requires_onboarding: userData.requires_onboarding,
+            onboarding_completed_at: userData.onboarding_completed_at
+          };
+          return { success: true, user: this.user };
+        }
+        
+        return { success: false, error: 'No user data received' };
+      } catch (error: any) {
+        this.setError(error.response?.data?.message || 'Failed to check authentication');
+        return { success: false, error: error.response?.data?.message || 'Failed to check authentication' };
+      } finally {
+        this.setLoading(false);
+      }
     },
 
-    // Update last CSRF check time
-    updateLastCsrfCheck() {
-      this.lastCsrfCheck = new Date();
+
+    async completeOnboarding(): Promise<boolean> {
+      try {
+        const api = createProtectedApiClient();
+        await api.post('/auth/complete-onboarding');
+        
+        if (this.user) {
+          this.user.requires_onboarding = false;
+        }
+        return true;
+      } catch (error) {
+        console.error('Failed to complete onboarding:', error);
+        return false;
+      }
     },
 
-    // Set cache durations (configurable)
-    setCacheDurations(authDuration: number, csrfDuration: number) {
-      this.authCacheDuration = authDuration;
-      this.csrfCacheDuration = csrfDuration;
-    },
-
-    // User registration
-    async signup(userData: {
-      email: string;
-      password: string;
-      name: string;
-      phone: string;
-      role?: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-    }) {
+    async signup(userData: SignupData) {
       const userStore = useUserStore();
       const apiClient = createApiClient();
       
@@ -93,40 +124,41 @@ export const useAuthStore = defineStore('auth', {
         const response = await apiClient.post<any>('/auth/signup', userData);
         
         if (response) {
-          // Set flag to show onboarding wizard
-          if (process.client) {
-            const showWizard = useStorage('showOnboardingWizard', false);
-            showWizard.value = true;
-          }
+          const userDataFromResponse = response.data || response.user || response;
           
-          // Handle different response structures
-          let userDataFromResponse: any;
-          if (response.data) {
-            // Response has data wrapper: { data: { user info } }
-            userDataFromResponse = response.data;
-          } else if (response.user) {
-            // Response has user wrapper: { user: { user info } }
-            userDataFromResponse = response.user;
-          } else {
-            // Response is direct user data
-            userDataFromResponse = response;
-          }
-          
-          // Ensure userDataFromResponse has required fields
-          if (userDataFromResponse && (userDataFromResponse.id || userDataFromResponse.email)) {
-            // Set user in store
-            userStore.setUser(userDataFromResponse);
-            userStore.persistToStorage();
+          if (userDataFromResponse) {
+            userDataFromResponse.requires_onboarding = true;
             
-            this.updateLastAuthCheck();
-
-            return { success: true, user: userDataFromResponse };
-          } else {
-            throw new Error('Invalid user data received from server');
+            // Update auth store
+            this.user = userDataFromResponse;
+            
+            // Update user store with all required fields
+            userStore.setUser({
+              id: userDataFromResponse.id,
+              email: userDataFromResponse.email,
+              name: userDataFromResponse.name,
+              phone: userDataFromResponse.phone || userData.phone,
+              role: (userDataFromResponse.role || userData.role || 'tenant') as 'tenant' | 'landlord' | 'manager' | 'super_admin',
+              requires_onboarding: true,
+              is_active: true,
+              profile_image_url: userDataFromResponse.profile_image_url
+            });
+            
+            // Set auth token if available in response
+            if (response.token) {
+              localStorage.setItem('auth_token', response.token);
+            }
+            
+            return { 
+              success: true, 
+              user: userDataFromResponse,
+            };
           }
         }
+        
+        throw new Error('No response data received');
       } catch (error: any) {
-        const errorMessage = error.data?.message || error.message || 'Registration failed';
+        const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
         this.setError(errorMessage);
         return { success: false, error: errorMessage };
       } finally {
@@ -134,8 +166,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // User login
-    async signin(credentials: { email: string; password: string }) {
+    async signin(credentials: LoginCredentials) {
       const userStore = useUserStore();
       const apiClient = createApiClient();
       
@@ -143,208 +174,61 @@ export const useAuthStore = defineStore('auth', {
       this.clearError();
       
       try {
-        const response = await apiClient.post<any>(ENDPOINTS.AUTH.SIGNIN, credentials);
+        console.log('Attempting to sign in with:', credentials.email);
+        const response = await apiClient.post<any>('/auth/signin', credentials);
+        console.log('Sign in response:', response);
         
         if (response) {
-          // Handle different response structures
-          let userData: any;
-          if (response.data) {
-            // Response has data wrapper: { data: { user info } }
-            userData = response.data;
-          } else if (response.user) {
-            // Response has user wrapper: { user: { user info } }
-            userData = response.user;
-          } else {
-            // Response is direct user data
-            userData = response;
-          }
+          const userData = response.data || response.user || response;
           
-          // Ensure userData has required fields
-          if (userData && (userData.id || userData.email)) {
-            // Set user in store
+          if (userData) {
+            console.log('User data received:', userData);
+            
+            // Update both auth store and user store
+            this.user = userData;
             userStore.setUser(userData);
+            userStore.isAuthenticated = true;
+            
+            // Ensure the state is persisted
             userStore.persistToStorage();
             
-            // Initialize CSRF token after successful login
-            const { tokenManager } = await import('../services/tokenManager');
-            await tokenManager.getCsrfToken();
-            
-            this.updateLastAuthCheck();
-
+            console.log('User authenticated successfully');
             return { success: true, user: userData };
-          } else {
-            throw new Error('Invalid user data received from server');
           }
         }
+        
+        throw new Error('No response data received');
       } catch (error: any) {
-        const errorMessage = error.data?.message || error.message || 'Login failed';
-        this.setError(errorMessage);
-        return { success: false, error: errorMessage };
-      } finally {
-        this.setLoading(false);
-      }
-    },
-
-    // User logout
-    async signout() {
-      const userStore = useUserStore();
-      
-
-      this.setLoading(true);
-      this.clearError();
-      
-      try {
-        // Revoke JWT token using the new endpoint
-
-        const { tokenManager } = await import('../services/tokenManager');
-        const revokeResult = await tokenManager.revokeJwtToken();
-        
-
-        
-        // Clear user from store
-
+        this.user = null;
         userStore.clearUser();
-        userStore.clearStorage();
         
-        // Clear cache timestamps
-        this.lastAuthCheck = null;
-        this.lastCsrfCheck = null;
-        
-
-        return { success: true };
-      } catch (error: any) {
-        console.error('[AuthStore] Signout error:', error);
-        const errorMessage = error.data?.message || error.message || 'Logout failed';
+        const errorMessage = error.response?.data?.message || error.message || 'Login failed';
         this.setError(errorMessage);
-        return { success: false, error: errorMessage };
+        
+        return { 
+          success: false, 
+          error: errorMessage 
+        };
       } finally {
         this.setLoading(false);
-
       }
     },
 
-    // Check authentication status using new /auth/validate endpoint
-    async checkAuth(force: boolean = false) {
-      const userStore = useUserStore();
-      
-      // If cache is valid and not forcing, return cached result
-      if (!force && this.isAuthCacheValid) {
-        const hasUser = !!userStore.currentUser;
-
-        return { success: hasUser, user: userStore.currentUser, cached: true };
-      }
-      
-      this.setLoading(true);
-      this.clearError();
-      
+    async logout() {
       try {
-        // Use the new token manager to validate JWT
-        const { tokenManager } = await import('../services/tokenManager');
-        const validation = await tokenManager.validateJwtToken();
-        
-        if (validation.valid && validation.user) {
-          // Set user in store
-          userStore.setUser(validation.user);
-          userStore.persistToStorage();
-          
-          this.updateLastAuthCheck();
-
-          return { success: true, user: validation.user, cached: false };
-        } else {
-          // Invalid or expired JWT
-          userStore.clearUser();
-          userStore.clearStorage();
-          this.updateLastAuthCheck();
-          return { success: false, error: validation.message || 'Token validation failed', cached: false };
-        }
-      } catch (error: any) {
+        const api = createProtectedApiClient();
+        await api.post('/auth/logout');
+      } catch (error) {
+        console.error('Logout error:', error);
+      } finally {
+        this.user = null;
+        const userStore = useUserStore();
         userStore.clearUser();
-        userStore.clearStorage();
-        
-        const errorMessage = error?.data?.message || error?.message || 'Authentication check failed';
-        this.setError(errorMessage);
-        this.updateLastAuthCheck();
-        return { success: false, error: errorMessage, cached: false };
-      } finally {
-        this.setLoading(false);
       }
     },
 
-    // Quick authentication check using only cookies (no API call)
-    checkAuthFromCookies() {
-
-      logCookies();
-      
-      const possibleAuthCookies = ['access_token', 'refresh_token', 'token', 'auth_token', 'session'];
-      
-      for (const cookieName of possibleAuthCookies) {
-        if (hasCookie(cookieName)) {
-          const cookieValue = getCookie(cookieName);
-
-          return { success: true, cookieName, cookieValue };
-        }
-      }
-      
-
-      return { success: false, error: 'No authentication cookies found' };
-    },
-
-    // Refresh tokens using new token manager
-    async refreshTokens() {
-      this.setLoading(true);
-      this.clearError();
-      
-      try {
-        const { tokenManager } = await import('../services/tokenManager');
-        
-        // Refresh both JWT and CSRF tokens
-        const [jwtSuccess, csrfSuccess] = await Promise.all([
-          tokenManager.refreshJwtToken(),
-          tokenManager.refreshCsrfToken()
-        ]);
-        
-        if (jwtSuccess || csrfSuccess) {
-          this.updateLastAuthCheck();
-          return { success: true, message: 'Tokens refreshed successfully' };
-        } else {
-          throw new Error('Failed to refresh tokens');
-        }
-      } catch (error: any) {
-        const errorMessage = error.data?.message || error.message || 'Token refresh failed';
-        this.setError(errorMessage);
-        return { success: false, error: errorMessage };
-      } finally {
-        this.setLoading(false);
-      }
-    },
-
-    // Initialize authentication - restore from storage then validate with server ONCE
-    async initialize() {
-      const userStore = useUserStore();
-      
-      // Try to restore user from storage first (optimistic UI)
-      userStore.initializeFromStorage();
-      
-      // Only validate with server if cache is invalid or doesn't exist
-      if (!this.isAuthCacheValid) {
-
-        await this.checkAuth();
-      } else {
-
-      }
-    },
-
-    // Force refresh authentication (bypasses cache)
-    async forceRefreshAuth() {
-
-      return await this.checkAuth(true);
-    },
-
-    // Clear all caches (useful for testing or when you need fresh data)
     clearCaches() {
-      this.lastAuthCheck = null;
-      this.lastCsrfCheck = null;
-
+      // Implementation for clearing caches
     }
   }
 });

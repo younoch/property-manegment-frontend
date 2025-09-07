@@ -174,7 +174,7 @@ import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'nuxt/app'
 import { useUserStore } from '~/stores/user'
-import { useAuthStore } from '~/stores/auth'
+import { useAuth } from '~/composables/useAuth'
 import { getTopHeaderNav } from '~/utils/navigation'
 
 defineProps<{ showSidebar?: boolean }>()
@@ -183,7 +183,7 @@ defineEmits<{ (e: 'openSidebar'): void }>()
 /** Auth + user */
 const userStore = useUserStore()
 const { isLoggedIn } = storeToRefs(userStore)
-const { signout } = useAuthStore()
+const { signout } = useAuth()
 const router = useRouter()
 
 /** Top nav data */
@@ -217,14 +217,18 @@ onMounted(() => {
 /** Logout */
 async function handleLogout() {
   try {
-    const result = await signout()
-    userStore.clearUser(); userStore.clearStorage()
-    await router.push('/')
-    if (!result?.success) console.error('[Header] Logout result:', result?.error)
+    console.log('Logging out...')
+    await signout()
+    console.log('Signout successful, redirecting to home')
+    await navigateTo('/')
+    window.location.reload() // Ensure a full page reload to clear all state
   } catch (e) {
     console.error('[Header] Logout error:', e)
-    userStore.clearUser(); userStore.clearStorage()
-    await router.push('/')
+    // Clear user data and redirect even if there was an error
+    userStore.clearUser()
+    userStore.clearStorage()
+    await navigateTo('/')
+    window.location.reload()
   }
 }
 </script>

@@ -30,57 +30,6 @@ const prefill = reactive({
 })
 
 
-async function login(values: any) {
-  // if (values.mobileCheck) {
-  //   await getTwoFactorAuthSettings(values.mobileCheck);
-  // } else {
-  //   try {
-  //     const response = await AuthenticationApi.login({
-  //       mobile: values.mobile,
-  //       password: values.password,
-  //       otpCode: values.otpCode
-  //     });
-
-  //     if (response.data) {
-  //       const res = response.data.data;
-  //       const params = {
-  //         accessToken: res.attributes.accessToken,
-  //         user: {
-  //           id: res.id || "",
-  //           dateOfBirth: res.attributes.dateOfBirth || "",
-  //           email: res.attributes.email || "",
-  //           firstName: res.attributes.firstName || "",
-  //           lastName: res.attributes.lastName || "",
-  //           mobile: res.attributes.mobile || "",
-  //           profileImage: !_.isEmpty(res.relationships.profileImage.data)
-  //             ? res.relationships.profileImage.data.attributes.path
-  //             : "",
-  //           roles: !_.isEmpty(res.relationships.roles.data)
-  //             ? joinTitles(res.relationships.roles.data)
-  //             : "",
-  //           resorts: !_.isEmpty(res.relationships.roles.data)
-  //             ? joinTitles(res.relationships.roles.data)
-  //             : ""
-  //         },
-  //         language: res.relationships.language.data.attributes.code
-  //       };
-
-  //       await store.dispatch("login", params);
-  //       axios.defaults.headers.common["Authorization"] = `Bearer ${store.getters.accessToken}`;
-
-  //       const adminResorts = store.getters.adminResorts;
-  //       if (isMobile() && adminResorts[0]?.id > 0) {
-  //         router.push({ path: `resorts/m-service-desk-resort/${adminResorts[0].id}` });
-  //       } else {
-  //         router.push({ name: "crm-users" });
-  //       }
-  //     }
-  //   } catch (error: any) {
-  //     console.error(error);
-  //   }
-  // }
-}
-
 /** Stepper */
 const steps = [
   { label: 'Unit' },

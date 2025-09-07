@@ -6,6 +6,9 @@ export interface User {
   role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
   profile_image_url?: string;
   is_active?: boolean;
+  requires_onboarding?: boolean;
+  onboarding_completed_at?: string | null;
+  last_activity?: string;
 }
 
 export interface AuthState {

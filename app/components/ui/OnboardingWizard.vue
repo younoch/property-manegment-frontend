@@ -152,7 +152,7 @@ async function submitForm() {
         });
         
         console.log('Property created successfully:', propertyResponse);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error creating property:', error);
         if (error.response) {
           console.error('Error response data:', error.response.data);

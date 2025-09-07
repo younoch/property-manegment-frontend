@@ -384,11 +384,12 @@ watch(selectedPropertyId, async () => {
 // ======================
 // 11. Event Handlers
 // ======================
-const onCreated = (created: any) => {
+const onCreated = async (created: any) => {
   if (route.query.onboarding) {
     navigateTo(`/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&portfolioId=${selectedPortfolioId.value}&onboarding=true`)
   }
-  units.value.unshift({ ...created })
+  // Refresh the units list to get the latest data
+  await loadUnits()
 }
 
 </script>

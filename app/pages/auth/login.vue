@@ -121,14 +121,35 @@ const handleLogin = async () => {
       password: form.value.password
     });
     
-    if (result.success) {
-      // Redirect to dashboard or intended page
-      await router.push('/dashboard');
+    console.log('Login result:', result);
+    
+    if (result?.success) {
+      // Wait a small amount of time to ensure stores are updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Get the user store to check authentication state
+      const userStore = useUserStore();
+      console.log('User store after login:', {
+        isAuthenticated: userStore.isAuthenticated,
+        user: userStore.user
+      });
+      
+      if (userStore.isAuthenticated) {
+        console.log('User is authenticated, redirecting to dashboard');
+        // Use window.location to force a full page reload and ensure all state is properly initialized
+        window.location.href = '/dashboard';
+      } else {
+        console.error('User not authenticated after successful login');
+      }
     } else {
-      // Handle error through the store
+      console.error('Login failed:', result?.error || 'Unknown error');
     }
   } catch (error: any) {
-    // Handle error through the store
+    console.error('Login error:', error);
+    // Clear any potentially invalid auth state on error
+    const userStore = useUserStore();
+    userStore.clearUser();
+    userStore.clearStorage();
   }
 };
 </script>

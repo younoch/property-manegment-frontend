@@ -59,9 +59,10 @@ export function useLeaseDetail(leaseId: number) {
         payments.value = Array.isArray(pData) ? pData : (Array.isArray(pData?.items) ? pData.items : [])
       } catch { payments.value = [] }
     } catch (e: any) {
-      toastError(e?.message || 'Failed to load lease')
+      const errorMessage = e?.data?.message || e?.message?.replace(/\[.*?\]\s*"[^"]*"/, '').trim() || 'Failed to load lease';
+      toastError(errorMessage);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
@@ -76,9 +77,10 @@ export function useLeaseDetail(leaseId: number) {
       toastSuccess('Lease activated')
       await reload()
     } catch (e: any) {
-      toastError(e?.message || 'Activation failed')
+      const errorMessage = e?.data?.message || e?.message?.replace(/\[.*?\]\s*"[^"]*"/, '').trim() || 'Activation failed';
+      toastError(errorMessage);
     } finally {
-      activating.value = false
+      activating.value = false;
     }
   }
 
@@ -92,9 +94,10 @@ export function useLeaseDetail(leaseId: number) {
       toastSuccess('Lease ended')
       await reload()
     } catch (e: any) {
-      toastError(e?.message || 'Failed to end lease')
+      const errorMessage = e?.data?.message || e?.message?.replace(/\[.*?\]\s*"[^"]*"/, '').trim() || 'Failed to end lease';
+      toastError(errorMessage);
     } finally {
-      ending.value = false
+      ending.value = false;
     }
   }
 

@@ -38,6 +38,9 @@
       </main>
     </div>
 
+    <!-- Debug Component -->
+
+
     <!-- Mobile Sidebar Drawer -->
     <ClientOnly>
       <div class="md:hidden">
@@ -76,48 +79,58 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
-import { useRoute } from 'nuxt/app'
 import { storeToRefs } from 'pinia'
-import { useStorage } from '@vueuse/core'
 import AppHeader from '~/components/layout/AppHeader.vue'
 import OnboardingWizard from '~/components/ui/OnboardingWizard.vue'
 import { useUserStore } from '~/stores/user'
-import { getSidebarNav, type UserRole } from '~/utils/navigation'
+import { useAuthStore } from '~/stores/auth'
+import { getSidebarNav } from '~/utils/navigation'
 
+const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
+const authStore = useAuthStore()
 const { userRole } = storeToRefs(userStore)
 
-const sidebarOpen = ref(false)
-const showOnboardingWizard = ref(false)
-
-// Check for onboarding wizard flag using useStorage
-const shouldShowWizard = useStorage('showOnboardingWizard', false)
-
-// Show wizard if flag is set
-doOnceOnClient(() => {
-  if (shouldShowWizard.value) {
-    showOnboardingWizard.value = true
-    shouldShowWizard.value = false
+// Fetch user data when layout is mounted
+onMounted(async () => {
+  await userStore.fetchUser()
+  if (authStore.isAuthenticated) {
+    console.log('sdf sd fa sdf asd f')
   }
 })
 
-// Helper to run code once on client side
-function doOnceOnClient(fn: () => void) {
-  if (process.client) {
-    onMounted(fn)
-  }
-}
+const sidebarOpen = ref(false)
 
-function handleOnboardingComplete() {
-  navigateTo('/units/?onboarding=true')
-}
-const route = useRoute()
-watch(() => route.fullPath, () => { sidebarOpen.value = false })
-
-const sidebarItems = computed(() => getSidebarNav((userRole.value || 'tenant') as UserRole))
 const showSidebar = computed(() => {
   const role = userRole.value
   return role === 'super_admin' || role === 'landlord' || role === 'manager'
 })
+
+const showOnboardingWizard = ref(false)
+
+// Watch for changes to user and update onboarding wizard visibility
+watch(() => userStore.user, (newUser) => {
+  if (newUser) {
+    showOnboardingWizard.value = !!newUser.requires_onboarding
+  } else {
+    showOnboardingWizard.value = false
+  }
+}, { immediate: true })
+
+const handleOnboardingComplete = async () => {
+  try {
+    await authStore.completeOnboarding()
+    navigateTo('/units/?onboarding=true')
+  } catch (error) {
+    console.error('Failed to complete onboarding:', error)
+    navigateTo('/dashboard')
+  }
+}
+
+watch(() => route.fullPath, () => { 
+  sidebarOpen.value = false 
+})
+
+const sidebarItems = computed(() => getSidebarNav(userRole.value || 'tenant'))
 </script>
