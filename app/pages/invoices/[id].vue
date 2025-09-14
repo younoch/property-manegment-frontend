@@ -17,9 +17,20 @@
         <UButton variant="ghost" :to="`/leases/${model?.lease_id}`" icon="i-heroicons-arrow-left">Back</UButton>
         <UButton
           v-if="!editMode"
+          icon="i-lucide-send"
+          color="green"
+          :loading="sending"
+          @click="sendInvoice"
+          class="ml-2"
+        >
+          Send
+        </UButton>
+        <UButton
+          v-if="!editMode"
           :disabled="!canEdit"
           icon="i-lucide-pencil-line"
           @click="enterEdit"
+          class="ml-2"
         >
           Edit
         </UButton>
@@ -207,6 +218,7 @@ type InvoiceVM = {
 }
 
 const raw = ref<any>(null)                 // last-loaded server response
+const lease = ref<any>(null)                // lease data
 const model = reactive<InvoiceVM>({
   id: invoiceId,
   portfolio_id: 0,
@@ -222,6 +234,7 @@ const model = reactive<InvoiceVM>({
 
 const loading = ref(false)
 const saving = ref(false)
+const sending = ref(false)
 const editMode = ref(false)
 
 const canEdit = computed(() => model.status === 'draft' || model.status === 'open')
@@ -276,6 +289,8 @@ function snapshotFromServer(src: any) {
   model.id = src.id
   model.portfolio_id = src.portfolio_id
   model.lease_id = src.lease_id
+  // Store the raw data for reverting changes
+  raw.value = JSON.parse(JSON.stringify(src))
   model.issue_date = (src.issue_date || '').slice(0,10)
   model.due_date = (src.due_date || '').slice(0,10)
   model.status = src.status
@@ -294,9 +309,22 @@ function snapshotFromServer(src: any) {
 async function loadInvoice() {
   loading.value = true
   try {
+    // Load invoice data
     const res = await api.get(`/invoices/${invoiceId}`)
     const data = res?.data?.data ?? res?.data ?? res
     snapshotFromServer(data)
+    
+    // Load lease data if lease_id exists
+    if (data.lease_id) {
+      try {
+        const leaseRes = await api.get(`/leases/${data.lease_id}`)
+        lease.value = leaseRes?.data?.data ?? leaseRes?.data ?? leaseRes
+        console.log('Loaded lease data:', lease.value)
+      } catch (e: any) {
+        console.error('Failed to load lease data:', e)
+        // Don't show error to user for lease data as it's secondary
+      }
+    }
   } catch (e: any) {
     toastError(e?.message || 'Failed to load invoice')
   } finally {
@@ -361,9 +389,42 @@ async function save() {
 }
 
 function downloadPdf() {
-  // simple server-side render trigger if you add it later
-  // for now: print dialog (browser export to PDF)
   window.print()
+}
+
+const sendInvoice = async () => {
+  if (!confirm('Are you sure you want to send this invoice to the tenant?')) {
+    return
+  }
+  
+  try {
+    sending.value = true
+    
+    // Prepare the email payload
+    const payload = {
+      recipient_email: lease.value?.lease_tenants?.[0]?.tenant?.email || '',
+      recipient_name: `${lease.value?.lease_tenants?.[0]?.tenant?.first_name || ''} ${lease.value?.lease_tenants?.[0]?.tenant?.last_name || ''}`.trim(),
+      recipient_phone: lease.value?.lease_tenants?.[0]?.tenant?.phone || '',
+      subject: `Invoice #${model.id} for ${lease.value?.property?.name || 'Property'} - ${lease.value?.unit?.label || ''}`,
+      message: `Dear ${lease.value?.lease_tenants?.[0]?.tenant?.first_name || 'Tenant'},\n\nPlease find attached your invoice for ${lease.value?.property?.name || 'the property'}, Unit ${lease.value?.unit?.label || ''}.\n\nInvoice Details:\n- Invoice #${model.id}\n- Issue Date: ${model.issue_date}\n- Due Date: ${model.due_date}\n- Amount Due: ${fmtBDT(total.value)}\n\nBest regards,\nYour Property Management Team`,
+      property_address: `${lease.value?.property?.name || ''}${lease.value?.unit?.label ? `, Unit ${lease.value.unit.label}` : ''}`,
+      cc_emails: [],
+      bcc_emails: [],
+      reply_to: 'noreply@leasemanager.com', // TODO: Replace with actual management email
+      include_watermark: false,
+      notes: `Invoice #${model.id} sent to tenant on ${new Date().toISOString().split('T')[0]}`
+    }
+
+    const response = await api.post(`/invoices/${invoiceId}/send`, payload)
+    toastSuccess(response.message || 'Invoice sent successfully')
+    // Reload the invoice to update the status
+    await loadInvoice()
+  } catch (error: any) {
+    toastError(error.data?.message || 'Failed to send invoice')
+    console.error('Error sending invoice:', error)
+  } finally {
+    sending.value = false
+  }
 }
 
 onMounted(loadInvoice)

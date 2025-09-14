@@ -168,13 +168,15 @@ export const useAuthStore = defineStore('auth', {
 
     async signin(credentials: LoginCredentials) {
       const userStore = useUserStore();
-      const apiClient = createApiClient();
+      const apiClient = createProtectedApiClient();
       
       this.setLoading(true);
       this.clearError();
       
       try {
         console.log('Attempting to sign in with:', credentials.email);
+        
+        // The ProtectedApiClient will automatically handle CSRF tokens
         const response = await apiClient.post<any>('/auth/signin', credentials);
         console.log('Sign in response:', response);
         
