@@ -65,7 +65,7 @@ export const ENDPOINTS = {
     SIGNUP: '/auth/signup',
     SIGNIN: '/auth/signin',
     SIGNOUT: '/auth/signout',
-    REFRESH: '/csrf/refresh',
+    REFRESH: '/auth/refresh',
     WHOAMI: '/auth/whoami',
     // Optional endpoints (may not exist on backend yet)
     VALIDATE: '/auth/validate',

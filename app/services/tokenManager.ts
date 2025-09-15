@@ -90,15 +90,6 @@ export class TokenManager {
   }
 
   /**
-   * Check and refresh CSRF only if needed
-   */
-  private async checkAndRefreshCsrfIfNeeded(): Promise<void> {
-    if (this.shouldRefreshCsrf()) {
-      await this.refreshCsrfToken();
-    }
-  }
-
-  /**
    * Rotate CSRF if older than rotate threshold
    */
   private async checkAndRotateCsrfIfNeeded(): Promise<void> {

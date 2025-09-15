@@ -285,14 +285,8 @@ export class ProtectedApiClient {
    * Check if an error indicates token expiration
    */
   private isTokenExpiredError(error: any): boolean {
-    const status = error?.status || error?.response?.status;
     const message = error?.data?.message || error?.message || '';
-    return status === 401 ||
-           status === 403 ||
-           message.toLowerCase().includes('token expired') ||
-           message.toLowerCase().includes('unauthorized') ||
-           message.toLowerCase().includes('forbidden') ||
-           message.toLowerCase().includes('access token is required');
+    return message.toLowerCase().includes('access token')
   }
 
   /**
