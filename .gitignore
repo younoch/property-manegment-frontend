@@ -57,6 +57,7 @@ jspm_packages/
 
 # pnpm files (pnpm-lock.yaml should be committed for production)
 .pnpm-store/
+pnpm-workspace.yaml
 
 # dotenv environment variables file
 .env
