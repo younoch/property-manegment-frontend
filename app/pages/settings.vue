@@ -66,7 +66,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useThemeColor, type ThemeKey } from '~/composables/useThemeColor'
-import { useToast } from '#imports'
 
 definePageMeta({ middleware: 'auth' })
 

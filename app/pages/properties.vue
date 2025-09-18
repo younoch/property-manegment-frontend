@@ -105,7 +105,6 @@
 definePageMeta({ middleware: ['auth'] })
 
 import { h, resolveComponent, nextTick } from 'vue'
-import { useToast } from '#imports'
 import type { TableColumn } from '@nuxt/ui'
 import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
 import PropertyForm from '../components/properties/PropertyForm.vue'

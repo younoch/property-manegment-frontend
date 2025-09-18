@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useToast } from '#imports'
 import { useApiToast } from '~/composables/useApiToast'
 
 definePageMeta({ middleware: ['auth'] })

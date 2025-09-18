@@ -1,3 +1,4 @@
+import { useAuth } from '~/composables/useAuth'
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   const { initialize, isAuthCacheValid } = useAuth();
   

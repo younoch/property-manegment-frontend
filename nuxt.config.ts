@@ -26,7 +26,8 @@ export default defineNuxtConfig({
     ]
   ],
   imports: {
-    dirs: ['stores']
+    // IMPORTANT: When specifying dirs, Nuxt stops using defaults. Include 'composables' explicitly.
+    dirs: ['stores', 'composables']
   },
   css: [
     '~/assets/css/main.css'

@@ -1,4 +1,3 @@
-import { useToast } from '#imports';
 
 function isHydrated(): boolean {
 	if (typeof window === 'undefined') return false;

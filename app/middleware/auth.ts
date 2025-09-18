@@ -1,5 +1,8 @@
 // @ts-nocheck
 import { useUserStore } from '../stores/user';
+import { useAuthStore } from '../stores/auth';
+import { useAuth } from '~/composables/useAuth';
+import { useCsrf } from '~/composables/useCsrf';
 
 export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
   // Skip middleware on server-side

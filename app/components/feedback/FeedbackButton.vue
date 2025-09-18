@@ -66,7 +66,6 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue'
-import { useToast } from '#imports'
 import { useAuth } from '~/composables/useAuth'
 import { object, string, minLength, pipe, safeParse, optional, email as isEmail } from 'valibot'
 import { createProtectedApiClient } from '~/utils/api'

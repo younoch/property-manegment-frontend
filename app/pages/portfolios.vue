@@ -195,7 +195,6 @@ import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
 import PortfolioForm from '../components/portfolios/PortfolioForm.vue'
 import { createProtectedApiClient } from '../utils/api'
 import { useAuth } from '../composables/useAuth'
-import { useToast } from '#imports'
 
 // Components are auto-imported in Nuxt 3
 

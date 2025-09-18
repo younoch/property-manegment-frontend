@@ -1,4 +1,6 @@
-export default defineNuxtRouteMiddleware(async (to) => {
+import { useUserStore } from '~/stores/user'
+import type { RouteLocationNormalized } from 'vue-router'
+export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalized) => {
   // Avoid SSR execution to prevent loops
   if (import.meta.server) {
     return;

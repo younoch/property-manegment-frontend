@@ -85,7 +85,6 @@
 </template>
 
 <script setup lang="ts">
-import { useToast } from '#imports'
 import { useLeaseDetail } from '~/composables/useLeaseDetail'
 
 import LeaseHeader from '~/components/leases/LeaseHeader.vue'

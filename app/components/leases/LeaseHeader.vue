@@ -20,7 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from '#imports'
 import { getLeaseStatusColor } from '@/constants/leases'
 
 const router = useRouter()

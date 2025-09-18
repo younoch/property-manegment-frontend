@@ -74,6 +74,9 @@ definePageMeta({
   middleware: 'guest'
 });
 
+import { useAuthStore } from '~/stores/auth'
+import { useUserStore } from '~/stores/user'
+
 const { signin, isAuthenticating, currentError } = useAuthStore();
 const router = useRouter();
 
