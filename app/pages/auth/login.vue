@@ -139,8 +139,8 @@ const handleLogin = async () => {
       
       if (userStore.isAuthenticated) {
         console.log('User is authenticated, redirecting to dashboard');
-        // Use window.location to force a full page reload and ensure all state is properly initialized
-        window.location.href = '/dashboard';
+        // Use Nuxt navigation to avoid a full page reload
+        await navigateTo('/dashboard');
       } else {
         console.error('User not authenticated after successful login');
       }
