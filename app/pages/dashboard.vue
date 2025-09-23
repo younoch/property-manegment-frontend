@@ -227,17 +227,17 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="w-full min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-hidden">
     <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 shadow">
-      <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+    <header class="bg-white dark:bg-gray-800 shadow w-full">
+      <div class="w-full px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
           <USelect 
             v-model="selectedRange" 
             :items="ranges" 
             size="sm"
-            class="w-48"
+            class="w-full sm:w-48"
             @update:modelValue="handleRangeChange"
           />
           <UButton
@@ -245,13 +245,14 @@ onMounted(async () => {
             color="white"
             @click="handleRefresh"
             :loading="loading"
+            class="flex-shrink-0"
           />
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    <main class="w-full px-4 py-6 sm:px-6 lg:px-8">
       <!-- Error Alert -->
       <UAlert
         v-if="error"
@@ -263,7 +264,7 @@ onMounted(async () => {
       />
 
       <!-- KPI Grid -->
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+      <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8 w-full">
         <KPICard 
           v-for="(kpi, index) in kpis" 
           :key="index"
@@ -273,7 +274,7 @@ onMounted(async () => {
       </div>
 
       <!-- Charts Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 w-full">
         <!-- Revenue vs Expenses Chart -->
         <DashboardChart
           title="Revenue vs Expenses"
@@ -306,7 +307,7 @@ onMounted(async () => {
       </div>
 
       <!-- Additional Sections -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 w-full">
         <!-- Upcoming Due -->
         <UCard class="h-full">
           <template #header>

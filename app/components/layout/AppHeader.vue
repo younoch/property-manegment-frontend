@@ -1,190 +1,316 @@
 <template>
-  <header class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <!-- Brand -->
-        <NuxtLink to="/" class="flex items-center space-x-2">
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center"
-               style="background: var(--ui-primary)">
-            <span class="text-white font-bold text-lg">P</span>
+  <div class="w-full">
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40 w-full">
+      <div class="w-full px-3 sm:px-4 lg:px-6">
+        <div class="flex justify-between items-center h-14 sm:h-16 w-full">
+          <!-- Mobile menu button -->
+          <div class="flex items-center">
+            <UButton
+              v-if="showSidebar"
+              class="md:hidden mr-1"
+              variant="ghost"
+              color="gray"
+              :icon="isSidebarOpen ? 'i-heroicons-x-mark' : 'i-heroicons-bars-3'"
+              :ui="{ rounded: 'rounded-full' }"
+              @click="openSidebar"
+            />
+            <NuxtLink to="/" class="flex items-center space-x-2">
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style="background: var(--ui-primary)">
+                <span class="text-white font-bold text-sm sm:text-lg">P</span>
+              </div>
+              <span class="text-lg sm:text-xl font-bold text-gray-900 whitespace-nowrap">PropertyManager</span>
+            </NuxtLink>
           </div>
-          <span class="text-xl font-bold text-gray-900">PropertyManager</span>
-        </NuxtLink>
 
-        <!-- Top Nav -->
-        <nav class="hidden md:flex space-x-6">
-          <NuxtLink
-            v-for="item in topNavItems"
-            :key="item.to"
-            :to="item.to"
-            class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            :class="[
-              'hover:opacity-90',
-              // hover color via CSS var for theme friendliness
-              'hover:[color:var(--ui-primary)]',
-              'hover:[background:color-mix(in_oklch,white 90%,var(--ui-primary))]'
-            ]"
-            :active-class="'[color:var(--ui-primary)] [background:color-mix(in_oklch,white 92%,var(--ui-primary))]'"
-          >
-            <span class="inline-flex items-center gap-2">
-              <UIcon :name="item.icon" class="w-5 h-5" />
-              <span>{{ item.label }}</span>
-            </span>
-          </NuxtLink>
-        </nav>
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex space-x-1 sm:space-x-2 lg:space-x-4">
+            <NuxtLink
+              v-for="item in topNavItems"
+              :key="item.to"
+              :to="item.to"
+              class="text-gray-700 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              :class="[
+                'hover:opacity-90',
+                'hover:[color:var(--ui-primary)]',
+                'hover:[background:color-mix(in_oklch,white 90%,var(--ui-primary))]',
+                'text-sm sm:text-base'
+              ]"
+              :active-class="'[color:var(--ui-primary)] [background:color-mix(in_oklch,white 92%,var(--ui-primary))]'"
+            >
+              <span class="inline-flex items-center gap-1 sm:gap-2">
+                <UIcon :name="item.icon" class="w-4 h-4 sm:w-5 sm:h-5" />
+                <span class="hidden sm:inline">{{ item.label }}</span>
+              </span>
+            </NuxtLink>
+          </nav>
 
-        <!-- Right side -->
-        <ClientOnly>
-          <template #fallback>
-            <div class="h-8 w-24 bg-gray-200 rounded" />
-          </template>
-
-          <div class="flex items-center gap-3">
-            <!-- Auth (signed out) -->
-            <template v-if="!isLoggedIn">
-              <NuxtLink
-                to="/auth/login"
-                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:[color:var(--ui-primary)]"
-              >
-                Sign In
-              </NuxtLink>
-
-              <NuxtLink
-                to="/auth/register"
-                class="text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                style="background: var(--ui-primary)"
-              >
-                Get Started
-              </NuxtLink>
+          <ClientOnly>
+            <template #fallback>
+              <div class="h-8 w-24 bg-gray-200 rounded" />
             </template>
 
-            <!-- Notifications (signed in) -->
-            <template v-else>
-              <div class="relative">
-                <UButton
-                  variant="ghost"
-                  color="gray"
-                  icon="i-heroicons-bell"
-                  aria-label="Notifications"
-                  class="notifications-button"
-                  @click="notificationOpen = !notificationOpen"
-                />
-                <div
-                  v-if="hasUnreadNotifications"
-                  class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"
-                />
-                <div
-                  v-if="notificationOpen"
-                  class="notifications-dropdown absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
+            <div class="flex items-center gap-1 sm:gap-3">
+              <template v-if="!isLoggedIn">
+                <NuxtLink
+                  to="/auth/login"
+                  class="text-gray-700 px-2 sm:px-3 py-2 rounded-md text-sm font-medium transition-colors hover:[color:var(--ui-primary)] whitespace-nowrap"
                 >
-                  <div class="px-4 py-2 border-b border-gray-100">
-                    <div class="flex justify-between items-center">
-                      <h3 class="font-medium">Notifications</h3>
-                      <UButton
-                        variant="ghost"
-                        color="gray"
-                        size="sm"
-                        icon="i-heroicons-x-mark"
-                        @click="notificationOpen = false"
-                        aria-label="Close notifications"
-                      />
-                    </div>
-                  </div>
+                  <span class="hidden sm:inline">Sign In</span>
+                  <UIcon name="i-heroicons-arrow-right-on-rectangle" class="sm:hidden w-5 h-5" />
+                </NuxtLink>
 
-                  <div class="max-h-96 overflow-y-auto">
-                    <div v-if="notifications.length === 0" class="px-4 py-8 text-center text-gray-500">
-                      No new notifications
+                <NuxtLink
+                  to="/auth/register"
+                  class="text-white px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
+                  style="background: var(--ui-primary)"
+                >
+                  <span class="hidden sm:inline">Get Started</span>
+                  <span class="sm:hidden">Sign Up</span>
+                </NuxtLink>
+              </template>
+
+              <template v-else>
+                <div class="relative">
+                  <UButton
+                    variant="ghost"
+                    color="gray"
+                    icon="i-heroicons-bell"
+                    aria-label="Notifications"
+                    class="notifications-button p-1.5 sm:p-2"
+                    @click.stop="notificationOpen = !notificationOpen"
+                  />
+                  <div
+                    v-if="hasUnreadNotifications"
+                    class="absolute top-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full"
+                  />
+                  <div
+                    v-if="notificationOpen"
+                    class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    @click="notificationOpen = false"
+                  />
+                  <div
+                    v-if="notificationOpen"
+                    class="notifications-dropdown fixed inset-x-4 top-16 sm:top-20 sm:right-0 sm:left-auto sm:max-w-sm bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200 max-h-[calc(100vh-6rem)] flex flex-col"
+                  >
+                    <div class="px-4 py-2 border-b border-gray-100">
+                      <div class="flex justify-between items-center">
+                        <h3 class="font-medium">Notifications</h3>
+                        <UButton
+                          variant="ghost"
+                          color="gray"
+                          size="sm"
+                          icon="i-heroicons-x-mark"
+                          @click="notificationOpen = false"
+                          aria-label="Close notifications"
+                        />
+                      </div>
                     </div>
-                    <div v-else>
-                      <div
-                        v-for="n in notifications"
-                        :key="n.id"
-                        class="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-0"
-                      >
-                        <div class="flex items-start">
-                          <UIcon :name="n.icon" class="h-5 w-5 text-gray-400" />
-                          <div class="ml-3 flex-1">
-                            <p class="text-sm font-medium text-gray-900">{{ n.title }}</p>
-                            <p class="text-sm text-gray-500">{{ n.message }}</p>
-                            <p class="text-xs text-gray-400 mt-1">{{ n.time }}</p>
+
+                    <div class="flex-1 overflow-y-auto">
+                      <div v-if="notifications.length === 0" class="px-4 py-8 text-center text-gray-500">
+                        No new notifications
+                      </div>
+                      <div v-else>
+                        <div
+                          v-for="n in notifications"
+                          :key="n.id"
+                          class="px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                        >
+                          <div class="flex items-start">
+                            <UIcon :name="n.icon" class="h-5 w-5 text-gray-400" />
+                            <div class="ml-3 flex-1">
+                              <p class="text-sm font-medium text-gray-900">{{ n.title }}</p>
+                              <p class="text-sm text-gray-500">{{ n.message }}</p>
+                              <p class="text-xs text-gray-400 mt-1">{{ n.time }}</p>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div v-if="notifications.length > 0" class="px-4 py-2 border-t border-gray-100 text-center">
-                    <UButton variant="ghost" size="sm" color="primary" label="Mark all as read" @click="markAllAsRead" />
+                    <div v-if="notifications.length > 0" class="px-4 py-2 border-t border-gray-100 text-center sticky bottom-0 bg-white">
+                      <UButton 
+                        variant="ghost" 
+                        size="sm" 
+                        color="primary" 
+                        label="Mark all as read" 
+                        class="w-full justify-center"
+                        @click="markAllAsRead" 
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- User menu -->
-              <div class="relative user-menu-dropdown">
-                <UButton
-                  variant="ghost"
-                  class="flex items-center gap-2"
-                  @click="userMenuOpen = !userMenuOpen"
-                >
-                  <UIcon name="i-heroicons-user-circle" class="h-6 w-6" />
-                  <span>{{ userStore.displayName }}</span>
-                  <UIcon name="i-heroicons-chevron-down" class="h-4 w-4" />
-                </UButton>
-
-                <div
-                  v-if="userMenuOpen"
-                  class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
-                >
-                  <NuxtLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="userMenuOpen = false">
-                    Profile
-                  </NuxtLink>
-                  <NuxtLink to="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="userMenuOpen = false">
-                    Settings
-                  </NuxtLink>
-                  <div class="border-t border-gray-100" />
-                  <button
-                    @click="handleLogout"
-                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                <div class="relative user-menu-dropdown">
+                  <UButton
+                    variant="ghost"
+                    class="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2"
+                    @click.stop="userMenuOpen = !userMenuOpen"
                   >
-                    Sign out
-                  </button>
+                    <UIcon name="i-heroicons-user-circle" class="h-5 w-5 sm:h-6 sm:w-6" />
+                    <span class="hidden sm:inline text-sm sm:text-base">{{ userStore.displayName }}</span>
+                    <UIcon name="i-heroicons-chevron-down" class="hidden sm:block h-4 w-4" />
+                  </UButton>
+
+                  <div
+                    v-if="userMenuOpen"
+                    class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    @click="userMenuOpen = false"
+                  />
+                  <div
+                    v-if="userMenuOpen"
+                    class="fixed bottom-0 left-0 right-0 md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-2 bg-white rounded-t-2xl md:rounded-lg shadow-2xl md:shadow-lg py-2 z-50 border border-gray-200 w-full md:w-48"
+                  >
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 md:hidden">
+                      <h3 class="font-medium">Account</h3>
+                      <UButton
+                        variant="ghost"
+                        color="gray"
+                        icon="i-heroicons-x-mark"
+                        @click="userMenuOpen = false"
+                        aria-label="Close menu"
+                      />
+                    </div>
+                    <NuxtLink 
+                      to="/profile" 
+                      class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
+                      @click="userMenuOpen = false"
+                    >
+                      <UIcon name="i-heroicons-user" class="w-5 h-5 mr-3" />
+                      <span>Profile</span>
+                    </NuxtLink>
+                    <NuxtLink 
+                      to="/settings" 
+                      class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
+                      @click="userMenuOpen = false"
+                    >
+                      <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5 mr-3" />
+                      <span>Settings</span>
+                    </NuxtLink>
+                    <div class="border-t border-gray-100" />
+                    <button
+                      @click="handleLogout"
+                      class="w-full flex items-center px-4 py-3 text-left text-gray-700 hover:bg-gray-100 text-base md:text-sm"
+                    >
+                      <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 mr-3" />
+                      <span>Sign out</span>
+                    </button>
+                  </div>
+                </div>
+              </template>
+
+            </div>
+          </ClientOnly>
+        </div>
+      </div>
+    </header>
+    <!-- Mobile Sidebar Drawer -->
+    <ClientOnly>
+      <USlideover 
+        v-model:open="isSidebarOpen" 
+        side="right" 
+        :close="{ onClick: () => closeSidebar() }"
+        :ui="{ 
+          width: 'w-72 sm:w-80', 
+          overlay: { background: 'bg-black/50' },
+          // Add transition for smoother open/close
+          transition: {
+            enter: 'transition ease-out duration-200',
+            enterFrom: 'opacity-0 translate-x-full',
+            enterTo: 'opacity-100 translate-x-0',
+            leave: 'transition ease-in duration-150',
+            leaveFrom: 'opacity-100 translate-x-0',
+            leaveTo: 'opacity-0 translate-x-full'
+          }
+        }"
+      >
+        <template #content>
+          <div class="h-full flex flex-col bg-white overflow-hidden">
+            <UButton icon="i-heroicons-x-mark" class="size-10 self-end" color="red" variant="ghost" @click="closeSidebar" />
+            <nav class="flex-1 space-y-1 overflow-y-auto">
+              <NuxtLink
+                v-for="item in sidebarItems"
+                :key="item.to + '-mobile'"
+                :to="item.to"
+                class="group flex items-center px-4 py-3 rounded-lg text-base font-medium text-gray-700 transition-colors
+                      hover:[color:var(--ui-primary)]
+                      hover:[background:color-mix(in_oklch,white 92%,var(--ui-primary))]"
+                :active-class="'[color:var(--ui-primary)] [background:color-mix(in_oklch,white 90%,var(--ui-primary))]'"
+                @click="closeSidebar"
+              >
+                <UIcon :name="item.icon" class="w-6 h-6 mr-3 flex-shrink-0" />
+                <span>{{ item.label }}</span>
+              </NuxtLink>
+            </nav>
+            
+            <!-- Footer with user info -->
+            <div v-if="isLoggedIn" class="p-4 border-t border-gray-100">
+              <div class="flex items-center">
+                <UIcon name="i-heroicons-user-circle" class="w-10 h-10 text-gray-400" />
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-gray-900">{{ userStore.displayName }}</p>
+                  <p class="text-xs text-gray-500">{{ userStore.user?.email }}</p>
                 </div>
               </div>
-            </template>
-
-
-
-            <!-- Mobile menu (optional) -->
-            <UButton
-              v-if="showSidebar"
-              class="md:hidden"
-              variant="ghost"
-              icon="i-heroicons-bars-3"
-              @click="$emit('openSidebar')"
-            />
+            </div>
           </div>
-        </ClientOnly>
-      </div>
-    </div>
-  </header>
+        </template>
+      </USlideover>
+    </ClientOnly>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, withDefaults } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'nuxt/app'
 import { useUserStore } from '~/stores/user'
 import { useAuth } from '~/composables/useAuth'
-import { getTopHeaderNav } from '~/utils/navigation'
+import { getSidebarNav, getTopHeaderNav } from '~/utils/navigation'
 
-defineProps<{ showSidebar?: boolean }>()
-defineEmits<{ (e: 'openSidebar'): void }>()
+const props = withDefaults(defineProps<{ 
+  showSidebar?: boolean,
+  sidebarItems?: Array<{ to: string; label: string; icon: string }>,
+  sidebarOpen?: boolean
+}>(), {
+  showSidebar: false,
+  sidebarOpen: false
+})
+
+const emit = defineEmits<{ 
+  (e: 'update:sidebarOpen', value: boolean): void
+}>()
+
+const isSidebarOpen = computed({
+  get: () => props.sidebarOpen,
+  set: (value) => emit('update:sidebarOpen', value)
+})
+
+// Watch for route changes to close the sidebar
+const route = useRoute()
+watch(() => route.fullPath, () => {
+  closeSidebar()
+})
+
+const closeSidebar = () => {
+  isSidebarOpen.value = false
+  // Optional: Add a small delay to allow the close animation to complete
+  // before potentially re-rendering the page
+  return new Promise(resolve => setTimeout(resolve, 200))
+}
+
+const openSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+}
 
 /** Auth + user */
 const userStore = useUserStore()
-const { isLoggedIn } = storeToRefs(userStore)
+const { userRole, isLoggedIn } = storeToRefs(userStore)
 const { signout } = useAuth()
 const router = useRouter()
+
+// Get sidebar items based on user role
+const sidebarItems = computed(() => props.sidebarItems || getSidebarNav(userRole.value || 'tenant'))
 
 /** Top nav data */
 const topNavItems = getTopHeaderNav()
@@ -203,15 +329,34 @@ function markAllAsRead() { notifications.value = notifications.value.map(n => ({
 const userMenuOpen = ref(false)
 
 /** Click outside closing */
+// Close menus when clicking outside
+const closeOnClickOutside = (ev: MouseEvent) => {
+  const target = ev.target as HTMLElement
+  
+  // Don't close if clicking on a button that toggles a menu
+  if (target.closest('.notifications-button, .user-menu-dropdown > button')) {
+    return
+  }
+  
+  // Close notifications dropdown if click is outside
+  const notificationsDropdown = document.querySelector('.notifications-dropdown')
+  if (notificationOpen.value && notificationsDropdown && !notificationsDropdown.contains(target)) {
+    notificationOpen.value = false
+  }
+  
+  // Close user menu if click is outside
+  const userMenu = document.querySelector('.user-menu-dropdown')
+  if (userMenuOpen.value && userMenu && !userMenu.contains(target)) {
+    userMenuOpen.value = false
+  }
+}
+
 onMounted(() => {
-  document.addEventListener('click', (ev) => {
-    const t = ev.target as Element
-    const userMenu = document.querySelector('.user-menu-dropdown')
-    const notif = document.querySelector('.notifications-dropdown')
-    const notifBtn = document.querySelector('.notifications-button')
-    if (userMenu && !userMenu.contains(t)) userMenuOpen.value = false
-    if (notif && notifBtn && !notif.contains(t) && !notifBtn.contains(t)) notificationOpen.value = false
-  })
+  document.addEventListener('click', closeOnClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeOnClickOutside)
 })
 
 /** Logout */

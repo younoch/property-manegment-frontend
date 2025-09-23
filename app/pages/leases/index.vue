@@ -1,49 +1,64 @@
 <!-- app/pages/leases/index.vue -->
 <template>
-  <div class="max-w-6xl mx-auto p-4 sm:p-6 overflow-scroll">
-    <div class="flex items-center justify-between gap-2">
-      <UTooltip
-        text="Create and manage lease agreements for a unit."
-        :content="{ side: 'right' }"
-      >
-        <div class="flex gap-2 cursor-pointer">
-          <h1 class="text-2xl font-semibold">Leases</h1>
+  <div class="max-w-6xl mx-auto p-3 sm:p-4 md:p-6 overflow-x-hidden">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div class="flex items-center gap-2">
+        <h1 class="text-xl sm:text-2xl font-semibold">Leases</h1>
+        <UTooltip
+          text="Create and manage lease agreements for a unit."
+          :content="{ side: 'right' }"
+        >
           <UButton
             icon="i-heroicons-information-circle"
-            color="neutral"
+            color="gray"
             variant="ghost"
             aria-label="About Leases"
             class="p-1"
           />
-        </div>
-      </UTooltip>
+        </UTooltip>
+      </div>
       <UButton 
-        icon="i-heroicons-plus" 
+        icon="i-heroicons-plus"
+        size="sm"
+        class="w-full sm:w-auto justify-center"
         :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
         :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
-      >Add Lease
+      >
+        <span class="hidden sm:inline">Add Lease</span>
+        <span class="sm:hidden">New Lease</span>
       </UButton>
     </div>
 
-    <div class="flex items-center gap-2 px-4 py-3.5 overflow-x-auto">
+    <!-- Filters Section -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
       <USelect
         v-model.number="selectedPortfolioId"
         :items="portfolioOptions"
         placeholder="Select Portfolio"
-        class="min-w-[220px]"
+        size="sm"
+        class="w-full"
+        :ui="{ width: 'w-full' }"
       />
 
       <USelect
         v-model.number="selectedPropertyId"
         :items="propertyOptions"
         placeholder="Select Property"
-        class="min-w-[220px]"
+        size="sm"
+        class="w-full"
+        :ui="{ width: 'w-full' }"
+        :disabled="!selectedPortfolioId"
       />
+      
       <USelect
         v-model.number="selectedUnitId"
         :items="unitOptions"
         placeholder="Select Unit"
-        class="min-w-[220px]"
+        size="sm"
+        class="w-full"
+        :ui="{ width: 'w-full' }"
+        :disabled="!selectedPropertyId"
       />
     </div>
 
@@ -53,30 +68,47 @@
           <USkeleton class="h-28 rounded-xl" v-for="i in 3" :key="i" />
         </div>
       </div>
-      <div v-else-if="rowsArray.length === 0" class="py-10 flex flex-col items-center text-center gap-3">
-        <div class="i-lucide-file-text h-12 w-12 text-primary/80" aria-hidden="true" />
-        <p class="text-lg font-medium">No leases yet</p>
-        <p class="text-sm text-gray-500 max-w-md">
-          Create your first lease agreement to start tracking rent payments and lease terms.
-        </p>
-        <UButton 
-          icon="i-heroicons-plus" 
-          class="mt-2" 
-          :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
-          :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
-        >
-          Create Your First Lease
-        </UButton>
-      </div>
-      <UTable
-        v-else
-        :data="rowsArray"
-        :columns="columns"
-        class="flex-1"
-        :loading="loading"
-        loading-color="primary"
-        loading-animation="carousel"
-      />
+      <template v-else>
+        <div v-if="rowsArray.length === 0" class="py-8 sm:py-12 flex flex-col items-center text-center px-4">
+          <div class="i-lucide-file-text h-10 w-10 sm:h-12 sm:w-12 text-primary/80 mb-3" aria-hidden="true" />
+          <h2 class="text-lg sm:text-xl font-medium mb-2">No leases found</h2>
+          <p class="text-sm text-gray-500 max-w-md mb-4">
+            Create your first lease agreement to start tracking rent payments and lease terms.
+          </p>
+          <UButton 
+            icon="i-heroicons-plus"
+            size="sm"
+            :to="`/leases/new?unitId=${selectedPortfolioId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
+            :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
+            class="w-full sm:w-auto"
+          >
+            Create Lease
+          </UButton>
+        </div>
+        <div v-else class="overflow-x-auto -mx-2 sm:mx-0">
+          <UTable
+            :data="rowsArray"
+            :columns="columns"
+            class="min-w-full"
+            :loading="loading"
+            loading-color="primary"
+            loading-animation="carousel"
+            :ui="{
+              wrapper: 'border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden',
+              th: { padding: 'py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' },
+              td: { padding: 'py-3 px-4 text-sm text-gray-900' },
+              thead: 'bg-gray-50 dark:bg-gray-800',
+              tbody: 'divide-y divide-gray-200 dark:divide-gray-700',
+            }"
+          >
+            <template #empty-state>
+              <div class="text-center py-6 text-gray-500">
+                No leases match your current filters
+              </div>
+            </template>
+          </UTable>
+        </div>
+      </template>
     </UCard>
 
     <div class="mt-2 text-xs text-gray-500">

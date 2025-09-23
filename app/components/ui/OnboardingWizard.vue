@@ -204,12 +204,21 @@ async function submitForm() {
   <UModal 
     v-model:open="showOnboardingWizard"
     :dismissible="false"
-    :ui="{ content: 'w-full sm:max-w-2xl', header: 'p-3 sm:p-4 min-h-14', body: 'p-3 sm:p-4', width: 'w-full sm:max-w-2xl' }"
-    :close="{
-    color: 'error',
-    variant: 'outline',
-    class: 'rounded-full'
-  }"
+    :ui="{
+      container: 'items-center sm:items-start',
+      width: 'w-full sm:max-w-2xl',
+      margin: 'sm:my-8 mx-auto',
+      overlay: { background: 'bg-gray-900/50 dark:bg-gray-900/75' },
+      base: 'relative flex flex-col max-h-[90vh] sm:max-h-[90vh] mx-4 sm:mx-0',
+      content: 'w-full max-w-full sm:max-w-2xl overflow-y-auto',
+      header: 'p-3 sm:p-4 min-h-14', 
+      body: 'p-3 sm:p-4 flex-1 overflow-y-auto',
+      close: {
+        color: 'error',
+        variant: 'outline',
+        class: 'rounded-full'
+      }
+    }"
   >
     <template #header>
       <!-- Progress Indicator -->

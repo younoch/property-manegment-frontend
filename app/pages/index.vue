@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '#imports'
+import { useHead, useRuntimeConfig, useRequestURL } from '#imports'
 
 import HeroSection from '~/components/home/HeroSection.vue'
 import ProblemSolution from '~/components/home/ProblemSolution.vue'
@@ -59,10 +59,58 @@ import StatCard from '~/components/home/StatCard.vue'
 
 definePageMeta({ layout: 'public' })
 
+// SEO: compute site/canonical URL from runtime config when available
+const runtimePublic = useRuntimeConfig().public as Record<string, any>
+const frontendDomain = (runtimePublic.frontendDomain || '')
+  .replace(/^https?:\/\//, '')
+  .replace(/\/$/, '')
+const siteUrl = frontendDomain ? `https://${frontendDomain}` : undefined
+
+const reqUrl = process.server ? useRequestURL() : null
+const currentPath = reqUrl ? reqUrl.pathname : '/'
+const canonicalUrl = siteUrl ? `${siteUrl}${currentPath}` : undefined
+
+const title = 'LeaseTrack — Smart Property Management Made Easy for Small Landlords'
+const description = 'Manage leases, auto-generate rent invoices, track payments and late fees. Built for small landlords. Free to start.'
+const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || undefined
+
 useHead({
-  title: 'LeaseTrack — Smart Property Management Made Easy for Small Landlords',
+  title,
   meta: [
-    { name: 'description', content: 'Manage leases, auto-generate rent invoices, track payments and late fees. Built for small landlords. Free to start.' }
+    { name: 'description', content: description },
+    { name: 'robots', content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1' },
+    // Open Graph
+    { property: 'og:type', content: 'website' },
+    { property: 'og:title', content: title },
+    { property: 'og:description', content: description },
+    canonicalUrl ? { property: 'og:url', content: canonicalUrl } : undefined,
+    ogImage ? { property: 'og:image', content: ogImage } : undefined,
+    // Twitter
+    { name: 'twitter:card', content: ogImage ? 'summary_large_image' : 'summary' },
+    { name: 'twitter:title', content: title },
+    { name: 'twitter:description', content: description },
+    ogImage ? { name: 'twitter:image', content: ogImage } : undefined,
+  ].filter(Boolean) as any,
+  link: canonicalUrl ? [{ rel: 'canonical', href: canonicalUrl }] : [],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'LeaseTrack',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        url: canonicalUrl || undefined,
+        description,
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+          category: 'FreeTrial'
+        }
+      })
+    }
   ]
 })
 </script>
