@@ -36,7 +36,7 @@
                 'hover:[background:color-mix(in_oklch,white 90%,var(--ui-primary))]',
                 'text-sm sm:text-base'
               ]"
-              :active-class="'[color:var(--ui-primary)] [background:color-mix(in_oklch,white 92%,var(--ui-primary))]'"
+              :active-class="'text-primary [background:color-mix(in_oklch,white 92%,var(--ui-primary))]'"
             >
               <span class="inline-flex items-center gap-1 sm:gap-2">
                 <UIcon :name="item.icon" class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -160,9 +160,9 @@
                   ></div>
                   <div
                     v-if="userMenuOpen"
-                    class="fixed inset-x-4 top-16 sm:top-20 sm:right-0 sm:left-auto bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200 max-h-[calc(100vh-6rem)] flex flex-col w-auto sm:max-w-sm"
+                    class="fixed min-w-[9rem] inset-x-4 top-16 sm:top-20 sm:right-0 sm:left-auto bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200 max-h-[calc(100vh-6rem)] flex flex-col w-auto sm:max-w-sm"
                   >
-                    <div class="px-4 py-2 border-b border-gray-100">
+                    <div class="px-4 py-2 border-b border-gray-100 space-y-1">
                       <div class="flex justify-between items-center">
                         <h3 class="font-medium">Account</h3>
                         <UButton
@@ -178,23 +178,25 @@
                     <div class="flex-1 overflow-y-auto">
                       <NuxtLink 
                         to="/profile" 
-                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
+                        class="flex items-center px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm" 
                         @click="userMenuOpen = false"
+                        active-class="text-primary"
                       >
                         <UIcon name="i-heroicons-user" class="w-5 h-5 mr-3" />
                         <span>Profile</span>
                       </NuxtLink>
                       <NuxtLink 
                         to="/settings" 
-                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
+                        class="flex items-center px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm" 
                         @click="userMenuOpen = false"
+                        active-class="text-primary"
                       >
                         <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5 mr-3" />
                         <span>Settings</span>
                       </NuxtLink>
                       <button
                         @click="handleLogout"
-                        class="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm flex items-center"
+                        class="w-full text-left px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm flex items-center"
                       >
                         <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 mr-3" />
                         <span>Logout</span>
@@ -233,15 +235,15 @@
         <template #content>
           <div class="h-full flex flex-col bg-white overflow-hidden">
             <UButton icon="i-heroicons-x-mark" class="size-10 self-end" color="red" variant="ghost" @click="closeSidebar" />
-            <nav class="flex-1 space-y-1 overflow-y-auto">
+            <nav class="flex-1 overflow-y-auto">
               <NuxtLink
                 v-for="item in sidebarItems"
                 :key="item.to + '-mobile'"
                 :to="item.to"
-                class="group flex items-center px-4 py-3 rounded-lg text-base font-medium text-gray-700 transition-colors
+                class="group flex items-center px-4 py-2 rounded-lg text-base font-medium text-gray-700 transition-colors
                       hover:[color:var(--ui-primary)]
                       hover:[background:color-mix(in_oklch,white 92%,var(--ui-primary))]"
-                :active-class="'[color:var(--ui-primary)] [background:color-mix(in_oklch,white 90%,var(--ui-primary))]'"
+                :active-class="'text-primary [background:color-mix(in_oklch,white 90%,var(--ui-primary))]'"
                 @click="closeSidebar"
               >
                 <UIcon :name="item.icon" class="w-6 h-6 mr-3 flex-shrink-0" />
