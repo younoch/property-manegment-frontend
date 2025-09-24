@@ -86,7 +86,7 @@
                   />
                   <div
                     v-if="notificationOpen"
-                    class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    class="fixed inset-0 bg-transparent bg-opacity-50 z-40 md:hidden"
                     @click="notificationOpen = false"
                   />
                   <div
@@ -155,49 +155,54 @@
 
                   <div
                     v-if="userMenuOpen"
-                    class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                    class="fixed inset-0 bg-transparent bg-opacity-50 z-40 md:hidden"
                     @click="userMenuOpen = false"
-                  />
+                  ></div>
                   <div
                     v-if="userMenuOpen"
-                    class="fixed bottom-0 left-0 right-0 md:absolute md:bottom-auto md:left-auto md:right-0 md:top-full md:mt-2 bg-white rounded-t-2xl md:rounded-lg shadow-2xl md:shadow-lg py-2 z-50 border border-gray-200 w-full md:w-48"
+                    class="fixed inset-x-4 top-16 sm:top-20 sm:right-0 sm:left-auto bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200 max-h-[calc(100vh-6rem)] flex flex-col w-auto sm:max-w-sm"
                   >
-                    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 md:hidden">
-                      <h3 class="font-medium">Account</h3>
-                      <UButton
-                        variant="ghost"
-                        color="gray"
-                        icon="i-heroicons-x-mark"
-                        @click="userMenuOpen = false"
-                        aria-label="Close menu"
-                      />
+                    <div class="px-4 py-2 border-b border-gray-100">
+                      <div class="flex justify-between items-center">
+                        <h3 class="font-medium">Account</h3>
+                        <UButton
+                          variant="ghost"
+                          color="gray"
+                          size="sm"
+                          icon="i-heroicons-x-mark"
+                          @click="userMenuOpen = false"
+                          aria-label="Close menu"
+                        />
+                      </div>
                     </div>
-                    <NuxtLink 
-                      to="/profile" 
-                      class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
-                      @click="userMenuOpen = false"
-                    >
-                      <UIcon name="i-heroicons-user" class="w-5 h-5 mr-3" />
-                      <span>Profile</span>
-                    </NuxtLink>
-                    <NuxtLink 
-                      to="/settings" 
-                      class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
-                      @click="userMenuOpen = false"
-                    >
-                      <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5 mr-3" />
-                      <span>Settings</span>
-                    </NuxtLink>
-                    <div class="border-t border-gray-100" />
-                    <button
-                      @click="handleLogout"
-                      class="w-full flex items-center px-4 py-3 text-left text-gray-700 hover:bg-gray-100 text-base md:text-sm"
-                    >
-                      <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 mr-3" />
-                      <span>Sign out</span>
-                    </button>
+                    <div class="flex-1 overflow-y-auto">
+                      <NuxtLink 
+                        to="/profile" 
+                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
+                        @click="userMenuOpen = false"
+                      >
+                        <UIcon name="i-heroicons-user" class="w-5 h-5 mr-3" />
+                        <span>Profile</span>
+                      </NuxtLink>
+                      <NuxtLink 
+                        to="/settings" 
+                        class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm" 
+                        @click="userMenuOpen = false"
+                      >
+                        <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5 mr-3" />
+                        <span>Settings</span>
+                      </NuxtLink>
+                      <button
+                        @click="handleLogout"
+                        class="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 text-base md:text-sm flex items-center"
+                      >
+                        <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 mr-3" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
+
               </template>
 
             </div>

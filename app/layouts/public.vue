@@ -16,10 +16,17 @@
             <NuxtLink to="/contact" class="text-sm font-medium hover:text-primary-600 transition-colors">Contact</NuxtLink>
           </nav>
           <div class="flex items-center space-x-4">
-            <NuxtLink to="/auth/login" class="text-sm font-medium hover:text-primary-600 transition-colors">Log in</NuxtLink>
-            <NuxtLink to="auth/register" class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
-              Get Started
-            </NuxtLink>
+            <template v-if="isLoggedIn">
+              <NuxtLink to="/dashboard" class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+                Dashboard
+              </NuxtLink>
+            </template>
+            <template v-else>
+              <NuxtLink to="/auth/login" class="text-sm font-medium hover:text-primary-600 transition-colors">Log in</NuxtLink>
+              <NuxtLink to="auth/register" class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+                Get Started
+              </NuxtLink>
+            </template>
           </div>
         </div>
       </div>
@@ -87,10 +94,14 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '~/stores/user'
 import FeedbackButton from '~/components/feedback/FeedbackButton.vue'
 
 const route = useRoute()
-// This layout is for public-facing pages like home, about, contact, etc.
+const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(userStore)
 </script>
 
 <style scoped>
