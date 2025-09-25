@@ -1,38 +1,49 @@
 <template>
-  <div class="max-w-3xl mx-auto p-4 sm:p-6 space-y-6">
+  <div class="max-w-3xl mx-auto p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-      <div>
-        <div class="flex items-center gap-3">
-          <h1 class="text-2xl font-semibold">Invoice #{{ invoiceId }}</h1>
-          <UBadge :color="badgeColor" variant="soft" class="capitalize">{{ model?.status || 'open' }}</UBadge>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="space-y-1">
+        <div class="flex flex-wrap items-center gap-2">
+          <h1 class="text-xl sm:text-2xl font-semibold">Invoice #{{ invoiceId }}</h1>
+          <UBadge :color="badgeColor" variant="soft" class="capitalize text-xs sm:text-sm">{{ model?.status || 'open' }}</UBadge>
         </div>
-        <p class="text-sm text-gray-500 mt-1">
-          Lease: <span class="font-medium">#{{ model?.lease_id }}</span> ·
-          Portfolio: <span class="font-medium">#{{ model?.portfolio_id }}</span>
+        <p class="text-xs sm:text-sm text-gray-500">
+          <span>Lease: <span class="font-medium">#{{ model?.lease_id }}</span></span>
+          <span class="hidden sm:inline"> · </span>
+          <span class="block sm:inline">Portfolio: <span class="font-medium">#{{ model?.portfolio_id }}</span></span>
         </p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <UButton variant="ghost" :to="`/leases/${model?.lease_id}`" icon="i-heroicons-arrow-left">Back</UButton>
+      <div class="flex flex-wrap items-center gap-2 justify-end">
+        <UButton 
+          size="xs"
+          variant="ghost" 
+          :to="`/leases/${model?.lease_id}`" 
+          icon="i-heroicons-arrow-left"
+          class="text-xs sm:text-sm"
+        >
+          <span class="hidden sm:inline">Back</span>
+        </UButton>
         <UButton
           v-if="!editMode"
+          size="xs"
           icon="i-lucide-send"
           color="green"
           :loading="sending"
           @click="sendInvoice"
-          class="ml-2"
+          class="text-xs sm:text-sm"
         >
-          Send
+          <span class="hidden sm:inline">Send</span>
         </UButton>
         <UButton
           v-if="!editMode"
+          size="xs"
           :disabled="!canEdit"
           icon="i-lucide-pencil-line"
           @click="enterEdit"
-          class="ml-2"
+          class="text-xs sm:text-sm"
         >
-          Edit
+          <span class="hidden sm:inline">Edit</span>
         </UButton>
         <template v-else>
           <UButton
@@ -57,7 +68,7 @@
 
     <!-- Meta -->
     <UCard>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <div>
           <div class="text-xs text-gray-500">Issue date</div>
           <div v-if="!editMode" class="font-medium">{{ fmtDate(model.issue_date) }}</div>
@@ -83,30 +94,33 @@
 
     <!-- Items -->
     <UCard>
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center justify-between mb-2 sm:mb-3">
         <h3 class="text-sm font-medium">Items</h3>
         <UButton
           v-if="editMode"
-          size="xs"
+          size="2xs"
           variant="soft"
           icon="i-lucide-plus"
           @click="addRow"
+          class="text-xs"
         >
-          Add row
+          <span class="hidden sm:inline">Add row</span>
         </UButton>
       </div>
 
-      <div class="overflow-hidden rounded-md ring-1 ring-black/5 dark:ring-white/10">
-        <table class="w-full text-sm">
-          <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
-            <tr>
-              <th class="py-2 px-3 text-left w-6"></th>
-              <th class="py-2 px-3 text-left">Name</th>
-              <th class="py-2 px-3 text-right">Qty</th>
-              <th class="py-2 px-3 text-right">Unit price</th>
-              <th class="py-2 px-3 text-right">Amount</th>
-            </tr>
-          </thead>
+      <div class="overflow-x-auto -mx-2 sm:mx-0">
+        <div class="min-w-full inline-block align-middle">
+          <div class="overflow-hidden rounded-md ring-1 ring-black/5 dark:ring-white/10">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-xs sm:text-sm">
+              <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
+                <tr>
+                  <th class="py-2 px-2 sm:px-3 text-left w-6"></th>
+                  <th class="py-2 px-2 sm:px-3 text-left">Name</th>
+                  <th class="py-2 px-1 sm:px-3 text-right whitespace-nowrap">Qty</th>
+                  <th class="py-2 px-1 sm:px-3 text-right whitespace-nowrap">Unit price</th>
+                  <th class="py-2 px-2 sm:px-3 text-right whitespace-nowrap">Amount</th>
+                </tr>
+              </thead>
           <tbody class="divide-y divide-gray-100/70 dark:divide-white/10">
             <tr v-for="(row, idx) in model.items" :key="row.__key" class="align-top">
               <td class="py-2 px-3">
@@ -120,36 +134,38 @@
                   @click="removeRow(idx)"
                 />
               </td>
-              <td class="py-2 px-3">
-                <div v-if="!editMode" class="font-medium">{{ row.name || '—' }}</div>
-                <UInput v-else v-model.trim="row.name" placeholder="Item name" />
+              <td class="py-2 px-2 sm:px-3">
+                <div v-if="!editMode" class="font-medium text-xs sm:text-sm">{{ row.name || '—' }}</div>
+                <UInput v-else v-model.trim="row.name" placeholder="Item name" size="xs" />
               </td>
-              <td class="py-2 px-3 text-right">
-                <div v-if="!editMode">{{ row.qty }}</div>
+              <td class="py-2 px-1 sm:px-3 text-right whitespace-nowrap">
+                <div v-if="!editMode" class="text-xs sm:text-sm">{{ row.qty }}</div>
                 <UInput
                   v-else
                   v-model.number="row.qty"
                   type="number"
                   min="0.01"
                   step="0.01"
-                  class="text-right"
+                  class="text-right text-xs sm:text-sm"
+                  size="xs"
                   @input="recalcRow(row)"
                 />
               </td>
-              <td class="py-2 px-3 text-right">
-                <div v-if="!editMode">{{ fmtBDT(row.unit_price) }}</div>
+              <td class="py-2 px-1 sm:px-3 text-right whitespace-nowrap">
+                <div v-if="!editMode" class="text-xs sm:text-sm">{{ fmtBDT(row.unit_price) }}</div>
                 <UInput
                   v-else
                   v-model.number="row.unit_price"
                   type="number"
                   min="0"
                   step="0.01"
-                  class="text-right"
+                  class="text-right text-xs sm:text-sm"
+                  size="xs"
                   @input="recalcRow(row)"
                 />
               </td>
-              <td class="py-2 px-3 text-right font-medium">
-                {{ fmtBDT(row.amount) }}
+              <td class="py-2 px-2 sm:px-3 text-right font-medium whitespace-nowrap">
+                <span class="text-xs sm:text-sm">{{ fmtBDT(row.amount) }}</span>
               </td>
             </tr>
           </tbody>
@@ -166,15 +182,33 @@
               <td colspan="4" class="py-2 px-3 text-right text-gray-700">Total</td>
               <td class="py-2 px-3 text-right font-semibold">{{ fmtBDT(total) }}</td>
             </tr>
-          </tfoot>
-        </table>
+              </tfoot>
+            </table>
+          </div>
+        </div>
       </div>
     </UCard>
 
     <!-- Footer actions (view mode) -->
-    <div v-if="!editMode" class="flex items-center justify-end gap-2">
-      <UButton variant="soft" icon="i-lucide-download" @click="downloadPdf">Download PDF</UButton>
-      <UButton :disabled="!canEdit" icon="i-lucide-pencil-line" @click="enterEdit">Edit</UButton>
+    <div v-if="!editMode" class="flex flex-wrap items-center justify-end gap-2">
+      <UButton 
+        size="xs" 
+        variant="soft" 
+        icon="i-lucide-download" 
+        @click="downloadPdf"
+        class="text-xs sm:text-sm"
+      >
+        <span class="hidden sm:inline">Download</span> PDF
+      </UButton>
+      <UButton 
+        size="xs" 
+        :disabled="!canEdit" 
+        icon="i-lucide-pencil-line" 
+        @click="enterEdit"
+        class="text-xs sm:text-sm"
+      >
+        <span class="hidden sm:inline">Edit</span>
+      </UButton>
     </div>
   </div>
 </template>
@@ -431,6 +465,38 @@ onMounted(loadInvoice)
 </script>
 
 <style scoped>
+/* Responsive table container */
+@media (max-width: 640px) {
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .table-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .table-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 640px) {
+  button, [role="button"], .btn {
+    min-height: 2rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  input, .input {
+    min-height: 2rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
 @media print {
   .max-w-3xl { max-width: 800px; }
   .no-print { display: none !important; }

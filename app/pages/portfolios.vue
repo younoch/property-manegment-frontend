@@ -133,9 +133,21 @@
             </div>
 
             <UDropdownMenu
-              :content="{ align: 'end' }"
+              :content="{ 
+                align: 'end',
+                class: 'w-48',
+                popper: {
+                  strategy: 'absolute',
+                  placement: 'bottom-end',
+                  modifiers: [
+                    { name: 'offset', options: { offset: [0, 8] } },
+                    { name: 'preventOverflow', options: { padding: 16 } }
+                  ]
+                }
+              }"
               :items="getRowItems({ original: row })"
               aria-label="Actions"
+              :ui="{ width: 'w-full sm:w-48' }"
             >
               <UButton icon="i-lucide-ellipsis-vertical" color="neutral" variant="ghost" class="-m-1" />
             </UDropdownMenu>

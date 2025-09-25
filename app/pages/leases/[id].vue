@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto p-4 sm:p-6 overflow-scroll space-y-6">
+  <div class="max-w-6xl mx-auto p-2 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6 w-full">
     <LeaseHeader :leaseId="leaseId" :lease="lease" />
 
     <LeaseActions
@@ -14,7 +14,23 @@
       @open-payment="openPaymentModal"
     />
 
-    <UTabs v-model="tab" :items="tabs" variant="link" :ui="{ trigger: 'grow' }" class="gap-4 w-full">
+    <UTabs 
+      v-model="tab" 
+      :items="tabs" 
+      variant="link" 
+      orientation="vertical" 
+      :ui="{ 
+        root: 'w-full text-xs sm:text-sm items-start',
+        wrapper: 'w-full overflow-x-auto overflow-y-hidden hide-scrollbar', 
+        base: 'flex-1', 
+        list: 'flex-nowrap', 
+        container: 'border-b border-gray-200 dark:border-gray-700', 
+        tab: { 
+          padding: 'py-1.5 px-2 sm:py-2 sm:px-4', 
+          size: 'text-xs sm:text-sm md:text-base' 
+        } 
+      }" 
+    >
       <template #overview>
         <LeaseOverview :lease="lease" :balanceBDT="balanceBDT" :fmtBDT="fmtBDT" />
       </template>
@@ -41,20 +57,30 @@
       </template>
 
       <template #tenants>
-        <UCard>
-          <div class="text-sm text-gray-500" v-if="(lease?.lease_tenants || []).length === 0">No tenants linked.</div>
-          <ul v-else class="text-sm text-gray-700 list-disc list-inside">
-            <li v-for="t in lease.lease_tenants" :key="t.id">
-              {{ t.tenant.first_name }} {{ t.tenant.last_name }}
-              <span v-if="t.tenant.phone" class="text-gray-500">· {{ t.tenant.phone }}</span>
-              <span v-if="t.tenant.email" class="text-gray-500">· {{ t.tenant.email }}</span>
+        <UCard :ui="{ body: 'p-2 sm:p-4' }">
+          <div class="text-xs sm:text-sm text-gray-500" v-if="(lease?.lease_tenants || []).length === 0">No tenants linked.</div>
+          <ul class="space-y-2">
+            <li v-for="t in lease.lease_tenants" :key="t.id" class="p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
+              <div class="font-medium">{{ t.tenant.first_name }} {{ t.tenant.last_name }}</div>
+              <div v-if="t.tenant.phone || t.tenant.email" class="text-sm text-gray-500 mt-1 space-y-1">
+                <div v-if="t.tenant.phone" class="flex items-center">
+                  <UIcon name="i-lucide-phone" class="w-4 h-4 mr-2" />
+                  <a :href="'tel:' + t.tenant.phone" class="hover:text-primary-600 dark:hover:text-primary-400">{{ t.tenant.phone }}</a>
+                </div>
+                <div v-if="t.tenant.email" class="flex items-center">
+                  <UIcon name="i-lucide-mail" class="w-4 h-4 mr-2" />
+                  <a :href="'mailto:' + t.tenant.email" class="hover:text-primary-600 dark:hover:text-primary-400 break-all">{{ t.tenant.email }}</a>
+                </div>
+              </div>
             </li>
           </ul>
         </UCard>
       </template>
 
       <template #documents>
-        <UCard><div class="text-sm text-gray-500">No documents yet.</div></UCard>
+        <UCard :ui="{ body: { padding: 'p-3 sm:p-4' } }">
+      <div class="text-sm text-gray-500">No documents yet.</div>
+    </UCard>
       </template>
     </UTabs>
 
@@ -99,6 +125,7 @@ import EndLeaseModal from '~/components/leases/modals/EndLeaseModal.vue'
 definePageMeta({ middleware: ['auth'] })
 
 const route = useRoute()
+
 const leaseId = Number(route.params.id)
 
 const {
