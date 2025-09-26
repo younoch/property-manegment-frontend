@@ -10,7 +10,7 @@
     }">
     
     <template #body>
-      <UPlaceholder class="h-fit">
+      <div class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="mb-4 p-3 bg-gray-50 rounded-lg">
             <div class="flex items-center justify-between">
@@ -165,7 +165,7 @@
               </div>
             </div>
         </UForm>
-      </UPlaceholder>
+      </div>
     </template>
   </UModal>
 </template>

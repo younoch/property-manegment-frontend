@@ -6,7 +6,7 @@
     :close="{ color: 'error', variant: 'outline', class: 'rounded-full' }"
   >
     <template #body>
-      <UPlaceholder class="h-fit">
+      <div class="h-fit">
         <div class="mb-3 text-sm text-muted-foreground" v-if="!isViewing">
           A portfolio is a simple container for your properties (e.g., “Personal”, “Family”, “Investments”).
         </div>
@@ -69,7 +69,7 @@
             <UButton v-if="!isViewing" type="submit" :loading="submitting">{{ isEditing ? 'Save changes' : 'Create portfolio' }}</UButton>
           </div>
         </UForm>
-      </UPlaceholder>
+      </div>
     </template>
   </UModal>
 </template>

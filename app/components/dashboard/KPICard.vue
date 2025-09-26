@@ -7,7 +7,6 @@
     }"
   >
     <!-- Soft glow effect -->
-    <div class="pointer-events-none absolute -top-8 -right-8 h-24 w-24 rounded-full bg-primary-500/20 blur-2xl"></div>
 
     <div class="flex items-start justify-between gap-2">
       <div>

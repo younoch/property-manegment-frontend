@@ -10,7 +10,6 @@
     }">
     
     <template #body>
-      <UPlaceholder class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             
@@ -92,7 +91,6 @@
             <UButton v-if="!isViewing" type="submit" :loading="submitting">{{ isEditing ? 'Save' : 'Create' }}</UButton>
           </div>
         </UForm>
-      </UPlaceholder>
       
     </template>
   </UModal>

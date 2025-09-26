@@ -6,7 +6,7 @@
     :close="{ color: 'error', variant: 'outline', class: 'rounded-full' }"
   >
     <template #body>
-      <UPlaceholder class="h-fit">
+      <div class="h-fit">
         <UForm :state="form" :validate="validate" @submit="onSubmit">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Portfolio" name="portfolio_id" :error="errors.portfolio_id" class="sm:col-span-2">
@@ -46,7 +46,7 @@
             <UButton v-if="model && !props.view" color="red" variant="soft" @click.prevent="onDelete">Delete</UButton>
           </div>
         </UForm>
-      </UPlaceholder>
+      </div>
     </template>
   </UModal>
 </template>
