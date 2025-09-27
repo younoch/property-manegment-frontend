@@ -78,7 +78,7 @@
           <UButton 
             icon="i-heroicons-plus"
             size="sm"
-            :to="`/leases/new?unitId=${selectedPortfolioId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
+            :to="`/leases/new?unitId=${selectedUnitIdbagira}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
             :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
             class="w-full sm:w-auto"
           >
@@ -95,7 +95,7 @@
             loading-animation="carousel"
             :ui="{
               wrapper: 'border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden',
-              th: { padding: 'py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider' },
+              th: { padding: 'py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase trng-wider' },
               td: { padding: 'py-3 px-4 text-sm text-gray-900' },
               thead: 'bg-gray-50 dark:bg-gray-800',
               tbody: 'divide-y divide-gray-200 dark:divide-gray-700',
@@ -110,7 +110,7 @@
         </div>
       </template>
     </UCard>
-
+acki
     <div class="mt-2 text-xs text-gray-500">
       <div v-if="error">Error: {{ error?.message || error }}</div>
     </div>

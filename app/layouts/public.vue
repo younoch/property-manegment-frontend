@@ -98,10 +98,19 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '~/stores/user'
 import FeedbackButton from '~/components/feedback/FeedbackButton.vue'
+import { onMounted } from 'vue';
+import { useWakeBackend } from '~/composables/useWakeBackend';
 
 const route = useRoute()
 const userStore = useUserStore()
 const { isLoggedIn } = storeToRefs(userStore)
+
+// Wake up the backend when the layout is mounted
+const { wakeBackend } = useWakeBackend()
+onMounted(() => {
+  // Don't await, we want this to happen in the background
+  wakeBackend()
+})
 </script>
 
 <style scoped>

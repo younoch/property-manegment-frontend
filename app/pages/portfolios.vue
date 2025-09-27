@@ -1,11 +1,12 @@
 <template>
-  <div class="max-w-6xl mx-auto p-4 sm:p-6">
+  <div class="max-w-6xl mx-auto p-2 sm:p-6">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between items-center mb-2 sm:mb-4">
       <h1 class="text-2xl font-semibold">Rental Portfolios</h1>
-      <UButton icon="i-heroicons-plus" color="primary" @click="openCreate">
+      <!-- it will back later -->
+      <!-- <UButton icon="i-heroicons-plus" color="primary" @click="openCreate">
         Add Portfolio
-      </UButton>
+      </UButton> -->
     </div>
 
     <!-- Loading -->
@@ -43,149 +44,12 @@
         }"
       >
         <template #portfolio="{ item }">
-          <UCard class="mb-6">
-            <!-- Edit/View Toggle -->
-            <div class="flex justify-between items-center mb-4">
-              <UButton
-                :icon="isEditMode ? 'i-lucide-eye' : 'i-lucide-pencil'"
-                @click="toggleEditMode(item.data)"
-              >
-                {{ isEditMode ? 'View' : 'Edit' }}
-              </UButton>
-            </div>
-
-            <!-- View Mode -->
-            <div v-if="!isEditMode">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Basic Information -->
-                <div class="space-y-2">
-                  <h3 class="font-semibold border-b pb-1">Basic Information</h3>
-                  <div><strong>Name:</strong> {{ item.data.name || 'N/A' }}</div>
-                  <div>
-                    <strong>Status:</strong>
-                    <span :class="{
-                      'text-green-500': item.data.status === 'Active',
-                      'text-red-500': item.data.status === 'Inactive',
-                      'text-yellow-500': item.data.status === 'Pending'
-                    }">{{ item.data.status || 'N/A' }}</span>
-                  </div>
-                  <div><strong>Plan:</strong> {{ item.data.subscription_plan || 'N/A' }}</div>
-                  <div><strong>Currency:</strong> {{ item.data.currency || 'N/A' }}</div>
-                  <div><strong>Timezone:</strong> {{ item.data.timezone || 'N/A' }}</div>
-                </div>
-
-                <!-- Contact -->
-                <div class="space-y-2">
-                  <h3 class="font-semibold border-b pb-1">Contact Information</h3>
-                  <div><strong>Email:</strong> {{ item.data.email || 'N/A' }}</div>
-                  <div><strong>Phone:</strong> {{ item.data.phone || 'N/A' }}</div>
-                  <div>
-                    <strong>Website:</strong>
-                    <a
-                      v-if="item.data.website"
-                      :href="item.data.website.startsWith('http') ? item.data.website : 'https://' + item.data.website"
-                      target="_blank"
-                      class="text-primary-600 hover:underline"
-                    >
-                      {{ item.data.website }}
-                    </a>
-                    <span v-else>N/A</span>
-                  </div>
-                </div>
-
-                <!-- Address -->
-                <div class="space-y-2">
-                  <h3 class="font-semibold border-b pb-1">Address</h3>
-                  <div><strong>Street:</strong> {{ item.data.address || 'N/A' }}</div>
-                  <div><strong>City:</strong> {{ item.data.city || 'N/A' }}</div>
-                  <div><strong>State:</strong> {{ item.data.state || 'N/A' }}</div>
-                  <div><strong>Postal Code:</strong> {{ item.data.postal_code || 'N/A' }}</div>
-                  <div><strong>Country:</strong> {{ item.data.country || 'N/A' }}</div>
-                </div>
-
-                <!-- Business -->
-                <div class="space-y-2">
-                  <h3 class="font-semibold border-b pb-1">Business Details</h3>
-                  <div><strong>Tax ID:</strong> {{ item.data.tax_id || 'N/A' }}</div>
-                  <div><strong>Registration #:</strong> {{ item.data.registration_number || 'N/A' }}</div>
-                  <div><strong>VAT #:</strong> {{ item.data.vat_number || 'N/A' }}</div>
-                  <div><strong>External ID:</strong> {{ item.data.provider_customer_id || 'N/A' }}</div>
-                  <div v-if="item.data.logo_url" class="mt-2">
-                    <strong>Logo:</strong>
-                    <img :src="item.data.logo_url" alt="Logo" class="mt-1 h-12 w-auto rounded" />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Audit -->
-              <div class="mt-4 pt-4 border-t text-xs text-gray-500">
-                <div>Created: {{ formatDate(item.data.created_at) }}</div>
-                <div>Last Updated: {{ formatDate(item.data.updated_at) }}</div>
-              </div>
-            </div>
-
-            <!-- Edit Mode -->
-            <div v-else>
-              <div v-if="editModel" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Basic -->
-                  <div class="space-y-2">
-                    <h3 class="font-semibold">Basic Information</h3>
-                    <div><strong>Name:</strong><UInput v-model="editModel.name" class="w-full mt-1" /></div>
-                    <div>
-                      <strong>Status:</strong>
-                      <USelect
-                        v-model="editModel.status"
-                        :options="['Active','Inactive','Pending']"
-                        class="w-full mt-1"
-                      />
-                    </div>
-                    <div><strong>Plan:</strong><UInput v-model="editModel.subscription_plan" class="w-full mt-1" /></div>
-                    <div><strong>Currency:</strong><UInput v-model="editModel.currency" class="w-full mt-1" /></div>
-                    <div><strong>Timezone:</strong><UInput v-model="editModel.timezone" class="w-full mt-1" /></div>
-                  </div>
-
-                  <!-- Contact -->
-                  <div class="space-y-2">
-                    <h3 class="font-semibold">Contact Information</h3>
-                    <div><strong>Email:</strong><UInput v-model="editModel.email" type="email" class="w-full mt-1" /></div>
-                    <div><strong>Phone:</strong><UInput v-model="editModel.phone" type="tel" class="w-full mt-1" /></div>
-                    <div><strong>Website:</strong><UInput v-model="editModel.website" type="url" class="w-full mt-1" /></div>
-                    <div><strong>Logo URL:</strong><UInput v-model="editModel.logo_url" type="url" class="w-full mt-1" /></div>
-                  </div>
-
-                  <!-- Address -->
-                  <div class="space-y-2">
-                    <h3 class="font-semibold">Address</h3>
-                    <UTextarea v-model="editModel.address" class="w-full mt-1" />
-                    <div class="grid grid-cols-2 gap-2">
-                      <UInput v-model="editModel.city" placeholder="City" class="w-full mt-1" />
-                      <UInput v-model="editModel.state" placeholder="State" class="w-full mt-1" />
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                      <UInput v-model="editModel.postal_code" placeholder="Postal" class="w-full mt-1" />
-                      <UInput v-model="editModel.country" placeholder="Country" class="w-full mt-1" />
-                    </div>
-                  </div>
-
-                  <!-- Business -->
-                  <div class="space-y-2">
-                    <h3 class="font-semibold">Business Details</h3>
-                    <UInput v-model="editModel.tax_id" placeholder="Tax ID" class="w-full mt-1" />
-                    <UInput v-model="editModel.registration_number" placeholder="Registration" class="w-full mt-1" />
-                    <UInput v-model="editModel.vat_number" placeholder="VAT" class="w-full mt-1" />
-                    <UInput v-model="editModel.provider_customer_id" placeholder="External ID" class="w-full mt-1" />
-                  </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="flex justify-end gap-2 mt-6 pt-4 border-t">
-                  <UButton color="gray" variant="ghost" @click="cancelEdit">Cancel</UButton>
-                  <UButton color="primary" @click="updatePortfolio">Save Changes</UButton>
-                </div>
-              </div>
-            </div>
-          </UCard>
+          <PortfolioCard
+            :portfolio="item.data"
+            :currencies="currencies"
+            :portfolio-statuses="PORTFOLIO_STATUSES"
+            @save-changes="updatePortfolio"
+          />
         </template>
       </UTabs>
     </div>
@@ -193,43 +57,47 @@
     <!-- Portfolio Form Modal -->
     <PortfolioForm
       v-model:open="isFormOpen"
-      :model="formModel"
-      :view="isViewing"
       @created="onCreated"
-      @updated="onUpdated"
       @update:open="onFormOpenChange"
-    />
-
-    <!-- Error -->
-    <div class="mt-2 text-xs text-red-500" v-if="error">
-      Error: {{ error?.message || error }}
-    </div>
-
-    <!-- Delete -->
-    <ConfirmDeleteModal
-      :open="isDeleteOpen"
-      :loading="isDeleting"
-      title="Delete Portfolio"
-      :message="`Are you sure you want to delete “${selectedRow?.name || ('#' + deletingId)}”?`"
-      @update:open="(v) => { if (!v) resetDeleteState() }"
-      @confirm="confirmDelete"
-      @cancel="resetDeleteState"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, toRaw } from 'vue'
-import { format } from 'date-fns'
+import PortfolioCard from '~/components/portfolios/PortfolioCard.vue'
 import { createProtectedApiClient } from '../utils/api'
+import { useToast } from '#imports'
 
 definePageMeta({ middleware: ['auth'] })
 
-// Types
-type PortfolioRow = Record<string, any>
+interface PortfolioRow {
+  id?: number | string
+  name: string
+  status?: string
+  subscription_plan?: string
+  timezone?: string
+  email?: string
+  phone?: string
+  address?: string
+  city?: string
+  state?: string
+  zip_code?: string
+  country?: string
+  tax_id?: string
+  registration_number?: string
+  vat_number?: string
+  currency?: string
+  created_at?: string
+  updated_at?: string
+  [key: string]: any
+}
 
-// API
+// Import constants
+import { currencies } from '~/constants/currencies'
+import { PORTFOLIO_STATUSES } from '~/constants/portfolio'
+
 const api = createProtectedApiClient()
+const toast = useToast()
 const { user, checkAuth } = useAuth()
 await checkAuth()
 
@@ -237,130 +105,215 @@ const landlordId = computed(() =>
   typeof user.value?.id === 'string' ? Number(user.value.id) : user.value?.id
 )
 
-// Data
-const { data: rows, pending, error, refresh } = await useAsyncData(
-  'landlord-portfolios',
-  async () => {
-    if (!landlordId.value) return []
-    const endpoint = `/portfolios/landlord/${landlordId.value}?page=1&limit=100`
-    return api.get<any>(endpoint)
-  },
-  {
-    watch: [landlordId],
-    server: false,
-    immediate: true,
-    transform: (res: any) => {
-      const payload = res?.data ?? res
-      const list = Array.isArray(payload) ? payload : (payload?.data ?? [])
-      return (list || []).map((p: any) => ({
-        ...p,
-        status: p?.status
-          ? String(p.status).charAt(0).toUpperCase() + String(p.status).slice(1)
-          : 'Active'
-      }))
+// Define the API response type
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data: {
+    data: PortfolioRow[];
+    total: number;
+    page: number;
+    limit: number;
+  };
+  timestamp: string;
+  path: string;
+}
+
+// Data fetching
+const fetchPortfolios = async () => {
+  try {
+    if (!landlordId.value) {
+      console.error('No landlord ID available')
+      return {
+        success: false,
+        message: 'No landlord ID',
+        data: { data: [], total: 0, page: 1, limit: 100 },
+        timestamp: new Date().toISOString(),
+        path: ''
+      }
     }
+    
+    // Make the API call with proper typing
+    const response = await api.get<ApiResponse>(`/portfolios/landlord/${landlordId.value}?page=1&limit=100`)
+    
+    if (!response) {
+      console.error('Empty response from API')
+      return {
+        success: false,
+        message: 'Empty response',
+        data: { data: [], total: 0, page: 1, limit: 100 },
+        timestamp: new Date().toISOString(),
+        path: ''
+      }
+    }
+    
+    return response
+  } catch (err) {
+    console.error('Error fetching portfolios:', err)
+    return {
+      success: false,
+      message: err instanceof Error ? err.message : 'Unknown error',
+      data: { data: [], total: 0, page: 1, limit: 100 },
+      timestamp: new Date().toISOString(),
+      path: ''
+    }
+  }
+}
+
+// Server-side data fetching
+const { data: apiResponse, pending } = await useAsyncData<ApiResponse>(
+  'portfolios',
+  fetchPortfolios,
+  {
+    server: true,
+    lazy: false,
+    immediate: true
   }
 )
 
-const rowsArray = computed(() =>
-  Array.isArray(rows.value) ? rows.value as PortfolioRow[] : []
-)
+// Client-side data refresh
+const loadPortfolios = async () => {
+  try {
+    const result = await fetchPortfolios()
+    if (result) {
+      apiResponse.value = result
+    }
+  } catch (err) {
+    console.error('Error refreshing portfolios:', err)
+  }
+}
 
-// Form
+// Extract the portfolios array from the API response
+const rowsArray = computed<PortfolioRow[]>({
+  get: () => {
+    if (!apiResponse.value?.data?.data) return []
+    return Array.isArray(apiResponse.value.data.data) ? apiResponse.value.data.data : []
+  },
+  set: (newValue) => {
+    if (apiResponse.value?.data) {
+      apiResponse.value.data.data = newValue
+    }
+  }
+})
+
+onMounted(() => {
+  loadPortfolios()
+  
+  // Handle case where user loads after component
+  const unwatch = watch(() => user.value, (newUser) => {
+    if (newUser?.id) {
+      loadPortfolios()
+      unwatch()
+    }
+  }, { immediate: true })
+})
+
+// Handle auth state changes
+watch(() => user.value, (newUser) => {
+  if (newUser?.id) loadPortfolios()
+})
+
+// Create
 const isFormOpen = ref(false)
-const formModel = ref<PortfolioRow | null>(null)
-const isViewing = ref(false)
 
 function openCreate() {
-  formModel.value = null
-  isViewing.value = false
   isFormOpen.value = true
 }
 
 function onCreated(created: PortfolioRow) {
-  rows.value = [{ ...created }, ...(rowsArray.value || [])]
-  refresh()
-  isFormOpen.value = false
-}
-
-function onUpdated(updated: PortfolioRow) {
-  const idx = rowsArray.value.findIndex(r => r.id === updated.id)
-  if (idx !== -1) {
-    rows.value[idx] = { ...updated }
-    refresh()
+  if (!apiResponse.value) return
+  
+  // Create a new array with the created portfolio at the beginning
+  const newData = {
+    ...apiResponse.value.data,
+    data: [created, ...(apiResponse.value.data.data || [])],
+    total: (apiResponse.value.data.total || 0) + 1
   }
+  
+  // Update the response with the new data
+  apiResponse.value = {
+    ...apiResponse.value,
+    data: newData
+  }
+  
   isFormOpen.value = false
+  toast.add({ title: 'Portfolio created', color: 'green' })
 }
 
 function onFormOpenChange(v: boolean) {
-  isFormOpen.value = v
   if (!v) {
-    formModel.value = null
-    isViewing.value = false
+    isFormOpen.value = v
   }
 }
 
-// Edit
-const isEditMode = ref(false)
-const editModel = ref<PortfolioRow | null>(null)
+// Update portfolio
+const isUpdating = ref(false)
 
-function toggleEditMode(portfolio: PortfolioRow) {
-  isEditMode.value = !isEditMode.value
-  if (isEditMode.value) {
-    editModel.value = structuredClone(toRaw(portfolio))
-  } else {
-    editModel.value = null
+async function updatePortfolio(updatedData: Partial<PortfolioRow> & { id?: number }) {
+  if (!updatedData.id) {
+    console.error('Cannot update portfolio: No ID provided')
+    return
   }
-}
-
-function cancelEdit() {
-  isEditMode.value = false
-  editModel.value = null
-}
-
-function updatePortfolio() {
-  if (!editModel.value) return
-  const idx = rowsArray.value.findIndex(r => r.id === editModel.value!.id)
-  if (idx !== -1) {
-    rows.value[idx] = { ...editModel.value }
-    refresh()
-  }
-  isEditMode.value = false
-  editModel.value = null
-}
-
-// Delete
-const isDeleteOpen = ref(false)
-const deletingId = ref<number | string | null>(null)
-const selectedRow = ref<PortfolioRow | null>(null)
-const isDeleting = ref(false)
-
-function resetDeleteState() {
-  isDeleteOpen.value = false
-  deletingId.value = null
-  selectedRow.value = null
-}
-
-async function confirmDelete() {
-  if (!deletingId.value) return
+  
+  const portfolioId = updatedData.id
+  
+  // Remove the ID from the payload since it's in the URL
+  const { id, ...payload } = updatedData
+  
   try {
-    isDeleting.value = true
-    await api.delete(`/portfolios/${deletingId.value}`)
-    rows.value = rowsArray.value.filter(r => r.id !== deletingId.value)
-    await refresh()
+    isUpdating.value = true
+    
+    // Make the PATCH request to update the portfolio
+    const response = await api.patch(`/portfolios/${portfolioId}`, payload)
+    
+    // Update local state with the response data
+    const responseData = (response as any)?.data?.data || (response as any)?.data
+    if (!responseData) {
+      throw new Error('No data returned from server')
+    }
+    
+    const idx = rowsArray.value.findIndex(r => r.id === portfolioId)
+    if (idx !== -1) {
+      const updatedRow = { ...rowsArray.value[idx], ...responseData }
+      rowsArray.value = [
+        ...rowsArray.value.slice(0, idx), 
+        updatedRow, 
+        ...rowsArray.value.slice(idx + 1)
+      ]
+    }
+    
+    // Show success message
+    toast.add({
+      title: 'Portfolio updated',
+      description: 'Your portfolio has been updated successfully.',
+      icon: 'i-heroicons-check-circle',
+      color: 'green'
+    })
+    
+  } catch (error: any) {
+    console.error('Error updating portfolio:', error)
+    
+    // Show error message from API if available
+    const errorMessage = error?.response?.data?.message || 
+                        error?.data?.message || 
+                        error?.message ||
+                        'Failed to update portfolio. Please try again.'
+    
+    console.error('Error details:', {
+      status: error?.response?.status,
+      statusText: error?.response?.statusText,
+      data: error?.response?.data,
+      originalError: error
+    })
+    
+    toast.add({
+      title: 'Error',
+      description: errorMessage,
+      icon: 'i-heroicons-exclamation-circle',
+      color: 'red'
+    })
   } finally {
-    resetDeleteState()
-    isDeleting.value = false
-  }
-}
-
-// Utils
-const formatDate = (date: string) => {
-  if (!date) return 'N/A'
-  try {
-    return format(new Date(date), 'PPpp')
-  } catch {
-    return date
+    isUpdating.value = false
   }
 }
 </script>

@@ -1,14 +1,14 @@
 <template>
   <UModal
     v-model:open="isOpen"
-    :title="modalTitle"
+    title="Create New Portfolio"
     :ui="{ content: 'w-full sm:max-w-2xl', header: 'p-3 sm:p-4 min-h-14', body: 'p-3 sm:p-4', width: 'w-full sm:max-w-2xl' }"
     :close="{ color: 'error', variant: 'outline', class: 'rounded-full' }"
   >
     <template #body>
       <div class="h-fit">
-        <div class="mb-3 text-sm text-muted-foreground" v-if="!isViewing">
-          A portfolio is a simple container for your properties (e.g., “Personal”, “Family”, “Investments”).
+        <div class="mb-3 text-sm text-muted-foreground">
+          A portfolio is a simple container for your properties (e.g., "Personal", "Family", "Investments").
         </div>
 
         <UForm :state="form" :validate="validate" @submit.prevent="onSubmit">
@@ -16,37 +16,24 @@
             <UFormField label="Name" name="name" :error="errors.name" class="sm:col-span-2" help="Pick something recognizable." required>
               <UInput
                 v-model="form.name"
-                :disabled="isViewing"
                 placeholder="e.g., Personal Portfolio"
                 class="w-full"
-                :autofocus="true"
-              />
-            </UFormField>
-
-            <UFormField label="Subscription Plan" name="subscription_plan" :error="errors.subscription_plan" help="You can change this later.">
-              <USelect
-                v-model="form.subscription_plan"
-                :items="subscriptionPlanOptions"
-                :disabled="isViewing"
-                placeholder="Select plan"
-                class="w-full"
+                autofocus
               />
             </UFormField>
 
             <UFormField label="Provider Customer ID" name="provider_customer_id" :error="errors.provider_customer_id" help="Optional. For external billing systems.">
               <UInput
                 v-model="form.provider_customer_id"
-                :disabled="isViewing"
                 placeholder="Optional external customer id"
                 class="w-full"
               />
             </UFormField>
 
-            <UFormField label="Timezone" name="timezone" :error="errors.timezone" class="sm:col-span-2">
+            <UFormField label="Timezone" name="timezone" :error="errors.timezone">
               <USelectMenu
                 v-model="selectedTimezone"
                 :items="timezoneOptions"
-                :disabled="isViewing"
                 placeholder="Select timezone"
                 class="w-full"
                 searchable
@@ -65,8 +52,8 @@
           </div>
 
           <div class="flex items-center justify-end gap-2 mt-6">
-            <UButton color="gray" variant="soft" @click.prevent="onClose">{{ isViewing ? 'Close' : 'Cancel' }}</UButton>
-            <UButton v-if="!isViewing" type="submit" :loading="submitting">{{ isEditing ? 'Save changes' : 'Create portfolio' }}</UButton>
+            <UButton color="gray" variant="soft" @click.prevent="onClose">Cancel</UButton>
+            <UButton type="submit" :loading="submitting">Create portfolio</UButton>
           </div>
         </UForm>
       </div>
@@ -79,7 +66,6 @@ import { object, string, minLength, pipe, safeParse } from 'valibot'
 import { createProtectedApiClient } from '../../utils/api'
 import { useApiToast } from '../../composables/useApiToast'
 import { useAuth } from '../../composables/useAuth'
-import { SUBSCRIPTION_PLAN_OPTIONS } from '../../constants'
 import timezones from 'timezones-list'
 
 interface TimezoneOption {
@@ -95,16 +81,17 @@ interface AddPortfolioPayload {
   timezone: string
 }
 interface CreatedPortfolio {
-  id?: number | string
+  id: number | string
   name: string
-  landlord_id?: number | string
-  subscription_plan?: string
+  landlord_id: number | string
+  subscription_plan: string
   provider_customer_id?: string
+  timezone: string
   [key: string]: any
 }
 
-const props = defineProps<{ open: boolean; model?: Partial<CreatedPortfolio> | null; view?: boolean }>()
-const emit = defineEmits<{ 'update:open': [value: boolean]; created: [value: CreatedPortfolio]; updated: [value: CreatedPortfolio]; }>()
+const props = defineProps<{ open: boolean }>()
+const emit = defineEmits<{ 'update:open': [value: boolean]; created: [value: CreatedPortfolio] }>()
 
 const isOpen = computed({
   get: () => props.open,
@@ -115,8 +102,6 @@ const submitting = ref(false)
 const api = createProtectedApiClient()
 const { success: toastSuccess, error: toastError } = useApiToast()
 const { user } = useAuth()
-
-const subscriptionPlanOptions = SUBSCRIPTION_PLAN_OPTIONS
 
 // Prepare timezone options for the select
 const timezoneOptions = timezones.map(tz => ({
@@ -133,18 +118,15 @@ const selectedTimezone = ref<TimezoneOption | null>(
 
 const form = reactive<Omit<AddPortfolioPayload, 'landlord_id'>>({
   name: '',
-  subscription_plan: '',
+  subscription_plan: 'free',
   provider_customer_id: '',
   timezone: selectedTimezone.value?.value || defaultTimezone
 })
+
 const errors = reactive<Record<string, string | undefined>>({})
-const isEditing = computed(() => !!props.model?.id)
-const isViewing = computed(() => !!props.view)
-const modalTitle = computed(() => isViewing.value ? 'View Portfolio' : (isEditing.value ? 'Edit Portfolio' : 'Create Portfolio'))
 
 const Schema = object({
   name: pipe(string(), minLength(1, 'Portfolio name is required')),
-  subscription_plan: pipe(string(), minLength(1, 'Please select a subscription plan')),
   timezone: pipe(string(), minLength(1, 'Please select a timezone')),
   provider_customer_id: string()
 })
@@ -174,37 +156,20 @@ const resetForm = () => {
   selectedTimezone.value = defaultTz
   Object.assign(form, {
     name: '',
-    subscription_plan: '',
+    subscription_plan: 'free',
     provider_customer_id: '',
     timezone: defaultTz?.value || defaultTimezone
   })
-  Object.keys(errors).forEach((k) => delete errors[k])
+  Object.keys(errors).forEach(key => delete errors[key])
 }
 
 const onClose = () => { isOpen.value = false }
 
 watch(
   () => props.open,
-  (v) => {
-    if (v) {
+  (isOpen) => {
+    if (isOpen) {
       resetForm()
-      if (props.model) {
-        // Only copy model properties that exist in the form
-        Object.keys(form).forEach(key => {
-          if (key in props.model!) {
-            if (key === 'timezone') {
-              const tz = timezoneOptions.find(tz => tz.value === props.model?.[key])
-              if (tz) {
-                selectedTimezone.value = tz
-                form.timezone = tz.value
-              }
-            } else {
-              // @ts-ignore - We know the key exists in model
-              form[key] = props.model[key] || form[key]
-            }
-          }
-        })
-      }
     }
   },
   { immediate: true }
@@ -222,7 +187,6 @@ const onSubmit = async (event: Event) => {
     Object.assign(errors, validation)
     return
   }
-  console.log('Form is valid')
 
   submitting.value = true
   try {
@@ -233,26 +197,41 @@ const onSubmit = async (event: Event) => {
       provider_customer_id: form.provider_customer_id?.trim() || undefined,
       timezone: form.timezone
     }
+    
     const landlordIdRaw = user.value?.id
-    const landlordIdNumber = typeof landlordIdRaw === 'string' ? Number(landlordIdRaw) : (landlordIdRaw as any)
-    const payload: AddPortfolioPayload = {
-      ...formData,
-      landlord_id: Number.isFinite(landlordIdNumber) ? landlordIdNumber : 0
+    const landlordIdNumber = typeof landlordIdRaw === 'string' 
+      ? Number(landlordIdRaw) 
+      : (landlordIdRaw as number | undefined)
+    
+    if (!landlordIdNumber) {
+      throw new Error('User ID not found')
     }
 
-    if (isEditing.value && props.model?.id) {
-      const response = await api.patch<CreatedPortfolio>(`/portfolios/${props.model.id}`, payload)
-      toastSuccess(response?.message || 'Portfolio updated')
-      emit('updated', response?.data ?? { id: props.model.id, ...payload })
-    } else {
-      const response = await api.post<CreatedPortfolio>('/portfolios', payload)
-      toastSuccess(response?.message || 'Portfolio created')
-      emit('created', response?.data ?? { ...payload })
+    const payload: AddPortfolioPayload = {
+      ...formData,
+      landlord_id: landlordIdNumber
     }
+
+    const response = await api.post<CreatedPortfolio>('/portfolios', payload)
+    toastSuccess(response?.message || 'Portfolio created successfully')
+    
+    // Create a complete portfolio object with the response data
+    const createdPortfolio: CreatedPortfolio = {
+      id: response.data?.id || 0, // Default to 0 if ID is not provided
+      name: payload.name,
+      landlord_id: payload.landlord_id,
+      subscription_plan: payload.subscription_plan,
+      provider_customer_id: payload.provider_customer_id,
+      timezone: payload.timezone,
+      ...(response.data || {}) // Include any additional fields from the response
+    }
+    
+    emit('created', createdPortfolio)
     isOpen.value = false
   } catch (err: any) {
-    toastError(err?.data?.message || err?.message || 'Request failed')
-    console.error('Portfolio submit error:', err)
+    const errorMessage = err?.data?.message || err?.message || 'Failed to create portfolio'
+    toastError(errorMessage)
+    console.error('Portfolio creation error:', err)
   } finally {
     submitting.value = false
   }
