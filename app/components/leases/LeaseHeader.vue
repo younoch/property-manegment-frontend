@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between">
     <div>
       <div class="flex items-center gap-3">
-        <h1 class="text-2xl font-semibold">Lease #{{ leaseId }}</h1>
+        <h1 class="text-xl md:text-2xl font-semibold">Lease #{{ leaseId }}</h1>
         <UBadge :color="statusColor" variant="soft" class="capitalize">
           {{ lease?.status || 'draft' }}
         </UBadge>

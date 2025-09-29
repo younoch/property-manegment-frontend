@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto p-2 sm:p-6">
     <!-- Header -->
     <div class="flex justify-between items-center mb-2 sm:mb-4">
-      <h1 class="text-2xl font-semibold">Rental Portfolios</h1>
+      <h1 class="text-xl md:text-2xl font-semibold">Rental Portfolios</h1>
       <!-- it will back later -->
       <!-- <UButton icon="i-heroicons-plus" color="primary" @click="openCreate">
         Add Portfolio

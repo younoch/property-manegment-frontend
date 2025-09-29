@@ -6,9 +6,9 @@ export const topHeaderNav = [
 export const sidebarNav = [
   { label: 'Leases', to: '/leases', icon: 'i-heroicons-document-text' },
   { label: 'Units', to: '/units', icon: 'i-heroicons-home-modern' },
+  { label: 'Expenses', to: '/expenses', icon: 'i-heroicons-currency-dollar' },
   { label: 'Tenants', to: '/tenants', icon: 'i-heroicons-users' },
   { label: 'Properties', to: '/properties', icon: 'i-heroicons-building-office' },
-  { label: 'Portfolios', to: '/portfolios', icon: 'i-heroicons-briefcase' },
   { 
     label: 'Communication', 
     to: '/communication', 

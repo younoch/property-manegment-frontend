@@ -11,6 +11,17 @@ export interface User {
   last_activity?: string;
 }
 
+export interface ErrorResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  timestamp: string;
+  path: string;
+  method: string;
+  errorType: string;
+  [key: string]: any; // For any additional fields that might be present
+}
+
 export interface AuthState {
   user: User | null;
   loading: boolean;
@@ -21,4 +32,5 @@ export interface AuthState {
   lastCsrfCheck?: Date | null;
   authCacheDuration?: number;
   csrfCacheDuration?: number;
+  apiError?: ErrorResponse | null;
 }

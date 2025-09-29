@@ -4,7 +4,7 @@
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div class="flex items-center gap-2">
-        <h1 class="text-xl sm:text-2xl font-semibold">Leases</h1>
+        <h1 class="text-xl sm:text-xl md:text-2xl font-semibold">Leases</h1>
         <UTooltip
           text="Create and manage lease agreements for a unit."
           :content="{ side: 'right' }"
@@ -110,7 +110,6 @@
         </div>
       </template>
     </UCard>
-acki
     <div class="mt-2 text-xs text-gray-500">
       <div v-if="error">Error: {{ error?.message || error }}</div>
     </div>
@@ -250,12 +249,12 @@ const pendingLeases = ref(false)
 
 async function loadLeases() {
   leases.value = []
-  const pid = selectedPortfolioId.value
+  const pid = selectedPropertyId.value
   const uid = selectedUnitId.value
   if (!pid || !uid) return
   try {
     pendingLeases.value = true
-    const res = await api.get<any>(`/portfolios/${pid}/units/${uid}/leases`)
+    const res = await api.get<any>(`/units/${uid}/leases`)
     const list = Array.isArray(res?.data) ? res.data : (res?.data?.data ?? [])
     leases.value = list || []
   } catch (e) {

@@ -38,32 +38,32 @@
             <p class="mt-1 text-sm text-gray-600">Fill out the form and we’ll get back to you soon.</p>
             <UForm :state="state" :validate="validate" class="mt-6 space-y-5" @submit="onSubmit">
               <div class="grid md:grid-cols-2 gap-4">
-                <UFormGroup label="Full name" name="name" :error="errors.name">
+                <UFormField label="Full name" name="name" :error="errors.name">
                   <UInput v-model="state.name" placeholder="Your name"/>
-                </UFormGroup>
-                <UFormGroup label="Email" name="email" :error="errors.email">
+                </UFormField>
+                <UFormField label="Email" name="email" :error="errors.email">
                   <UInput v-model="state.email" type="email" placeholder="you@example.com"/>
-                </UFormGroup>
+                </UFormField>
               </div>
               <div class="grid md:grid-cols-2 gap-4">
-                <UFormGroup label="Company / Portfolio" name="company">
+                <UFormField label="Company / Portfolio" name="company">
                   <UInput v-model="state.company" placeholder="Optional"/>
-                </UFormGroup>
-                <UFormGroup label="# of units" name="units">
+                </UFormField>
+                <UFormField label="# of units" name="units">
                   <USelect v-model="state.units" :options="unitOptions" placeholder="Select"/>
-                </UFormGroup>
+                </UFormField>
               </div>
               <div class="grid md:grid-cols-2 gap-4">
-                <UFormGroup label="Topic" name="topic">
+                <UFormField label="Topic" name="topic">
                   <USelect v-model="state.topic" :options="topics" placeholder="Choose a topic"/>
-                </UFormGroup>
-                <UFormGroup label="Priority" name="priority">
+                </UFormField>
+                <UFormField label="Priority" name="priority">
                   <USelect v-model="state.priority" :options="priorities" placeholder="Normal"/>
-                </UFormGroup>
+                </UFormField>
               </div>
-              <UFormGroup label="Message" name="message" :error="errors.message">
+              <UFormField label="Message" name="message" :error="errors.message">
                 <UTextarea v-model="state.message" placeholder="How can we help?" :rows="6"/>
-              </UFormGroup>
+              </UFormField>
               <div class="flex flex-col sm:flex-row items-center gap-3">
                 <UButton type="submit" color="primary" size="lg" :loading="submitting">Send message</UButton>
                 <p v-if="submitted" class="text-sm text-primary-700">Thanks! We received your message and will reply soon.</p>

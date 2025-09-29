@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-6xl mx-auto p-4 sm:p-6 overflow-scroll">
     <div class="flex items-center justify-between mb-4">
-      <h1 class="text-2xl font-semibold">Maintenance</h1>
+      <h1 class="text-xl md:text-2xl font-semibold">Maintenance</h1>
       <UButton icon="i-heroicons-wrench-screwdriver">New Request</UButton>
     </div>
     

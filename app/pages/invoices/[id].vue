@@ -4,7 +4,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="space-y-1">
         <div class="flex flex-wrap items-center gap-2">
-          <h1 class="text-xl sm:text-2xl font-semibold">Invoice #{{ invoiceId }}</h1>
+          <h1 class="text-xl sm:text-xl md:text-2xl font-semibold">Invoice #{{ invoiceId }}</h1>
           <UBadge :color="badgeColor" variant="soft" class="capitalize text-xs sm:text-sm">{{ model?.status || 'open' }}</UBadge>
         </div>
         <p class="text-xs sm:text-sm text-gray-500">

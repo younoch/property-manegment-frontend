@@ -79,6 +79,7 @@ import { useUserStore } from '~/stores/user'
 
 const { signin, isAuthenticating, currentError } = useAuthStore();
 const router = useRouter();
+const toast = useToast();
 
 const form = ref({
   email: '',
@@ -93,7 +94,6 @@ const errors = ref({
 const showPassword = ref(false);
 
 const loading = computed(() => isAuthenticating);
-const errorMessage = computed(() => currentError);
 
 const validateForm = () => {
   errors.value = { email: '', password: '' };
@@ -139,16 +139,47 @@ const handleLogin = async () => {
       
       if (userStore.isAuthenticated) {
         console.log('User is authenticated, redirecting to dashboard');
+        // Show success toast
+        toast.add({
+          title: 'Sign In Successful',
+          description: 'Welcome back! Redirecting to your dashboard...',
+          color: 'green',
+          icon: 'i-heroicons-check-circle',
+          timeout: 3000
+        });
         // Use Nuxt navigation to avoid a full page reload
         await navigateTo('/dashboard');
       } else {
+        toast.add({
+          title: 'Sign In Error',
+          description: result?.error || 'An unknown error occurred during sign in',
+          color: 'red',
+          icon: 'i-heroicons-exclamation-circle',
+          timeout: 5000
+        });
         console.error('User not authenticated after successful login');
       }
     } else {
+      // Show error toast for failed login
+      toast.add({
+        title: 'Sign In Failed',
+        description: result?.error || 'Invalid email or password. Please try again.',
+        color: 'red',
+        icon: 'i-heroicons-exclamation-circle',
+        timeout: 5000
+      });
       console.error('Login failed:', result?.error || 'Unknown error');
     }
   } catch (error: any) {
     console.error('Login error:', error);
+    // Show error toast for unexpected errors
+    toast.add({
+      title: 'Sign In Error',
+      description: error?.message || 'An unexpected error occurred. Please try again.',
+      color: 'red',
+      icon: 'i-heroicons-exclamation-circle',
+      timeout: 5000
+    });
     // Clear any potentially invalid auth state on error
     const userStore = useUserStore();
     userStore.clearUser();

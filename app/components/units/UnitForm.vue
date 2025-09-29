@@ -188,9 +188,10 @@ const onSubmit = async () => {
       emit('updated', response?.data ?? { ...form, id: props.model.id })
       isOpen.value = false
     } else {
-      const portfolioId = form.portfolio_id
       const propertyId = form.property_id
-      const response = await api.post<any>(`/portfolios/${portfolioId}/properties/${propertyId}/units`, { ...form })
+      // Exclude portfolio_id from the request body as it's not needed in the new API structure
+      const { portfolio_id, ...unitData } = form
+      const response = await api.post<any>(`/properties/${propertyId}/units`, unitData)
       toastSuccess(response?.message || 'unit updated')
       emit('created', response?.data ?? { ...form, id: response?.data?.id })
       isOpen.value = false

@@ -6,7 +6,7 @@
         :content="{ side: 'right' }"
       >
         <div class="flex gap-2 cursor-pointer">
-          <h1 class="text-2xl font-semibold">Tenants</h1>
+          <h1 class="text-xl md:text-2xl font-semibold">Tenants</h1>
           <UButton
             icon="i-heroicons-information-circle"
             color="neutral"

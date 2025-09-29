@@ -53,7 +53,6 @@ const fmtBDT = (n: number | string | null | undefined) =>
         <div><strong>Bathrooms:</strong> {{ unitInfo.bathrooms ?? '—' }}</div>
         <div><strong>Sq Ft:</strong> {{ unitInfo.sqft ?? '—' }}</div>
         <div><strong>Property:</strong> {{ unitInfo.property?.name ?? ('#' + unitInfo.property_id) }}</div>
-        <div><strong>Portfolio:</strong> {{ unitInfo.portfolio?.name ?? ('#' + unitInfo.portfolio_id) }}</div>
       </div>
     </div>
 

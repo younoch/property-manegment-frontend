@@ -82,7 +82,7 @@ async function loadUnitContext() {
   if (!prefill.portfolioId || !prefill.propertyId || !prefill.unitId) return
   unitLoading.value = true
   try {
-    const res = await api.get<any>(`/units/${prefill.unitId}`)
+    const res = await api.get<any>(`/properties/${prefill.propertyId}/units/${prefill.unitId}`)
     const raw = res?.data?.data ?? res?.data ?? res
     unitInfo.value = {
       ...raw,
@@ -150,7 +150,7 @@ async function createDraftLeaseIfNeeded() {
     })
     
     console.log('Creating lease with payload:', payload)
-    const res = await api.post<any>(`/portfolios/${prefill.portfolioId}/units/${prefill.unitId}/leases`, payload)
+    const res = await api.post<any>(`/units/${prefill.unitId}/leases`, payload)
     const created = res?.data?.data ?? res?.data ?? res
     draftLeaseId.value = typeof created?.id === 'string' ? Number(created.id) : created?.id
     return draftLeaseId.value
@@ -214,7 +214,7 @@ function goBack() {
   <div class="max-w-5xl mx-auto p-4 sm:p-6 space-y-6">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-semibold">New Lease</h1>
+        <h1 class="text-xl md:text-2xl font-semibold">New Lease</h1>
         <p class="text-sm text-gray-500">Follow the steps to lease a unit to tenant(s).</p>
       </div>
       <UButton variant="ghost" to="/leases" icon="i-heroicons-arrow-left">Back to Leases</UButton>

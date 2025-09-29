@@ -61,7 +61,7 @@ const tenantSchema = object({
 })
 
 // Property type options from constants
-const propertyTypeOptions = PROPERTY_TYPES
+ PROPERTY_TYPES
 
 // Form data with types
 const form = reactive<OnboardingData>({
@@ -279,7 +279,7 @@ async function submitForm() {
             <UFormField label="Property Type" name="type" :error="errors.type" required help="You can change this later.">
               <USelect 
                 v-model="form.property.type" 
-                :options="propertyTypeOptions.map(t => ({ label: t.label, value: t.value }))"
+                :items="PROPERTY_TYPES"
                 :disabled="submitting"
                 placeholder="Select property type"
                 class="w-full"

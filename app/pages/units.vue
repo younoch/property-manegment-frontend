@@ -7,7 +7,7 @@
       :ui="{content: 'text-sm text-primary-800 bg-white shadow-lg rounded-md p-3'}"
     >
       <div class="flex gap-2 cursor-pointer">
-        <h1 class="text-2xl font-semibold">Units</h1>
+        <h1 class="text-xl md:text-2xl font-semibold">Units</h1>
         <UButton
           icon="i-heroicons-information-circle"
           color="neutral"
@@ -268,7 +268,7 @@ async function loadUnits() {
     pendingUnits.value = true
     units.value = []
     
-    const res = await api.get<any>(`/portfolios/${pid}/properties/${propId}/units`)
+    const res = await api.get<any>(`/properties/${propId}/units`)
     const list = Array.isArray(res?.data) ? res.data : (res?.data?.data ?? [])
     units.value = list || []
   } catch (e) {

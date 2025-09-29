@@ -231,7 +231,7 @@ onMounted(async () => {
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow w-full">
       <div class="w-full px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
+        <h1 class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
         <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
           <USelect 
             v-model="selectedRange" 

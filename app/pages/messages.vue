@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-5xl mx-auto p-4 sm:p-6">
-    <h1 class="text-2xl font-semibold mb-4">Messages</h1>
+    <h1 class="text-xl md:text-2xl font-semibold mb-4">Messages</h1>
     <UCard>
       <div class="space-y-3">
         <div v-for="message in messages" :key="message.id" class="flex items-start justify-between p-3 rounded-md border border-gray-200 hover:bg-gray-50">

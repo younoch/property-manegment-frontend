@@ -3,6 +3,7 @@
   // Nuxt official TypeScript setup: https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -20,7 +21,7 @@
       "#app": ["./.nuxt/types/app"],
       "#build": ["./.nuxt/types/build"],
       "@/*": ["app/*"],
-      "~/*": ["app/*"],
+      "~/*": ["app/*", "*"],
     }
   },
   "include": [
