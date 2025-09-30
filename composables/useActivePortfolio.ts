@@ -16,7 +16,6 @@ export const useActivePortfolio = () => {
       }
       return true
     } catch (err) {
-      console.error('Failed to set active portfolio:', err)
       showError('Error', 'Failed to load portfolio. Please try again.')
       return false
     }

@@ -18,7 +18,7 @@
       <div class="text-sm text-gray-500 italic mb-4">
         Sample data shown below. The actual maintenance feature will be available in an upcoming release.
       </div>
-      <UTable :data="rows" :columns="columns" />
+      <UTable :data="rows" :columns="columns" :ui="{ td: 'py-2 px-4' }" />
     </UCard>
   </div>
 </template>

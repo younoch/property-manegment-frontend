@@ -5,7 +5,7 @@
       <UButton icon="i-heroicons-user-plus">Invite User</UButton>
     </div>
     <UCard>
-      <UTable :rows="rows" :columns="columns" />
+      <UTable :rows="rows" :columns="columns" :ui="{ td: 'py-2 px-4' }"/>
     </UCard>
   </div>
 </template>

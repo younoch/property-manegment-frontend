@@ -1,15 +1,23 @@
 <template>
-  <UModal :open="openModel" @update:open="val => emit('update:open', val)" 
-    :title="props.invoice.id ? 'Record Invoice Payment' : 'Record Payment'">
+  <UModal 
+    :open="openModel" 
+    @update:open="(val: boolean) => emit('update:open', val)" 
+    :title="props.invoice.id ? 'Record Invoice Payment' : 'Record Payment'"
+    :ui="{ 
+      container: 'relative',
+      width: 'sm:max-w-lg',
+      padding: 'p-4 sm:p-6',
+    }"
+  >
     <template #body>
       <UForm 
         :schema="schema" 
         :state="state" 
-        class="space-y-4" 
+        class="space-y-4 sm:space-y-6" 
         @submit="onSubmit"
-        @error="(errors: any) => console.log('Form errors:', errors)"
+        @error="() => {}"
       >
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
           <UFormField label="Amount" name="amount">
             <UInput 
               v-model.number="state.amount" 
@@ -36,8 +44,9 @@
           <UFormField label="Method" name="method">
             <USelect 
               v-model="state.method" 
-              :items="methods"
+              :items="paymentMethods"
               placeholder="Select payment method"
+              class="w-full"
             />
           </UFormField>
           
@@ -46,6 +55,7 @@
               v-model="state.received_at" 
               type="date" 
               :max="new Date().toISOString().split('T')[0]"
+              class="w-full"
             />
           </UFormField>
           
@@ -53,6 +63,7 @@
             <UInput 
               v-model="state.reference" 
               placeholder="Optional reference number"
+              class="w-full"
             />
           </UFormField>
           
@@ -61,15 +72,17 @@
               v-model="state.notes" 
               :rows="3" 
               placeholder="Add any additional notes about this payment"
+              class="w-full"
             />
           </UFormField>
         </div>
         
-        <div class="flex justify-end gap-2 mt-6">
+        <div class="flex flex-col-reverse gap-3 mt-6 sm:flex-row sm:justify-end sm:gap-4">
           <UButton 
             variant="soft" 
             color="gray" 
             @click="emit('update:open', false)"
+            class="w-full sm:w-auto"
           >
             Cancel
           </UButton>
@@ -80,6 +93,7 @@
             :loading="loading" 
             :disabled="!isValid"
             icon="i-heroicons-banknotes"
+            class="w-full sm:w-auto"
           >
             Record Payment
           </UButton>
@@ -91,13 +105,12 @@
 
 <script setup lang="ts">
 import * as v from 'valibot'
+import { paymentMethods } from '~/constants/expense'
 
 // Types
-type PaymentMethod = 'cash' | 'bank_transfer' | 'card' | 'ach' | 'mobile'
-
 interface PaymentFormState {
   amount: number | null
-  method: PaymentMethod
+  method: string
   received_at: string
   reference: string
   notes: string
@@ -105,29 +118,34 @@ interface PaymentFormState {
   [key: string]: any // Add index signature to handle dynamic properties
 }
 
+interface Invoice {
+  id?: string
+  totalAmount?: number
+  paidAmount?: number
+  dueAmount?: number
+  [key: string]: any // Allow additional properties
+}
+
 // Props & Emits
-const props = defineProps<{ 
+const props = withDefaults(defineProps<{ 
   open: boolean
   loading: boolean
-  portfolioId: number
+  invoice: Invoice
+  totalAmount?: number
+  paidAmount?: number
   leaseId: number
-  invoice?: any
-}>()
+  portfolioId?: number
+}>(), {
+  totalAmount: undefined,
+  paidAmount: 0,
+  portfolioId: undefined
+})
 
 const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
-  (e: 'submitted', value: any): void
+  (e: 'submitted', value: PaymentFormState): void
   (e: 'error', message: string): void
 }>()
-
-// Payment methods
-const methods = [
-  { value: 'cash', label: 'Cash' },
-  { value: 'bank_transfer', label: 'Bank Transfer' },
-  { value: 'card', label: 'Credit/Debit Card' },
-  { value: 'ach', label: 'ACH Payment' },
-  { value: 'mobile', label: 'Mobile Payment' }
-] as const
 
 // State
 // Helper function to get today's date in YYYY-MM-DD format
@@ -139,21 +157,33 @@ const getTodayDateString = (): string => {
   return `${year}-${month}-${day}`
 }
 
+// Format currency helper
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BDT',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value)
+}
+
 // Watch for invoice ID and total amount changes
 watch(() => props.invoice.id, (newInvoiceId) => {
   if (newInvoiceId) {
-    console.log('Invoice ID updated:', newInvoiceId)
+    state.amount = props.totalAmount || props.invoice.totalAmount || 0
+  } else {
+    state.amount = 0
   }
 })
 
-watch(() => props.invoice.amount, (newTotal) => {
-  if (newTotal && newTotal > 0) {
-    state.amount = Number(newTotal.toFixed(2))
+watch(() => props.totalAmount, (newTotal) => {
+  if (props.invoice.id) {
+    state.amount = newTotal || props.invoice.totalAmount || 0
   }
-}, { immediate: true })
+})
 
 const state = reactive<PaymentFormState>({
-  amount: props.invoice.amount ? Number(props.invoice.amount.toFixed(2)) : 0,
+  amount: props.invoice.totalAmount ? Number(props.invoice.totalAmount.toFixed(2)) : 0,
   method: 'bank_transfer',
   received_at: getTodayDateString(),
   reference: '',
@@ -161,18 +191,45 @@ const state = reactive<PaymentFormState>({
   lease_id: props.leaseId
 })
 
+// Custom validation function for amount
+const validateAmount = (value: number): string | boolean => {
+  if (typeof value !== 'number' || isNaN(value)) {
+    return 'Amount must be a valid number';
+  }
+  if (value <= 0) {
+    return 'Amount must be greater than 0';
+  }
+  if (props.invoice.id && props.totalAmount) {
+    const maxAmount = props.totalAmount - (props.paidAmount || 0);
+    if (value > maxAmount) {
+      return `Amount cannot exceed ${formatCurrency(maxAmount)}`;
+    }
+  }
+  return true;
+};
+
 // Form validation schema
 const schema = v.object({
   amount: v.pipe(
-    v.number(),
-    v.minValue(0.01, 'Amount must be greater than 0')
+    v.number('Amount must be a number'),
+    v.minValue(0.01, 'Amount must be greater than 0'),
+    v.custom(validateAmount)
   ),
   method: v.union([
-    v.literal('cash'),
+    v.literal('credit_card'),
+    v.literal('debit_card'),
     v.literal('bank_transfer'),
-    v.literal('card'),
-    v.literal('ach'),
-    v.literal('mobile')
+    v.literal('ach_transfer'),
+    v.literal('wire_transfer'),
+    v.literal('check'),
+    v.literal('money_order'),
+    v.literal('cash'),
+    v.literal('paypal'),
+    v.literal('venmo'),
+    v.literal('zelle'),
+    v.literal('cash_app'),
+    v.literal('cryptocurrency'),
+    v.literal('other')
   ], 'Please select a valid payment method'),
   received_at: v.pipe(
     v.string(),
@@ -187,9 +244,13 @@ const schema = v.object({
 })
 
 // Computed
-const openModel = computed({
-  get: () => props.open,
-  set: (value: boolean) => emit('update:open', value)
+const openModel = computed<boolean>({
+  get() {
+    return props.open
+  },
+  set(value: boolean) {
+    emit('update:open', value)
+  }
 })
 
 const isValid = computed(() => {
@@ -197,13 +258,12 @@ const isValid = computed(() => {
     const result = v.safeParse(schema, state)
     return result.success
   } catch (error) {
-    console.error('Validation error:', error)
     return false
   }
 })
 
 // Methods
-const user = useUserStore()
+const userStore = useUserStore()
 
 function resetForm() {
   state.amount = 0
@@ -213,27 +273,22 @@ function resetForm() {
   state.notes = ''
 }
 
-async function onSubmit() {
-  if (!isValid.value) {
-    emit('error', 'Please fill in all required fields correctly')
-    return
-  }
-
+const onSubmit = async () => {
   try {
-    const paymentData = {
-      portfolio_id: props.portfolioId,
-      lease_id: props.leaseId,
-      user_id: user.user?.id || null,
-      invoice_id: props.invoice.id || null,
-      received_at: new Date(state.received_at).toISOString(),
-      method: state.method,
+    const paymentData: PaymentFormState = {
       amount: Number(state.amount),
-      reference: state.reference || undefined,
-      notes: state.notes || undefined
-    }
+      method: state.method,
+      received_at: state.received_at,
+      reference: state.reference || '',
+      notes: state.notes || '',
+      lease_id: props.leaseId,
+      portfolio_id: props.portfolioId,
+      user_id: userStore.user?.id,
+      invoice_id: props.invoice.id || null,
+      payment_method: state.method
+    };
 
-    console.log('Submitting payment:', paymentData)
-    emit('submitted', paymentData)
+    emit('submitted', paymentData as any);
     resetForm()
     
   } catch (error) {

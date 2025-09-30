@@ -130,46 +130,23 @@ async function submitForm() {
     }) as ApiResponse<PortfolioResponse>
 
     // Create property if user filled in property details (name is required)
-    console.log('Property creation - Checking conditions:', {
-      hasPropertyName: !!form.property.name.trim(),
-      portfolioId: portfolioResponse?.data?.id,
-      propertyData: form.property
-    });
-    
     if (form.property.name.trim() && portfolioResponse?.data?.id) {
       try {
-        console.log('Attempting to create property with data:', {
-          name: form.property.name.trim(),
-          property_type: form.property.type,
-          portfolio_id: portfolioResponse.data.id,
-          status: 'active'
-        });
-        
-        const propertyResponse = await api.post(`/portfolios/${portfolioResponse.data.id}/properties`, {
+        await api.post('/api/properties', {
           name: form.property.name.trim(),
           property_type: form.property.type,
           portfolio_id: portfolioResponse.data.id, 
         });
-        
-        console.log('Property created successfully:', propertyResponse);
       } catch (error: any) {
-        console.error('Error creating property:', error);
         if (error.response) {
-          console.error('Error response data:', error.response.data);
-          console.error('Error status:', error.response.status);
-          console.error('Error headers:', error.response.headers);
-        } else if (error.request) {
-          console.error('No response received:', error.request);
+          // If it's a validation error, show the actual error message
+          const errorMessage = error.response.data?.message || 'Failed to create property';
+          toastError(errorMessage);
         } else {
-          console.error('Error message:', error.message);
+          toastError('An error occurred while creating the property');
         }
         throw error; 
       }
-    } else {
-      console.log('Property not created. Conditions not met:', {
-        hasPropertyName: !!form.property.name.trim(),
-        hasPortfolioId: !!portfolioResponse?.data?.id
-      });
     }
 
     // Create tenant if not skipped
@@ -192,7 +169,6 @@ async function submitForm() {
     emit('completed')
     showOnboardingWizard.value = false
   } catch (error: any) {
-    console.error('Onboarding error:', error)
     toastError(error?.data?.message || 'Failed to complete onboarding. Please try again.')
   } finally {
     submitting.value = false

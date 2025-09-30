@@ -79,7 +79,7 @@ function updateDetails(newDetails: any) {
 async function loadUnitContext() {
   unitInfo.value = null
   unitError.value = null
-  if (!prefill.portfolioId || !prefill.propertyId || !prefill.unitId) return
+  if (!prefill.propertyId || !prefill.unitId) return
   unitLoading.value = true
   try {
     const res = await api.get<any>(`/properties/${prefill.propertyId}/units/${prefill.unitId}`)
@@ -116,7 +116,7 @@ if (route.query.onboarding) {
 }
 
 function canGoTenants() {
-  return !!prefill.portfolioId && !!prefill.propertyId && !!prefill.unitId && canLeaseThisUnit.value
+  return !!prefill.propertyId && !!prefill.unitId && canLeaseThisUnit.value
 }
 function canGoDetails() {
   return selectedTenants.value.length >= 1
@@ -149,7 +149,6 @@ async function createDraftLeaseIfNeeded() {
       }
     })
     
-    console.log('Creating lease with payload:', payload)
     const res = await api.post<any>(`/units/${prefill.unitId}/leases`, payload)
     const created = res?.data?.data ?? res?.data ?? res
     draftLeaseId.value = typeof created?.id === 'string' ? Number(created.id) : created?.id
@@ -236,7 +235,7 @@ function goBack() {
     <!-- Step 1 -->
     <StepTenants
       v-else-if="activeStep === 1"
-      :portfolio-id="prefill.portfolioId"
+      :portfolio-id="unitInfo?.property?.portfolio_id"
       v-model="selectedTenants"
       @back="goBack"
       @next="goNext"

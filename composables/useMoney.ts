@@ -23,7 +23,6 @@ export const useMoney = () => {
     try {
       return new Intl.NumberFormat('en-US', defaultOptions).format(value)
     } catch (e) {
-      console.error('Error formatting currency:', e)
       return value.toFixed(2)
     }
   }

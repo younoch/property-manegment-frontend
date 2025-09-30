@@ -271,9 +271,6 @@ const onSubmit = async () => {
     if ('number_of_units' in payload) delete payload.number_of_units
     // Ensure portfolio_id comes from parent selection if provided
     payload.portfolio_id = effectivePortfolioId.value
-    if (process.client) {
-      console.debug('[PropertyForm] submit portfolio_id:', payload.portfolio_id)
-    }
 
     if (isEditing.value && props.model?.id) {
       const response = await api.patch<any>(`/properties/${props.model.id}`, payload)
@@ -292,7 +289,6 @@ const onSubmit = async () => {
     const message =
       err?.data?.message || err?.message || "Failed to create property";
     toastError(message);
-    console.error('=== END ERROR DEBUG ===');
   } finally {
     submitting.value = false;
   }

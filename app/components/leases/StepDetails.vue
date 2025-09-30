@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, watch, ref } from "vue";
 import * as v from "valibot";
+import { useToast } from '#imports';
 
 // Helper functions for formatting
 const formatDate = (date: string | Date, format: string): string => {
@@ -143,8 +144,6 @@ const toast = useToast();
 
 // Handle form submission
 async function onSubmit() {
-  console.log("Form submitted with data:", JSON.parse(JSON.stringify(state)));
-
   // Basic date validation
   const startDate = new Date(state.start_date);
   const endDate = new Date(state.end_date);
@@ -212,10 +211,6 @@ async function onSubmit() {
 
 const isValid = computed(() => {
   try {
-    console.log(
-      "Validating form with state:",
-      JSON.parse(JSON.stringify(state))
-    );
     const result = v.safeParse(schema, state);
 
     if (!result.success) {
@@ -241,10 +236,8 @@ const isValid = computed(() => {
       }
     }
 
-    console.log("Form is valid");
     return true;
   } catch (error) {
-    console.error("Unexpected validation error:", error);
     return false;
   }
 });
@@ -293,7 +286,7 @@ const prorated = computed(() =>
     :state="state"
     class="space-y-4"
     @submit="onSubmit"
-    @error="(errors: any) => console.log('Form errors:', errors)"
+    @error="() => {}"
   >
     <UCard>
       <!-- Read-only context -->
@@ -452,7 +445,7 @@ const prorated = computed(() =>
           type="submit"
           color="primary"
           :disabled="!isValid"
-          @click="console.log('Next button clicked, isValid:', isValid)"
+          @click=""
         >
           Next
         </UButton>

@@ -1,3 +1,5 @@
+import type { PortfolioRow } from '~/types/portfolio';
+
 export interface User {
   id: string;
   email: string;
@@ -9,6 +11,7 @@ export interface User {
   requires_onboarding?: boolean;
   onboarding_completed_at?: string | null;
   last_activity?: string;
+  owned_portfolios?: PortfolioRow[];
 }
 
 export interface ErrorResponse {

@@ -65,9 +65,6 @@ const { userRole } = storeToRefs(userStore)
 // Fetch user data when layout is mounted
 onMounted(async () => {
   await userStore.fetchUser()
-  if (authStore.isAuthenticated) {
-    console.log('sdf sd fa sdf asd f')
-  }
 })
 
 const sidebarOpen = ref(false)

@@ -17,7 +17,6 @@ export const usePortfolioDates = () => {
         ...options
       })
     } catch (e) {
-      console.error('Error formatting date:', e)
       return 'Invalid date'
     }
   }

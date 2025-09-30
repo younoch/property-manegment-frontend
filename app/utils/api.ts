@@ -221,7 +221,6 @@ export const makeProtectedRequest = async <T>(
       
       // If CSRF-related error, refresh CSRF token first
       if (errorMessage.toLowerCase().includes('csrf')) {
-        console.log('🔄 CSRF-related error detected, refreshing CSRF token...');
         const csrfOk = await tokenManager.refreshCsrfToken();
         if (csrfOk) {
           try {
@@ -236,7 +235,6 @@ export const makeProtectedRequest = async <T>(
               }
             });
           } catch (retryError: any) {
-            console.error('❌ Request failed after CSRF refresh:', retryError);
             throw retryError;
           }
         }
@@ -244,7 +242,6 @@ export const makeProtectedRequest = async <T>(
       
       // If JWT/token-related error, refresh JWT token first
       else if (errorMessage.toLowerCase().includes('token')) {
-        console.log('🔄 JWT/token-related error detected, refreshing JWT token...');
         const jwtOk = await tokenManager.refreshJwtToken();
         if (jwtOk) {
           try {
@@ -259,7 +256,6 @@ export const makeProtectedRequest = async <T>(
               }
             });
           } catch (retryError: any) {
-            console.error('❌ Request failed after JWT refresh:', retryError);
             throw retryError;
           }
         }
@@ -345,8 +341,7 @@ export class ProtectedApiClient {
           
           // If CSRF-related error, refresh CSRF token first
           if (this.isCsrfError(error)) {
-            console.log('🔄 CSRF-related error detected, refreshing CSRF token...');
-            const csrfOk = await tokenManager.refreshCsrfToken();
+                const csrfOk = await tokenManager.refreshCsrfToken();
             if (csrfOk) {
               try {
                 const { headers: retryOptionHeaders, method: _ignoredRetryMethod, ...restRetryOptions } = options || {};
@@ -365,7 +360,6 @@ export class ProtectedApiClient {
 
                 return retryResponse;
               } catch (retryAfterCsrfError: any) {
-                console.error('❌ Request failed after CSRF refresh:', retryAfterCsrfError);
                 await this.handleAuthFailure();
                 throw retryAfterCsrfError;
               }
@@ -374,8 +368,7 @@ export class ProtectedApiClient {
           
           // If JWT/token-related error, refresh JWT token first
           else if (this.isJwtError(error)) {
-            console.log('🔄 JWT/token-related error detected, refreshing JWT token...');
-            const jwtOk = await tokenManager.refreshJwtToken();
+                const jwtOk = await tokenManager.refreshJwtToken();
             if (jwtOk) {
               try {
                 const { headers: retryOptionHeaders, method: _ignoredRetryMethod, ...restRetryOptions } = options || {};
@@ -396,7 +389,6 @@ export class ProtectedApiClient {
               } catch (retryAfterJwtError: any) {
                 // If still unauthorized/forbidden, try CSRF refresh next
                 if (retryAfterJwtError?.status === 401 || retryAfterJwtError?.status === 403) {
-                  console.log('🔄 Still unauthorized after JWT refresh, trying CSRF refresh...');
                   const csrfOk = await tokenManager.refreshCsrfToken();
                   if (csrfOk) {
                     try {
@@ -431,7 +423,6 @@ export class ProtectedApiClient {
           
           // For other 401 errors, try JWT refresh first (existing logic)
           else {
-            console.log('🔄 Generic 401 error, trying JWT refresh...');
             const jwtOk = await tokenManager.refreshJwtToken();
             if (jwtOk) {
               try {
@@ -453,7 +444,6 @@ export class ProtectedApiClient {
               } catch (retryAfterJwtError: any) {
                 // If still unauthorized/forbidden, try CSRF refresh next
                 if (retryAfterJwtError?.status === 401 || retryAfterJwtError?.status === 403) {
-                  console.log('🔄 Still unauthorized after JWT refresh, trying CSRF refresh...');
                   const csrfOk = await tokenManager.refreshCsrfToken();
                   if (csrfOk) {
                     try {
@@ -488,7 +478,6 @@ export class ProtectedApiClient {
         }
 
         // Stage 2: For initial 403 or if JWT not attempted, try CSRF refresh
-        console.log('🔄 Trying CSRF refresh for 403 or fallback...');
         const csrfOk = await tokenManager.refreshCsrfToken();
         if (csrfOk) {
           try {
@@ -508,13 +497,11 @@ export class ProtectedApiClient {
 
             return retryResponse;
           } catch (retryError: any) {
-            console.error('❌ Request failed after CSRF refresh:', retryError);
             await this.handleAuthFailure();
             throw retryError;
           }
         }
 
-        console.error('❌ Token refresh attempts failed');
         await this.handleAuthFailure();
         throw error;
       }
@@ -544,7 +531,6 @@ export class ProtectedApiClient {
         await navigateTo('/auth/login');
       }
     } catch (error) {
-      console.error('❌ Error during auth failure handling:', error);
       // Fallback: force page reload to signin
       if (process.client) {
         window.location.href = '/auth/login';

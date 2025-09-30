@@ -34,7 +34,7 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white shadow-md rounded-lg p-0 md:p-4 flex flex-wrap items-center md:gap-3 gap-2">
+    <div class="bg-white shadow-md rounded-lg p-0 md:p-4 flex flex-wrap items-center md:gap-3 gap-2 mb-1 md:mb-2">
       <div class="flex-1">
         <USelect
           v-model.number="selectedPortfolioId"
@@ -101,7 +101,7 @@
     </div>
 
     <!-- Expenses Content -->
-    <UCard class="p-4">
+    <div>
       <!-- Loading Skeleton -->
       <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <USkeleton v-for="i in 3" :key="i" class="h-32 rounded-xl animate-pulse" />
@@ -132,8 +132,9 @@
         :loading="loading"
         loading-color="primary"
         loading-animation="carousel"
+        :ui="{ td: 'py-2 px-4' }"
       />
-    </UCard>
+    </div>
 
     <!-- Error -->
     <div v-if="error" class="text-red-600 text-sm mt-2">{{ error?.message || error }}</div>
@@ -421,7 +422,6 @@ function clearFilters() {
 }
 
 onMounted(() => {
-  console.log(route)
   if (route.query.onboarding) {
     isFormOpen.value = true
   }

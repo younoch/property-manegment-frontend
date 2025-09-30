@@ -76,6 +76,7 @@ definePageMeta({
 
 import { useAuthStore } from '~/stores/auth'
 import { useUserStore } from '~/stores/user'
+import { useToast } from '#imports'
 
 const { signin, isAuthenticating, currentError } = useAuthStore();
 const router = useRouter();
@@ -124,28 +125,20 @@ const handleLogin = async () => {
       password: form.value.password
     });
     
-    console.log('Login result:', result);
-    
     if (result?.success) {
       // Wait a small amount of time to ensure stores are updated
       await new Promise(resolve => setTimeout(resolve, 100));
       
       // Get the user store to check authentication state
       const userStore = useUserStore();
-      console.log('User store after login:', {
-        isAuthenticated: userStore.isAuthenticated,
-        user: userStore.user
-      });
       
       if (userStore.isAuthenticated) {
-        console.log('User is authenticated, redirecting to dashboard');
         // Show success toast
         toast.add({
           title: 'Sign In Successful',
           description: 'Welcome back! Redirecting to your dashboard...',
           color: 'green',
-          icon: 'i-heroicons-check-circle',
-          timeout: 3000
+          icon: 'i-heroicons-check-circle'
         });
         // Use Nuxt navigation to avoid a full page reload
         await navigateTo('/dashboard');
@@ -154,8 +147,7 @@ const handleLogin = async () => {
           title: 'Sign In Error',
           description: result?.error || 'An unknown error occurred during sign in',
           color: 'red',
-          icon: 'i-heroicons-exclamation-circle',
-          timeout: 5000
+          icon: 'i-heroicons-exclamation-circle'
         });
         console.error('User not authenticated after successful login');
       }
@@ -165,8 +157,7 @@ const handleLogin = async () => {
         title: 'Sign In Failed',
         description: result?.error || 'Invalid email or password. Please try again.',
         color: 'red',
-        icon: 'i-heroicons-exclamation-circle',
-        timeout: 5000
+        icon: 'i-heroicons-exclamation-circle'
       });
       console.error('Login failed:', result?.error || 'Unknown error');
     }
@@ -177,8 +168,7 @@ const handleLogin = async () => {
       title: 'Sign In Error',
       description: error?.message || 'An unexpected error occurred. Please try again.',
       color: 'red',
-      icon: 'i-heroicons-exclamation-circle',
-      timeout: 5000
+      icon: 'i-heroicons-exclamation-circle'
     });
     // Clear any potentially invalid auth state on error
     const userStore = useUserStore();

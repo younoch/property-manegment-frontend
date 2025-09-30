@@ -156,7 +156,6 @@ const onSubmit = async (event: Event) => {
     resetForm()
     isOpen.value = false
   } catch (error: any) {
-    console.error('Failed to submit feedback:', error)
     toast.add({
       title: 'Error',
       description: error.data?.message || 'Failed to send feedback. Please try again.',

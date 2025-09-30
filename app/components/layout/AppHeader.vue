@@ -270,13 +270,10 @@ onUnmounted(() => {
 /** Logout */
 async function handleLogout() {
   try {
-    console.log('Logging out...')
     await signout()
-    console.log('Signout successful, redirecting to home')
     await navigateTo('/')
     window.location.reload() // Ensure a full page reload to clear all state
   } catch (e) {
-    console.error('[Header] Logout error:', e)
     // Clear user data and redirect even if there was an error
     userStore.clearUser()
     userStore.clearStorage()

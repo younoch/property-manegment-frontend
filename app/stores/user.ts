@@ -83,7 +83,6 @@ export const useUserStore = defineStore('user', {
   actions: {
     // Set user data
     setUser(user: User | null) {
-      console.log('Current user set:', user);
       this.user = user;
       this.isAuthenticated = !!user;
       this.loading = false;
@@ -93,10 +92,9 @@ export const useUserStore = defineStore('user', {
     
     // Fetch user data from API
     async fetchUser() {
-      console.log('Fetching user data from /auth/whoami...');
-      this.loading = true;
-      const api = createApiClient();
       try {
+        this.loading = true;
+        const api = createApiClient();
         const response = await api.get('/auth/whoami');
         if (response.data) {
           this.setUser(response.data as User);
@@ -104,7 +102,6 @@ export const useUserStore = defineStore('user', {
           this.clearUser();
         }
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
         this.clearUser();
       } finally {
         this.loading = false;
@@ -151,13 +148,11 @@ export const useUserStore = defineStore('user', {
       try {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
-          const user = JSON.parse(storedUser);
-          this.setUser(user);
+          this.user = JSON.parse(storedUser);
         } else {
-          console.log('No stored user data found');
+          // No stored user data found
         }
       } catch (error) {
-        console.error('Failed to initialize user from storage:', error);
         this.clearStorage();
       }
     },
@@ -165,11 +160,7 @@ export const useUserStore = defineStore('user', {
     // Persist user to localStorage
     persistToStorage() {
       if (process.client && this.user) {
-        try {
-          localStorage.setItem('user', JSON.stringify(this.user));
-        } catch (error) {
-          console.error('Failed to persist user to storage:', error);
-        }
+        localStorage.setItem('user', JSON.stringify(this.user));
       }
     },
 

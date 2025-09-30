@@ -102,7 +102,6 @@ export function useLeaseDetail(leaseId: number) {
   }
 
   async function generateNextInvoice() {
-    console.log('Generating next invoice for lease', leaseId)
     if (!lease.value) return
     generatingInvoice.value = true
     try {
@@ -124,7 +123,6 @@ export function useLeaseDetail(leaseId: number) {
         e?.message || 
         'Failed to generate invoice';
       
-      console.log('Error message to display:', errorMessage);
       toastError(String(errorMessage));
       throw e; // Re-throw to allow caller to handle the error if needed
     } finally {
@@ -148,7 +146,7 @@ export function useLeaseDetail(leaseId: number) {
     try {
       // Extract only the fields we want to send to the API
       const { portfolio_id, ...paymentData } = payload;
-      await api.post(`/portfolios/${portfolio_id}/payments`, {
+      await api.post(`/payments`, {
         ...paymentData,
         // Ensure we're sending the correct field names expected by the API
         received_at: paymentData.received_at,

@@ -460,7 +460,7 @@ const loadDraft = () => {
       }
     }
   } catch (error) {
-    console.error('Failed to load draft:', error);
+    // Handle error silently
   }
 };
 
@@ -506,8 +506,6 @@ const onSubmit = async () => {
     const message =
       err?.data?.message || err?.message || "Failed to update profile";
     toastError(message);
-    
-    console.error('Profile update error:', err);
   } finally {
     submitting.value = false;
   }

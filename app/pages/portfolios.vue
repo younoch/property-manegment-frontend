@@ -70,29 +70,8 @@ import { useToast } from '#imports'
 
 definePageMeta({ middleware: ['auth'] })
 
-interface PortfolioRow {
-  id?: number | string
-  name: string
-  status?: string
-  subscription_plan?: string
-  timezone?: string
-  email?: string
-  phone?: string
-  address?: string
-  city?: string
-  state?: string
-  zip_code?: string
-  country?: string
-  tax_id?: string
-  registration_number?: string
-  vat_number?: string
-  currency?: string
-  created_at?: string
-  updated_at?: string
-  [key: string]: any
-}
-
-// Import constants
+// Import types and constants
+import type { PortfolioRow } from '~/types/portfolio'
 import { currencies } from '~/constants/currencies'
 import { PORTFOLIO_STATUSES } from '~/constants/portfolio'
 

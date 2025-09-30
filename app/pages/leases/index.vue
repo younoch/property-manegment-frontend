@@ -23,7 +23,7 @@
         size="sm"
         class="w-full sm:w-auto justify-center"
         :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
-        :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
+        :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}`"
       >
         <span class="hidden sm:inline">Add Lease</span>
         <span class="sm:hidden">New Lease</span>
@@ -78,7 +78,7 @@
           <UButton 
             icon="i-heroicons-plus"
             size="sm"
-            :to="`/leases/new?unitId=${selectedUnitIdbagira}&propertyId=${selectedPropertyId}&portfolioId=${selectedPortfolioId}`"
+            :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}`"
             :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
             class="w-full sm:w-auto"
           >
@@ -96,7 +96,7 @@
             :ui="{
               wrapper: 'border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden',
               th: { padding: 'py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase trng-wider' },
-              td: { padding: 'py-3 px-4 text-sm text-gray-900' },
+              td: { padding: 'py-2 px-4 text-sm text-gray-900' },
               thead: 'bg-gray-50 dark:bg-gray-800',
               tbody: 'divide-y divide-gray-200 dark:divide-gray-700',
             }"

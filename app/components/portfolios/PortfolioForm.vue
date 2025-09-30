@@ -231,7 +231,6 @@ const onSubmit = async (event: Event) => {
   } catch (err: any) {
     const errorMessage = err?.data?.message || err?.message || 'Failed to create portfolio'
     toastError(errorMessage)
-    console.error('Portfolio creation error:', err)
   } finally {
     submitting.value = false
   }

@@ -15,8 +15,6 @@ export const withPortfolioContext = (config: any = {}) => {
 }
 
 export const handleApiError = (error: any, defaultMessage = 'An error occurred') => {
-  console.error('API Error:', error)
-  
   // Extract error message from response if available
   const message = error.response?.data?.message || 
                 error.response?.data?.error || 

@@ -353,7 +353,6 @@ async function loadInvoice() {
       try {
         const leaseRes = await api.get(`/leases/${data.lease_id}`)
         lease.value = leaseRes?.data?.data ?? leaseRes?.data ?? leaseRes
-        console.log('Loaded lease data:', lease.value)
       } catch (e: any) {
         console.error('Failed to load lease data:', e)
         // Don't show error to user for lease data as it's secondary

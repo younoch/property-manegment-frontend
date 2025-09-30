@@ -9,8 +9,6 @@ export default defineEventHandler(async (event: H3Event) => {
     // 2. Save to your database
     // 3. Optionally send email notifications
     
-    console.log('Received feedback:', body)
-    
     // Example: Save to database (uncomment and implement as needed)
     /*
     await prisma.feedback.create({
@@ -26,17 +24,11 @@ export default defineEventHandler(async (event: H3Event) => {
     
     // Return success response
     return {
-      status: 'success',
-      message: 'Feedback received successfully',
-      data: {
-        ...body,
-        receivedAt: new Date().toISOString()
-      }
+      success: true,
+      message: 'Feedback received. Thank you!'
     }
     
   } catch (error) {
-    console.error('Error processing feedback:', error)
-    
     // Return error response
     throw createError({
       statusCode: 500,

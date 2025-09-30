@@ -9,8 +9,7 @@ const getApiConfig = () => {
   };
 
   const isProduction = process.env.NODE_ENV === 'production';
-  console.log('isProduction', isProduction)
-
+    
   // Prefer env-provided base URL from runtime config
   const baseFromEnv = (runtimePublic.apiBase && runtimePublic.apiBase.length > 0)
     ? runtimePublic.apiBase

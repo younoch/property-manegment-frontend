@@ -101,7 +101,6 @@ export const useCsrf = () => {
             }
           }
         } catch (refreshError) {
-          console.error('❌ Token refresh failed during CSRF fetch:', refreshError);
           // If refresh fails, force navigation to login page
           await handleAuthFailure();
         }
@@ -136,7 +135,6 @@ export const useCsrf = () => {
       }
       return token.value;
     } catch (err: any) {
-      console.error('❌ CSRF token refresh failed:', err);
       error.value = err?.data?.message || err?.message || 'Failed to refresh CSRF token';
       
       if (err?.status === 401) {
@@ -199,9 +197,8 @@ export const useCsrf = () => {
         await navigateTo('/auth/login');
       }
     } catch (error) {
-      console.error('❌ Error during auth failure handling:', error);
-      // Fallback: force page reload to login
-      if (process.client) {
+    // Fallback: force page reload to login
+    if (process.client) {
         window.location.href = '/auth/login';
       }
     }

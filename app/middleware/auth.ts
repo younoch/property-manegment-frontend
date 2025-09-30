@@ -22,12 +22,10 @@ export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
     
     // If we have a valid user in storage, continue
     if (userStore.isLoggedIn) {
-      console.log('User session restored from storage');
       return;
     }
     
     // If no valid session, redirect to login
-    console.log('No valid session, redirecting to login');
     return navigateTo('/auth/login');
     
   } catch (error) {

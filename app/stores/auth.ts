@@ -174,27 +174,19 @@ export const useAuthStore = defineStore('auth', {
       this.clearError();
       
       try {
-        console.log('Attempting to sign in with:', credentials.email);
-        
         // The ProtectedApiClient will automatically handle CSRF tokens
         const response = await apiClient.post<any>('/auth/signin', credentials);
-        console.log('Sign in response:', response);
         
         if (response) {
           const userData = response.data || response.user || response;
           
           if (userData) {
-            console.log('User data received:', userData);
-            
             // Update both auth store and user store
             this.user = userData;
             userStore.setUser(userData);
-            userStore.isAuthenticated = true;
-            
             // Ensure the state is persisted
             userStore.persistToStorage();
             
-            console.log('User authenticated successfully');
             return { success: true, user: userData };
           }
         }

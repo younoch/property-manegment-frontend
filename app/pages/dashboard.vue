@@ -1,27 +1,66 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
 import type { KPI } from '~/types/dashboard';
+import type { Property } from '~/types/properties';
 
 // Components
+import { createProtectedApiClient } from '@/utils/api';
 import KPICard from '~/components/dashboard/KPICard.vue';
 import DashboardChart from '~/components/dashboard/DashboardChart.vue';
 import DataTable from '~/components/dashboard/DataTable.vue';
 
 definePageMeta({ middleware: ['auth'] })
 
-// Router
-const router = useRouter();
+const api = createProtectedApiClient()
 const authStore = useAuthStore();
+
+const user = computed(() => authStore.user)
+const properties = ref<Property[]>([]);
+
+const fetchProperties = async () => {
+  try {
+    if (!user.value?.owned_portfolios?.length) {
+      properties.value = [];
+      return;
+    }
+    
+    const portfolioId = user.value.owned_portfolios[0].id;
+    const response = await api.get<any>(`/portfolios/${portfolioId}/properties`);
+    const raw = response?.data?.data ?? response?.data ?? response;
+    properties.value = Array.isArray(raw) ? raw : [];
+  } catch (e: any) {
+    error.value = e?.message || 'Failed to load properties';
+  } finally {
+    loading.value = false;
+  }
+}
 
 // State
 const loading = ref(true);
 const error = ref<string | null>(null);
 
+// Property Selection
+const selectedProperty = ref<string | null>(null);
+const propertyOptions = computed(() => {
+  return [
+    { label: 'All Properties', value: null },
+    ...properties.value.map(property => ({
+      label: property.name || 'Unnamed Property',
+      value: property.id
+    }))
+  ];
+});
+
 // Date Ranges
 const ranges = ['This Month', 'Last 3 Months', 'Last 12 Months'];
 const selectedRange = ref(ranges[2]);
+
+// Handle property change
+const handlePropertyChange = (propertyId: string | null) => {
+  // Property change handler
+};
 
 // Table columns for recent activities
 const activityColumns = [
@@ -171,7 +210,6 @@ const occupancyChartOptions = {
 const handleRangeChange = (range: string) => {
   loading.value = true;
   // In a real app, fetch data based on the selected range
-  console.log('Selected range:', range);
   
   // Simulate API call
   setTimeout(() => {
@@ -212,6 +250,21 @@ const fmtDate = (dateString: string) => {
   });
 };
 
+// Watch for user data to be available
+watch(() => user.value, async (newUser) => {
+  if (newUser?.owned_portfolios?.length) {
+    try {
+      loading.value = true;
+      await fetchProperties();
+    } catch (err) {
+      error.value = 'Failed to load properties';
+      console.error('Properties load error:', err);
+    } finally {
+      loading.value = false;
+    }
+  }
+}, { immediate: true });
+
 // Lifecycle Hooks
 onMounted(async () => {
   try {
@@ -231,13 +284,22 @@ onMounted(async () => {
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow w-full">
       <div class="w-full px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h1 class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
-        <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
+        <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto flex-wrap gap-2">
+          <USelect 
+            v-model="selectedProperty"
+            :items="propertyOptions"
+            size="sm"
+            class="w-full sm:w-48 flex-shrink-0"
+            placeholder="Select Property"
+            :loading="loading"
+            @update:modelValue="handlePropertyChange"
+          />
           <USelect 
             v-model="selectedRange" 
             :items="ranges" 
             size="sm"
-            class="w-full sm:w-48"
+            class="w-full sm:w-48 flex-shrink-0"
             @update:modelValue="handleRangeChange"
           />
           <UButton

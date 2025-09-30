@@ -425,7 +425,6 @@ const handleSave = async () => {
   const portfolioId = props.portfolio.id
   
   if (!portfolioId) {
-    console.error('Cannot update portfolio: No ID provided')
     toast.add({
       title: 'Error',
       description: 'Cannot update portfolio: No ID provided',
@@ -477,8 +476,6 @@ const handleSave = async () => {
     emit('saved', responseData)
     
   } catch (error: any) {
-    console.error('Error updating portfolio:', error)
-    
     // Show error message from API if available
     const errorMessage = error?.response?.data?.message || 
                         error?.data?.message || 
@@ -654,7 +651,6 @@ const updateEditTimezone = (value: {label: string; value: string} | string | nul
       selectedEditTimezone.value = tzOption
       editModel.value.timezone = tzOption.value
     } else {
-      console.warn('No matching timezone found for:', tzStr)
       selectedEditTimezone.value = null
       editModel.value.timezone = tzStr // Fallback to the raw string if no match found
     }
@@ -676,7 +672,6 @@ const useMyEditTimezone = (timezone?: string) => {
     const tz = timezone || browserTimezone.value
     
     if (!tz) {
-      console.warn('No timezone provided and browser timezone not available')
       return false
     }
 
@@ -697,11 +692,9 @@ const useMyEditTimezone = (timezone?: string) => {
       editModel.value.timezone = timezoneOption.value
       return true
     } else {
-      console.warn('No matching timezone found for:', tz)
       return false
     }
   } catch (error) {
-    console.error('Error in useMyEditTimezone:', error)
     return false
   }
 }

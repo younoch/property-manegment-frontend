@@ -73,6 +73,7 @@
         :loading="pending"
         loading-color="primary"
         loading-animation="carousel"
+        :ui="{ td: 'py-2 px-4' }"
       />
     </UCard>
 
@@ -177,9 +178,6 @@ const { data: portfoliosResponse, pending, error } = await useAsyncData(
     transform: (res: any) => {
       const payload = res?.data ?? res
       const list = Array.isArray(payload) ? payload : (payload?.data ?? [])
-      if (process.client) {
-        console.log('[Portfolios] Loaded:', list?.length)
-      }
       return list
     }
   }

@@ -65,6 +65,7 @@
         :loading="loading"
         loading-color="primary"
         loading-animation="carousel"
+        :ui="{ td: 'py-2 px-4' }"
       />
     </UCard>
 
@@ -314,7 +315,7 @@ function getRowItems(row: any) {
       color: 'secondary',
       class: 'text-secondary',
       onSelect() {
-        navigateTo(`/leases/new?unitId=${row.original.id}&propertyId=${row.original.property_id}&portfolioId=${row.original.portfolio_id}`)
+        navigateTo(`/leases/new?unitId=${row.original.id}&propertyId=${row.original.property_id}`)
       }
     })
   }
@@ -338,7 +339,6 @@ function getRowItems(row: any) {
 }
 
 onMounted(() => {
-  console.log(route)
   if (route.query.onboarding) {
     isFormOpen.value = true
   }
@@ -386,7 +386,7 @@ watch(selectedPropertyId, async () => {
 // ======================
 const onCreated = async (created: any) => {
   if (route.query.onboarding) {
-    navigateTo(`/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&portfolioId=${selectedPortfolioId.value}&onboarding=true`)
+    navigateTo(`/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&onboarding=true`)
   }
   // Refresh the units list to get the latest data
   await loadUnits()

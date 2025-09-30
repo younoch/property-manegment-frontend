@@ -35,7 +35,7 @@ const emit = defineEmits<{ close: [] }>()
 const confettiCanvas = ref<HTMLCanvasElement | null>(null)
 
 const close = () => emit('close')
-const onAfterLeave = () => console.log('Modal fully closed')
+const onAfterLeave = () => {}
 
 const colors = [
   '#FF3B30', 
