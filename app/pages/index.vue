@@ -13,12 +13,12 @@
 
       <section class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12">
         <div class="container mx-auto px-4 sm:px-6">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 text-center">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <StatCard value="99.9%" label="Uptime on secure cloud" />
             <StatCard value="Portfolio TZ" label="Accurate due & overdue" />
             <StatCard value="Minutes" label="From lease to first invoice" />
           </div>
-          <LogoCloud class="mt-6 sm:mt-8 md:mt-12 opacity-70" />
+          <LogoCloud class="mt-8 sm:mt-10 md:mt-14 opacity-70" />
         </div>
       </section>
 

@@ -36,18 +36,18 @@
         <nav class="mt-10 p-5 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
           <h3 class="font-semibold">In this policy</h3>
           <ul class="mt-2 text-sm text-primary-700 grid sm:grid-cols-2 gap-y-1">
-            <li><a href="#info-we-collect" class="hover:underline">1. Information we collect</a></li>
-            <li><a href="#how-we-use" class="hover:underline">2. How we use information</a></li>
-            <li><a href="#legal-bases" class="hover:underline">3. Legal bases</a></li>
-            <li><a href="#sharing" class="hover:underline">4. Sharing & processors</a></li>
-            <li><a href="#cookies" class="hover:underline">5. Cookies & analytics</a></li>
-            <li><a href="#retention" class="hover:underline">6. Data retention</a></li>
-            <li><a href="#security" class="hover:underline">7. Security</a></li>
-            <li><a href="#international" class="hover:underline">8. International transfers</a></li>
-            <li><a href="#your-rights" class="hover:underline">9. Your rights</a></li>
-            <li><a href="#children" class="hover:underline">10. Children</a></li>
-            <li><a href="#changes" class="hover:underline">11. Changes</a></li>
-            <li><a href="#contact" class="hover:underline">12. Contact us</a></li>
+            <li><a href="#info-we-collect" @click="(e) => scrollToSection(e, 'info-we-collect')" class="hover:underline">1. Information we collect</a></li>
+            <li><a href="#how-we-use" @click="(e) => scrollToSection(e, 'how-we-use')" class="hover:underline">2. How we use information</a></li>
+            <li><a href="#legal-bases" @click="(e) => scrollToSection(e, 'legal-bases')" class="hover:underline">3. Legal bases</a></li>
+            <li><a href="#sharing" @click="(e) => scrollToSection(e, 'sharing')" class="hover:underline">4. Sharing & processors</a></li>
+            <li><a href="#cookies" @click="(e) => scrollToSection(e, 'cookies')" class="hover:underline">5. Cookies & analytics</a></li>
+            <li><a href="#retention" @click="(e) => scrollToSection(e, 'retention')" class="hover:underline">6. Data retention</a></li>
+            <li><a href="#security" @click="(e) => scrollToSection(e, 'security')" class="hover:underline">7. Security</a></li>
+            <li><a href="#international" @click="(e) => scrollToSection(e, 'international')" class="hover:underline">8. International transfers</a></li>
+            <li><a href="#your-rights" @click="(e) => scrollToSection(e, 'your-rights')" class="hover:underline">9. Your rights</a></li>
+            <li><a href="#children" @click="(e) => scrollToSection(e, 'children')" class="hover:underline">10. Children</a></li>
+            <li><a href="#changes" @click="(e) => scrollToSection(e, 'changes')" class="hover:underline">11. Changes</a></li>
+            <li><a href="#contact" @click="(e) => scrollToSection(e, 'contact')" class="hover:underline">12. Contact us</a></li>
           </ul>
         </nav>
 
@@ -69,7 +69,7 @@
             <li>Detect, prevent, and respond to fraud, abuse, or security incidents.</li>
             <li>Improve the product (e.g., troubleshooting, analytics, new features).</li>
             <li>Communicate with you (service updates, transactional emails, support).</li>
-            <li>Comply with legal obligations and enforce our <NuxtLink to="/terms" class="text-primary-700 underline">Terms</NuxtLink>.</li>
+            <li>Comply with legal obligations and enforce our <NuxtLink to="/terms" class="text-primary-700 hover:underline">Terms</NuxtLink>.</li>
           </ul>
         </PolicySection>
 
@@ -125,7 +125,7 @@
             <li>Port data in a structured, machine‑readable format</li>
             <li>Withdraw consent where processing relies on consent</li>
           </ul>
-          <p class="text-gray-700 mt-2">To exercise these rights, contact us at <NuxtLink to="#contact" class="text-primary-700 underline">privacy@leasetrack.app</NuxtLink>. We will verify your request and respond within applicable timeframes.</p>
+          <p class="text-gray-700 mt-2">To exercise these rights, contact us at <a href="mailto:privacy@leasetrack.app" class="text-primary-700 hover:underline">privacy@leasetrack.app</a>. We will verify your request and respond within applicable timeframes.</p>
         </PolicySection>
 
         <PolicySection id="children" title="10. Children">
@@ -139,9 +139,9 @@
         <PolicySection id="contact" title="12. Contact us">
           <div class="text-gray-700 space-y-1">
             <p><strong>Email:</strong> privacy@leasetrack.app</p>
-            <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 underline">Contact form</NuxtLink></p>
-            <p><strong>Legal & Terms:</strong> <NuxtLink to="/terms" class="text-primary-700 underline">Terms of Service</NuxtLink></p>
-            <p><strong>Status:</strong> <NuxtLink to="/status" class="text-primary-700 underline">Status page</NuxtLink></p>
+            <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 hover:underline">Contact form</NuxtLink></p>
+            <p><strong>Legal & Terms:</strong> <NuxtLink to="/terms" class="text-primary-700 hover:underline">Terms of Service</NuxtLink></p>
+            <p><strong>Status:</strong> <NuxtLink to="/status" class="text-primary-700 hover:underline">Status page</NuxtLink></p>
           </div>
         </PolicySection>
 
@@ -157,8 +157,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent } from 'vue'
 import { useHead } from '#imports'
+import PolicySection from '@/components/privacy/PolicySection.vue'
 
 definePageMeta({ layout: 'public' })
 
@@ -171,20 +171,29 @@ useHead({
 
 const effectiveDate = 'August 30, 2025'
 
-const PolicySection = defineComponent({
-  name: 'PolicySection',
-  props: { id: String, title: String },
-  template: `
-    <section :id="id" class='mt-10'>
-      <div class='p-6 md:p-7 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm'>
-        <h2 class='text-xl md:text-2xl font-bold'>{{ title }}</h2>
-        <div class='mt-3'><slot /></div>
-      </div>
-    </section>
-  `
-})
+// Define the PolicySection component
+// Smooth scroll function
+const scrollToSection = (event: Event, id: string) => {
+  event.preventDefault()
+  const element = document.getElementById(id)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+    // Update URL without page reload
+    window.history.pushState({}, '', `#${id}`)
+  }
+}
 </script>
 
 <style scoped>
-/* keep policy page calm and readable */
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure sections have proper spacing when navigated to */
+section {
+  scroll-margin-top: 2rem;
+}
+
+/* Keep policy page calm and readable */
 </style>

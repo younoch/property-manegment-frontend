@@ -85,7 +85,7 @@
 
     <!-- FAQ (short) -->
     <section class="py-16">
-      <div class="container mx-auto px-4 max-w-4xl">
+      <div class="container mx-auto px-4 max-w-6xl">
         <h2 class="text-2xl md:text-3xl font-bold text-center">Before you send</h2>
         <div class="mt-6 grid md:grid-cols-2 gap-4">
           <UAccordion :items="faqItemsLeft" color="primary" variant="soft"/>
