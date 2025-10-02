@@ -8,7 +8,7 @@
       <div class="absolute inset-0 bg-gradient-to-b from-primary-50/50 via-white to-white"></div>
     </div>
 
-    <section class="container mx-auto px-4 pt-16 md:pt-24">
+    <section class="container mx-auto px-4 pt-2 md:pt-20">
       <div class="max-w-4xl mx-auto">
         <div class="text-center">
           <h1 class="text-4xl md:text-5xl font-extrabold">Terms & Conditions</h1>

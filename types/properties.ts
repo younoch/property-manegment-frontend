@@ -18,6 +18,30 @@ export interface Property {
   updated_at?: string;
 }
 
+export interface PropertyStats {
+  totalUnits: number;
+  rentedUnits: number;
+  activeTenants: number;
+  totalRevenue: number;
+  totalExpenses: number;
+  overduePayments: any[]; // You might want to create a specific type for this
+  activeLeases: number;
+  monthlyRevenue: Array<{
+    year: number;
+    month: number;
+    amount: number;
+    label: string;
+  }>;
+  monthlyExpenses: Array<{
+    year: number;
+    month: number;
+    amount: number;
+    label: string;
+  }>;
+  occupancyRate: number;
+  historicalOccupancy: Array<[string, number]>;
+}
+
 export interface Unit {
   id: number | string;
   portfolio_id: number;

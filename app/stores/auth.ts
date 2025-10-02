@@ -59,6 +59,7 @@ export const useAuthStore = defineStore('auth', {
         this.setLoading(true);
         this.clearError();
         
+        const userStore = useUserStore();
         const api = createProtectedApiClient();
         const response = await api.get<{
           id: string;
@@ -70,11 +71,16 @@ export const useAuthStore = defineStore('auth', {
           is_active?: boolean;
           requires_onboarding?: boolean;
           onboarding_completed_at?: string | null;
+          owned_portfolios?: Array<{
+            id: string;
+            name: string;
+            // Add other portfolio properties as needed
+          }>;
         }>('/auth/whoami');
         
         if (response.data) {
           const userData = response.data;
-          this.user = {
+          const user = {
             id: userData.id,
             email: userData.email,
             name: userData.name,
@@ -83,15 +89,25 @@ export const useAuthStore = defineStore('auth', {
             profile_image_url: userData.profile_image_url,
             is_active: userData.is_active,
             requires_onboarding: userData.requires_onboarding,
-            onboarding_completed_at: userData.onboarding_completed_at
+            onboarding_completed_at: userData.onboarding_completed_at,
+            owned_portfolios: userData.owned_portfolios || []
           };
-          return { success: true, user: this.user };
+          
+          // Update both auth and user stores
+          this.user = user;
+          userStore.setUser(user);
+          
+          return { success: true, user };
         }
         
         return { success: false, error: 'No user data received' };
       } catch (error: any) {
+        console.error('Error in checkAuth:', error);
         this.setError(error.response?.data?.message || 'Failed to check authentication');
-        return { success: false, error: error.response?.data?.message || 'Failed to check authentication' };
+        return { 
+          success: false, 
+          error: error.response?.data?.message || 'Failed to check authentication' 
+        };
       } finally {
         this.setLoading(false);
       }

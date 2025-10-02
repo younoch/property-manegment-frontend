@@ -4,6 +4,9 @@ import { useAuthStore } from '../stores/auth';
 import { useAuth } from '~/composables/useAuth';
 import { useCsrf } from '~/composables/useCsrf';
 
+// Track if we're already checking auth to prevent duplicate calls
+let isCheckingAuth = false;
+
 export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
   // Skip middleware on server-side
   if (process.server) return;
@@ -12,21 +15,46 @@ export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
   if (to.path.startsWith('/auth/')) return;
   
   const userStore = useUserStore();
+  const authStore = useAuthStore();
   
-  // If we're already authenticated, continue
-  if (userStore.isLoggedIn) return;
+  // If we're already authenticated and the cache is valid, continue
+  if (userStore.isLoggedIn && authStore.isAuthCacheValid) {
+    return;
+  }
   
-  // Try to restore session from localStorage
+  // Prevent multiple simultaneous auth checks
+  if (isCheckingAuth) {
+    return;
+  }
+  
+  isCheckingAuth = true;
+  
   try {
-    await userStore.initializeFromStorage();
+    // First try to restore from storage (fast path)
+    if (!userStore.isLoggedIn) {
+      await userStore.initializeFromStorage();
+    }
     
-    // If we have a valid user in storage, continue
-    if (userStore.isLoggedIn) {
+    // If we have a valid user in storage and cache is still valid, continue
+    if (userStore.isLoggedIn && authStore.isAuthCacheValid) {
+      // Refresh the auth state in the background if needed
+      if (!authStore.isAuthCacheValid) {
+        const { checkAuth } = useAuth();
+        checkAuth().catch(console.error);
+      }
       return;
     }
     
-    // If no valid session, redirect to login
-    return navigateTo('/auth/login');
+    // If we don't have a valid session, check with the server
+    const { checkAuth } = useAuth();
+    const { success } = await checkAuth();
+    
+    if (!success) {
+      // If server check fails, clear any invalid state and redirect to login
+      userStore.clearUser();
+      userStore.clearStorage();
+      return navigateTo('/auth/login');
+    }
     
   } catch (error) {
     console.error('Error in auth middleware:', error);
@@ -34,6 +62,8 @@ export default defineNuxtRouteMiddleware(async (to: { path: string }) => {
     userStore.clearUser();
     userStore.clearStorage();
     return navigateTo('/auth/login');
+  } finally {
+    isCheckingAuth = false;
   }
 });
 

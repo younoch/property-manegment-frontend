@@ -1,5 +1,5 @@
 <template>
-  <section id="features" class="py-16">
+  <section id="features" class="py-4 md:py-16">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-center">Everything you need to run rentals</h2>
       <p class="mt-3 text-center text-gray-600">Built for small landlords: fast, accurate, and audit-friendly.</p>

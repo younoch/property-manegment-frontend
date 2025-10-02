@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16 border-t border-gray-100" id="problem">
+  <section class="py-4 md:py-16 border-t border-gray-100" id="problem">
     <div class="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
       <div>
         <h2 class="text-3xl md:text-4xl font-bold">Spreadsheets cause missed payments. We fix that.</h2>

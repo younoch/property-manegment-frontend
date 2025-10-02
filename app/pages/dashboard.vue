@@ -1,193 +1,69 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '~/stores/auth';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useUserStore } from '~/stores/user';
 import type { KPI } from '~/types/dashboard';
-import type { Property } from '~/types/properties';
-
-// Components
-import { createProtectedApiClient } from '@/utils/api';
+import type { Property, PropertyStats } from '~/types/properties';
+import { createProtectedApiClient } from '~/utils/api';
 import KPICard from '~/components/dashboard/KPICard.vue';
 import DashboardChart from '~/components/dashboard/DashboardChart.vue';
 import DataTable from '~/components/dashboard/DataTable.vue';
+type RangeValue = typeof ranges[number]['value'];
 
-definePageMeta({ middleware: ['auth'] })
+// META
+definePageMeta({ middleware: ['auth'] });
 
-const api = createProtectedApiClient()
-const authStore = useAuthStore();
+// STORES & API
+const userStore = useUserStore();
+const api = createProtectedApiClient();
+const user = computed(() => userStore.currentUser);
 
-const user = computed(() => authStore.user)
-const properties = ref<Property[]>([]);
-
-const fetchProperties = async () => {
-  try {
-    if (!user.value?.owned_portfolios?.length) {
-      properties.value = [];
-      return;
-    }
-    
-    const portfolioId = user.value.owned_portfolios[0].id;
-    const response = await api.get<any>(`/portfolios/${portfolioId}/properties`);
-    const raw = response?.data?.data ?? response?.data ?? response;
-    properties.value = Array.isArray(raw) ? raw : [];
-  } catch (e: any) {
-    error.value = e?.message || 'Failed to load properties';
-  } finally {
-    loading.value = false;
-  }
-}
-
-// State
+// STATE
 const loading = ref(true);
 const error = ref<string | null>(null);
 
-// Property Selection
+const properties = ref<Property[]>([]);
 const selectedProperty = ref<string | null>(null);
+
+// Format properties for USelect component
 const propertyOptions = computed(() => {
-  return [
-    { label: 'All Properties', value: null },
-    ...properties.value.map(property => ({
-      label: property.name || 'Unnamed Property',
-      value: property.id
-    }))
-  ];
+  return properties.value.map(property => ({
+    label: property.name,
+    value: property.id,
+    disabled: false
+  }));
 });
+const loadingStats = ref(false);
+const propertyStats = ref<Partial<PropertyStats>>({});
 
-// Date Ranges
-const ranges = ['This Month', 'Last 3 Months', 'Last 12 Months'];
-const selectedRange = ref(ranges[2]);
-
-// Handle property change
-const handlePropertyChange = (propertyId: string | null) => {
-  // Property change handler
-};
-
-// Table columns for recent activities
-const activityColumns = [
-  { id: 'description', key: 'description', label: 'Activity', sortable: true },
-  { id: 'property', key: 'property', label: 'Property', sortable: true },
-  { id: 'date', key: 'date', label: 'Date', sortable: true },
-  { id: 'status', key: 'status', label: 'Status', sortable: true }
-];
+const revenueData = ref<Array<Array<string | number>>>([['Month', 'Revenue', 'Expenses']]);
+const occupancyData = ref<Array<Array<string | number>>>([
+  ['Month', 'Occupancy Rate'],
+]);
 
 // KPIs
 const kpis = ref<KPI[]>([
-  { 
-    label: 'Total Properties', 
-    value: 42, 
-    icon: 'i-heroicons-home', 
-    delta: 2,
-    spark: [
-      ['M', 'v'], 
-      ['Jan', 35], ['Feb', 37], ['Mar', 39], 
-      ['Apr', 40], ['May', 42]
-    ] 
-  },
-  { 
-    label: 'Active Tenants', 
-    value: 126, 
-    icon: 'i-heroicons-users', 
-    delta: 5,
-    spark: [
-      ['M', 'v'], 
-      ['Jan', 118], ['Feb', 119], ['Mar', 121], 
-      ['Apr', 124], ['May', 126]
-    ]
-  },
-  { 
-    label: 'Vacancy Rate', 
-    value: 8, 
-    icon: 'i-heroicons-home-modern', 
-    delta: -2,
-    spark: [
-      ['M', 'v'], 
-      ['Jan', 12], ['Feb', 11], ['Mar', 9], 
-      ['Apr', 8], ['May', 8]
-    ]
-  },
-  { 
-    label: 'Monthly Revenue', 
-    value: 185000, 
-    icon: 'i-heroicons-currency-dollar', 
-    delta: 15000,
-    money: true,
-    spark: [
-      ['M', 'v'], 
-      ['Jan', 130000], ['Feb', 140000], ['Mar', 150000], 
-      ['Apr', 170000], ['May', 185000]
-    ]
-  }
+  { id: 'total_units', label: 'Total Units', value: 0, icon: 'i-heroicons-home' },
+  { id: 'occupied_units', label: 'Occupied', value: 0, icon: 'i-heroicons-check-circle' },
+  { id: 'total_expenses', label: 'Total Expenses', value: 0, icon: 'i-heroicons-wrench-screwdriver' },
+  { id: 'total_revenue', label: 'Monthly Revenue', value: 0, icon: 'i-heroicons-currency-dollar' }
 ]);
 
-// Chart Data
-const revenueData = ref<Array<Array<string | number>>>([
-  ['Month', 'Revenue', 'Expenses'],
-  ['Jan', 130000, 90000],
-  ['Feb', 140000, 95000],
-  ['Mar', 150000, 100000],
-  ['Apr', 170000, 105000],
-  ['May', 185000, 110000]
-]);
-
-const occupancyData = ref<Array<Array<string | number>>>([
-  ['Month', 'Occupancy Rate'],
-  ['Jan', 0.72],
-  ['Feb', 0.75],
-  ['Mar', 0.78],
-  ['Apr', 0.81],
-  ['May', 0.84]
-]);
-
-// Recent Activities
+// Activities
 const recentActivities = ref([
-  {
-    id: 1,
-    type: 'payment',
-    description: 'Rent payment received',
-    amount: 1200,
-    date: '2023-06-15T10:30:00Z',
-    status: 'completed',
-    property: 'Sunset Villas #42'
-  },
-  {
-    id: 2,
-    type: 'maintenance',
-    description: 'AC repair request',
-    date: '2023-06-14T15:45:00Z',
-    status: 'in-progress',
-    property: 'Downtown Loft #12'
-  },
-  {
-    id: 3,
-    type: 'application',
-    description: 'New tenant application',
-    date: '2023-06-14T09:15:00Z',
-    status: 'pending',
-    property: 'Riverside Apartments #5'
-  },
-  {
-    id: 4,
-    type: 'inspection',
-    description: 'Quarterly property inspection',
-    date: '2023-06-13T14:20:00Z',
-    status: 'scheduled',
-    property: 'Mountain View Complex #8'
-  }
+  { id: 1, type: 'payment', description: 'Rent payment received', amount: 1200, date: '2023-06-15T10:30:00Z', status: 'completed', property: 'Sunset Villas #42' },
+  { id: 2, type: 'maintenance', description: 'AC repair request', date: '2023-06-14T15:45:00Z', status: 'in-progress', property: 'Downtown Loft #12' },
+  { id: 3, type: 'application', description: 'New tenant application', date: '2023-06-14T09:15:00Z', status: 'pending', property: 'Riverside Apartments #5' },
+  { id: 4, type: 'inspection', description: 'Quarterly property inspection', date: '2023-06-13T14:20:00Z', status: 'scheduled', property: 'Mountain View Complex #8' }
 ]);
 
-// Chart Options
+// CHART OPTIONS
 const revenueChartOptions = {
   title: 'Revenue vs Expenses',
   curveType: 'function',
   legend: { position: 'top' },
   colors: ['#4ade80', '#f87171'],
-  vAxis: {
-    format: 'currency',
-    title: 'Amount (BDT)'
-  },
-  hAxis: {
-    title: 'Month'
-  }
+  vAxis: { format: 'currency', title: 'Amount (BDT)' },
+  hAxis: { title: 'Month' }
 };
 
 const occupancyChartOptions = {
@@ -195,90 +71,218 @@ const occupancyChartOptions = {
   curveType: 'function',
   legend: { position: 'none' },
   colors: ['#60a5fa'],
-  vAxis: {
-    format: '#%',
-    minValue: 0,
-    maxValue: 1,
-    title: 'Occupancy Rate'
-  },
-  hAxis: {
-    title: 'Month'
+  vAxis: { format: '#%', minValue: 0, maxValue: 1, title: 'Occupancy Rate' },
+  hAxis: { title: 'Month' }
+};
+
+// TABLE COLUMNS
+const activityColumns = [
+  { id: 'description', key: 'description', label: 'Activity', sortable: true },
+  { id: 'property', key: 'property', label: 'Property', sortable: true },
+  { id: 'date', key: 'date', label: 'Date', sortable: true },
+  { id: 'status', key: 'status', label: 'Status', sortable: true }
+];
+
+// DATE RANGES
+const ranges = [
+  { label: 'This Month', value: 'this_month' },
+  { label: 'Last Month', value: 'last_month' },
+  { label: 'Last 3 Months', value: 'last_3_months' },
+  { label: 'This Year', value: 'this_year' },
+  { label: 'Last Year', value: 'last_year' },
+  { label: 'All Time', value: 'all_time' }
+] as const;
+
+
+const selectedRange = ref<RangeValue>(ranges[2].value);
+const currentStartDate = ref<Date>(new Date());
+const currentEndDate = ref<Date>(new Date());
+
+// HELPERS
+const formatDateForApi = (date: Date): string =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+const transformRevenueExpenses = (data: any): Array<Array<string | number>> => {
+  const result: Array<Array<string | number>> = [['Month', 'Revenue', 'Expenses']];
+  const revenueMap = new Map(data.monthlyRevenue.map((r: any) => [`${r.year}-${r.month}`, r]));
+  const expenseMap = new Map(data.monthlyExpenses.map((e: any) => [`${e.year}-${e.month}`, e]));
+  const allKeys = new Set<string>([...revenueMap.keys(), ...expenseMap.keys()]);
+
+  const sortedKeys = Array.from(allKeys).sort((a, b) => {
+    const [ayStr, amStr] = a.split('-');
+    const [byStr, bmStr] = b.split('-');
+    
+    const ay = ayStr ? parseInt(ayStr, 10) : 0;
+    const am = amStr ? parseInt(amStr, 10) : 0;
+    const by = byStr ? parseInt(byStr, 10) : 0;
+    const bm = bmStr ? parseInt(bmStr, 10) : 0;
+    
+    return ay === by ? am - bm : ay - by;
+  });
+
+  for (const key of sortedKeys) {
+    const revenue = revenueMap.get(key);
+    const expense = expenseMap.get(key);
+    result.push([
+      revenue?.label || expense?.label || '',
+      revenue?.amount ?? 0,
+      expense?.amount ?? 0
+    ]);
+  }
+  return result;
+};
+
+const getDateRange = (range: string): { startDate: Date; endDate: Date } => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
+  switch (range) {
+    case 'this_month':
+      return { startDate: new Date(currentYear, currentMonth, 1), endDate: today };
+    case 'last_month':
+      return { startDate: new Date(currentYear, currentMonth - 1, 1), endDate: new Date(currentYear, currentMonth, 0) };
+    case 'last_3_months':
+      return { startDate: new Date(currentYear, currentMonth - 2, 1), endDate: today };
+    case 'this_year':
+      return { startDate: new Date(currentYear, 0, 1), endDate: today };
+    case 'last_year':
+      return { startDate: new Date(currentYear - 1, 0, 1), endDate: new Date(currentYear - 1, 11, 31) };
+    case 'all_time':
+      return { startDate: new Date(2024, 0, 1), endDate: today };
+    default:
+      return { startDate: new Date(currentYear, currentMonth - 2, 1), endDate: today };
   }
 };
 
-// Methods
-const handleRangeChange = (range: string) => {
+// API CALLS
+const fetchProperties = async () => {
   loading.value = true;
-  // In a real app, fetch data based on the selected range
-  
-  // Simulate API call
-  setTimeout(() => {
-    loading.value = false;
-  }, 500);
-};
-
-const handleRefresh = async () => {
+  error.value = null;
   try {
-    loading.value = true;
-    error.value = null;
-    // In a real app, refetch data here
-    await new Promise(resolve => setTimeout(resolve, 1000));
-  } catch (err) {
-    error.value = 'Failed to refresh data';
-    console.error('Refresh error:', err);
+    const portfolio = user.value?.owned_portfolios?.[0];
+    if (!portfolio) throw new Error('No owned portfolios found for user');
+
+    const response = await api.get<any>(`/portfolios/${portfolio.id}/properties`);
+    const raw = response?.data?.data ?? response?.data ?? response;
+    properties.value = Array.isArray(raw) ? raw : [];
+
+    if (properties.value.length) {
+      // @ts-ignore value
+      selectedProperty.value = propertyOptions.value[0].value;
+    }
+  } catch (e: any) {
+    error.value = e.response?.data?.message || e.message || 'Failed to load properties';
+    properties.value = [];
   } finally {
     loading.value = false;
   }
 };
 
-// Format BDT currency
-const fmtBDT = (value: number) => {
-  return new Intl.NumberFormat('en-BD', {
-    style: 'currency',
-    currency: 'BDT',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value);
-};
+const fetchPropertyStats = async (propertyId: string | null) => {
+  if (!propertyId) {
+    propertyStats.value = {};
+    return;
+  }
+  loadingStats.value = true;
+  try {
+    const params = {
+      startDate: formatDateForApi(currentStartDate.value),
+      endDate: formatDateForApi(currentEndDate.value)
+    };
+    const response = await api.get(`/dashboard/properties/${propertyId}/stats?${new URLSearchParams(params)}`);
+    propertyStats.value = response?.data ?? response;
 
-// Format date
-const fmtDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
+    // @ts-ignore - We know these properties exist from the API response
+    kpis.value[0].value = propertyStats.value.totalUnits;
+    // @ts-ignore
+    kpis.value[1].value = propertyStats.value.rentedUnits;
+    // @ts-ignore
+    kpis.value[2].value = propertyStats.value.totalExpenses;
+    // @ts-ignore
+    kpis.value[3].value = propertyStats.value.totalRevenue;
 
-// Watch for user data to be available
-watch(() => user.value, async (newUser) => {
+    revenueData.value = transformRevenueExpenses(propertyStats.value);
+    occupancyData.value = occupancyData.value.concat(propertyStats.value.historicalOccupancy);
+  } catch (e: any) {
+    console.error('Failed to fetch property stats:', e);
+    propertyStats.value = {};
+  } finally {
+    loadingStats.value = false;
+  }
+};
+// WATCHERS
+watch(selectedRange, async (newRange) => {
+  if (!newRange) return;
+  const { startDate, endDate } = getDateRange(newRange);
+  currentStartDate.value = startDate;
+  currentEndDate.value = endDate;
+  if (selectedProperty.value) await fetchPropertyStats(selectedProperty.value);
+}, { immediate: true });
+
+watch(selectedProperty, (newPropertyId) => {
+  fetchPropertyStats(newPropertyId);
+});
+
+watch(() => user.value, async (newUser, oldUser) => {
+  if (newUser?.id === oldUser?.id) return;
   if (newUser?.owned_portfolios?.length) {
-    try {
-      loading.value = true;
-      await fetchProperties();
-    } catch (err) {
-      error.value = 'Failed to load properties';
-      console.error('Properties load error:', err);
-    } finally {
-      loading.value = false;
-    }
+    await fetchProperties();
+  } else if (newUser) {
+    properties.value = [];
+    error.value = 'No properties found for your account. Please contact support.';
   }
 }, { immediate: true });
 
-// Lifecycle Hooks
-onMounted(async () => {
+// METHODS
+const getActionColor = (action: string) => {
+  const colors: Record<string, string> = {
+    create: 'green',
+    update: 'blue',
+    delete: 'red',
+    login: 'indigo',
+    logout: 'gray',
+  };
+  return colors[action.toLowerCase()] || 'gray';
+};
+
+const handlePropertyChange = (propertyId: string | null) => {
+  selectedProperty.value = propertyId;
+};
+
+const handleRangeChange = (range: string) => {
+  loadingStats.value = true;
+  setTimeout(() => { loadingStats.value = false }, 500);
+};
+
+const handleRefresh = async () => {
   try {
     loading.value = true;
-    // In a real app, fetch initial data here
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    loadingStats.value = true;
+    error.value = null;
+    await Promise.all([
+      fetchProperties(),
+      selectedProperty.value ? fetchPropertyStats(selectedProperty.value) : Promise.resolve()
+    ]);
+  } catch (e) {
+    error.value = 'Failed to refresh data';
+    console.error('Refresh error:', e);
+  } finally {
     loading.value = false;
-  } catch (err) {
-    error.value = 'Failed to load dashboard data';
+    loadingStats.value = false;
+  }
+};
+
+// LIFECYCLE
+onMounted(async () => {
+  if (user.value?.owned_portfolios?.length) {
+    await fetchProperties();
+  } else {
     loading.value = false;
-    console.error('Dashboard data error:', err);
   }
 });
 </script>
+
 <template>
   <div class="w-full min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-hidden">
     <!-- Header -->
@@ -293,6 +297,7 @@ onMounted(async () => {
             class="w-full sm:w-48 flex-shrink-0"
             placeholder="Select Property"
             :loading="loading"
+            :disabled="loading"
             @update:modelValue="handlePropertyChange"
           />
           <USelect 
@@ -302,11 +307,11 @@ onMounted(async () => {
             class="w-full sm:w-48 flex-shrink-0"
             @update:modelValue="handleRangeChange"
           />
-          <UButton
+<UButton
             icon="i-heroicons-arrow-path"
             color="white"
             @click="handleRefresh"
-            :loading="loading"
+            :loading="loading || loadingStats"
             class="flex-shrink-0"
           />
         </div>
@@ -330,8 +335,13 @@ onMounted(async () => {
         <KPICard 
           v-for="(kpi, index) in kpis" 
           :key="index"
-          :kpi="kpi"
+          :kpi="{
+            ...kpi,
+            // Override values with API data if available
+            value: propertyStats?.[kpi.id]?.current ?? kpi.value
+          }"
           class="h-full"
+          :class="{ 'opacity-50': loadingStats }"
         />
       </div>
 
@@ -339,15 +349,16 @@ onMounted(async () => {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 w-full">
         <!-- Revenue vs Expenses Chart -->
         <DashboardChart
+          :show-chart="revenueData.length > 1"
           title="Revenue vs Expenses"
           :chart-data="revenueData"
           :chart-options="revenueChartOptions"
           :show-range-selector="false"
           class="h-[400px]"
         />
-
         <!-- Occupancy Rate Chart -->
         <DashboardChart
+          :show-chart="occupancyData.length > 1"
           title="Occupancy Rate"
           :chart-data="occupancyData"
           :chart-options="occupancyChartOptions"
@@ -374,23 +385,22 @@ onMounted(async () => {
         <UCard class="h-full">
           <template #header>
             <div class="flex items-center justify-between">
-              <h3 class="text-lg font-medium">Upcoming Due (14 days)</h3>
+              <h3 class="text-lg font-medium">Recent Activity</h3>
               <UButton 
+                size="xs" 
                 variant="ghost" 
-                size="sm"
+                color="primary"
                 label="View All"
-                to="/payments/upcoming"
                 trailing-icon="i-heroicons-arrow-right"
+                disabled
               />
             </div>
           </template>
-          <!-- Upcoming due content will go here -->
-          <div class="text-center text-gray-500 dark:text-gray-400 py-8">
-            <UIcon name="i-heroicons-calendar" class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-2" />
-            <p>No upcoming payments due</p>
+          <div class="text-center text-gray-500 py-8">
+            <UIcon name="i-heroicons-information-circle" class="w-8 h-8 mx-auto text-gray-300 mb-2" />
+            <p>Activity feed is currently unavailable</p>
           </div>
         </UCard>
-
         <!-- Open Maintenance -->
         <UCard class="h-full">
           <template #header>
@@ -405,7 +415,6 @@ onMounted(async () => {
               />
             </div>
           </template>
-          <!-- Open maintenance content will go here -->
           <div class="text-center text-gray-500 dark:text-gray-400 py-8">
             <UIcon name="i-heroicons-wrench-screwdriver" class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-2" />
             <p>No open maintenance requests</p>

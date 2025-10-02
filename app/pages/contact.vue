@@ -10,7 +10,7 @@
     </div>
 
     <!-- Hero / Intro -->
-    <section class="container mx-auto px-4 pt-16 md:pt-24 text-center">
+    <section class="container mx-auto px-4 pt-2 md:pt-20 text-center">
       <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">Contact</span>
       <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">We'd love to hear from you</h1>
       <p class="mt-3 text-gray-600 max-w-2xl mx-auto text-lg">Questions about LeaseTrack, pricing, or onboarding? Send us a note—our team usually replies within one business day.</p>

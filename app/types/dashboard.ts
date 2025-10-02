@@ -1,10 +1,9 @@
 export interface KPI {
+  id: string;
   label: string;
   value: number;
   icon: string;
-  delta: number;
   money?: boolean;
-  spark?: Array<[string, string | number]>;
 }
 
 export interface ChartData {

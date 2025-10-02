@@ -9,7 +9,7 @@
     </div>
 
     <!-- Hero -->
-    <section class="container mx-auto px-4 pt-16 md:pt-24 text-center">
+    <section class="container mx-auto px-4 pt-2 md:pt-20 text-center">
       <h1 class="text-4xl md:text-5xl font-extrabold">Simple Pricing</h1>
       <p class="mt-3 text-gray-600 max-w-2xl mx-auto">LeaseTrack is built for small landlords. Start free, then upgrade as you grow. Cancel anytime.</p>
 

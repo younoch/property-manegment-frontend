@@ -19,13 +19,16 @@
       </div>
     </template>
 
-    <div class="flex-1 min-h-[300px]">
+    <div v-if="showChart" class="flex-1 min-h-[300px]">
       <GoogleChart
         :type="chartType"
         :data="chartData"
         :options="chartOptions"
         class="w-full h-full"
       />
+    </div>
+    <div v-else class="flex-1 min-h-[300px] flex items-center justify-center">
+      <p class="text-gray-500 dark:text-gray-400">No data available</p>
     </div>
 
     <template #footer v-if="$slots.footer">
@@ -39,6 +42,10 @@ import type { PropType } from 'vue';
 import type { ChartOptions } from '~/types/dashboard';
 
 const props = defineProps({
+  showChart: {
+    type: Boolean,
+    default: true
+  },
   title: {
     type: String,
     required: true

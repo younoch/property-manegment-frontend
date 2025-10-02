@@ -12,7 +12,7 @@
                 <h3 class="text-sm font-medium text-gray-900">Email notifications</h3>
                 <p class="text-sm text-gray-500">Receive email notifications for important updates</p>
               </div>
-              <UToggle v-model="settings.emailNotifications" />
+              <USwitch v-model="settings.emailNotifications" />
             </div>
           </div>
         </div>
@@ -66,6 +66,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useThemeColor, type ThemeKey } from '~/composables/useThemeColor'
+import { useToast } from '#imports'
 
 definePageMeta({ middleware: 'auth' })
 

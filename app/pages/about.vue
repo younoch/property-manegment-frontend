@@ -10,7 +10,7 @@
     </div>
 
     <!-- HERO (no site header) -->
-    <section class="container mx-auto px-4 pt-16 md:pt-24">
+    <section class="container mx-auto px-4 pt-2 md:pt-20">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
           <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">About LeaseTrack</span>
