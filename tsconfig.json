@@ -6,14 +6,15 @@
     "baseUrl": ".",
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "strict": true,
     "jsx": "preserve",
     "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
 
-    // Important: add Nuxt/Vue/Node types so globals like `ref` work in editor
-    "types": ["@types/node", "nuxt", "vue"],
+    // Important: add Nuxt/Vue/Node types so globals work in editor
+    "types": ["@nuxt/schema", "@nuxt/schema/nuxt", "@types/node", "nuxt", "vue"],
 
     // Map Nuxt-generated type paths
     "paths": {
@@ -28,6 +29,7 @@
     "types/**/*.d.ts",
     ".nuxt",
     "**/*.ts",
+    "**/*.d.ts",
     "**/*.vue",
     "**/*.js",
     ".nuxt/imports.d.ts"

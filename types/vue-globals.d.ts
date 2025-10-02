@@ -18,6 +18,11 @@ import type {
 
     // Nuxt composables
     const useState: typeof import('#app')['useState'];
+    const useHead: typeof import('@unhead/vue')['useHead'];
+    const useSeoMeta: (meta: Record<string, any>) => void;
+    const useRoute: typeof import('vue-router')['useRoute'];
+    const useRouter: typeof import('vue-router')['useRouter'];
+    const useNuxtApp: typeof import('nuxt/app')['useNuxtApp'];
     const defineNuxtPlugin: typeof import('#app')['defineNuxtPlugin'];
     const defineNuxtRouteMiddleware: typeof import('#app')['defineNuxtRouteMiddleware'];
     const definePageMeta: typeof import('#app')['definePageMeta'];

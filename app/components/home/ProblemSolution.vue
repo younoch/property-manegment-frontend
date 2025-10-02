@@ -3,14 +3,16 @@
     <div class="container mx-auto px-4 sm:px-6">
       <div class="grid lg:grid-cols-2 gap-6 md:gap-12 lg:gap-16 items-center">
         <div class="space-y-2 sm:space-y-5">
-          <h2 class="text-2xl sm:text-3xl md:text-4xl xl:text-[2.5rem] font-bold leading-tight text-center sm:text-left">
-            Spreadsheets cause missed payments.<br class="hidden sm:block">
-            <span class="text-primary-600">We fix that.</span>
-          </h2>
-          
-          <p class="text-base sm:text-lg text-gray-600 leading-relaxed text-center sm:text-left">
-            A simple flow: <span class="font-medium text-gray-800">Unit → Lease → Invoice → Payment</span> with automatic status updates, grace periods, and idempotent late fees.
-          </p>
+          <header class="space-y-2">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl xl:text-[2.5rem] font-bold leading-tight text-center sm:text-left">
+              Spreadsheets cause missed payments.<br class="hidden sm:block">
+              <span class="text-primary-600">We fix that.</span>
+            </h2>
+            
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed text-center sm:text-left">
+              A simple flow: <span class="font-medium text-gray-800">Unit → Lease → Invoice → Payment</span> with automatic status updates, grace periods, and idempotent late fees.
+            </p>
+          </header>
           
           <ul class="space-y-2.5 sm:space-y-3 text-gray-700">
             <li class="flex items-start gap-3">

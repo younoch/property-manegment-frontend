@@ -2,11 +2,11 @@
   <section class="container mx-auto px-4 pt-2 md:pt-20 mb-2 md:mb-20">
     <div class="grid lg:grid-cols-2 gap-3 md:gap-10 items-center">
       <div>
-        <span class="inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
+        <p class="inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
           LeaseTrack · Smart Property Management
-        </span>
+        </p>
 
-        <h1 class="mt-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
+        <h1 class="mt-5 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
           Manage leases, send invoices,
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">manage payments—fast.</span>
         </h1>
@@ -24,7 +24,7 @@
         </div>
         <p class="mt-3 text-xs sm:text-sm text-gray-600">No credit card required · 1-minute signup · Works on mobile</p>
 
-        <div class="mt-6 grid grid-cols-3 gap-3 max-w-md">
+        <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
           <img src="https://picsum.photos/200/300?random=1" alt="Sample building" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
           <img src="https://picsum.photos/200/300?random=2" alt="Sample dashboard" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
           <img src="https://picsum.photos/200/300?random=3" alt="Landlord workspace" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
