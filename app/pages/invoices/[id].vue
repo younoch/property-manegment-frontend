@@ -262,10 +262,10 @@ type InvoiceVM = {
 // Refs and state
 const raw = ref<any>(null)                 // last-loaded server response
 const lease = ref<any>(null)               // lease data
-const loading = ref(false)
-const saving = ref(false)
-const sending = ref(false)
-const editMode = ref(false)
+const loading = ref(false)                 // loading state
+const saving = ref(false)                  // save in progress
+const sending = ref(false)                 // sending in progress
+const editMode = ref(false)                // edit mode toggle
 
 // Form model
 const model = reactive<InvoiceVM>({
@@ -280,11 +280,6 @@ const model = reactive<InvoiceVM>({
   total: 0,
   items: []
 })
-
-const loading = ref(false)
-const saving = ref(false)
-const sending = ref(false)
-const editMode = ref(false)
 
 const canEdit = computed(() => model.status === 'open')
 const badgeColor = computed(() =>

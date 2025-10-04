@@ -198,7 +198,7 @@ function findPortfolioById(id: string | undefined): Portfolio | undefined {
     const searchId = typeof id === 'string' ? id : String(id);
     return pid === searchId;
   });
-{{ ... }}
+}
 
 watch(selectedPortfolioId, async (id, oldId) => {
   if (id !== oldId) {
@@ -215,6 +215,7 @@ watch(selectedPortfolioId, async (id, oldId) => {
   await loadLeases();
 }, { immediate: true });
 
+watch(selectedPropertyId, async (id, oldId) => {
   if (id === oldId) return;
   
   selectedUnitId.value = undefined;
@@ -229,7 +230,6 @@ watch(selectedPortfolioId, async (id, oldId) => {
 }, { immediate: true });
 
 // Watch for unit changes and load leases
-{{ ... }}
 watch(selectedUnitId, async (newId: string | undefined, oldId: string | undefined) => {
   if (newId !== oldId && newId) {
     await loadLeases();
@@ -247,8 +247,7 @@ defineExpose({
   portfolioOptions,
   propertyOptions,
   unitOptions,
-  loading,
-{{ ... }}
+  loading
 });
 
 // Handle initial load and query parameters

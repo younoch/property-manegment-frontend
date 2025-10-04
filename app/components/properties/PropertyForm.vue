@@ -117,13 +117,13 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void;
   (e: 'created', value: CreatedProperty): void;
   (e: 'updated', value: CreatedProperty): void;
-}>();{{ ... }}
+}>();
 
 const isOpen = computed({
   get: () => props.open,
   set: (value: boolean) => emit('update:open', value)
 });
-{{ ... }}
+
 const submitting = ref(false);
 const api = createProtectedApiClient();
 const { success: toastSuccess, error: toastError } = useApiToast();

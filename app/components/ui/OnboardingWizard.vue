@@ -122,11 +122,17 @@ async function submitForm() {
   
   submitting.value = true
   try {
+    // Get current timezone and currency
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const currency = Intl.NumberFormat().resolvedOptions().currency || 'USD';
+    
     // Create portfolio
     const portfolioResponse = await api.post<PortfolioResponse>('/portfolios', {
       name: form.portfolio.name.trim(),
       subscription_plan: 'free', 
-      landlord_id: user.value?.id
+      landlord_id: user.value?.id,
+      timezone,
+      currency
     }) as ApiResponse<PortfolioResponse>
 
     // Create property if user filled in property details (name is required)

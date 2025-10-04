@@ -1,3 +1,22 @@
+export interface AddPortfolioPayload {
+  name: string
+  subscription_plan: string
+  provider_customer_id?: string
+  timezone: string
+  email?: string
+  phone?: string
+  website?: string
+  address?: string
+  city?: string
+  state?: string
+  postal_code?: string
+  country?: string
+  tax_id?: string
+  registration_number?: string
+  vat_number?: string
+  currency?: string
+}
+
 export interface PortfolioRow {
   id?: string
   name: string

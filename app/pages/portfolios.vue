@@ -80,10 +80,6 @@ const toast = useToast()
 const { user, checkAuth } = useAuth()
 await checkAuth()
 
-const landlordId = computed(() =>
-  typeof user.value?.id === 'string' ? Number(user.value.id) : user.value?.id
-)
-
 // Define the API response type
 interface ApiResponse {
   success: boolean;
@@ -101,7 +97,7 @@ interface ApiResponse {
 // Data fetching
 const fetchPortfolios = async () => {
   try {
-    if (!landlordId.value) {
+    if (!user.value?.id) {
       console.error('No landlord ID available')
       return {
         success: false,
@@ -113,7 +109,7 @@ const fetchPortfolios = async () => {
     }
     
     // Make the API call with proper typing
-    const response = await api.get<ApiResponse>(`/portfolios/landlord/${landlordId.value}?page=1&limit=100`)
+    const response = await api.get<ApiResponse>(`/portfolios/landlord/${user.value?.id}?page=1&limit=100`)
     
     if (!response) {
       console.error('Empty response from API')
