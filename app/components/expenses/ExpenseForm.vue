@@ -1,37 +1,23 @@
 <!-- app/components/expenses/ExpenseForm.vue -->
 <template>
-  <UModal 
-    v-model:open="isOpen" 
-    :title="isEditing ? 'Edit Expense' : 'Add Expense'"
-    :ui="{ content: 'w-full sm:max-w-2xl', header: 'p-2 sm:p-4 min-h-14', body: 'p-2 sm:p-4', width: 'w-full sm:max-w-2xl' }" 
+  <UModal v-model:open="isOpen" :title="isEditing ? 'Edit Expense' : 'Add Expense'"
+    :ui="{ content: 'w-full sm:max-w-2xl', header: 'p-2 sm:p-4 min-h-14', body: 'p-2 sm:p-4', width: 'w-full sm:max-w-2xl' }"
     :close="{
       color: 'error',
       variant: 'outline',
-      class: 'rounded-full'}" 
-  >
+      class: 'rounded-full'
+    }">
     <template #body>
       <UForm :state="form" :validate="validate" @submit="onSubmit">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <UFormField label="Property" name="property_id" :error="errors.property_id">
-            <USelect
-              v-model="form.property_id"
-              :items="propertyOptions"
-              placeholder="Select Property"
-              class="w-full"
-              :disabled="isViewing || !!propertyId"
-            />
+            <USelect v-model="form.property_id" :items="propertyOptions" placeholder="Select Property" class="w-full"
+              :disabled="isViewing || !!propertyId" />
           </UFormField>
 
           <UFormField label="Amount" name="amount" :error="errors.amount">
-            <UInput 
-              v-model.number="form.amount" 
-              type="number" 
-              min="0" 
-              step="0.01" 
-              class="w-full" 
-              :disabled="isViewing"
-              :ui="{ icon: { trailing: { pointer: '' } } }"
-            >
+            <UInput v-model.number="form.amount" type="number" min="0" step="0.01" class="w-full" :disabled="isViewing"
+              :ui="{ icon: { trailing: { pointer: '' } } }">
               <template #leading>
                 <span class="text-gray-500 dark:text-gray-400 text-sm">$</span>
               </template>
@@ -39,54 +25,31 @@
           </UFormField>
 
           <UFormField label="Category" name="category" :error="errors.category">
-            <USelect
-              v-model="form.category"
-              :items="categoryOptions"
-              placeholder="Select Category"
-              class="w-full"
-              :disabled="isViewing"
-            />
+            <USelect v-model="form.category" :items="categoryOptions" placeholder="Select Category" class="w-full"
+              :disabled="isViewing" />
           </UFormField>
 
           <UFormField label="Date Incurred" name="date_incurred" :error="errors.date_incurred">
             <UPopover :popper="{ placement: 'bottom-start' }">
-              <UButton
-                color="gray"
-                variant="outline"
-                :disabled="isViewing"
-                class="w-full justify-start text-left font-normal"
-                :class="!form.date_incurred ? 'text-gray-400' : ''"
-              >
+              <UButton color="gray" variant="outline" :disabled="isViewing"
+                class="w-full justify-start text-left font-normal" :class="!form.date_incurred ? 'text-gray-400' : ''">
                 <UIcon name="i-heroicons-calendar" class="mr-2 h-4 w-4" />
                 {{ form.date_incurred ? format(form.date_incurred, 'PPP') : 'Pick a date' }}
               </UButton>
               <template #panel="{ close }">
-                <DatePicker
-                  v-model="form.date_incurred"
-                  @close="close"
-                />
+                <DatePicker v-model="form.date_incurred" @close="close" />
               </template>
             </UPopover>
           </UFormField>
 
           <UFormField label="Status" name="status" :error="errors.status">
-            <USelect
-              v-model="form.status"
-              :items="statusOptions"
-              placeholder="Select Status"
-              class="w-full"
-              :disabled="isViewing"
-            />
+            <USelect v-model="form.status" :items="statusOptions" placeholder="Select Status" class="w-full"
+              :disabled="isViewing" />
           </UFormField>
 
           <UFormField label="Payment Method" name="payment_method" :error="errors.payment_method">
-            <USelect
-              v-model="form.payment_method"
-              :items="paymentMethods"
-              placeholder="Select payment method"
-              class="w-full"
-              :disabled="isViewing"
-            />
+            <USelect v-model="form.payment_method" :items="paymentMethods" placeholder="Select payment method"
+              class="w-full" :disabled="isViewing" />
           </UFormField>
 
           <UFormField label="Vendor" name="vendor" :error="errors.vendor">
@@ -94,36 +57,23 @@
           </UFormField>
 
           <UFormField label="Receipt URL" name="receipt_url" :error="errors.receipt_url">
-            <UInput v-model="form.receipt_url" type="url" placeholder="https://example.com/receipt.pdf" class="w-full" :disabled="isViewing" />
+            <UInput v-model="form.receipt_url" type="url" placeholder="https://example.com/receipt.pdf" class="w-full"
+              :disabled="isViewing" />
           </UFormField>
 
           <UFormField label="Tax Information" class="sm:col-span-2">
             <div class="grid grid-cols-2 gap-4">
               <UFormField label="Tax Amount" name="tax_amount" :error="errors.tax_amount">
-                <UInput 
-                  v-model.number="form.tax_amount" 
-                  type="number" 
-                  min="0" 
-                  step="0.01" 
-                  class="w-full" 
-                  :disabled="isViewing"
-                  :ui="{ icon: { trailing: { pointer: '' } } }"
-                >
+                <UInput v-model.number="form.tax_amount" type="number" min="0" step="0.01" class="w-full"
+                  :disabled="isViewing" :ui="{ icon: { trailing: { pointer: '' } } }">
                   <template #leading>
                     <span class="text-gray-500 dark:text-gray-400 text-sm">$</span>
                   </template>
                 </UInput>
               </UFormField>
               <UFormField label="Tax Rate %" name="tax_rate" :error="errors.tax_rate">
-                <UInput 
-                  v-model.number="form.tax_rate" 
-                  type="number" 
-                  min="0" 
-                  max="100" 
-                  step="0.01" 
-                  class="w-full" 
-                  :disabled="isViewing"
-                >
+                <UInput v-model.number="form.tax_rate" type="number" min="0" max="100" step="0.01" class="w-full"
+                  :disabled="isViewing">
                   <template #trailing>
                     <span class="text-gray-500 dark:text-gray-400 text-sm">%</span>
                   </template>
@@ -133,7 +83,8 @@
           </UFormField>
 
           <UFormField label="Description" name="description" :error="errors.description" class="sm:col-span-2">
-            <UTextarea v-model="form.description" placeholder="Expense description" class="w-full" :disabled="isViewing" />
+            <UTextarea v-model="form.description" placeholder="Expense description" class="w-full"
+              :disabled="isViewing" />
           </UFormField>
 
           <UFormField label="Notes" name="notes" :error="errors.notes" class="sm:col-span-2">
@@ -141,11 +92,11 @@
           </UFormField>
         </div>
 
-          <div class="flex items-center justify-end gap-2 mt-6" v-if="!isViewing">
-            <UButton color="gray" variant="soft" @click.prevent="onClose">{{ isViewing ? 'Close' : 'Cancel' }}</UButton>
-            <UButton type="submit" :loading="submitting">{{ isEditing ? 'Save' : 'Create' }}</UButton>
-          </div>
-        </UForm>
+        <div class="flex items-center justify-end gap-2 mt-6" v-if="!isViewing">
+          <UButton color="gray" variant="soft" @click.prevent="onClose">{{ isViewing ? 'Close' : 'Cancel' }}</UButton>
+          <UButton type="submit" :loading="submitting">{{ isEditing ? 'Save' : 'Create' }}</UButton>
+        </div>
+      </UForm>
     </template>
   </UModal>
 </template>
@@ -223,7 +174,7 @@ watch(
         form.amount = Number(props.model.amount ?? 0)
         form.category = String(props.model.category ?? '')
         // Ensure date_incurred is a properly formatted string
-        form.date_incurred = props.model.date_incurred 
+        form.date_incurred = props.model.date_incurred
           ? formatDate(new Date(props.model.date_incurred))
           : formatDate(new Date())
         form.status = String(props.model.status ?? 'pending')
@@ -241,11 +192,66 @@ watch(
   }
 )
 
+const onSubmit = async (e: Event) => {
+  e.preventDefault()
+  
+  try {
+    submitting.value = true
+    const payload = {
+      ...form,
+      amount: Number(form.amount),
+      tax_amount: Number(form.tax_amount),
+      tax_rate: Number(form.tax_rate),
+      property_id: form.property_id ? Number(form.property_id) : null,
+      date_incurred: new Date(form.date_incurred).toISOString()
+    }
+
+    let response
+    if (isEditing.value && props.model?.id) {
+      response = await api.patch(`/expenses/${props.model.id}`, payload)
+      emit('updated', response.data)
+      toastSuccess('Expense updated successfully')
+    } else {
+      response = await api.post('/expenses', payload)
+      emit('created', response.data)
+      toastSuccess('Expense created successfully')
+    }
+    
+    isOpen.value = false
+    resetForm()
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || 'An error occurred while saving the expense'
+    toastError(errorMessage)
+    console.error('Error saving expense:', error)
+  } finally {
+    submitting.value = false
+  }
+}
+
 watch(() => props.propertyId, (id) => {
-  if (typeof id === 'number' && id > 0) form.property_id = id
+  if (id) form.property_id = id.toString()
 }, { immediate: true })
 
+const resetForm = () => {
+  form.property_id = props.propertyId?.toString() ?? ''
+  form.amount = 0
+  form.category = ''
+  form.date_incurred = formatDate(new Date())
+  form.status = 'pending'
+  form.description = ''
+  form.vendor = ''
+  form.payment_method = ''
+  form.receipt_url = ''
+  form.tax_amount = 0
+  form.tax_rate = 0
+  form.notes = ''
+}
+
 const errors = reactive<Record<string, string | undefined>>({})
+
+const onClose = () => {
+  isOpen.value = false
+}
 
 const Schema = object({
   property_id: pipe(string(), minLength(1, 'Please select a property')),
@@ -254,7 +260,28 @@ const Schema = object({
   status: string(),
   description: pipe(string(), minLength(1, 'Description is required')),
   vendor: pipe(string(), minLength(1, 'Vendor is required')),
-{{ ... }}
+})
+
+const validate = (state: any) => {
+  const result = safeParse(Schema, state)
+  
+  if (!result.success) {
+    // Clear previous errors
+    Object.keys(errors).forEach(key => delete errors[key])
+    
+    // Set new errors
+    result.issues.forEach((issue: any) => {
+      const path = issue.path?.[0]?.key || issue.path || 'root'
+      errors[path] = issue.message
+    })
+    
+    return false
+  }
+  
+  // Clear errors if validation passes
+  Object.keys(errors).forEach(key => delete errors[key])
+  return true
+}
 
 import { expenseCategories, expenseStatuses, paymentMethods } from '~/constants/expense'
 import { format } from 'date-fns'
@@ -265,7 +292,7 @@ const categoryOptions = computed(() => expenseCategories.map(c => ({
   label: c.label,
   value: c.value,
   icon: c.icon
-{{ ... }}
+})))
 
 const statusOptions = computed(() => expenseStatuses.map(s => ({
   label: s.label,
@@ -274,5 +301,3 @@ const statusOptions = computed(() => expenseStatuses.map(s => ({
 })))
 
 </script>
-
-
