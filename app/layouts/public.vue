@@ -57,8 +57,6 @@
             <h4 class="font-semibold text-gray-900 mb-4">Company</h4>
             <ul class="space-y-2 text-sm text-gray-600">
               <li><NuxtLink to="/about" class="hover:text-primary-600">About Us</NuxtLink></li>
-              <li><NuxtLink to="/blog" class="hover:text-primary-600">Blog</NuxtLink></li>
-              <li><NuxtLink to="/careers" class="hover:text-primary-600">Careers</NuxtLink></li>
             </ul>
           </div>
           <div>

@@ -23,7 +23,7 @@ interface ApiResponse<T = any> {
 }
 
 interface PortfolioResponse {
-  id: number | string
+  id: string
   [key: string]: any
 }
 
@@ -132,7 +132,7 @@ async function submitForm() {
     // Create property if user filled in property details (name is required)
     if (form.property.name.trim() && portfolioResponse?.data?.id) {
       try {
-        await api.post('/api/properties', {
+        await api.post(`/portfolios/${portfolioResponse.data.id}/properties`, {
           name: form.property.name.trim(),
           property_type: form.property.type,
           portfolio_id: portfolioResponse.data.id, 

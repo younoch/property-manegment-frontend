@@ -30,7 +30,7 @@ interface LeaseDetails {
 
 const props = defineProps<{
   unitInfo: any | null;
-  tenants: Array<{ id: number; first_name: string; last_name: string }>;
+  tenants: Array<{ id: string; first_name: string; last_name: string }>;
   modelValue: LeaseDetails;
 }>();
 

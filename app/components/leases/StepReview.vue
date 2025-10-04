@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
-  prefill: { portfolioId?: number; propertyId?: number; unitId?: number }
+  prefill: { portfolioId?: string; propertyId?: string; unitId?: string }
   unitInfo: any | null
-  tenants: Array<{ id: number; first_name: string; last_name: string; phone?: string | null }>
+  tenants: Array<{ id: string; first_name: string; last_name: string; phone?: string | null }>
   details: {
     start_date: string
     end_date: string

@@ -2,7 +2,7 @@ import { createProtectedApiClient } from '@/utils/api'
 import { h, resolveComponent } from 'vue'
 import { useApiToast } from '@/composables/useApiToast'
 
-export function useLeaseDetail(leaseId: number) {
+export function useLeaseDetail(leaseId: string) {
   const api = createProtectedApiClient()
   const { success: toastSuccess, error: toastError } = useApiToast()
 
@@ -88,7 +88,7 @@ export function useLeaseDetail(leaseId: number) {
     if (!lease.value) return
     ending.value = true
     try {
-      const pid = lease.value.portfolio_id
+      const pid = lease.value.portfolio_id?.toString()
       const endpoint = pid ? `/portfolios/${pid}/leases/${leaseId}/end` : `/leases/${leaseId}/end`
       await api.post(endpoint, { end_date: endDate })
       toastSuccess('Lease ended')
@@ -131,10 +131,10 @@ export function useLeaseDetail(leaseId: number) {
   }
 
   async function submitPayment(payload: { 
-    portfolio_id: number;
-    lease_id: number;
-    user_id?: number | null;
-    invoice_id?: number | null;
+    portfolio_id: string;
+    lease_id: string;
+    user_id?: string | null;
+    invoice_id?: string | null;
     received_at: string;
     method: string;
     amount: number;

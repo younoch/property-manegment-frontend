@@ -14,7 +14,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <UFormField label="Property" name="property_id" :error="errors.property_id">
             <USelect
-              v-model.number="form.property_id"
+              v-model="form.property_id"
               :items="propertyOptions"
               placeholder="Select Property"
               class="w-full"
@@ -156,7 +156,7 @@ import { createProtectedApiClient } from '../../utils/api'
 import { UNIT_STATUSES } from '../../constants/units'
 import { useApiToast } from '../../composables/useApiToast'
 
-const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: number; propertyId?: number; portfolioOptions?: any[]; propertyOptions?: any[] }>()
+const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: string; propertyId?: string; portfolioOptions?: any[]; propertyOptions?: any[] }>()
 const emit = defineEmits<{
   'update:open': [value: boolean];
   created: [value: any];
@@ -186,7 +186,7 @@ const formatDate = (date: Date) => {
 }
 
 interface ExpenseFormData {
-  property_id: number;
+  property_id: string;
   amount: number;
   category: string;
   date_incurred: string;
@@ -201,7 +201,7 @@ interface ExpenseFormData {
 }
 
 const form = reactive<ExpenseFormData>({
-  property_id: props.propertyId ?? 0,
+  property_id: props.propertyId?.toString() ?? '',
   amount: 0,
   category: '',
   date_incurred: formatDate(new Date()), // Initialize with formatted date string
@@ -248,97 +248,13 @@ watch(() => props.propertyId, (id) => {
 const errors = reactive<Record<string, string | undefined>>({})
 
 const Schema = object({
-  property_id: number(),
-  amount: pipe(number(), minValue(0.01, 'Amount must be greater than 0')),
+  property_id: pipe(string(), minLength(1, 'Please select a property')),
   category: pipe(string(), minLength(1, 'Category is required')),
   date_incurred: pipe(string(), minLength(1, 'Date is required')), // Will be converted to Date object in the component
   status: string(),
   description: pipe(string(), minLength(1, 'Description is required')),
   vendor: pipe(string(), minLength(1, 'Vendor is required')),
-  payment_method: pipe(string(), minLength(1, 'Payment method is required')),
-  receipt_url: pipe(string(), url('Please enter a valid URL')),
-  tax_amount: number(),
-  tax_rate: number(),
-  notes: string()
-})
-
-const validate = (state: any) => {
-  const result = safeParse(Schema, state)
-  if (result.success) {
-    Object.keys(errors).forEach((k) => delete errors[k])
-    return []
-  }
-  Object.keys(errors).forEach((k) => delete errors[k])
-  result.issues.forEach((issue: any) => {
-    const path = Array.isArray(issue.path) && issue.path.length > 0 ? issue.path[0]?.key : undefined
-    if (path && typeof path === 'string') errors[path] = issue.message
-  })
-  return result.issues
-}
-
-const resetForm = () => {
-  form.property_id = props.propertyId ?? 0
-  form.amount = 0
-  form.category = ''
-  form.date_incurred = formatDate(new Date())
-  form.status = 'pending'
-  form.description = ''
-  form.vendor = ''
-  form.payment_method = ''
-  form.receipt_url = ''
-  form.tax_amount = 0
-  form.tax_rate = 0
-  form.notes = ''
-}
-
-const onClose = () => {
-  isOpen.value = false
-  resetForm()
-}
-
-const onSubmit = async () => {
-  const validation = validate(form)
-  if (validation.length) return
-  
-  submitting.value = true
-  try {
-    // Ensure date_incurred is a string in YYYY-MM-DD format
-    let formattedDate = ''
-    if (form.date_incurred) {
-      const date = new Date(form.date_incurred)
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      formattedDate = `${year}-${month}-${day}`
-    }
-  
-    const payload = {
-      ...form,
-      date_incurred: formattedDate,
-      tax_amount: Number(form.tax_amount) || 0,
-      tax_rate: Number(form.tax_rate) || 0,
-      amount: Number(form.amount)
-    }
-
-    if (isEditing.value && props.model?.id) {
-      const propertyId = form.property_id
-      const response = await api.patch<any>(`/properties/${propertyId}/expenses/${props.model.id}`, payload)
-      emit('updated', response?.data ?? { ...form, id: props.model.id })
-      toastSuccess('Expense updated successfully')
-    } else {
-      const propertyId = form.property_id
-      const response = await api.post<any>(`/properties/${propertyId}/expenses`, payload)
-      emit('created', response?.data ?? { ...form, id: response?.data?.id })
-      toastSuccess('Expense created successfully')
-    }
-    
-    isOpen.value = false
-  } catch (err: any) {
-    // Error toast handled by api client
-  } finally {
-    submitting.value = false
-  }
-}
+{{ ... }}
 
 import { expenseCategories, expenseStatuses, paymentMethods } from '~/constants/expense'
 import { format } from 'date-fns'
@@ -349,7 +265,7 @@ const categoryOptions = computed(() => expenseCategories.map(c => ({
   label: c.label,
   value: c.value,
   icon: c.icon
-})))
+{{ ... }}
 
 const statusOptions = computed(() => expenseStatuses.map(s => ({
   label: s.label,

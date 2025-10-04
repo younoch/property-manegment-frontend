@@ -97,17 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  safeParse,
-  object,
-  string,
-  number,
-  minLength,
-  maxLength,
-  optional,
-  nullable,
-  pipe,
-} from "valibot";
+import { safeParse, object, string, number, maxLength, minLength, optional, nullable, pipe } from "valibot";
 import { createProtectedApiClient } from "../../utils/api";
 import { useApiToast } from "../../composables/useApiToast";
 import { PROPERTY_TYPES } from "../../constants/property";
@@ -115,19 +105,25 @@ import type {
   AddPropertyPayload,
   CreatedProperty,
 } from "../../../types/properties";
-const props = defineProps<{ open: boolean; selectedPortfolioId?: number; model?: Partial<CreatedProperty> | null; view?: boolean }>();
+
+const props = defineProps<{
+  open: boolean;
+  selectedPortfolioId?: string;
+  model?: Partial<CreatedProperty> | null;
+  view?: boolean;
+}>();
 
 const emit = defineEmits<{
-  'update:open': [value: boolean];
-  created: [value: CreatedProperty];
-  updated: [value: CreatedProperty];
-}>();
+  (e: 'update:open', value: boolean): void;
+  (e: 'created', value: CreatedProperty): void;
+  (e: 'updated', value: CreatedProperty): void;
+}>();{{ ... }}
 
 const isOpen = computed({
   get: () => props.open,
-  set: (v: boolean) => emit('update:open', v)
+  set: (value: boolean) => emit('update:open', value)
 });
-
+{{ ... }}
 const submitting = ref(false);
 const api = createProtectedApiClient();
 const { success: toastSuccess, error: toastError } = useApiToast();
@@ -139,7 +135,7 @@ const propertyTypeOptions = PROPERTY_TYPES;
 
 // Sync portfolio_id with parent selection immediately and on change
 watch(() => props.selectedPortfolioId, (id) => {
-  if (typeof id === 'number' && id > 0) {
+  if (id && id.length > 0) {
     form.portfolio_id = id
   }
 }, { immediate: true })
@@ -147,12 +143,12 @@ watch(() => props.selectedPortfolioId, (id) => {
 // Computed effective portfolio id (parent or local)
 const effectivePortfolioId = computed(() => {
   const fromProp = props.selectedPortfolioId
-  if (typeof fromProp === 'number' && fromProp > 0) return fromProp
+  if (fromProp && fromProp.length > 0) return fromProp
   return form.portfolio_id
 })
 
 const form = reactive<AddPropertyPayload>({
-  portfolio_id: 0,
+  portfolio_id: '', // Will be set from props or form
   name: "",
   address_line1: "",
   address_line2: "",
@@ -169,7 +165,7 @@ const errors = reactive<Record<string, string | undefined>>({});
 // Geocoding removed for simplified form
 
 const Schema = object({
-  portfolio_id: number(),
+  portfolio_id: pipe(string(), minLength(1, 'Portfolio is required')),
   name: pipe(string(), minLength(2, "Name must be at least 2 characters")),
   address_line1: pipe(
     string(),
@@ -222,7 +218,7 @@ const validate = (state: AddPropertyPayload) => {
 };
 
 const resetForm = () => {
-  form.portfolio_id = 0;
+  form.portfolio_id = props.selectedPortfolioId || '';
   form.name = "";
   form.address_line1 = "";
   form.address_line2 = "";
@@ -256,7 +252,7 @@ watch(
         form.zip_code = String(props.model.zip_code || '')
         form.country = String(props.model.country || 'USA')
         form.property_type = String(props.model.property_type || 'apartment')
-        form.portfolio_id = Number(props.model.portfolio_id || 0)
+        form.portfolio_id = String(props.model.portfolio_id || '')
       }
     }
   }
@@ -280,7 +276,14 @@ const onSubmit = async () => {
       // Apply default coordinates for creation, hidden from the form
       if (typeof payload.latitude !== 'number') payload.latitude = 44.5
       if (typeof payload.longitude !== 'number') payload.longitude = -89.5
-      const response = await api.post<any>(`/portfolios/${effectivePortfolioId.value}/properties`, payload)
+      
+      // Ensure portfolio_id is a string
+      const portfolioId = String(effectivePortfolioId.value || '')
+      if (!portfolioId) {
+        throw new Error('Portfolio ID is required')
+      }
+      
+      const response = await api.post<any>(`/portfolios/${portfolioId}/properties`, payload)
       toastSuccess(response?.message || 'Property created')
       emit('created', response?.data ?? { ...payload })
     }

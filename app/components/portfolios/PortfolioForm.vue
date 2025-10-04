@@ -75,15 +75,15 @@ interface TimezoneOption {
 
 interface AddPortfolioPayload {
   name: string
-  landlord_id: number
+  landlord_id: string
   subscription_plan: string
   provider_customer_id?: string
   timezone: string
 }
 interface CreatedPortfolio {
-  id: number | string
+  id: string
   name: string
-  landlord_id: number | string
+  landlord_id: string
   subscription_plan: string
   provider_customer_id?: string
   timezone: string
@@ -198,18 +198,15 @@ const onSubmit = async (event: Event) => {
       timezone: form.timezone
     }
     
-    const landlordIdRaw = user.value?.id
-    const landlordIdNumber = typeof landlordIdRaw === 'string' 
-      ? Number(landlordIdRaw) 
-      : (landlordIdRaw as number | undefined)
+    const landlordId = user.value?.id
     
-    if (!landlordIdNumber) {
+    if (!landlordId) {
       throw new Error('User ID not found')
     }
 
     const payload: AddPortfolioPayload = {
       ...formData,
-      landlord_id: landlordIdNumber
+      landlord_id: landlordId.toString()
     }
 
     const response = await api.post<CreatedPortfolio>('/portfolios', payload)
@@ -217,7 +214,7 @@ const onSubmit = async (event: Event) => {
     
     // Create a complete portfolio object with the response data
     const createdPortfolio: CreatedPortfolio = {
-      id: response.data?.id || 0, // Default to 0 if ID is not provided
+      id: response.data?.id?.toString() || '',
       name: payload.name,
       landlord_id: payload.landlord_id,
       subscription_plan: payload.subscription_plan,

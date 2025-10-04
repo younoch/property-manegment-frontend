@@ -228,7 +228,7 @@ function onFormOpenChange(v: boolean) {
 // Update portfolio
 const isUpdating = ref(false)
 
-async function updatePortfolio(updatedData: Partial<PortfolioRow> & { id?: number }) {
+async function updatePortfolio(updatedData: Partial<PortfolioRow> & { id?: string }) {
   if (!updatedData.id) {
     console.error('Cannot update portfolio: No ID provided')
     return

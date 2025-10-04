@@ -59,8 +59,8 @@ import { ref, reactive, computed, watch } from 'vue'
 const props = defineProps<{
   open: boolean
   model?: any | null
-  portfolioId?: number
-  portfolioOptions: Array<{ label: string; value: number }>
+  portfolioId?: string
+  portfolioOptions: Array<{ label: string; value: string }>
   view?: boolean
 }>()
 
@@ -68,14 +68,14 @@ const emit = defineEmits<{
   'update:open': [value: boolean]
   created: [tenant: any]
   updated: [tenant: any]
-  deleted: [id: number]
+  deleted: [id: string]
 }>()
 
 const api = createProtectedApiClient()
 const pending = ref(false)
 
 const Schema = object({
-  portfolio_id: number(),
+  portfolio_id: pipe(string(), minLength(1, 'Portfolio is required')),
   first_name: pipe(string(), minLength(1, 'First name is required')),
   last_name: pipe(string(), minLength(1, 'Last name is required')),
   email: pipe(string(), email('Please enter a valid email address')),
@@ -84,7 +84,7 @@ const Schema = object({
 })
 
 const form = reactive({
-  portfolio_id: 0,
+  portfolio_id: '',
   first_name: '',
   last_name: '',
   email: '',
@@ -99,29 +99,24 @@ const isOpen = computed({
 
 watch(() => props.open, (open) => {
   if (open) {
-    resetForm()
   }
 })
 
 watch(() => props.model, (model) => {
   if (model) {
-    form.portfolio_id = Number(model.portfolio_id || props.portfolioId || 0)
-    form.first_name = model.first_name || ''
-    form.last_name = model.last_name || ''
-    form.email = model.email || ''
-    form.phone = model.phone || ''
-    form.is_active = model.is_active ?? true
+    form.portfolio_id = props.model.portfolio_id?.toString() || ''
+    form.first_name = props.model.first_name || ''
+    form.last_name = props.model.last_name || ''
+    form.email = props.model.email || ''
+    form.phone = props.model.phone || ''
+    form.is_active = props.model.is_active !== false
+  } else {
+    form.portfolio_id = props.portfolioId?.toString() || ''
   }
 })
 
-watch(() => props.portfolioId, (id) => {
-  if (id) {
-    form.portfolio_id = Number(id)
-  }
-})
-
-function resetForm() {
-  form.portfolio_id = Number(props.portfolioId || 0)
+const resetForm = () => {
+  form.portfolio_id = props.portfolioId?.toString() || ''
   form.first_name = ''
   form.last_name = ''
   form.email = ''
@@ -150,7 +145,7 @@ async function onSubmit() {
     pending.value = true
     
     const payload = {
-      portfolio_id: Number(form.portfolio_id),
+      portfolio_id: form.portfolio_id,
       first_name: form.first_name,
       last_name: form.last_name,
       email: form.email,

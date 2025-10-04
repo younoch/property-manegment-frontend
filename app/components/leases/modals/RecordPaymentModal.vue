@@ -114,7 +114,7 @@ interface PaymentFormState {
   received_at: string
   reference: string
   notes: string
-  lease_id: number
+  lease_id: string
   [key: string]: any // Add index signature to handle dynamic properties
 }
 
@@ -133,8 +133,8 @@ const props = withDefaults(defineProps<{
   invoice: Invoice
   totalAmount?: number
   paidAmount?: number
-  leaseId: number
-  portfolioId?: number
+  leaseId: string
+  portfolioId?: string
 }>(), {
   totalAmount: undefined,
   paidAmount: 0,

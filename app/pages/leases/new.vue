@@ -102,13 +102,13 @@ onMounted(loadUnitContext)
 const canLeaseThisUnit = computed(() => unitInfo.value?.status === 'vacant')
 
 /** Tenants */
-type Tenant = { id: number; first_name: string; last_name: string; email?: string | null; phone?: string | null }
+type Tenant = { id: string; first_name: string; last_name: string; email?: string | null; phone?: string | null }
 const selectedTenants = ref<Tenant[]>([])
 
 /** Draft + activate */
 const creating = ref(false)
 const activating = ref(false)
-const draftLeaseId = ref<number | null>(null)
+const draftLeaseId = ref<string | null>(null)
 const showCelebration = ref(false)
 
 if (route.query.onboarding) {
@@ -161,7 +161,7 @@ async function createDraftLeaseIfNeeded() {
   }
 }
 
-async function attachTenants(leaseId: number) {
+async function attachTenants(leaseId: string) {
   if (!selectedTenants.value.length) return
   const tenant_ids = selectedTenants.value.map(t => t.id)
   await api.post<any>(`/leases/${leaseId}/tenants`, { tenant_ids })

@@ -214,23 +214,31 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: ['auth'] })
-
 import { createProtectedApiClient } from '~/utils/api'
 import { useAuth } from '~/composables/useAuth'
 import { useApiToast } from '~/composables/useApiToast'
 
-const api = createProtectedApiClient()
-const { checkAuth } = useAuth()
-await checkAuth()
+definePageMeta({ middleware: ['auth'] })
 
-const { success: toastSuccess, error: toastError } = useApiToast()
+// Auth will be checked in onMounted
+
+// Define emits
+const emit = defineEmits<{
+  (e: 'update:open', value: boolean): void
+  (e: 'created', value: any): void
+  (e: 'updated', value: any): void
+}>()
+
+// Component state
 const route = useRoute()
-const invoiceId = Number(route.params.id)
+const invoiceId = String(route.params.id)
+const api = createProtectedApiClient()
+const { success: toastSuccess, error: toastError } = useApiToast()
 
-type ItemRow = {
-  id?: number
+interface ItemRow {
+  id?: string
   name: string
+  description?: string
   qty: number
   unit_price: number
   amount: number
@@ -238,9 +246,9 @@ type ItemRow = {
 }
 
 type InvoiceVM = {
-  id: number
-  portfolio_id: number
-  lease_id: number
+  id: string
+  portfolio_id: string
+  lease_id: string
   issue_date: string
   due_date: string
   status: 'open'|'paid'|'overdue'|'void'
@@ -251,12 +259,19 @@ type InvoiceVM = {
   updated_at?: string
 }
 
+// Refs and state
 const raw = ref<any>(null)                 // last-loaded server response
-const lease = ref<any>(null)                // lease data
+const lease = ref<any>(null)               // lease data
+const loading = ref(false)
+const saving = ref(false)
+const sending = ref(false)
+const editMode = ref(false)
+
+// Form model
 const model = reactive<InvoiceVM>({
   id: invoiceId,
-  portfolio_id: 0,
-  lease_id: 0,
+  portfolio_id: '',
+  lease_id: '',
   issue_date: '',
   due_date: '',
   status: 'open',
@@ -271,7 +286,7 @@ const saving = ref(false)
 const sending = ref(false)
 const editMode = ref(false)
 
-const canEdit = computed(() => model.status === 'draft' || model.status === 'open')
+const canEdit = computed(() => model.status === 'open')
 const badgeColor = computed(() =>
   model.status === 'paid' ? 'primary'
   : model.status === 'overdue' ? 'warning'
@@ -344,15 +359,17 @@ async function loadInvoice() {
   loading.value = true
   try {
     // Load invoice data
-    const res = await api.get(`/invoices/${invoiceId}`)
-    const data = res?.data?.data ?? res?.data ?? res
-    snapshotFromServer(data)
+    const res = await api.get<{ data: any } | any>(`/invoices/${invoiceId}`)
+    const data = (res as any)?.data?.data ?? (res as any)?.data ?? res
+    if (data) {
+      snapshotFromServer(data)
+    }
     
     // Load lease data if lease_id exists
     if (data.lease_id) {
       try {
-        const leaseRes = await api.get(`/leases/${data.lease_id}`)
-        lease.value = leaseRes?.data?.data ?? leaseRes?.data ?? leaseRes
+        const leaseRes = await api.get<{ data: any } | any>(`/leases/${data.lease_id}`)
+        lease.value = (leaseRes as any)?.data?.data ?? (leaseRes as any)?.data ?? leaseRes
       } catch (e: any) {
         console.error('Failed to load lease data:', e)
         // Don't show error to user for lease data as it's secondary
@@ -409,10 +426,13 @@ async function save() {
       // optionally: updated_at for optimistic locking
       // updated_at: raw.value?.updated_at
     }
-    const res = await api.patch(`/invoices/${invoiceId}`, payload)
-    const data = res?.data?.data ?? res?.data ?? res
-    toastSuccess('Invoice saved')
-    snapshotFromServer(data)
+    const res = await api.patch<{ data: InvoiceVM } | any>(`/invoices/${invoiceId}`, payload)
+    const data = res.data?.data ?? res.data ?? res
+    if (data) {
+      snapshotFromServer(data)
+      toastSuccess('Invoice updated successfully')
+      emit('updated', data)
+    }
     editMode.value = false
   } catch (e: any) {
     toastError(e?.message || 'Failed to save invoice')
@@ -425,6 +445,7 @@ function downloadPdf() {
   window.print()
 }
 
+// Functions
 const sendInvoice = async () => {
   if (!confirm('Are you sure you want to send this invoice to the tenant?')) {
     return
@@ -460,7 +481,16 @@ const sendInvoice = async () => {
   }
 }
 
-onMounted(loadInvoice)
+onMounted(async () => {
+  // Check auth first
+  const { checkAuth } = useAuth()
+  try {
+    await checkAuth()
+    await loadInvoice()
+  } catch (error) {
+    console.error('Authentication error:', error)
+  }
+})
 </script>
 
 <style scoped>

@@ -50,7 +50,7 @@ export const useNotification = () => {
     })
   }
   
-  const remove = (id: number) => {
+  const remove = (id: string | number) => {
     return toast.remove(id)
   }
   

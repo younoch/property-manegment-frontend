@@ -33,7 +33,7 @@
     <!-- Filters Section -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
       <USelect
-        v-model.number="selectedPortfolioId"
+        v-model="selectedPortfolioId"
         :items="portfolioOptions"
         placeholder="Select Portfolio"
         size="sm"
@@ -42,7 +42,7 @@
       />
 
       <USelect
-        v-model.number="selectedPropertyId"
+        v-model="selectedPropertyId"
         :items="propertyOptions"
         placeholder="Select Property"
         size="sm"
@@ -52,7 +52,7 @@
       />
       
       <USelect
-        v-model.number="selectedUnitId"
+        v-model="selectedUnitId"
         :items="unitOptions"
         placeholder="Select Unit"
         size="sm"
@@ -161,128 +161,44 @@ const columns: TableColumn<any>[] = [
 const api = createProtectedApiClient()
 const { user, checkAuth } = useAuth()
 await checkAuth()
-
 const landlordId = computed(() => {
   const id = user.value?.id
-  return typeof id === 'string' ? Number(id) : id
+  return typeof id === 'string' ? id : String(id)
 })
 
-const selectedPortfolioId = ref<number | undefined>(undefined)
-const selectedUnitId = ref<number | undefined>(undefined)
-const selectedPropertyId = ref<number | undefined>(undefined)
+const selectedPortfolioId = ref<string | undefined>(undefined)
+const selectedPropertyId = ref<string | undefined>(undefined)
+const selectedUnitId = ref<string | undefined>(undefined)
 
 // Load portfolios with units
-const { data: portfoliosResponse, pending, error } = await useAsyncData(
-  'landlord-portfolios-for-leases',
-  async () => {
-    if (!landlordId.value) return []
-    const endpoint = `/portfolios/landlord/${landlordId.value}`
-    const res = await api.get<any>(endpoint)
-    return res
-  },
-  {
-    watch: [landlordId],
-    server: false,
-    immediate: true,
-    transform: (res: any) => {
-      const payload = res?.data ?? res
-      const list = Array.isArray(payload) ? payload : (payload?.data ?? [])
-      return list
-    }
-  }
-)
-
-const portfolios = computed(() => Array.isArray(portfoliosResponse.value) ? portfoliosResponse.value : [])
-const portfolioOptions = computed(() => (portfolios.value || []).map((p: any) => ({
-  label: p?.name ?? `Portfolio #${p?.id}`,
-  value: typeof p?.id === 'string' ? Number(p.id) : (p?.id ?? 0)
-})))
-
-watch(portfolios, (list) => {
-  const options = (list || []).map((p: any) => ({
-    id: typeof p?.id === 'string' ? Number(p.id) : p?.id,
-    properties: p?.properties || []
-  })).filter((p: any) => Number.isFinite(p.id))
-  
-  // Auto-select first portfolio if none selected
-  if ((!selectedPortfolioId.value || !options.some((p: any) => p.id === selectedPortfolioId.value)) && options.length > 0) {
-    const firstPortfolio = options[0]
-    selectedPortfolioId.value = firstPortfolio.id
-    
-    // Auto-select first property if available
-    if (firstPortfolio.properties?.length > 0) {
-      const firstProperty = firstPortfolio.properties[0]
-      selectedPropertyId.value = typeof firstProperty.id === 'string' ? Number(firstProperty.id) : firstProperty.id
-      
-      // Auto-select first unit if available
-      if (firstProperty.units?.length > 0) {
-        const firstUnit = firstProperty.units[0]
-        selectedUnitId.value = typeof firstUnit.id === 'string' ? Number(firstUnit.id) : firstUnit.id
-      }
-    }
-  }
-}, { immediate: true, deep: true })
-
-const propertyOptions = computed(() => {
-  const selected = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value)
-  const properties = Array.isArray(selected?.properties) ? selected.properties : []
-  return properties.map((p: any) => ({
-    label: p?.name ? `${p.name} (#${p.id})` : `Property #${p.id}`,
-    value: typeof p?.id === 'string' ? Number(p.id) : (p?.id ?? 0)
-  }))
-})
-
-const unitOptions = computed(() => {
-  const portfolio = portfolios.value.find((p: any) => p?.id === selectedPortfolioId.value)
-  const properties = Array.isArray(portfolio?.properties) ? portfolio.properties : []
-  const property = properties.find((pr: any) => (typeof pr?.id === 'string' ? Number(pr.id) : pr?.id) === selectedPropertyId.value)
-  const units = Array.isArray(property?.units) ? property.units : []
-  return units.map((u: any) => ({
-    label: u?.label ? `${u.label} (#${u.id})` : `Unit #${u.id}`,
-    value: typeof u?.id === 'string' ? Number(u.id) : (u?.id ?? 0)
-  }))
-})
-
-// Leases list
-const leases = ref<any[]>([])
-const pendingLeases = ref(false)
-
-async function loadLeases() {
-  leases.value = []
-  const pid = selectedPropertyId.value
-  const uid = selectedUnitId.value
-  if (!pid || !uid) return
-  try {
-    pendingLeases.value = true
-    const res = await api.get<any>(`/units/${uid}/leases`)
-    const list = Array.isArray(res?.data) ? res.data : (res?.data?.data ?? [])
-    leases.value = list || []
-  } catch (e) {
-  } finally {
-    pendingLeases.value = false
-  }
-}
-
 interface Portfolio {
-  id: number | string;
-  name?: string;
+  id: string;
+  name: string;
   properties?: Array<{
-    id: number | string;
-    name?: string;
+    id: string;
+    name: string;
     units?: Array<{
-      id: number | string;
-      label?: string;
+      id: string;
+      label: string;
     }>;
   }>;
 }
 
-const findPortfolioById = (id: number | string | undefined): Portfolio | undefined => {
+const { data: portfoliosResponse, pending, error } = await useAsyncData<Portfolio[]>(
+  'landlord-portfolios-for-leases',
+  async () => {
+    const { data } = await api.get('/portfolios/landlord');
+    return data;
+  }
+);
+
+function findPortfolioById(id: string | undefined): Portfolio | undefined {
   return portfolios.value.find((p: Portfolio) => {
-    const pid = typeof p?.id === 'string' ? Number(p.id) : p?.id;
-    const searchId = typeof id === 'string' ? Number(id) : id;
+    const pid = typeof p?.id === 'string' ? p.id : String(p.id);
+    const searchId = typeof id === 'string' ? id : String(id);
     return pid === searchId;
   });
-};
+{{ ... }}
 
 watch(selectedPortfolioId, async (id, oldId) => {
   if (id !== oldId) {
@@ -293,19 +209,12 @@ watch(selectedPortfolioId, async (id, oldId) => {
     if (id) {
       const portfolio = findPortfolioById(id);
       const firstProperty = portfolio?.properties?.[0];
-      if (firstProperty?.id !== undefined) {
-        selectedPropertyId.value = typeof firstProperty.id === 'string' 
-          ? Number(firstProperty.id) 
-          : firstProperty.id;
-      } else {
-        selectedPropertyId.value = undefined;
-      }
+      selectedPropertyId.value = firstProperty?.id?.toString();
     }
   }
   await loadLeases();
 }, { immediate: true });
 
-watch(selectedPropertyId, (id, oldId) => {
   if (id === oldId) return;
   
   selectedUnitId.value = undefined;
@@ -313,36 +222,34 @@ watch(selectedPropertyId, (id, oldId) => {
   // Auto-select first unit when property changes
   if (id && selectedPortfolioId.value) {
     const portfolio = findPortfolioById(selectedPortfolioId.value);
-    const property = portfolio?.properties?.find((p: any) => {
-      const pid = typeof p?.id === 'string' ? Number(p.id) : p?.id;
-      const searchId = typeof id === 'string' ? Number(id) : id;
-      return pid === searchId;
-    });
-    
+    const property = portfolio?.properties?.find((p: any) => p?.id?.toString() === id?.toString());
     const firstUnit = property?.units?.[0];
-    if (firstUnit?.id !== undefined) {
-      selectedUnitId.value = typeof firstUnit.id === 'string' 
-        ? Number(firstUnit.id) 
-        : firstUnit.id;
-    } else {
-      selectedUnitId.value = undefined;
-    }
+    selectedUnitId.value = firstUnit?.id?.toString();
   }
 }, { immediate: true });
 
 // Watch for unit changes and load leases
-watch(selectedUnitId, async (newId, oldId) => {
+{{ ... }}
+watch(selectedUnitId, async (newId: string | undefined, oldId: string | undefined) => {
   if (newId !== oldId && newId) {
     await loadLeases();
   }
 });
 
-watch(selectedUnitId, async () => {
-  await loadLeases()
-})
+const rowsArray = computed(() => leases.value || []);
+const portfolioOptions = computed(() => (portfolios.value || []).map((p: Portfolio) => ({
+  value: p.id,
+  label: p.name
+})));
 
-const rowsArray = computed(() => leases.value || [])
-const loading = computed(() => pending.value || pendingLeases.value)
+// Expose properties to template
+defineExpose({
+  portfolioOptions,
+  propertyOptions,
+  unitOptions,
+  loading,
+{{ ... }}
+});
 
 // Handle initial load and query parameters
 onMounted(async () => {
@@ -351,13 +258,13 @@ onMounted(async () => {
   
   // If we have query params, set the selected values
   if (query.portfolioId) {
-    selectedPortfolioId.value = Number(query.portfolioId)
+    selectedPortfolioId.value = String(query.portfolioId)
   }
   if (query.propertyId) {
-    selectedPropertyId.value = Number(query.propertyId)
+    selectedPropertyId.value = String(query.propertyId)
   }
   if (query.unitId) {
-    selectedUnitId.value = Number(query.unitId)
+    selectedUnitId.value = String(query.unitId)
   }
   
   // Wait for the next tick to ensure all refs are updated

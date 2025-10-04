@@ -305,7 +305,7 @@ const onUpdated = (updated: any) => {
   if (idx >= 0) tenants.value[idx] = { ...updated }
 }
 
-const onDeleted = (id: number) => {
+const onDeleted = (id: string) => {
   const idx = tenants.value.findIndex((t: any) => t?.id === id)
   if (idx >= 0) tenants.value.splice(idx, 1)
 }

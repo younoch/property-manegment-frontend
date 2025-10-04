@@ -15,7 +15,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Portfolio" name="portfolio_id" :error="errors.portfolio_id">
               <USelect
-                v-model.number="form.portfolio_id"
+                v-model="form.portfolio_id"
                 :items="portfolioOptions"
                 placeholder="Select Portfolio"
                 class="w-full"
@@ -25,7 +25,7 @@
 
             <UFormField label="Property" name="property_id" :error="errors.property_id">
               <USelect
-                v-model.number="form.property_id"
+                v-model="form.property_id"
                 :items="propertyOptions"
                 placeholder="Select Property"
                 class="w-full"
@@ -80,7 +80,7 @@ import { createProtectedApiClient } from '../../utils/api'
 import { UNIT_STATUSES } from '../../constants/units'
 import { useApiToast } from '../../composables/useApiToast'
 
-const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: number; propertyId?: number; portfolioOptions?: any[]; propertyOptions?: any[] }>()
+const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: string; propertyId?: string; portfolioOptions?: any[]; propertyOptions?: any[] }>()
 const emit = defineEmits<{
   'update:open': [value: boolean];
   created: [value: any];
@@ -102,21 +102,21 @@ const submitting = ref(false)
 const api = createProtectedApiClient()
 
 const form = reactive({
-  portfolio_id: props.portfolioId ?? 0,
-  property_id: props.propertyId ?? 0,
+  portfolio_id: props.portfolioId ? String(props.portfolioId) : '',
+  property_id: props.propertyId ? String(props.propertyId) : '',
   label: '',
   bedrooms: 0,
   bathrooms: 0,
   sqft: 0,
-  market_rent: 0,
+  market_rent: 0
 })
 watch(
   () => props.open,
   (newValue) => {
     if (newValue) {
       if (props.model && props.model.id) {
-        form.portfolio_id = props.model.portfolio_id ?? props.portfolioId ?? 0
-        form.property_id = props.model.property_id ?? props.propertyId ?? 0
+        form.portfolio_id = String(props.model.portfolio_id ?? props.portfolioId ?? '')
+        form.property_id = String(props.model.property_id ?? props.propertyId ?? '')
         form.label = String(props.model.label ?? '')
         form.bedrooms = Number(props.model.bedrooms ?? 0)
         form.bathrooms = Number(props.model.bathrooms ?? 0)
@@ -130,18 +130,18 @@ watch(
 )
 
 watch(() => props.portfolioId, (id) => {
-  if (typeof id === 'number' && id > 0) form.portfolio_id = id
+  if (id) form.portfolio_id = String(id)
 }, { immediate: true })
 
 watch(() => props.propertyId, (id) => {
-  if (typeof id === 'number' && id > 0) form.property_id = id
+  if (id) form.property_id = String(id)
 }, { immediate: true })
 
 const errors = reactive<Record<string, string | undefined>>({})
 
 const Schema = object({
-  portfolio_id: number(),
-  property_id: number(),
+  portfolio_id: pipe(string(), minLength(1, 'Portfolio is required')),
+  property_id: pipe(string(), minLength(1, 'Property is required')),
   label: pipe(string(), minLength(1)),
   bedrooms: number(),
   bathrooms: number(),
@@ -164,8 +164,8 @@ const validate = (state: any) => {
 }
 
 const resetForm = () => {
-  form.portfolio_id = props.portfolioId ?? 0
-  form.property_id = props.propertyId ?? 0
+  form.portfolio_id = props.portfolioId ? String(props.portfolioId) : ''
+  form.property_id = props.propertyId ? String(props.propertyId) : ''
   form.label = ''
   form.bedrooms = 0
   form.bathrooms = 0
