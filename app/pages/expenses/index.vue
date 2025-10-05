@@ -300,21 +300,16 @@ const filterOptions = computed(() => ({
 const units = ref<any[]>([])
 const pendingUnits = ref(false)
 
-const landlordId = computed(() => {
-  const id = user.value?.id
-  return typeof id === 'string' ? Number(id) : id
-})
-
 const { data: portfoliosResponse, pending, error } = await useAsyncData(
   'landlord-portfolios-for-units',
   async () => {
-    if (!landlordId.value) return []
-    const endpoint = `/portfolios/landlord/${landlordId.value}`
+    if (!user.value?.id) return []
+    const endpoint = `/portfolios/landlord/${user.value.id}`
     const res = await api.get<any>(endpoint)
     return res
   },
   {
-    watch: [landlordId],
+    watch: [user],
     server: false,
     immediate: true,
     transform: (res: any) => {

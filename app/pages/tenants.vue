@@ -37,7 +37,7 @@
 
       <!-- Portfolio Filter/Selector -->
       <USelect
-        v-model.number="selectedPortfolioId"
+        v-model.string="selectedPortfolioId"
         :items="portfolioOptions"
         placeholder="All Portfolios"
         class="min-w-[220px]"

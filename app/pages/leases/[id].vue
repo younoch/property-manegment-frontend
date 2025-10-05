@@ -126,7 +126,7 @@ definePageMeta({ middleware: ['auth'] })
 
 const route = useRoute()
 
-const leaseId = Number(route.params.id)
+const leaseId = String(route.params.id)
 
 const {
   // state
