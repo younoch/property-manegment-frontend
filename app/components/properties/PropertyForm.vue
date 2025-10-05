@@ -115,7 +115,7 @@ import type {
   AddPropertyPayload,
   CreatedProperty,
 } from "../../../types/properties";
-const props = defineProps<{ open: boolean; selectedPortfolioId?: number; model?: Partial<CreatedProperty> | null; view?: boolean }>();
+const props = defineProps<{ open: boolean; selectedPortfolioId?: string; model?: Partial<CreatedProperty> | null; view?: boolean }>();
 
 const emit = defineEmits<{
   'update:open': [value: boolean];
@@ -139,20 +139,20 @@ const propertyTypeOptions = PROPERTY_TYPES;
 
 // Sync portfolio_id with parent selection immediately and on change
 watch(() => props.selectedPortfolioId, (id) => {
-  if (typeof id === 'number' && id > 0) {
+  if (typeof id === 'string') {
     form.portfolio_id = id
   }
 }, { immediate: true })
 
 // Computed effective portfolio id (parent or local)
 const effectivePortfolioId = computed(() => {
-  const fromProp = props.selectedPortfolioId
-  if (typeof fromProp === 'number' && fromProp > 0) return fromProp
+  const fromProp = props.selectedPortfolioId 
+  if (typeof fromProp === 'string' && fromProp > 0) return fromProp
   return form.portfolio_id
 })
 
 const form = reactive<AddPropertyPayload>({
-  portfolio_id: 0,
+  portfolio_id: '',
   name: "",
   address_line1: "",
   address_line2: "",
@@ -169,7 +169,7 @@ const errors = reactive<Record<string, string | undefined>>({});
 // Geocoding removed for simplified form
 
 const Schema = object({
-  portfolio_id: number(),
+  portfolio_id: string(),
   name: pipe(string(), minLength(2, "Name must be at least 2 characters")),
   address_line1: pipe(
     string(),
@@ -222,7 +222,7 @@ const validate = (state: AddPropertyPayload) => {
 };
 
 const resetForm = () => {
-  form.portfolio_id = 0;
+  form.portfolio_id = '';
   form.name = "";
   form.address_line1 = "";
   form.address_line2 = "";
@@ -256,7 +256,7 @@ watch(
         form.zip_code = String(props.model.zip_code || '')
         form.country = String(props.model.country || 'USA')
         form.property_type = String(props.model.property_type || 'apartment')
-        form.portfolio_id = Number(props.model.portfolio_id || 0)
+        form.portfolio_id = String(props.model.portfolio_id || '')
       }
     }
   }

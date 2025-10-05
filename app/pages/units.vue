@@ -22,14 +22,14 @@
 
     <div class="flex items-center gap-2 px-4 py-3.5 overflow-x-auto">
       <USelect
-        v-model.number="selectedPortfolioId"
+        v-model.string="selectedPortfolioId"
         :items="portfolioOptions"
         placeholder="Select Portfolio"
         class="min-w-[220px]"
       />
 
       <USelect
-        v-model.number="selectedPropertyId"
+        v-model.string="selectedPropertyId"
         :items="propertyOptions"
         placeholder="Filter by Property (optional)"
         class="min-w-[220px]"
@@ -178,11 +178,11 @@ const isViewing = ref(false)
 const isDeleteOpen = ref(false)
 const isFormOpen = ref(false)
 const formModel = ref<any | null>(null)
-const deletingId = ref<number | null>(null)
+const deletingId = ref<string | null>(null)
 
 // Selection State
-const selectedPortfolioId = ref<number | undefined>(undefined)
-const selectedPropertyId = ref<number | undefined>(undefined)
+const selectedPortfolioId = ref<string | undefined>(undefined)
+const selectedPropertyId = ref<string | undefined>(undefined)
 
 // Data State
 const units = ref<any[]>([])
@@ -191,10 +191,6 @@ const pendingUnits = ref(false)
 // ======================
 // 6. Computed Properties
 // ======================
-const landlordId = computed(() => {
-  const id = user.value?.id
-  return typeof id === 'string' ? Number(id) : id
-})
 
 // ======================
 // 7. Data Fetching
@@ -202,13 +198,13 @@ const landlordId = computed(() => {
 const { data: portfoliosResponse, pending, error } = await useAsyncData(
   'landlord-portfolios-for-units',
   async () => {
-    if (!landlordId.value) return []
-    const endpoint = `/portfolios/landlord/${landlordId.value}`
+    if (!user.value?.id) return []
+    const endpoint = `/portfolios/landlord/${user.value.id}`
     const res = await api.get<any>(endpoint)
     return res
   },
   {
-    watch: [landlordId],
+    watch: [user],
     server: false,
     immediate: true,
     transform: (res: any) => {
@@ -246,7 +242,7 @@ const rowsArray = computed(() => {
   const allUnits = units.value || []
   if (selectedPropertyId.value) {
     return allUnits.filter((u: any) => 
-      (typeof u?.property_id === 'string' ? Number(u.property_id) : u?.property_id) === selectedPropertyId.value
+      String(u?.property_id || '') === String(selectedPropertyId.value || '')
     )
   }
   return allUnits
