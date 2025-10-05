@@ -37,7 +37,7 @@
 
       <!-- Parent-level Portfolio Filter/Selector -->
       <USelect
-        v-model.number="selectedPortfolioId"
+        v-model.string="selectedPortfolioId"
         :items="portfolioOptions"
         placeholder="All Portfolios"
         class="min-w-[220px]"
@@ -153,10 +153,6 @@ const columns: TableColumn<any>[] = [
 
 const api = createProtectedApiClient()
 const { user, checkAuth } = useAuth()
-const landlordId = computed(() => {
-  const id = user.value?.id
-  return typeof id === 'string' ? Number(id) : id
-})
 
 await checkAuth()
 
@@ -166,13 +162,13 @@ const searchQuery = ref('')
 const { data: portfoliosResponse, pending, error } = await useAsyncData(
   'landlord-portfolios',
   async () => {
-    if (!landlordId.value) return []
-    const endpoint = `/portfolios/landlord/${landlordId.value}`
+    if (!user.value?.id) return []
+    const endpoint = `/portfolios/landlord/${user.value.id}`
     const res = await api.get<any>(endpoint)
     return res
   },
   {
-    watch: [landlordId],
+    watch: [user],
     server: false,
     immediate: true,
     transform: (res: any) => {
@@ -198,11 +194,11 @@ const rowsArray = computed(() => {
 // Portfolio options for AddPropertyForm
 const portfolioOptions = computed(() => (portfolios.value || []).map((p: any) => ({
   label: p?.name ?? `Portfolio #${p?.id}`,
-  value: typeof p?.id === 'string' ? Number(p.id) : (p?.id ?? 0)
+  value: p?.id
 })))
-const selectedPortfolioId = ref<number | undefined>(undefined)
+const selectedPortfolioId = ref<string | undefined>(undefined)
 watch(portfolios, (list) => {
-  const options = (list || []).map((p: any) => (typeof p?.id === 'string' ? Number(p.id) : p?.id)).filter((id: any) => Number.isFinite(id))
+  const options = (list || []).map((p: any) => p?.id).filter((id: any) => String(id))
   if ((!selectedPortfolioId.value || !options.includes(selectedPortfolioId.value)) && options.length > 0) {
     selectedPortfolioId.value = options[0]
   }
@@ -212,7 +208,7 @@ const isFormOpen = ref(false)
 const formModel = ref<any | null>(null)
 const isViewing = ref(false)
 const isDeleteOpen = ref(false)
-const deletingId = ref<number | string | null>(null)
+const deletingId = ref<string | null>(null)
 const isDeleting = ref(false)
 
 function search() {

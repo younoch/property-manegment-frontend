@@ -11,7 +11,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <UFormField label="Portfolio" name="portfolio_id" :error="errors.portfolio_id" class="sm:col-span-2">
               <USelect
-                v-model.number="form.portfolio_id"
+                v-model.string="form.portfolio_id"
                 :items="portfolioOptions"
                 placeholder="Select Portfolio"
                 :disabled="true"
@@ -59,8 +59,8 @@ import { ref, reactive, computed, watch } from 'vue'
 const props = defineProps<{
   open: boolean
   model?: any | null
-  portfolioId?: number
-  portfolioOptions: Array<{ label: string; value: number }>
+  portfolioId?: string
+  portfolioOptions: Array<{ label: string; value: string }>
   view?: boolean
 }>()
 
@@ -68,14 +68,14 @@ const emit = defineEmits<{
   'update:open': [value: boolean]
   created: [tenant: any]
   updated: [tenant: any]
-  deleted: [id: number]
+  deleted: [id: string]
 }>()
 
 const api = createProtectedApiClient()
 const pending = ref(false)
 
 const Schema = object({
-  portfolio_id: number(),
+  portfolio_id: string(),
   first_name: pipe(string(), minLength(1, 'First name is required')),
   last_name: pipe(string(), minLength(1, 'Last name is required')),
   email: pipe(string(), email('Please enter a valid email address')),
@@ -105,7 +105,7 @@ watch(() => props.open, (open) => {
 
 watch(() => props.model, (model) => {
   if (model) {
-    form.portfolio_id = Number(model.portfolio_id || props.portfolioId || 0)
+    form.portfolio_id = String(model.portfolio_id || props.portfolioId || '')
     form.first_name = model.first_name || ''
     form.last_name = model.last_name || ''
     form.email = model.email || ''
@@ -116,12 +116,12 @@ watch(() => props.model, (model) => {
 
 watch(() => props.portfolioId, (id) => {
   if (id) {
-    form.portfolio_id = Number(id)
+    form.portfolio_id = String(id)
   }
 })
 
 function resetForm() {
-  form.portfolio_id = Number(props.portfolioId || 0)
+  form.portfolio_id = String(props.portfolioId || '')
   form.first_name = ''
   form.last_name = ''
   form.email = ''
@@ -150,7 +150,7 @@ async function onSubmit() {
     pending.value = true
     
     const payload = {
-      portfolio_id: Number(form.portfolio_id),
+      portfolio_id: String(form.portfolio_id),
       first_name: form.first_name,
       last_name: form.last_name,
       email: form.email,
