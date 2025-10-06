@@ -1,5 +1,5 @@
 export interface Expense {
-  id?: string | number
+  id?: string
   dateIncurred: string
   category: string
   amount: number

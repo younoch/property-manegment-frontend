@@ -131,10 +131,10 @@ export function useLeaseDetail(leaseId: number) {
   }
 
   async function submitPayment(payload: { 
-    portfolio_id: number;
-    lease_id: number;
-    user_id?: number | null;
-    invoice_id?: number | null;
+    portfolio_id: string;
+    lease_id: string;
+    user_id?: string | null;
+    invoice_id?: string | null;
     received_at: string;
     method: string;
     amount: number;

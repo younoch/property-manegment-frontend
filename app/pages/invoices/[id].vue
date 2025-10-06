@@ -226,10 +226,10 @@ await checkAuth()
 
 const { success: toastSuccess, error: toastError } = useApiToast()
 const route = useRoute()
-const invoiceId = Number(route.params.id)
+const invoiceId = route.params.id
 
 type ItemRow = {
-  id?: number
+  id?: string
   name: string
   qty: number
   unit_price: number
@@ -238,9 +238,9 @@ type ItemRow = {
 }
 
 type InvoiceVM = {
-  id: number
-  portfolio_id: number
-  lease_id: number
+  id: string
+  portfolio_id: string
+  lease_id: string
   issue_date: string
   due_date: string
   status: 'open'|'paid'|'overdue'|'void'
@@ -255,8 +255,8 @@ const raw = ref<any>(null)                 // last-loaded server response
 const lease = ref<any>(null)                // lease data
 const model = reactive<InvoiceVM>({
   id: invoiceId,
-  portfolio_id: 0,
-  lease_id: 0,
+  portfolio_id: '',
+  lease_id: '',
   issue_date: '',
   due_date: '',
   status: 'open',

@@ -1,5 +1,5 @@
 export interface PortfolioRow {
-  id?: number | string
+  id?: string
   name: string
   status?: string
   subscription_plan?: string

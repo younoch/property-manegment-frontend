@@ -37,7 +37,7 @@
     <div class="bg-white shadow-md rounded-lg p-0 md:p-4 flex flex-wrap items-center md:gap-3 gap-2 mb-1 md:mb-2">
       <div class="flex-1">
         <USelect
-          v-model.number="selectedPortfolioId"
+          v-model.string="selectedPortfolioId"
           :items="portfolioOptions"
           placeholder="Select Portfolio"
           class="w-full"
@@ -45,7 +45,7 @@
       </div>
       <div class="flex-1">
         <USelect
-          v-model.number="selectedPropertyId"
+          v-model.string="selectedPropertyId"
           :items="propertyOptions"
           placeholder="Select Property"
           class="w-full"
@@ -263,12 +263,12 @@ const isViewing = ref(false)
 const isDeleteOpen = ref(false)
 const isFormOpen = ref(false)
 const formModel = ref<any | null>(null)
-const deletingId = ref<number | null>(null)
+const deletingId = ref<string | null>(null)
 const selectedUnit = ref<any>(null)
 
 // Selection State
-const selectedPortfolioId = ref<number | undefined>(undefined)
-const selectedPropertyId = ref<number | undefined>(undefined)
+const selectedPortfolioId = ref<string | undefined>(undefined)
+const selectedPropertyId = ref<string | undefined>(undefined)
 
 // Filter State
 const filters = ref({

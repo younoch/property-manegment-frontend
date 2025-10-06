@@ -23,7 +23,8 @@
         root: 'w-full text-xs sm:text-sm items-start',
         wrapper: 'w-full overflow-x-auto overflow-y-hidden hide-scrollbar', 
         base: 'flex-1', 
-        list: 'flex-nowrap', 
+        list: 'flex-nowrap',
+        label: 'hidden md:inline',  
         container: 'border-b border-gray-200 dark:border-gray-700', 
         tab: { 
           padding: 'py-1.5 px-2 sm:py-2 sm:px-4', 
@@ -126,7 +127,7 @@ definePageMeta({ middleware: ['auth'] })
 
 const route = useRoute()
 
-const leaseId = String(route.params.id)
+const leaseId = route.params.id
 
 const {
   // state

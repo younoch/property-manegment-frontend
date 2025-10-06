@@ -2,9 +2,9 @@ export type InvoiceType = 'rent'|'deposit'|'adjustment'
 export type InvoiceStatus = 'open'|'paid'|'void'|'overdue'
 
 export interface Invoice {
-  id: number
-  portfolio_id: number
-  lease_id: number
+  id: string
+  portfolio_id: string
+  lease_id: string
   type: InvoiceType
   period?: string
   issue_date: string
@@ -17,9 +17,9 @@ export interface Invoice {
 }
 
 export interface Payment {
-  id: number
-  portfolio_id: number
-  lease_id: number
+  id: string
+  portfolio_id: string
+  lease_id: string
   amount: number
   method: 'cash'|'bank'|'mobile'|'other'
   at: string

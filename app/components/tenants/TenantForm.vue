@@ -36,7 +36,7 @@
             </UFormField>
 
             <UFormField label="Active Status" name="is_active" :error="errors.is_active" class="sm:col-span-2">
-              <UToggle v-model="form.is_active" :disabled="props.view" />
+              <USwitch v-model="form.is_active" :disabled="props.view" />
             </UFormField>
           </div>
 

@@ -23,7 +23,7 @@ interface ApiResponse<T = any> {
 }
 
 interface PortfolioResponse {
-  id: number | string
+  id: string
   [key: string]: any
 }
 
