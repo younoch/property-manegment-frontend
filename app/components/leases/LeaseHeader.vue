@@ -23,7 +23,7 @@
 import { getLeaseStatusColor } from '@/constants/leases'
 
 const router = useRouter()
-const props = defineProps<{ leaseId: number; lease: any | null }>()
+const props = defineProps<{ leaseId: string; lease: any | null }>()
 const statusColor = computed(() => getLeaseStatusColor(props.lease?.status))
 
 const goBack = () => {

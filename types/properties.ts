@@ -1,7 +1,7 @@
 export interface Property {
-  id: number | string;
-  account_id?: number; // Made optional since backend handles it
-  portfolio_id?: number; // Owning portfolio
+  id: string;
+  account_id?: string; // Made optional since backend handles it
+  portfolio_id?: string; // Owning portfolio
   name: string;
   address_line1: string;
   address_line2?: string | null;
@@ -43,9 +43,9 @@ export interface PropertyStats {
 }
 
 export interface Unit {
-  id: number | string;
-  portfolio_id: number;
-  property_id: number;
+  id: string;
+  portfolio_id: string;
+  property_id: string;
   label: string;
   bedrooms: number;
   bathrooms: number;
@@ -57,8 +57,8 @@ export interface Unit {
 }
 
 export interface AddPropertyPayload {
-  account_id?: number; // Made optional since backend handles it
-  portfolio_id: number; // Required: property must belong to a portfolio
+  account_id?: string; // Made optional since backend handles it
+  portfolio_id: string; // Required: property must belong to a portfolio
   name: string;
   address_line1: string;
   address_line2?: string | null;
@@ -73,8 +73,8 @@ export interface AddPropertyPayload {
 }
 
 export interface AddUnitPayload {
-  portfolio_id: number;
-  property_id: number;
+  portfolio_id: string;
+  property_id: string;
   label: string;
   bedrooms: number;
   bathrooms: number;

@@ -14,7 +14,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <UFormField label="Property" name="property_id" :error="errors.property_id">
             <USelect
-              v-model.number="form.property_id"
+              v-model.string="form.property_id"
               :items="propertyOptions"
               placeholder="Select Property"
               class="w-full"
@@ -156,7 +156,7 @@ import { createProtectedApiClient } from '../../utils/api'
 import { UNIT_STATUSES } from '../../constants/units'
 import { useApiToast } from '../../composables/useApiToast'
 
-const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: number; propertyId?: number; portfolioOptions?: any[]; propertyOptions?: any[] }>()
+const props = defineProps<{ open: boolean; model?: Partial<any> | null; view?: boolean; portfolioId?: string; propertyId?: string; portfolioOptions?: any[]; propertyOptions?: any[] }>()
 const emit = defineEmits<{
   'update:open': [value: boolean];
   created: [value: any];
@@ -186,7 +186,7 @@ const formatDate = (date: Date) => {
 }
 
 interface ExpenseFormData {
-  property_id: number;
+  property_id: string;
   amount: number;
   category: string;
   date_incurred: string;
@@ -201,7 +201,7 @@ interface ExpenseFormData {
 }
 
 const form = reactive<ExpenseFormData>({
-  property_id: props.propertyId ?? 0,
+  property_id: props.propertyId ?? '',
   amount: 0,
   category: '',
   date_incurred: formatDate(new Date()), // Initialize with formatted date string
@@ -219,7 +219,7 @@ watch(
   (newValue) => {
     if (newValue) {
       if (props.model && props.model.id) {
-        form.property_id = props.model.property_id ?? props.propertyId ?? 0
+        form.property_id = props.model.property_id ?? props.propertyId ?? ''
         form.amount = Number(props.model.amount ?? 0)
         form.category = String(props.model.category ?? '')
         // Ensure date_incurred is a properly formatted string
@@ -242,13 +242,13 @@ watch(
 )
 
 watch(() => props.propertyId, (id) => {
-  if (typeof id === 'number' && id > 0) form.property_id = id
+  if (id) form.property_id = id
 }, { immediate: true })
 
 const errors = reactive<Record<string, string | undefined>>({})
 
 const Schema = object({
-  property_id: number(),
+  property_id: string(),
   amount: pipe(number(), minValue(0.01, 'Amount must be greater than 0')),
   category: pipe(string(), minLength(1, 'Category is required')),
   date_incurred: pipe(string(), minLength(1, 'Date is required')), // Will be converted to Date object in the component

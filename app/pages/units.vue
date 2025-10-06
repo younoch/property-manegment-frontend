@@ -43,7 +43,7 @@
         </div>
       </div>
       <div v-else-if="rowsArray.length === 0" class="py-10 flex flex-col items-center text-center gap-3">
-        <div class="i-lucide-home h-12 w-12 text-primary/80" aria-hidden="true" />
+        <UIcon name="i-heroicons:home" class="h-12 w-12 text-primary/80" />
         <p class="text-lg font-medium">No units yet</p>
         <p class="text-sm text-gray-500 max-w-md">
           Add your first unit to start managing leases, collecting rent, and tracking maintenance.
@@ -116,9 +116,8 @@ definePageMeta({ middleware: ['auth'] })
 // 3. Table Configuration
 // ======================
 const columns: TableColumn<any>[] = [
-  { accessorKey: 'id', header: 'ID' },
   { accessorKey: 'label', header: 'Label' },
-  { accessorKey: 'property_id', header: 'Property' },
+  { accessorKey: 'property.name', header: 'Property' },
   { accessorKey: 'bedrooms', header: 'Beds' },
   { accessorKey: 'bathrooms', header: 'Baths' },
   { accessorKey: 'sqft', header: 'Sqft' },
@@ -188,13 +187,6 @@ const selectedPropertyId = ref<string | undefined>(undefined)
 const units = ref<any[]>([])
 const pendingUnits = ref(false)
 
-// ======================
-// 6. Computed Properties
-// ======================
-
-// ======================
-// 7. Data Fetching
-// ======================
 const { data: portfoliosResponse, pending, error } = await useAsyncData(
   'landlord-portfolios-for-units',
   async () => {

@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { createProtectedApiClient } from '~/utils/api'
 
 export interface Portfolio {
-  id: number | string
+  id: string
   name: string
   timezone: string
   subscription_plan: string
@@ -41,7 +41,7 @@ export const usePortfolioStore = defineStore('portfolio', () => {
   }
 
   // Load portfolio by ID
-  const loadPortfolio = async (id: number | string) => {
+  const loadPortfolio = async (id: string) => {
     if (!id) return null
     
     isLoading.value = true
