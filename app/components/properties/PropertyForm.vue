@@ -137,19 +137,6 @@ const isViewing = computed(() => !!props.view)
 
 const propertyTypeOptions = PROPERTY_TYPES;
 
-// Sync portfolio_id with parent selection immediately and on change
-watch(() => props.selectedPortfolioId, (id) => {
-  if (typeof id === 'string') {
-    form.portfolio_id = id
-  }
-}, { immediate: true })
-
-// Computed effective portfolio id (parent or local)
-const effectivePortfolioId = computed(() => {
-  const fromProp = props.selectedPortfolioId 
-  if (typeof fromProp === 'string' && fromProp > 0) return fromProp
-  return form.portfolio_id
-})
 
 const form = reactive<AddPropertyPayload>({
   portfolio_id: '',
@@ -270,7 +257,7 @@ const onSubmit = async () => {
     const payload = { ...form } as any
     if ('number_of_units' in payload) delete payload.number_of_units
     // Ensure portfolio_id comes from parent selection if provided
-    payload.portfolio_id = effectivePortfolioId.value
+    payload.portfolio_id = props.selectedPortfolioId
 
     if (isEditing.value && props.model?.id) {
       const response = await api.patch<any>(`/properties/${props.model.id}`, payload)
@@ -280,7 +267,7 @@ const onSubmit = async () => {
       // Apply default coordinates for creation, hidden from the form
       if (typeof payload.latitude !== 'number') payload.latitude = 44.5
       if (typeof payload.longitude !== 'number') payload.longitude = -89.5
-      const response = await api.post<any>(`/portfolios/${effectivePortfolioId.value}/properties`, payload)
+      const response = await api.post<any>(`/portfolios/${props.selectedPortfolioId}/properties`, payload)
       toastSuccess(response?.message || 'Property created')
       emit('created', response?.data ?? { ...payload })
     }

@@ -4,9 +4,9 @@
     <div class="flex justify-between items-center mb-2 sm:mb-4">
       <h1 class="text-xl md:text-2xl font-semibold">Rental Portfolios</h1>
       <!-- it will back later -->
-      <!-- <UButton icon="i-heroicons-plus" color="primary" @click="openCreate">
+      <UButton v-if="!rowsArray.length" icon="i-heroicons-plus" color="primary" @click="openCreate">
         Add Portfolio
-      </UButton> -->
+      </UButton>
     </div>
 
     <!-- Loading -->
@@ -16,7 +16,7 @@
 
     <!-- Empty -->
     <div
-      v-else-if="rowsArray.length === 0"
+      v-else-if="!rowsArray.length"
       class="py-10 flex flex-col items-center text-center gap-3"
     >
       <div class="i-lucide-briefcase h-8 w-8 text-primary/80"></div>
@@ -49,6 +49,7 @@
             :currencies="currencies"
             :portfolio-statuses="PORTFOLIO_STATUSES"
             @save-changes="updatePortfolio"
+            @deleted="handlePortfolioDeleted"
           />
         </template>
       </UTabs>
@@ -218,6 +219,15 @@ function onCreated(created: PortfolioRow) {
 function onFormOpenChange(v: boolean) {
   if (!v) {
     isFormOpen.value = v
+  }
+}
+
+// Handle portfolio deletion
+const handlePortfolioDeleted = (portfolioId: string) => {
+  if (apiResponse.value?.data?.data) {
+    apiResponse.value.data.data = apiResponse.value.data.data.filter(
+      (p: PortfolioRow) => p.id !== portfolioId
+    )
   }
 }
 
