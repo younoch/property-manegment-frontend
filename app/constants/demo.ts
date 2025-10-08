@@ -82,13 +82,6 @@ export const API_ENDPOINTS = {
     LOGOUT: '/api/auth/logout',
     REFRESH: '/api/auth/refresh'
   },
-  PROPERTIES: {
-    LIST: '/api/properties',
-    CREATE: '/api/properties',
-    UPDATE: '/api/properties/:id',
-    DELETE: '/api/properties/:id',
-    DETAILS: '/api/properties/:id'
-  },
   MAINTENANCE: {
     LIST: '/api/maintenance',
     CREATE: '/api/maintenance',
