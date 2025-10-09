@@ -105,7 +105,7 @@
 <script setup lang="ts">
 definePageMeta({ middleware: ['auth'] })
 
-import { h, resolveComponent, nextTick } from 'vue'
+import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
 import PropertyForm from '../components/properties/PropertyForm.vue'
@@ -202,7 +202,7 @@ watch(portfolios, (list) => {
   if ((!selectedPortfolioId.value || !options.includes(selectedPortfolioId.value)) && options.length > 0) {
     selectedPortfolioId.value = options[0]
   }
-})
+}, { immediate: true })
 
 const isFormOpen = ref(false)
 const formModel = ref<any | null>(null)

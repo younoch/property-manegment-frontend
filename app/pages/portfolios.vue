@@ -48,7 +48,7 @@
             :portfolio="item.data"
             :currencies="currencies"
             :portfolio-statuses="PORTFOLIO_STATUSES"
-            @save-changes="updatePortfolio"
+            @save="updatePortfolio"
             @deleted="handlePortfolioDeleted"
           />
         </template>
@@ -80,6 +80,9 @@ const api = createProtectedApiClient()
 const toast = useToast()
 const { user, checkAuth } = useAuth()
 await checkAuth()
+
+// State
+const isUpdating = ref(false)
 
 // Define the API response type
 interface ApiResponse {
@@ -213,92 +216,56 @@ function onCreated(created: PortfolioRow) {
   }
   
   isFormOpen.value = false
-  toast.add({ title: 'Portfolio created', color: 'green' })
+  toast.add({ title: 'Portfolio created', color: 'success' })
 }
 
 function onFormOpenChange(v: boolean) {
-  if (!v) {
-    isFormOpen.value = v
-  }
+  isFormOpen.value = v
+  isUpdating.value = false
 }
 
-// Handle portfolio deletion
-const handlePortfolioDeleted = (portfolioId: string) => {
-  if (apiResponse.value?.data?.data) {
-    apiResponse.value.data.data = apiResponse.value.data.data.filter(
-      (p: PortfolioRow) => p.id !== portfolioId
-    )
+function updatePortfolio(updatedPortfolio: PortfolioRow) {
+  if (!apiResponse.value?.data?.data) return
+  
+  // Update the portfolio in the local state
+  const updatedData = apiResponse.value.data.data.map((portfolio: PortfolioRow) => 
+    portfolio.id === updatedPortfolio.id ? updatedPortfolio : portfolio
+  )
+  
+  // Update the response with the modified data
+  apiResponse.value = {
+    ...apiResponse.value,
+    data: {
+      ...apiResponse.value.data,
+      data: updatedData
+    }
   }
+  
+  toast.add({ title: 'Portfolio updated', color: 'success' })
 }
 
-// Update portfolio
-const isUpdating = ref(false)
-
-async function updatePortfolio(updatedData: Partial<PortfolioRow> & { id?: string }) {
-  if (!updatedData.id) {
-    console.error('Cannot update portfolio: No ID provided')
-    return
+function handlePortfolioDeleted(deletedPortfolio: PortfolioRow) {
+  if (!apiResponse.value?.data?.data) return
+  
+  // Remove the deleted portfolio from the local state
+  const updatedData = apiResponse.value.data.data.filter(
+    (portfolio: PortfolioRow) => portfolio.id !== deletedPortfolio.id
+  )
+  
+  // Update the response with the filtered data
+  apiResponse.value = {
+    ...apiResponse.value,
+    data: {
+      ...apiResponse.value.data,
+      data: updatedData,
+      total: Math.max(0, (apiResponse.value.data.total || 1) - 1)
+    }
   }
   
-  const portfolioId = updatedData.id
-  
-  // Remove the ID from the payload since it's in the URL
-  const { id, ...payload } = updatedData
-  
-  try {
-    isUpdating.value = true
-    
-    // Make the PATCH request to update the portfolio
-    const response = await api.patch(`/portfolios/${portfolioId}`, payload)
-    
-    // Update local state with the response data
-    const responseData = (response as any)?.data?.data || (response as any)?.data
-    if (!responseData) {
-      throw new Error('No data returned from server')
-    }
-    
-    const idx = rowsArray.value.findIndex(r => r.id === portfolioId)
-    if (idx !== -1) {
-      const updatedRow = { ...rowsArray.value[idx], ...responseData }
-      rowsArray.value = [
-        ...rowsArray.value.slice(0, idx), 
-        updatedRow, 
-        ...rowsArray.value.slice(idx + 1)
-      ]
-    }
-    
-    // Show success message
-    toast.add({
-      title: 'Portfolio updated',
-      description: 'Your portfolio has been updated successfully.',
-      icon: 'i-heroicons-check-circle',
-      color: 'green'
-    })
-    
-  } catch (error: any) {
-    console.error('Error updating portfolio:', error)
-    
-    // Show error message from API if available
-    const errorMessage = error?.response?.data?.message || 
-                        error?.data?.message || 
-                        error?.message ||
-                        'Failed to update portfolio. Please try again.'
-    
-    console.error('Error details:', {
-      status: error?.response?.status,
-      statusText: error?.response?.statusText,
-      data: error?.response?.data,
-      originalError: error
-    })
-    
-    toast.add({
-      title: 'Error',
-      description: errorMessage,
-      icon: 'i-heroicons-exclamation-circle',
-      color: 'red'
-    })
-  } finally {
-    isUpdating.value = false
-  }
+  toast.add({ 
+    title: 'Portfolio deleted', 
+    description: `${deletedPortfolio.name} has been deleted`,
+    color: 'success' 
+  })
 }
 </script>

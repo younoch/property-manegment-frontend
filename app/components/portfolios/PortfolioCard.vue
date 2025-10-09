@@ -656,7 +656,7 @@ const confirmDelete = async () => {
         icon: 'i-heroicons-check-circle',
         color: 'success'
       })
-      emit('deleted', props.portfolio.id)
+      emit('deleted', props.portfolio)
       isDeleteModalOpen.value = false
     } else {
       throw new Error((response as any)?.message || 'Failed to delete portfolio')
