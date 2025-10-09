@@ -19,7 +19,7 @@
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">manage properties</span>
         </h1>
         <p class="mt-4 text-gray-700 text-lg md:text-xl max-w-2xl mx-auto">
-          LeaseTrack combines powerful property management tools with an intuitive interface designed specifically for small landlords and property managers.
+          LeaseDirector combines powerful property management tools with an intuitive interface designed specifically for small landlords and property managers.
         </p>
       </div>
     </section>
@@ -115,7 +115,7 @@
       <div class="container mx-auto px-4 text-center">
         <div class="max-w-3xl mx-auto bg-gradient-to-r from-primary-50 to-teal-50 rounded-2xl p-8 md:p-12">
           <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to simplify your property management?</h2>
-          <p class="text-gray-700 text-lg mb-8 max-w-2xl mx-auto">Join hundreds of landlords who trust LeaseTrack to manage their properties efficiently.</p>
+          <p class="text-gray-700 text-lg mb-8 max-w-2xl mx-auto">Join hundreds of landlords who trust LeaseDirector to manage their properties efficiently.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <UButton 
               to="/auth/register" 
@@ -145,19 +145,19 @@ import { useHead } from '#imports'
 
 definePageMeta({ 
   layout: 'public',
-  title: 'Features - LeaseTrack Property Management',
+  title: 'Features - LeaseDirector Property Management',
   description: 'Discover powerful property management features including lease tracking, rent collection, maintenance requests, and financial reporting. Built for small landlords.'
 })
 
 // SEO: Set up meta for this page
 useHead({
-  title: 'Features - LeaseTrack Property Management',
+  title: 'Features - LeaseDirector Property Management',
   meta: [
     { 
       name: 'description', 
       content: 'Discover powerful property management features including lease tracking, rent collection, maintenance requests, and financial reporting. Built for small landlords.' 
     },
-    { property: 'og:title', content: 'Features - LeaseTrack Property Management' },
+    { property: 'og:title', content: 'Features - LeaseDirector Property Management' },
     { property: 'og:description', content: 'Discover powerful property management features designed specifically for small landlords and property managers.' },
   ]
 })

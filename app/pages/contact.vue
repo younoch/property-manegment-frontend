@@ -13,7 +13,7 @@
     <section class="container mx-auto px-4 pt-2 md:pt-20 text-center">
       <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">Contact</span>
       <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">We'd love to hear from you</h1>
-      <p class="mt-3 text-gray-600 max-w-2xl mx-auto text-lg">Questions about LeaseTrack, pricing, or onboarding? Send us a note—our team usually replies within one business day.</p>
+      <p class="mt-3 text-gray-600 max-w-2xl mx-auto text-lg">Questions about LeaseDirector, pricing, or onboarding? Send us a note—our team usually replies within one business day.</p>
     </section>
 
     <!-- Contact content -->
@@ -21,9 +21,9 @@
       <div class="container mx-auto px-4 grid lg:grid-cols-3 gap-8 items-start">
         <!-- Contact cards -->
         <div class="space-y-4 lg:order-2">
-          <ContactCard icon="i-heroicons-envelope" title="General inquiries" subtitle="hello@leasetrack.app" desc="Anything product or account related."/>
-          <ContactCard icon="i-heroicons-lifebuoy" title="Support" subtitle="support@leasetrack.app" desc="Need help? We’re here for you."/>
-          <ContactCard icon="i-heroicons-briefcase" title="Sales" subtitle="sales@leasetrack.app" desc="Larger portfolios or custom needs."/>
+          <ContactCard icon="i-heroicons-envelope" title="General inquiries" subtitle="hello@leasedirector.app" desc="Anything product or account related."/>
+          <ContactCard icon="i-heroicons-lifebuoy" title="Support" subtitle="support@leasedirector.app" desc="Need help? We’re here for you."/>
+          <ContactCard icon="i-heroicons-briefcase" title="Sales" subtitle="sales@leasedirector.app" desc="Larger portfolios or custom needs."/>
           <div class="p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
             <h3 class="font-semibold">Status</h3>
             <p class="text-sm text-gray-600">Uptime & incidents are posted on our status page.</p>
@@ -105,9 +105,9 @@ import { useHead } from '#imports'
 definePageMeta({ layout: 'public' })
 // Page metadata
 useHead({
-  title: 'Contact LeaseTrack — We’d love to hear from you',
+  title: 'Contact LeaseDirector — We’d love to hear from you',
   meta: [
-    { name: 'description', content: 'Contact LeaseTrack for product questions, pricing, onboarding, or support. We usually respond within one business day.' }
+    { name: 'description', content: 'Contact LeaseDirector for product questions, pricing, onboarding, or support. We usually respond within one business day.' }
   ]
 })
 
@@ -193,7 +193,7 @@ async function onSubmit() {
 const faqItemsLeft = [
   { label: 'How fast do you reply?', content: 'We aim to respond within one business day.' },
   { label: 'Can you help me migrate?', content: 'Yes—send us a CSV or your current format and we’ll assist.' },
-  { label: 'Do you offer demos?', content: 'Yes—book a live demo and we’ll walk you through LeaseTrack.' }
+  { label: 'Do you offer demos?', content: 'Yes—book a live demo and we’ll walk you through LeaseDirector.' }
 ]
 
 const faqItemsRight = [

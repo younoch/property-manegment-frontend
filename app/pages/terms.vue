@@ -13,7 +13,7 @@
         <div class="text-center">
           <h1 class="text-4xl md:text-5xl font-extrabold">Terms & Conditions</h1>
           <p class="mt-3 text-gray-600">Effective date: {{ effectiveDate }}</p>
-          <p class="mt-2 text-gray-700 max-w-2xl mx-auto">These Terms & Conditions ("Terms") govern your use of the LeaseTrack service. By using our platform, you agree to these Terms.</p>
+          <p class="mt-2 text-gray-700 max-w-2xl mx-auto">These Terms & Conditions ("Terms") govern your use of the LeaseDirector service. By using our platform, you agree to these Terms.</p>
         </div>
 
         <!-- TOC -->
@@ -39,11 +39,11 @@
 
         <!-- Sections -->
         <TermsSection id="acceptance" title="1. Acceptance of Terms">
-          <p class="text-gray-700">By creating an account or using LeaseTrack, you confirm that you accept and will comply with these Terms, our <NuxtLink to="/privacy" class="text-primary-700 underline">Privacy Policy</NuxtLink>, and any additional policies we provide.</p>
+          <p class="text-gray-700">By creating an account or using LeaseDirector, you confirm that you accept and will comply with these Terms, our <NuxtLink to="/privacy" class="text-primary-700 underline">Privacy Policy</NuxtLink>, and any additional policies we provide.</p>
         </TermsSection>
 
         <TermsSection id="eligibility" title="2. Eligibility">
-          <p class="text-gray-700">You must be at least 18 years old or the age of majority in your jurisdiction to use LeaseTrack. By registering, you represent that you meet these requirements.</p>
+          <p class="text-gray-700">You must be at least 18 years old or the age of majority in your jurisdiction to use LeaseDirector. By registering, you represent that you meet these requirements.</p>
         </TermsSection>
 
         <TermsSection id="accounts" title="3. Accounts & Security">
@@ -65,7 +65,7 @@
         </TermsSection>
 
         <TermsSection id="use" title="5. Acceptable Use">
-          <p class="text-gray-700">You agree not to misuse LeaseTrack, including but not limited to:</p>
+          <p class="text-gray-700">You agree not to misuse LeaseDirector, including but not limited to:</p>
           <ul class="list-disc ms-5 text-gray-700 space-y-2 mt-2">
             <li>Attempting unauthorized access or security breaches.</li>
             <li>Using the service for unlawful, abusive, or fraudulent purposes.</li>
@@ -75,11 +75,11 @@
         </TermsSection>
 
         <TermsSection id="leases" title="6. Leases, Invoices, Payments">
-          <p class="text-gray-700">LeaseTrack provides tools for landlords to manage leases, invoices, and payments. We are not a party to rental agreements. You are solely responsible for ensuring your use complies with applicable laws (e.g., rental regulations, tax obligations, deposit limits).</p>
+          <p class="text-gray-700">LeaseDirector provides tools for landlords to manage leases, invoices, and payments. We are not a party to rental agreements. You are solely responsible for ensuring your use complies with applicable laws (e.g., rental regulations, tax obligations, deposit limits).</p>
         </TermsSection>
 
         <TermsSection id="intellectual" title="7. Intellectual Property">
-          <p class="text-gray-700">All rights, title, and interest in LeaseTrack, including software, design, and branding, remain with us and our licensors. You receive a limited, non‑exclusive, non‑transferable license to use the service during your subscription.</p>
+          <p class="text-gray-700">All rights, title, and interest in LeaseDirector, including software, design, and branding, remain with us and our licensors. You receive a limited, non‑exclusive, non‑transferable license to use the service during your subscription.</p>
         </TermsSection>
 
         <TermsSection id="termination" title="8. Termination">
@@ -87,15 +87,15 @@
         </TermsSection>
 
         <TermsSection id="disclaimers" title="9. Disclaimers">
-          <p class="text-gray-700">LeaseTrack is provided “as is” without warranties of any kind. We do not guarantee uninterrupted, error‑free service, or that defects will be corrected immediately.</p>
+          <p class="text-gray-700">LeaseDirector is provided “as is” without warranties of any kind. We do not guarantee uninterrupted, error‑free service, or that defects will be corrected immediately.</p>
         </TermsSection>
 
         <TermsSection id="liability" title="10. Limitation of Liability">
-          <p class="text-gray-700">To the maximum extent permitted by law, LeaseTrack and its affiliates are not liable for indirect, incidental, or consequential damages. Our total liability is limited to the fees paid by you in the 12 months before the claim.</p>
+          <p class="text-gray-700">To the maximum extent permitted by law, LeaseDirector and its affiliates are not liable for indirect, incidental, or consequential damages. Our total liability is limited to the fees paid by you in the 12 months before the claim.</p>
         </TermsSection>
 
         <TermsSection id="indemnity" title="11. Indemnification">
-          <p class="text-gray-700">You agree to indemnify and hold harmless LeaseTrack, its officers, employees, and affiliates from any claims, damages, or expenses arising from your use of the service or violation of these Terms.</p>
+          <p class="text-gray-700">You agree to indemnify and hold harmless LeaseDirector, its officers, employees, and affiliates from any claims, damages, or expenses arising from your use of the service or violation of these Terms.</p>
         </TermsSection>
 
         <TermsSection id="governing" title="12. Governing Law">
@@ -108,7 +108,7 @@
 
         <TermsSection id="contact" title="14. Contact">
           <div class="text-gray-700 space-y-1">
-            <p><strong>Email:</strong> legal@leasetrack.app</p>
+            <p><strong>Email:</strong> legal@leasedirector.app</p>
             <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 underline">Contact form</NuxtLink></p>
             <p><strong>Privacy:</strong> <NuxtLink to="/privacy" class="text-primary-700 underline">Privacy Policy</NuxtLink></p>
           </div>
@@ -131,9 +131,9 @@ import TermsSection from '~/components/terms/TermsSection.vue'
 const effectiveDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
 useHead({
-  title: 'LeaseTrack — Terms & Conditions',
+  title: 'LeaseDirector — Terms & Conditions',
   meta: [
-    { name: 'description', content: 'Terms & Conditions governing the use of LeaseTrack. Learn about accounts, subscriptions, acceptable use, liability, and legal details.' }
+    { name: 'description', content: 'Terms & Conditions governing the use of LeaseDirector. Learn about accounts, subscriptions, acceptable use, liability, and legal details.' }
   ]
 })
 </script>

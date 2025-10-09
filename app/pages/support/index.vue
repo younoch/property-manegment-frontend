@@ -107,7 +107,7 @@
               Contact Support
             </NuxtLink>
             <a 
-              href="mailto:support@leasetrack.app" 
+              href="mailto:support@leasedirector.app" 
               class="px-6 py-3 border border-gray-300 bg-white text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
             >
               Email Us
@@ -238,9 +238,9 @@ const navigateToTopic = (topicId: string) => {
 
 // Set page metadata
 useHead({
-  title: 'LeaseTrack — Help Center',
+  title: 'LeaseDirector — Help Center',
   meta: [
-    { name: 'description', content: 'Get help with LeaseTrack. Find answers to common questions, troubleshooting guides, and contact our support team.' }
+    { name: 'description', content: 'Get help with LeaseDirector. Find answers to common questions, troubleshooting guides, and contact our support team.' }
   ]
 });
 </script>

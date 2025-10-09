@@ -36,7 +36,7 @@ useSeoMeta({
   themeColor: '#ffffff',
   appleMobileWebAppCapable: 'yes',
   appleMobileWebAppStatusBarStyle: 'black-translucent',
-  appleMobileWebAppTitle: 'LeaseTrack'
+  appleMobileWebAppTitle: 'LeaseDirector'
 } as const)
 
 // Set up link tags
