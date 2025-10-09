@@ -7,7 +7,7 @@
     <header class="border-b border-gray-100">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
-          <NuxtLink to="/" class="text-xl font-bold text-primary-600">LeaseTrack</NuxtLink>
+          <NuxtLink to="/" class="text-xl font-bold text-primary-600">LeaseDirector</NuxtLink>
           <nav class="hidden md:flex items-center space-x-8">
             <NuxtLink to="/" class="text-sm font-medium hover:text-primary-600 transition-colors">Home</NuxtLink>
             <NuxtLink to="/features" class="text-sm font-medium hover:text-primary-600 transition-colors">Features</NuxtLink>
@@ -42,7 +42,7 @@
       <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div class="col-span-2 md:col-span-1">
-            <h3 class="font-bold text-gray-900 mb-4">LeaseTrack</h3>
+            <h3 class="font-bold text-gray-900 mb-4">LeaseDirector</h3>
             <p class="text-sm text-gray-600">Smart property management made easy for small landlords and property managers.</p>
           </div>
           <div>
@@ -72,7 +72,7 @@
           </div>
         </div>
         <div class="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p class="text-sm text-gray-500">© 2023 LeaseTrack. All rights reserved.</p>
+          <p class="text-sm text-gray-500">© 2023 LeaseDirector. All rights reserved.</p>
           <div class="flex space-x-6 mt-4 md:mt-0">
             <a href="#" class="text-gray-400 hover:text-gray-500">
               <span class="sr-only">Twitter</span>

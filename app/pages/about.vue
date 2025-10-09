@@ -13,13 +13,13 @@
     <section class="container mx-auto px-4 pt-2 md:pt-20">
       <div class="grid lg:grid-cols-2 gap-10 items-center">
         <div>
-          <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">About LeaseTrack</span>
+          <span class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">About LeaseDirector</span>
           <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">
             Built for small landlords.
             <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Obsessed with accuracy.</span>
           </h1>
           <p class="mt-4 text-gray-700 text-lg md:text-xl max-w-xl">
-            We created <strong>LeaseTrack</strong> to make rent operations simple, reliable, and audit‑friendly. No bloated features. Just the right workflows—leases, invoices, and payments—done right.
+            We created <strong>LeaseDirector</strong> to make rent operations simple, reliable, and audit‑friendly. No bloated features. Just the right workflows—leases, invoices, and payments—done right.
           </p>
         </div>
         <div class="relative">
@@ -161,7 +161,7 @@
     <!-- Final CTA -->
     <section class="py-16">
       <div class="container mx-auto px-4 text-center">
-        <h3 class="text-2xl md:text-3xl font-bold">Join LeaseTrack</h3>
+        <h3 class="text-2xl md:text-3xl font-bold">Join LeaseDirector</h3>
         <p class="mt-2 text-gray-600">Start free, send your first invoice in minutes, and keep your records clean.</p>
         <div class="mt-6 flex justify-center gap-3">
           <UButton color="primary" size="lg" to="/auth/register" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">Get Started Free</UButton>
@@ -180,9 +180,9 @@ import StackCard from '~/components/about/StackCard.vue'
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'About LeaseTrack — Smart Property Management for Small Landlords',
+  title: 'About LeaseDirector — Smart Property Management for Small Landlords',
   meta: [
-    { name: 'description', content: 'LeaseTrack is built for independent landlords and small property teams. Learn our mission, values, team, and how we build.' }
+    { name: 'description', content: 'LeaseDirector is built for independent landlords and small property teams. Learn our mission, values, team, and how we build.' }
   ]
 })
 </script>

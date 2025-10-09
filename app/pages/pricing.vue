@@ -11,7 +11,7 @@
     <!-- Hero -->
     <section class="container mx-auto px-4 pt-2 md:pt-20 text-center">
       <h1 class="text-4xl md:text-5xl font-extrabold">Simple Pricing</h1>
-      <p class="mt-3 text-gray-600 max-w-2xl mx-auto">LeaseTrack is built for small landlords. Start free, then upgrade as you grow. Cancel anytime.</p>
+      <p class="mt-3 text-gray-600 max-w-2xl mx-auto">LeaseDirector is built for small landlords. Start free, then upgrade as you grow. Cancel anytime.</p>
 
       <!-- Billing cycle toggle -->
       <div class="mt-6 flex justify-center gap-3">
@@ -60,7 +60,7 @@
       <div class="container mx-auto px-4 max-w-3xl text-center">
         <h2 class="text-2xl md:text-3xl font-bold">How our pricing works</h2>
         <p class="mt-3 text-gray-600">
-          LeaseTrack pricing is based on the number of <strong>units</strong> you manage,
+          LeaseDirector pricing is based on the number of <strong>units</strong> you manage,
           not the number of users. Invite unlimited teammates at no extra cost. Start free with 5 units, upgrade as you grow.
         </p>
         <ul class="mt-6 text-gray-700 text-left max-w-md mx-auto space-y-2">
@@ -101,7 +101,7 @@
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'LeaseTrack — Pricing',
+  title: 'LeaseDirector — Pricing',
   meta: [{ name: 'description', content: 'Simple pricing...' }]
 })
 

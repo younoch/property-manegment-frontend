@@ -13,7 +13,7 @@
         <div class="text-center">
           <h1 class="text-4xl md:text-5xl font-extrabold">Privacy Policy</h1>
           <p class="mt-3 text-gray-600">Effective date: {{ effectiveDate }}</p>
-          <p class="mt-2 text-gray-700 max-w-2xl mx-auto">This Privacy Policy explains how <strong>LeaseTrack</strong> ("we", "us", or "our") collects, uses, and safeguards information when you use our websites and services.</p>
+          <p class="mt-2 text-gray-700 max-w-2xl mx-auto">This Privacy Policy explains how <strong>LeaseDirector</strong> ("we", "us", or "our") collects, uses, and safeguards information when you use our websites and services.</p>
         </div>
 
         <!-- Highlights -->
@@ -90,7 +90,7 @@
             <li>Payment processing and subscription management</li>
             <li>Analytics and error monitoring</li>
           </ul>
-          <p class="text-gray-700 mt-2">We may disclose information if required by law or to protect the rights, property, or safety of LeaseTrack, our users, or the public.</p>
+          <p class="text-gray-700 mt-2">We may disclose information if required by law or to protect the rights, property, or safety of LeaseDirector, our users, or the public.</p>
         </PolicySection>
 
         <PolicySection id="cookies" title="5. Cookies & analytics">
@@ -125,11 +125,11 @@
             <li>Port data in a structured, machine‑readable format</li>
             <li>Withdraw consent where processing relies on consent</li>
           </ul>
-          <p class="text-gray-700 mt-2">To exercise these rights, contact us at <a href="mailto:privacy@leasetrack.app" class="text-primary-700 hover:underline">privacy@leasetrack.app</a>. We will verify your request and respond within applicable timeframes.</p>
+          <p class="text-gray-700 mt-2">To exercise these rights, contact us at <a href="mailto:privacy@leasedirector.app" class="text-primary-700 hover:underline">privacy@leasedirector.app</a>. We will verify your request and respond within applicable timeframes.</p>
         </PolicySection>
 
         <PolicySection id="children" title="10. Children">
-          <p class="text-gray-700">LeaseTrack is not intended for individuals under 16. We do not knowingly collect personal data from children. If you believe a child has provided us data, contact us and we will take appropriate action.</p>
+          <p class="text-gray-700">LeaseDirector is not intended for individuals under 16. We do not knowingly collect personal data from children. If you believe a child has provided us data, contact us and we will take appropriate action.</p>
         </PolicySection>
 
         <PolicySection id="changes" title="11. Changes to this policy">
@@ -138,7 +138,7 @@
 
         <PolicySection id="contact" title="12. Contact us">
           <div class="text-gray-700 space-y-1">
-            <p><strong>Email:</strong> privacy@leasetrack.app</p>
+            <p><strong>Email:</strong> privacy@leasedirector.app</p>
             <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 hover:underline">Contact form</NuxtLink></p>
             <p><strong>Legal & Terms:</strong> <NuxtLink to="/terms" class="text-primary-700 hover:underline">Terms of Service</NuxtLink></p>
             <p><strong>Status:</strong> <NuxtLink to="/status" class="text-primary-700 hover:underline">Status page</NuxtLink></p>
@@ -163,9 +163,9 @@ import PolicySection from '@/components/privacy/PolicySection.vue'
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'LeaseTrack — Privacy Policy',
+  title: 'LeaseDirector — Privacy Policy',
   meta: [
-    { name: 'description', content: 'How LeaseTrack collects, uses, and protects your information. Learn about data, security, cookies, retention, rights, and contact details.' }
+    { name: 'description', content: 'How LeaseDirector collects, uses, and protects your information. Learn about data, security, cookies, retention, rights, and contact details.' }
   ]
 })
 

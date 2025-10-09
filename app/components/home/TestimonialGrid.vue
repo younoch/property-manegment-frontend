@@ -6,7 +6,7 @@
         <TestimonialCard
           name="Sadia R."
           role="Landlord, 6 units"
-          quote="LeaseTrack cut my rent follow-up time in half. Invoices and late fees just work."
+          quote="LeaseDirector cut my rent follow-up time in half. Invoices and late fees just work."
           avatar="https://picsum.photos/200/200?random=25"
         />
         <TestimonialCard
