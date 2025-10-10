@@ -443,7 +443,7 @@ const sendInvoice = async () => {
       property_address: `${lease.value?.property?.name || ''}${lease.value?.unit?.label ? `, Unit ${lease.value.unit.label}` : ''}`,
       cc_emails: [],
       bcc_emails: [],
-      reply_to: 'noreply@leasemanager.com', // TODO: Replace with actual management email
+      reply_to: 'younoch295@gmail.com', // TODO: Replace with actual management email
       include_watermark: false,
       notes: `Invoice #${model.id} sent to tenant on ${new Date().toISOString().split('T')[0]}`
     }
