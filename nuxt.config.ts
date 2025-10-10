@@ -15,14 +15,14 @@ export default defineNuxtConfig({
       script: [
         {
           async: true,
-          src: 'https://www.googletagmanager.com/gtag/js?id=G-392NKQS5JK'
+          src: `https://www.googletagmanager.com/gtag/js?id=${process.env.NUXT_PUBLIC_GTAG_ID}`
         },
         {
           innerHTML: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-392NKQS5JK');
+            gtag('config', ${process.env.NUXT_PUBLIC_GTAG_ID});
           `
         }
       ]
