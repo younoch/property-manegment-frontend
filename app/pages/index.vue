@@ -36,8 +36,6 @@
 
       <StepsSection class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
 
-      <PricingTeaserGrid class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
-
       <FinalCta class="py-12 sm:py-16 md:py-20" />
     </div>
   </div>
@@ -54,7 +52,6 @@ import AudienceSection from '~/components/home/AudienceSection.vue'
 import ComparisonTable from '~/components/home/ComparisonTable.vue'
 import TestimonialGrid from '~/components/home/TestimonialGrid.vue'
 import StepsSection from '~/components/home/StepsSection.vue'
-import PricingTeaserGrid from '~/components/home/PricingTeaserGrid.vue'
 import FinalCta from '~/components/home/FinalCta.vue'
 import LogoCloud from '~/components/home/LogoCloud.vue'
 import StatCard from '~/components/home/StatCard.vue'

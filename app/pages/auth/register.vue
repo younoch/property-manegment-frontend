@@ -45,7 +45,7 @@
             />
           </UFormField>
           
-          <UFormField label="Role" name="role" :error="errors.role">
+          <!-- <UFormField label="Role" name="role" :error="errors.role">
             <USelect
               v-model="form.role"
               :items="roleOptions"
@@ -53,7 +53,7 @@
               required
               class="w-full"
             />
-          </UFormField>
+          </UFormField> -->
           
           <UFormField label="Password" name="password" :error="errors.password" class="relative">
             <UInputGroup class="relative">
