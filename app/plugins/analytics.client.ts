@@ -20,7 +20,10 @@ export default defineNuxtPlugin(() => {
       }
   
       window.gtag('js', new Date())
-      window.gtag('config', gtagId, { page_path: window.location.pathname })
+      window.gtag('config', gtagId, {
+        page_path: window.location.pathname,
+        send_page_view: true
+      })
   
       console.log('🔹 Sent initial page view for:', window.location.pathname)
   
