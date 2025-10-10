@@ -15,17 +15,19 @@ export default defineNuxtConfig({
       script: [
         {
           async: true,
-          src: `https://www.googletagmanager.com/gtag/js?id=${process.env.NUXT_PUBLIC_GTAG_ID}`
+          // We will insert the correct ID dynamically later
+          src: '', 
         },
         {
-          innerHTML: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', ${process.env.NUXT_PUBLIC_GTAG_ID});
-          `
+          hid: 'gtag-init',
+          innerHTML: '',
+          type: 'text/javascript',
+          charset: 'utf-8'
         }
-      ]
+      ],
+      __dangerouslyDisableSanitizersByTagID: {
+        'gtag-init': ['innerHTML']
+      }
     }
   },
   modules: [
@@ -50,11 +52,9 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/main.css'
   ],
-  appConfig: {
-    ui: {
-      colors: {
-        primary: 'emerald'   // <- your brand
-      }
+  ui: {
+    colors: {
+      primary: 'emerald'   // <- your brand
     }
   },
   srcDir: 'app',
@@ -65,7 +65,7 @@ export default defineNuxtConfig({
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
       frontendDomain: process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com',
       backendDomain: process.env.NUXT_PUBLIC_BACKEND_DOMAIN || 'api.yourapp.com',
-      GTAG_ID: process.env.NUXT_PUBLIC_GTAG_ID,
+      GTAG_ID: process.env.NUXT_PUBLIC_GTAG_ID
     }
   }
 })
