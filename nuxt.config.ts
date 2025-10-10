@@ -15,19 +15,18 @@ export default defineNuxtConfig({
       script: [
         {
           async: true,
-          // We will insert the correct ID dynamically later
-          src: '', 
+          src: `https://www.googletagmanager.com/gtag/js?id=${process.env.NUXT_PUBLIC_GTAG_ID}`
         },
         {
-          hid: 'gtag-init',
-          innerHTML: '',
-          type: 'text/javascript',
-          charset: 'utf-8'
+          innerHTML: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NUXT_PUBLIC_GTAG_ID}', { send_page_view: true });
+          `,
+          type: 'text/javascript'
         }
-      ],
-      __dangerouslyDisableSanitizersByTagID: {
-        'gtag-init': ['innerHTML']
-      }
+      ]
     }
   },
   modules: [
