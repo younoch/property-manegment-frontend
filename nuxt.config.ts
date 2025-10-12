@@ -96,14 +96,41 @@ export default defineNuxtConfig({
 
   // ✅ Sitemap configuration
   sitemap: {
-    hostname: 'https://leasedirector.com', // <-- replace with your actual domain
+    hostname: 'https://www.leasedirector.com',
     gzip: true,
     path: '/sitemap.xml',
+  
     routes: [
       '/',
       '/features',
       '/pricing',
-      '/about'
+      '/about',
+      '/contact',
+      '/privacy',
+      '/terms',
+      '/support'
+    ],
+  
+    // 🚫 Exclude all app/dashboard/auth routes
+    exclude: [
+      '/dashboard/**',
+      '/auth/**',
+      '/leases/**',
+      '/properties/**',
+      '/tenants/**',
+      '/units/**',
+      '/users/**',
+      '/maintenance/**',
+      '/expenses/**',
+      '/payments/**',
+      '/messages/**',
+      '/communication/**',
+      '/settings/**',
+      '/management/**',
+      '/profile',
+      '/test-stores',
+      '/unauthorized',
+      '/csrf-demo'
     ]
-  }
+  }  
 })
