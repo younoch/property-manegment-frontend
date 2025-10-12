@@ -2,6 +2,7 @@
 import 'dotenv/config'
 import { defineNuxtConfig } from 'nuxt/config'
 import type { ModuleOptions } from '@nuxt/ui'
+import { sitemapConfig } from './app/config/sitemap.config'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -95,42 +96,5 @@ export default defineNuxtConfig({
   },
 
   // ✅ Sitemap configuration
-  sitemap: {
-    hostname: 'https://www.leasedirector.com',
-    gzip: true,
-    path: '/sitemap.xml',
-  
-    routes: [
-      '/',
-      '/features',
-      '/pricing',
-      '/about',
-      '/contact',
-      '/privacy',
-      '/terms',
-      '/support'
-    ],
-  
-    // 🚫 Exclude all app/dashboard/auth routes
-    exclude: [
-      '/dashboard/**',
-      '/auth/**',
-      '/leases/**',
-      '/properties/**',
-      '/tenants/**',
-      '/units/**',
-      '/users/**',
-      '/maintenance/**',
-      '/expenses/**',
-      '/payments/**',
-      '/messages/**',
-      '/communication/**',
-      '/settings/**',
-      '/management/**',
-      '/profile',
-      '/test-stores',
-      '/unauthorized',
-      '/csrf-demo'
-    ]
-  }  
+  sitemap: sitemapConfig  
 })
