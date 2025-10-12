@@ -7,17 +7,47 @@ import type { ModuleOptions } from '@nuxt/ui'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  srcDir: 'app',
+  
+
+  // Server routes are handled in /app/server/routes/
+
+  // Modules
+  modules: [
+    ['@nuxt/ui', {
+      icons: ['mdi', 'heroicons']
+    } as Partial<ModuleOptions>],
+    [
+      '@pinia/nuxt',
+      {
+        autoImports: [
+          'defineStore',
+          'storeToRefs',
+          'acceptHMRUpdate'
+        ]
+      }
+    ]
+  ],
+
   components: [
     { path: '~/components', pathPrefix: false },
   ],
+  // App Configuration
   app: {
+    baseURL: '/',
+    buildAssetsDir: '/_nuxt/',
     head: {
+      title: 'LeaseDirector – Property Management Software',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'LeaseDirector helps landlords and property managers handle leases, tenants, invoices, and payments easily in one platform.' },
+        { name: 'format-detection', content: 'telephone=no' }
+      ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
-        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon.png' },
         { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
         { rel: 'manifest', href: '/site.webmanifest' }
       ],
@@ -38,21 +68,6 @@ export default defineNuxtConfig({
       ]
     }
   },
-  modules: [
-    ['@nuxt/ui', {
-      icons: ['mdi', 'heroicons']
-    } as Partial<ModuleOptions>],
-    [
-      '@pinia/nuxt',
-      {
-        autoImports: [
-          'defineStore',
-          'storeToRefs',
-          'acceptHMRUpdate'
-        ]
-      }
-    ]
-  ],
   imports: {
     // IMPORTANT: When specifying dirs, Nuxt stops using defaults. Include 'composables' explicitly.
     dirs: ['stores', 'composables']
@@ -65,7 +80,6 @@ export default defineNuxtConfig({
       primary: 'emerald'   // <- your brand
     }
   },
-  srcDir: 'app',
   runtimeConfig: {
     public: {
       // Support both apiBase and apiBaseUrl to match env var NUXT_PUBLIC_API_BASE_URL
