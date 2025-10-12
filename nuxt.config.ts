@@ -8,7 +8,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   srcDir: 'app',
-  
 
   // Server routes are handled in /app/server/routes/
 
@@ -26,12 +25,14 @@ export default defineNuxtConfig({
           'acceptHMRUpdate'
         ]
       }
-    ]
+    ],
+    '@nuxtjs/sitemap' // ✅ Added sitemap module
   ],
 
   components: [
     { path: '~/components', pathPrefix: false },
   ],
+
   // App Configuration
   app: {
     baseURL: '/',
@@ -68,26 +69,41 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   imports: {
-    // IMPORTANT: When specifying dirs, Nuxt stops using defaults. Include 'composables' explicitly.
     dirs: ['stores', 'composables']
   },
+
   css: [
     '~/assets/css/main.css'
   ],
+
   ui: {
     colors: {
       primary: 'emerald'   // <- your brand
     }
   },
+
   runtimeConfig: {
     public: {
-      // Support both apiBase and apiBaseUrl to match env var NUXT_PUBLIC_API_BASE_URL
       apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
       frontendDomain: process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com',
       backendDomain: process.env.NUXT_PUBLIC_BACKEND_DOMAIN || 'api.yourapp.com',
       GTAG_ID: process.env.NUXT_PUBLIC_GTAG_ID
     }
+  },
+
+  // ✅ Sitemap configuration
+  sitemap: {
+    hostname: 'https://leasedirector.com', // <-- replace with your actual domain
+    gzip: true,
+    path: '/sitemap.xml',
+    routes: [
+      '/',
+      '/features',
+      '/pricing',
+      '/about'
+    ]
   }
 })
