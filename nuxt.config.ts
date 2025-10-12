@@ -39,11 +39,11 @@ export default defineNuxtConfig({
     baseURL: '/',
     buildAssetsDir: '/_nuxt/',
     head: {
-      title: 'LeaseDirector – Property Management Software',
+      title: 'LeaseDirector — Property Management for Small Landlords',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'LeaseDirector helps landlords and property managers handle leases, tenants, invoices, and payments easily in one platform.' },
+        { name: 'description', content: 'Manage leases, auto-generate rent invoices, track payments and late fees. Built for small landlords. Free to start.' },
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
