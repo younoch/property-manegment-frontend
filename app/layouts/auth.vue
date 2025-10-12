@@ -48,5 +48,5 @@
 </template>
 
 <script setup lang="ts">
-// This layout is used for authentication pages
+// Theme is initialized in the theme-init.client.ts plugin
 </script>

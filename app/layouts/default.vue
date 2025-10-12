@@ -49,25 +49,30 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import FeedbackButton from '~/components/feedback/FeedbackButton.vue'
 import AppHeader from '~/components/layout/AppHeader.vue'
 import OnboardingWizard from '~/components/ui/OnboardingWizard.vue'
 import { useUserStore } from '~/stores/user'
 import { useAuthStore } from '~/stores/auth'
-import { getSidebarNav } from '~/utils/navigation'
 
 const route = useRoute()
-const router = useRouter()
+const sidebarOpen = ref(false)
+
+// Theme is now initialized in the theme-init.client.ts plugin
+
 const userStore = useUserStore()
 const authStore = useAuthStore()
 const { userRole } = storeToRefs(userStore)
 
 // Fetch user data when layout is mounted
 onMounted(async () => {
-  await userStore.fetchUser()
+  if (process.client) {
+    await userStore.fetchUser()
+  }
 })
-
-const sidebarOpen = ref(false)
 
 const showSidebar = computed(() => {
   const role = userRole.value

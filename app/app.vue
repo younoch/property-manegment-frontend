@@ -24,11 +24,31 @@
 </template>
 
 <script setup lang="ts">
-// Import types for better type checking
 import type { MetaObject } from '@nuxt/schema'
+import { useThemeColor } from '~/composables/useThemeColor'
+
+// Initialize theme
+const { initFromStorage, current } = useThemeColor()
+
+// Watch for theme changes to update meta theme-color
+watch(current, (newTheme) => {
+  if (process.client) {
+    const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim() || '#ffffff'
+    useSeoMeta({
+      themeColor
+    })
+  }
+}, { immediate: true })
 
 // This ensures the page is scrolled to top on route change
 const route = useRoute()
+
+// Initialize theme on client-side
+onMounted(() => {
+  if (process.client) {
+    initFromStorage()
+  }
+})
 
 // Set up meta tags for SEO and mobile optimization
 useSeoMeta({

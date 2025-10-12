@@ -5,13 +5,8 @@
         <div class="flex justify-between items-center h-14 sm:h-16 w-full">
           <!-- Mobile menu button -->
           <div class="flex items-center">
-            <UDrawer 
-              v-model:open="isDrawer" 
-              direction="left" 
-              :dismissible="false" 
-              :handle="false" 
-              :ui="{ container: 'gap-0', header: 'flex justify-end', content: 'w-full' }"
-            >
+            <UDrawer v-model:open="isDrawer" direction="left" :dismissible="false" :handle="false"
+              :ui="{ container: 'gap-0', header: 'flex justify-end', content: 'w-full' }">
               <UButton v-if="showSidebar" class="md:hidden mr-1" variant="ghost" color="gray" icon="i-heroicons-bars-3"
                 :ui="{ rounded: 'rounded-full' }" @click="isDrawer = true" />
               <template #header>
@@ -42,13 +37,10 @@
               </template>
 
             </UDrawer>
-            <NuxtLink to="/" class="flex items-center space-x-2">
-              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style="background: var(--ui-primary)">
-                <span class="text-white font-bold text-sm sm:text-lg">P</span>
-              </div>
-              <span class="text-lg sm:text-xl font-bold text-gray-900 whitespace-nowrap">PropertyManager</span>
-            </NuxtLink>
+            <div class="flex items-center">
+              <Logo class="mr-2" />
+              <NuxtLink to="/" class="text-xl font-bold text-primary-600">LeaseDirector</NuxtLink>
+            </div>
           </div>
 
           <!-- Desktop Navigation -->
@@ -171,7 +163,7 @@
                         <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5 mr-3" />
                         <span>Settings</span>
                       </NuxtLink>
-                      
+
                       <button @click="handleLogout"
                         class="w-full text-left px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm flex items-center">
                         <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5 mr-3" />
