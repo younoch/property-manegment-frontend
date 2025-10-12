@@ -12,6 +12,15 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
+        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon.png' },
+        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
+        { rel: 'manifest', href: '/site.webmanifest' }
+      ],
       script: [
         {
           async: true,
