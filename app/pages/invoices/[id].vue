@@ -4,7 +4,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="space-y-1">
         <div class="flex flex-wrap items-center gap-2">
-          <h1 class="text-xl sm:text-xl md:text-2xl font-semibold">Invoice #{{ invoiceId }}</h1>
+          <h1 class="text-xl sm:text-xl md:text-2xl font-semibold">Invoice #{{ model?.invoice_number }}</h1>
           <UBadge :color="badgeColor" variant="soft" class="capitalize text-xs sm:text-sm">{{ model?.status || 'open' }}</UBadge>
         </div>
         <p class="text-xs sm:text-sm text-gray-500">
@@ -237,24 +237,13 @@ type ItemRow = {
   __key: string         // local key for v-for stability
 }
 
-type InvoiceVM = {
-  id: string
-  portfolio_id: string
-  lease_id: string
-  issue_date: string
-  due_date: string
-  status: 'open'|'paid'|'overdue'|'void'
-  subtotal: number
-  tax: number
-  total: number
-  items: ItemRow[]
-  updated_at?: string
-}
+import type { InvoiceVM } from '~/types/invoice'
 
 const raw = ref<any>(null)                 // last-loaded server response
 const lease = ref<any>(null)                // lease data
 const model = reactive<InvoiceVM>({
   id: invoiceId,
+  invoice_number: '',
   portfolio_id: '',
   lease_id: '',
   issue_date: '',
@@ -323,6 +312,7 @@ function snapshotFromServer(src: any) {
   model.id = src.id
   model.portfolio_id = src.portfolio_id
   model.lease_id = src.lease_id
+  model.invoice_number = src.invoice_number
   // Store the raw data for reverting changes
   raw.value = JSON.parse(JSON.stringify(src))
   model.issue_date = (src.issue_date || '').slice(0,10)
