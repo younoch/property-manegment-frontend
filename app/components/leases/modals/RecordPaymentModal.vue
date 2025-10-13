@@ -35,9 +35,9 @@
           </UFormField>
 
           <!-- Method -->
-          <UFormField label="Method" name="method">
+          <UFormField label="Payment Method" name="payment_method">
             <USelect
-              v-model="state.method"
+              v-model="state.payment_method"
               :items="paymentMethods"
               placeholder="Select payment method"
               class="w-full"
@@ -112,7 +112,7 @@ interface Invoice {
 
 interface PaymentFormState {
   amount: number
-  method: string
+  payment_method: string
   received_at: string
   reference: string
   notes: string
@@ -163,7 +163,7 @@ const inputUi = {
 // ─── Form State ─────────────────────────────────────────────
 const state = reactive<PaymentFormState>({
   amount: props.invoice.totalAmount ?? 0,
-  method: 'bank_transfer',
+  payment_method: 'bank_transfer',
   received_at: getToday(),
   reference: '',
   notes: '',
@@ -194,7 +194,7 @@ const schema = v.object({
     v.minValue(0.01, 'Amount must be greater than 0'),
     v.custom(validateAmount)
   ),
-  method: v.string('Method is required'),
+  payment_method: v.string('Payment method is required'),
   received_at: v.string('Date is required'),
   reference: v.optional(v.string()),
   notes: v.optional(v.string()),
@@ -213,7 +213,7 @@ const userStore = useUserStore()
 const resetForm = () => {
   Object.assign(state, {
     amount: 0,
-    method: 'cash',
+    payment_method: 'bank_transfer',
     received_at: getToday(),
     reference: '',
     notes: ''
@@ -227,8 +227,7 @@ const onSubmit = () => {
       amount: Number(state.amount),
       portfolio_id: props.portfolioId,
       user_id: userStore.user?.id,
-      invoice_id: props.invoice.id ?? null,
-      payment_method: state.method
+      invoice_id: props.invoice.id ?? null
     })
     resetForm()
   } catch (err) {
