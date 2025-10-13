@@ -13,6 +13,48 @@
     </div>
     
     <UCard class="w-full">
+      <!-- Social Login Buttons -->
+      <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+        <UButton
+          block
+          color="white"
+          class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
+          @click="signInWithGoogle"
+        >
+          <template #leading>
+            <img 
+              src="https://www.google.com/favicon.ico" 
+              alt="Google" 
+              class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3"
+            />
+          </template>
+          Continue with Google
+        </UButton>
+        
+        <UButton
+          block
+          color="white"
+          class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
+          @click="signInWithFacebook"
+        >
+          <template #leading>
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
+              <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+            </svg>
+          </template>
+          Continue with Facebook
+        </UButton>
+      </div>
+      
+      <div class="relative mb-4 sm:mb-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center">
+          <span class="px-3 bg-white text-gray-500 text-xs sm:text-sm">Or continue with email</span>
+        </div>
+      </div>
+      
       <form @submit.prevent="handleLogin" class="space-y-4 sm:space-y-6">
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
@@ -52,16 +94,26 @@
           </UInput>
         </div>
         
-        <div class="pt-2">
-          <UButton
-            type="submit"
-            :loading="loading"
-            :disabled="loading"
-            class="w-full text-sm sm:text-base flex items-center justify-center"
-            size="lg"
-          >
-            Sign in
-          </UButton>
+        <div class="pt-2 sm:pt-3">
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 sm:gap-6 pt-2">
+            <div class="text-sm w-full sm:w-auto text-center sm:text-left">
+              <span class="text-gray-600">
+                Don't have an account? 
+              </span>
+              <NuxtLink to="/auth/register" class="font-medium text-primary-600 hover:text-primary-500 transition-colors whitespace-nowrap">
+                Sign up
+              </NuxtLink>
+            </div>
+            <UButton
+              type="submit"
+              :loading="loading"
+              :disabled="loading"
+              class="w-full sm:w-auto px-6 py-2.5 sm:py-2 text-sm sm:text-base justify-center"
+              size="md"
+            >
+              Sign in
+            </UButton>
+          </div>
         </div>
       </form>
     </UCard>

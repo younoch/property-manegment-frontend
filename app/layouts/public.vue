@@ -52,7 +52,7 @@
               <span class="sr-only">Twitter</span>
               <UIcon name="i-mdi-twitter" class="h-5 w-5" />
             </a>
-            <a href="#" class="text-gray-400 hover:text-gray-500">
+            <a href="https://www.facebook.com/leasedirector/" target="_blank" class="text-gray-400 hover:text-gray-500">
               <span class="sr-only">Facebook</span>
               <UIcon name="i-mdi-facebook" class="h-5 w-5" />
             </a>
