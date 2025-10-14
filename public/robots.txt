@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+disallow: /system-monitor
 Sitemap: https://www.leasedirector.com/sitemap.xml
