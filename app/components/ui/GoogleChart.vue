@@ -7,7 +7,6 @@ const props = defineProps<{
   type: ChartType
   data: (string | number | Date)[][]
   options?: Record<string, any>
-  /** Tailwind classes for the outer wrapper (sets size). Default: w-full h-[300px] */
   wrapperClass?: string
 }>()
 
@@ -75,7 +74,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :class="wrapperClass || 'w-full h-[300px] relative' " ref="wrapperEl">
+  <div :class="wrapperClass || 'w-full h-[150px] sm:h-[300px] relative' " ref="wrapperEl">
     <div ref="chartEl" class="w-full h-full" />
   </div>
 </template>

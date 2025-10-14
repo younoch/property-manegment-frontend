@@ -19,7 +19,7 @@
       </div>
     </template>
 
-    <div v-if="showChart" class="flex-1 min-h-[300px]">
+    <div v-if="showChart" class="flex-1 min-h-[150px] sm:min-h-[300px]">
       <GoogleChart
         :type="chartType"
         :data="chartData"
@@ -27,7 +27,7 @@
         class="w-full h-full"
       />
     </div>
-    <div v-else class="flex-1 min-h-[300px] flex items-center justify-center">
+    <div v-else class="flex-1 min-h-[150px] sm:min-h-[300px] flex items-center justify-center">
       <p class="text-gray-500 dark:text-gray-400">No data available</p>
     </div>
 
