@@ -28,6 +28,11 @@ const rebootContent = [
   `BuiltAt: ${builtAt}`,
   `Sitemap: ${sitemapUrl}`,
   `Note: LeaseDirector sitemap and metadata refreshed.`,
+  '',
+  // Mirror robots directives in reboot.txt for convenience/monitoring
+  'User-agent: *',
+  'Allow: /',
+  `Sitemap: ${sitemapUrl}`,
   ''
 ].join('\n')
 
