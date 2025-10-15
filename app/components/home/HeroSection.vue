@@ -7,13 +7,13 @@
         </p>
 
         <h1 class="mt-5 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
-          Manage leases, send invoices,
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">manage payments—fast.</span>
+          Smart Property Management for
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
         </h1>
 
         <p class="mt-4 text-gray-700 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed text-center sm:text-left">
-          <strong>LeaseDirector</strong> — <em>Smart Property Management Made Easy for Small Landlords</em>.
-          Create leases, auto-generate monthly invoices, track payments and late fees, all in your portfolio time zone.
+          <strong>LeaseDirector</strong> makes it easy to manage leases, send invoices, and track payments—all in one place.
+          Automate rent collection, generate professional invoices, and get paid on time, every time.
         </p>
 
         <div class="mt-7 flex flex-col sm:flex-row gap-3">
