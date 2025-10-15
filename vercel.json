@@ -1,10 +1,4 @@
 {
-    "redirects": [
-      {
-        "source": "https://leasedirector.com/(.*)",
-        "destination": "https://www.leasedirector.com/$1",
-        "permanent": true
-      }
-    ]
+    "redirects": []
   }
   
