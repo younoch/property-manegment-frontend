@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
 import PortfolioCard from '~/components/portfolios/PortfolioCard.vue'
-import { createProtectedApiClient } from '../../utils/api'
+import { createProtectedApiClient } from '@/utils/api'
 import { useToast } from '#imports'
 
 definePageMeta({ middleware: ['auth'] })

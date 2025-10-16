@@ -109,9 +109,9 @@ definePageMeta({ middleware: ['auth'] })
 
 import { h, resolveComponent, nextTick, ref, computed, watch, defineAsyncComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import ConfirmDeleteModal from '../components/ui/ConfirmDeleteModal.vue'
-import { createProtectedApiClient } from '../../utils/api'
-import { useAuth } from '../../composables/useAuth'
+import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal.vue'
+import { createProtectedApiClient } from '@/utils/api'
+import { useAuth } from '@/composables/useAuth'
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')

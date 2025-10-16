@@ -63,9 +63,7 @@
 
 <script setup lang="ts">
 import { object, string, minLength, pipe, safeParse } from 'valibot'
-import { createProtectedApiClient } from '../../utils/api'
-import { useApiToast } from '../../composables/useApiToast'
-import { useAuth } from '../../composables/useAuth'
+import { createProtectedApiClient } from '@/utils/api'
 import timezones from 'timezones-list'
 
 interface TimezoneOption {

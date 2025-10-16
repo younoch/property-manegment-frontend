@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDebounceFn } from '@vueuse/core'
-import { createProtectedApiClient } from '../../utils/api'
+import { createProtectedApiClient } from '@/utils/api'
 import { useApiToast } from '../../composables/useApiToast'
 
 type Tenant = { id: string; first_name: string; last_name: string; email?: string | null; phone?: string | null }

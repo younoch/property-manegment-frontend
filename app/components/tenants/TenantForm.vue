@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { object, string, boolean, minLength, email, pipe, number, safeParse } from 'valibot'
-import { createProtectedApiClient } from '../../utils/api'
+import { createProtectedApiClient } from '@/utils/api'
 import { ref, reactive, computed, watch } from 'vue'
 
 const props = defineProps<{

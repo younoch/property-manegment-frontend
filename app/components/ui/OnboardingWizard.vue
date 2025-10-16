@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core'
 import { object, string, minLength, pipe, safeParse, email as validateEmail } from 'valibot'
-import { createProtectedApiClient } from '../../utils/api'
-import { useApiToast } from '../../composables/useApiToast'
-import { useAuth } from '../../composables/useAuth'
-import { PROPERTY_TYPES } from '../../constants/property'
+import { createProtectedApiClient } from '@/utils/api'
+import { PROPERTY_TYPES } from '@/constants/property'
 
 interface Property {
   name: string

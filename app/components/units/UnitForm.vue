@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { object, number, string, minLength, pipe, safeParse, nullable, optional, message } from 'valibot'
-import { createProtectedApiClient } from '../../utils/api'
+import { createProtectedApiClient } from '@/utils/api'
 import { UNIT_STATUSES } from '../../constants/units'
 import { useApiToast } from '../../composables/useApiToast'
 

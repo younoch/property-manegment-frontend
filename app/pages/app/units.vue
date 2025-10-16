@@ -93,9 +93,8 @@
 // ======================
 import { h, resolveComponent, defineAsyncComponent, ref, computed, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import { createProtectedApiClient } from '../../utils/api'
-import { useAuth } from '../../composables/useAuth'
-import { getUnitStatusColor } from '../../constants/units'
+import { createProtectedApiClient } from '@/utils/api'
+import { getUnitStatusColor } from '@/constants/units'
 
 // Lazy load components
 const UnitForm = defineAsyncComponent(() => import('~/components/units/UnitForm.vue'))

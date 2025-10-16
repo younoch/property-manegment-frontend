@@ -122,9 +122,8 @@ definePageMeta({ middleware: ['auth'] })
 import { h, resolveComponent, onMounted, nextTick } from 'vue'
 import { useRoute } from '#imports'
 import type { TableColumn } from '@nuxt/ui'
-import { createProtectedApiClient } from '../../utils/api'
-import { useAuth } from '../../composables/useAuth'
-import { getLeaseStatusColor } from '../../constants/leases'
+import { createProtectedApiClient } from '@/utils/api'
+import { getLeaseStatusColor } from '@/constants/leases'
 
 const UButton = resolveComponent('UButton')
 const ULink = resolveComponent('ULink')
@@ -138,7 +137,7 @@ const columns: TableColumn<any>[] = [
       h(
         ULink,
         { 
-          to: `/leases/${row.original.id}`, 
+          to: `/app/leases/${row.original.id}`, 
           class: 'text-primary-600 hover:underline cursor-pointer' 
         },
         () => `#${row.original.id}`

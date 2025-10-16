@@ -32,6 +32,7 @@ import type {
     const useAuth: () => any;
     const useUserStore: () => any;
     const useCsrf: () => any;
+    const useApiToast: () => any;
 
     // Nuxt types
     interface RouteLocationNormalized {

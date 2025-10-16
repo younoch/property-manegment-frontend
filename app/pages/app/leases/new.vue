@@ -3,7 +3,7 @@ import { useApiToast } from '~/composables/useApiToast'
 
 definePageMeta({ middleware: ['auth'] })
 
-import { createProtectedApiClient } from '../../utils/api'
+import { createProtectedApiClient } from '@/utils/api'
 
 
 // Step components
