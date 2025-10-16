@@ -93,9 +93,9 @@
 // ======================
 import { h, resolveComponent, defineAsyncComponent, ref, computed, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import { createProtectedApiClient } from '../utils/api'
-import { useAuth } from '../composables/useAuth'
-import { getUnitStatusColor } from '../constants/units'
+import { createProtectedApiClient } from '../../utils/api'
+import { useAuth } from '../../composables/useAuth'
+import { getUnitStatusColor } from '../../constants/units'
 
 // Lazy load components
 const UnitForm = defineAsyncComponent(() => import('~/components/units/UnitForm.vue'))
@@ -303,7 +303,7 @@ function getRowItems(row: any) {
       color: 'secondary',
       class: 'text-secondary',
       onSelect() {
-        navigateTo(`/leases/new?unitId=${row.original.id}&propertyId=${row.original.property_id}`)
+        navigateTo(`/app/leases/new?unitId=${row.original.id}&propertyId=${row.original.property_id}`)
       }
     })
   }
@@ -374,7 +374,7 @@ watch(selectedPropertyId, async () => {
 // ======================
 const onCreated = async (created: any) => {
   if (route.query.onboarding) {
-    navigateTo(`/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&onboarding=true`)
+    navigateTo(`/app/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&onboarding=true`)
   }
   // Refresh the units list to get the latest data
   await loadUnits()

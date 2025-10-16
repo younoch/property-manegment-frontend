@@ -463,7 +463,7 @@ watch(selectedPropertyId, async () => {
 // ======================
 const onCreated = async (created: any) => {
   if (route.query.onboarding) {
-    navigateTo(`/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&portfolioId=${selectedPortfolioId.value}&onboarding=true`)
+    navigateTo(`/app/leases/new?unitId=${created.id}&propertyId=${selectedPropertyId.value}&portfolioId=${selectedPortfolioId.value}&onboarding=true`)
   }
   // Refresh the units list to get the latest data
   await loadExpenses()

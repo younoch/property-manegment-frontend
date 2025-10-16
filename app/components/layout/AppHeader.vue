@@ -145,19 +145,19 @@
                       </div>
                     </div>
                     <div class="flex-1 overflow-y-auto">
-                      <NuxtLink to="/profile"
+                      <NuxtLink to="/app/profile"
                         class="flex items-center px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm"
                         @click="userMenuOpen = false" active-class="text-primary">
                         <UIcon name="i-heroicons-user" class="w-5 h-5 mr-3" />
                         <span>Profile</span>
                       </NuxtLink>
-                      <NuxtLink to="/portfolios"
+                      <NuxtLink to="/app/portfolios"
                         class="flex items-center px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm"
                         @click="userMenuOpen = false" active-class="text-primary">
                         <UIcon name="i-heroicons-briefcase" class="w-5 h-5 mr-3" />
                         <span>Portfolio</span>
                       </NuxtLink>
-                      <NuxtLink to="/settings"
+                      <NuxtLink to="/app/settings"
                         class="flex items-center px-2 py-3 text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-base md:text-sm"
                         @click="userMenuOpen = false" active-class="text-primary">
                         <UIcon name="i-heroicons-cog-6-tooth" class="w-5 h-5 mr-3" />

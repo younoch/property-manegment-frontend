@@ -15,7 +15,7 @@
       
       <div class="space-y-4">
         <UButton
-          to="/dashboard"
+          to="/app/dashboard"
           variant="primary"
           size="lg"
           class="w-full"

@@ -215,7 +215,7 @@ function goBack() {
         <h1 class="text-xl md:text-2xl font-semibold">New Lease</h1>
         <p class="text-sm text-gray-500">Follow the steps to lease a unit to tenant(s).</p>
       </div>
-      <UButton variant="ghost" to="/leases" icon="i-heroicons-arrow-left">Back to Leases</UButton>
+      <UButton variant="ghost" to="/app/leases" icon="i-heroicons-arrow-left">Back to Leases</UButton>
     </div>
 
     <UStepper :items="steps" v-model="activeStep" orientation="horizontal" />

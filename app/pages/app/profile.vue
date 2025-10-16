@@ -74,8 +74,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ROLE_OPTIONS, getRoleColor, getRoleLabel } from '../constants'
-import { useUserStore } from '../stores/user'
+import { ROLE_OPTIONS, getRoleColor, getRoleLabel } from '../../constants'
+import { useUserStore } from '../../stores/user'
 import UserProfileUpdateModal from '../components/profile/UserProfileUpdateModal.vue'
 
 definePageMeta({ middleware: 'auth' })

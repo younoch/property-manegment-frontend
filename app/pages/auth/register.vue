@@ -310,7 +310,7 @@ const handleRegister = async () => {
       
       // Redirect to dashboard after a short delay
       setTimeout(() => {
-        navigateTo('/dashboard');
+        navigateTo('/app/dashboard');
       }, 1500);
     } else {
       errorMessage.value = result?.error || 'Registration failed';

@@ -20,7 +20,7 @@ const getApiConfig = () => {
   if (baseFromEnv) {
     return {
       BASE_URL: baseFromEnv,
-      COOKIE_DOMAIN: isProduction ? (runtimePublic.frontendDomain || 'yourapp.com') : 'localhost',
+      COOKIE_DOMAIN: isProduction ? (runtimePublic.frontendDomain || 'leasedirector.com') : 'localhost',
       COOKIE_SECURE: !!isProduction,
       COOKIE_SAME_SITE: (isProduction ? 'strict' : 'lax'),
       CORS_CREDENTIALS: true,
@@ -30,10 +30,10 @@ const getApiConfig = () => {
 
   // Fallbacks when no explicit base URL provided
   if (isProduction) {
-    const frontendDomain = (runtimePublic.frontendDomain || 'yourapp.com')
+    const frontendDomain = (runtimePublic.frontendDomain || 'leasedirector.com')
       .replace(/^https?:\/\//, '')
       .replace(/\/$/, '');
-    const backendDomain = (runtimePublic.backendDomain || 'api.yourapp.com')
+    const backendDomain = (runtimePublic.backendDomain || 'api.leasedirector.com')
       .replace(/^https?:\/\//, '')
       .replace(/\/$/, '');
     return {

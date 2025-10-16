@@ -36,7 +36,7 @@
         <tbody class="divide-y divide-gray-100/70 dark:divide-white/10">
           <tr v-for="inv in items" :key="inv.id" class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition">
             <td class="py-2 px-2 sm:px-3 font-medium">
-              <ULink :to="`/invoices/${inv.id}`" class="text-primary-600 hover:underline">#{{ inv.invoice_number }}</ULink>
+              <ULink :to="`/app/invoices/${inv.id}`" class="text-primary-600 hover:underline">#{{ inv.invoice_number }}</ULink>
             </td>
             <td class="py-2 px-1 sm:px-3 whitespace-nowrap">{{ fmtDate(inv.issue_date) }}</td>
             <td class="py-2 px-1 sm:px-3 whitespace-nowrap">{{ fmtDate(inv.due_date) }}</td>

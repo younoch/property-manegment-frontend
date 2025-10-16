@@ -59,14 +59,14 @@ onMounted(async () => {
   if (process.client) {
     await userStore.fetchUser()
     if (userRole.value !== 'super_admin') {
-      navigateTo('/dashboard')
+      navigateTo('/app/dashboard')
     }
   }
 })
 
 watch(userRole, (role) => {
   if (process.client && role && role !== 'super_admin') {
-    navigateTo('/dashboard')
+    navigateTo('/app/dashboard')
   }
 })
 

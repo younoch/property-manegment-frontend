@@ -23,7 +23,7 @@
         size="sm"
         class="w-full sm:w-auto justify-center"
         :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
-        :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}`"
+        :to="`/app/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}`"
       >
         <span class="hidden sm:inline">Add Lease</span>
         <span class="sm:hidden">New Lease</span>
@@ -78,7 +78,7 @@
           <UButton 
             icon="i-heroicons-plus"
             size="sm"
-            :to="`/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}`"
+            :to="`/app/leases/new?unitId=${selectedUnitId}&propertyId=${selectedPropertyId}`"
             :disabled="!selectedPortfolioId || !selectedUnitId || !selectedPropertyId"
             class="w-full sm:w-auto"
           >

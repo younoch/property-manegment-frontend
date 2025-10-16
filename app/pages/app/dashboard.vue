@@ -410,7 +410,7 @@ onMounted(async () => {
                 variant="ghost" 
                 size="sm"
                 label="View All"
-                to="/maintenance"
+                to="/app/maintenance"
                 trailing-icon="i-heroicons-arrow-right"
               />
             </div>

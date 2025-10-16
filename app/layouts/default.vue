@@ -57,6 +57,7 @@ import AppHeader from '~/components/layout/AppHeader.vue'
 import OnboardingWizard from '~/components/ui/OnboardingWizard.vue'
 import { useUserStore } from '~/stores/user'
 import { useAuthStore } from '~/stores/auth'
+import { getSidebarNav } from '#imports'
 
 const route = useRoute()
 const sidebarOpen = ref(false)
@@ -93,10 +94,10 @@ watch(() => userStore.user, (newUser) => {
 const handleOnboardingComplete = async () => {
   try {
     await authStore.completeOnboarding()
-    navigateTo('/units/?onboarding=true')
+    navigateTo('/app/units/?onboarding=true')
   } catch (error) {
     console.error('Failed to complete onboarding:', error)
-    navigateTo('/dashboard')
+    navigateTo('/app/dashboard')
   }
 }
 

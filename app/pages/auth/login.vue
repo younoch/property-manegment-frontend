@@ -193,7 +193,7 @@ const handleLogin = async () => {
           icon: 'i-heroicons-check-circle'
         });
         // Use Nuxt navigation to avoid a full page reload
-        await navigateTo('/dashboard');
+        await navigateTo('/app/dashboard');
       } else {
         toast.add({
           title: 'Sign In Error',

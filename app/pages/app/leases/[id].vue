@@ -208,7 +208,7 @@ onMounted(reload)
 async function onGenerateNext() {
   const created = await generateNextInvoice()
   if (created?.id) {
-    navigateTo(`/invoices/${created.id}`)
+    navigateTo(`/app/invoices/${created.id}`)
   } else {
     await reload()
     tab.value = 'invoices'

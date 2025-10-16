@@ -106,7 +106,7 @@
             
             <UButton
               v-if="isLoggedIn"
-              to="/dashboard"
+              to="/app/dashboard"
               variant="ghost"
               class="w-full justify-start"
             >

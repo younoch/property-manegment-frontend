@@ -18,7 +18,7 @@
         <UButton 
           size="xs"
           variant="ghost" 
-          :to="`/leases/${model?.lease_id}`" 
+          :to="`/app/leases/${model?.lease_id}`" 
           icon="i-heroicons-arrow-left"
           class="text-xs sm:text-sm"
         >
