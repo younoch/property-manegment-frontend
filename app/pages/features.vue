@@ -145,19 +145,19 @@ import { useHead } from '#imports'
 
 definePageMeta({ 
   layout: 'public',
-  title: 'Features - LeaseDirector Property Management',
+  title: 'Features - LeaseDirector Property Management Software',
   description: 'Discover powerful property management features including lease tracking, rent collection, maintenance requests, and financial reporting. Built for small landlords.'
 })
 
 // SEO: Set up meta for this page
 useHead({
-  title: 'Features - LeaseDirector Property Management',
+  title: 'Features - LeaseDirector Property Management Software',
   meta: [
     { 
       name: 'description', 
       content: 'Discover powerful property management features including lease tracking, rent collection, maintenance requests, and financial reporting. Built for small landlords.' 
     },
-    { property: 'og:title', content: 'Features - LeaseDirector Property Management' },
+    { property: 'og:title', content: 'Features - LeaseDirector Property Management Software' },
     { property: 'og:description', content: 'Discover powerful property management features designed specifically for small landlords and property managers.' },
   ]
 })

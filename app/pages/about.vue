@@ -180,7 +180,7 @@ import StackCard from '~/components/about/StackCard.vue'
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'About - LeaseDirector Property Management',
+  title: 'About - LeaseDirector Property Management Software',
   meta: [
     { name: 'description', content: 'LeaseDirector is built for independent landlords and small property teams. Learn our mission, values, team, and how we build.' }
   ]

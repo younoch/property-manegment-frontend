@@ -3,11 +3,11 @@
     <div class="grid lg:grid-cols-2 gap-3 md:gap-10 items-center">
       <div>
         <p class="inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
-          LeaseDirector · Smart Property Management
+          LeaseDirector · Smart Property Management Software
         </p>
 
         <h1 class="mt-5 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
-          Smart Property Management for
+          Smart Property Management Software for
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
         </h1>
 
