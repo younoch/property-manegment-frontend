@@ -23,7 +23,7 @@
       </div>
 
       <div class="mt-8 flex justify-center">
-        <UButton color="primary" size="lg" to="/auth/register" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">
+        <UButton color="primary" size="lg" to="/auth/signup" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">
           Start Free
         </UButton>
       </div>

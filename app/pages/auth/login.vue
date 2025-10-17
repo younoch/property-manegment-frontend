@@ -6,7 +6,7 @@
       </h2>
       <p class="text-sm sm:text-base text-gray-600">
         Or
-        <NuxtLink to="/auth/register" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+        <NuxtLink to="/auth/signup" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
           create a new account
         </NuxtLink>
       </p>
@@ -100,7 +100,7 @@
               <span class="text-gray-600">
                 Don't have an account? 
               </span>
-              <NuxtLink to="/auth/register" class="font-medium text-primary-600 hover:text-primary-500 transition-colors whitespace-nowrap">
+              <NuxtLink to="/auth/signup" class="font-medium text-primary-600 hover:text-primary-500 transition-colors whitespace-nowrap">
                 Sign up
               </NuxtLink>
             </div>
@@ -121,6 +121,12 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Login - LeaseDirector Property Management',
+  meta: [
+    { name: 'description', content: 'Log in to your LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
+  ]
+})
 definePageMeta({
   layout: 'auth',
   middleware: 'guest'

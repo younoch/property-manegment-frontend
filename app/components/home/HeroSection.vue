@@ -17,7 +17,7 @@
         </p>
 
         <div class="mt-7 flex flex-col sm:flex-row gap-3">
-          <UButton color="primary" size="lg" to="/auth/register" class=" justify-center items-center shadow-lg shadow-primary-200 hover:shadow-primary-300">
+          <UButton color="primary" size="lg" to="/auth/signup" class=" justify-center items-center shadow-lg shadow-primary-200 hover:shadow-primary-300">
             Get Started Free
           </UButton>
           <!-- <UButton class="justify-center items-center" variant="outline" color="primary" size="lg" to="/demo">See Live Demo</UButton> -->

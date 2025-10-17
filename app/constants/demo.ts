@@ -78,7 +78,7 @@ export const FORM_VALIDATION = {
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/api/auth/login',
-    REGISTER: '/api/auth/register',
+    REGISTER: '/api/auth/signup',
     LOGOUT: '/api/auth/logout',
     REFRESH: '/api/auth/refresh'
   },

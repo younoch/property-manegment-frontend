@@ -15,7 +15,7 @@ A modern property management application built with Nuxt.js 3 and Nuxt UI 3.
 This application implements a secure authentication system using **Pinia stores** for state management and HttpOnly cookies for secure authentication, as provided by your backend. The system includes:
 
 ### Authentication Flow
-1. **User Registration** (`/auth/register`) - Create new accounts with role selection
+1. **User Registration** (`/auth/signup`) - Create new accounts with role selection
 2. **User Login** (`/auth/login`) - Secure authentication with email/password
 3. **Dashboard** (`/dashboard`) - Protected area for authenticated users
 4. **Automatic Redirects** - Smart routing based on authentication status
@@ -200,7 +200,7 @@ pnpm preview
 ```
 
 ### Testing Authentication
-1. Visit `/auth/register` to create a new account
+1. Visit `/auth/signup` to create a new account
 2. Use `/auth/login` to sign in with existing credentials
 3. Access `/dashboard` to view the protected area
 4. Test role-based access with different user accounts

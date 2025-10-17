@@ -96,7 +96,7 @@
         <h3 class="text-xl md:text-2xl font-bold">Start managing smarter today</h3>
         <p class="mt-2 text-gray-600">Sign up free. Upgrade only when you need more.</p>
         <div class="mt-6">
-          <UButton color="primary" size="md" to="/auth/register" class="mx-auto">Get Started Free</UButton>
+          <UButton color="primary" size="md" to="/auth/signup" class="mx-auto">Get Started Free</UButton>
         </div>
       </div>
     </section>
@@ -107,7 +107,7 @@
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'LeaseDirector — Pricing',
+  title: 'Pricing - LeaseDirector Property Management',
   meta: [{ name: 'description', content: 'Simple pricing...' }]
 })
 

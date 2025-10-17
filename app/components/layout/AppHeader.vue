@@ -72,7 +72,7 @@
                   <UIcon name="i-heroicons-arrow-right-on-rectangle" class="sm:hidden w-5 h-5" />
                 </NuxtLink>
 
-                <NuxtLink to="/auth/register"
+                <NuxtLink to="/auth/signup"
                   class="text-white px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
                   style="background: var(--ui-primary)">
                   <span class="hidden sm:inline">Get Started</span>

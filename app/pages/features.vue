@@ -118,7 +118,7 @@
           <p class="text-gray-700 text-lg mb-8 max-w-2xl mx-auto">Join hundreds of landlords who trust LeaseDirector to manage their properties efficiently.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <UButton 
-              to="/auth/register" 
+              to="/auth/signup" 
               color="primary"
               size="xl"
               class="px-8"

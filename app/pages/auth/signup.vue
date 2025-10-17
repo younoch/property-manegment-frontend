@@ -187,6 +187,12 @@ definePageMeta({
   layout: 'auth',
   middleware: 'guest'
 });
+useHead({
+  title: 'Sign Up - LeaseDirector Property Management',
+  meta: [
+    { name: 'description', content: 'Sign up for a LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
+  ]
+})
 
 const authStore = useAuthStore();
 const userStore = useUserStore();

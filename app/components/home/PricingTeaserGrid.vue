@@ -16,7 +16,7 @@
             'Email support (48h)'
           ]"
           cta-text="Get Started"
-          cta-to="/auth/register"
+          cta-to="/auth/signup"
         />
         <PricingTeaserCard
           title="Pro"
@@ -29,7 +29,7 @@
             'Priority email support (24h)'
           ]"
           cta-text="Upgrade to Pro"
-          cta-to="/auth/register"
+          cta-to="/auth/signup"
           highlight
         />
         <PricingTeaserCard

@@ -70,7 +70,7 @@
             
             <UButton
               v-if="!isLoggedIn"
-              to="/auth/register"
+              to="/auth/signup"
               variant="outline"
               class="w-full"
             >
