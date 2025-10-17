@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useUserStore } from '../stores/user';
-import { useAuthStore } from '../stores/auth';
+import { useUserStore } from '@/stores/user';
+import { useAuthStore } from '@/stores/auth';
 import { useAuth } from '~/composables/useAuth';
 import { useCsrf } from '~/composables/useCsrf';
 

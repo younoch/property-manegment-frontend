@@ -1,5 +1,5 @@
-import { useApiConfig } from '../composables/useApiConfig';
-import { useApiToast } from '../composables/useApiToast';
+import { useApiConfig } from '@/composables/useApiConfig';
+import { useApiToast } from '@/composables/useApiToast';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -199,7 +199,7 @@ export const makeProtectedRequest = async <T>(
   const url = `${config.API_CONFIG.BASE_URL}${endpoint}`;
 
   // Use the new token manager approach
-  const { tokenManager } = await import('../services/tokenManager');
+  const { tokenManager } = await import('@/services/tokenManager');
   const method = options.method as HttpMethod || 'GET';
   const csrfHeaders = method !== 'GET' ? tokenManager.getCsrfHeader() : {};
   
@@ -315,7 +315,7 @@ export class ProtectedApiClient {
     
     try {
       // Get CSRF token for state-changing operations
-      const { tokenManager } = await import('../services/tokenManager');
+      const { tokenManager } = await import('@/services/tokenManager');
       const csrfHeaders = method !== 'GET' ? tokenManager.getCsrfHeader() : {};
       const { headers: optionHeaders, method: _ignoredMethod, ...restOptions } = options || {};
 
@@ -333,7 +333,7 @@ export class ProtectedApiClient {
       return response;
     } catch (error: any) {
       if (this.isTokenExpiredError(error)) {
-        const { tokenManager } = await import('../services/tokenManager');
+        const { tokenManager } = await import('@/services/tokenManager');
         
         // Check for specific 401 error messages and handle accordingly
         if (error?.status === 401) {
@@ -516,11 +516,11 @@ export class ProtectedApiClient {
 
     
     try {
-      const { tokenManager } = await import('../services/tokenManager');
+      const { tokenManager } = await import('@/services/tokenManager');
       tokenManager.clearTokens();
       
       // Clear user store
-      const { useUserStore } = await import('../stores/user');
+      const { useUserStore } = await import('@/stores/user');
       const userStore = useUserStore();
       userStore.setUser(null);
       userStore.persistToStorage();

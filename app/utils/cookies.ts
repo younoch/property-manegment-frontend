@@ -159,10 +159,10 @@ export async function checkCookieAccessibility(): Promise<void> {
   try {
     let baseUrl: string | undefined;
     try {
-      const { getRuntimeApiConfig } = await import('../config/api');
+      const { getRuntimeApiConfig } = await import('~/config/api');
       baseUrl = getRuntimeApiConfig().BASE_URL;
     } catch {
-      const { useApiConfig } = await import('../composables/useApiConfig');
+      const { useApiConfig } = await import('~/composables/useApiConfig');
       baseUrl = useApiConfig().API_CONFIG.BASE_URL;
     }
     const frontendOrigin = window.location.origin;

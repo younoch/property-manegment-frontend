@@ -109,12 +109,12 @@ import {
   pipe,
 } from "valibot"; 
 import { createProtectedApiClient } from "@/utils/api";
-import { useApiToast } from "../../composables/useApiToast";
-import { PROPERTY_TYPES } from "../../constants/property";
+import { useApiToast } from "@/composables/useApiToast";
+import { PROPERTY_TYPES } from "@/constants/property";
 import type {
   AddPropertyPayload,
   CreatedProperty,
-} from "../../../types/properties";
+} from "~/types/properties";
 const props = defineProps<{ open: boolean; selectedPortfolioId?: string; model?: Partial<CreatedProperty> | null; view?: boolean }>();
 
 const emit = defineEmits<{

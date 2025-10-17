@@ -1,5 +1,5 @@
-import { createApiClient } from '../utils/api';
-import { getCacheDuration } from '../constants/cache';
+import { createApiClient } from '@/utils/api';
+import { getCacheDuration } from '@/constants/cache';
 
 export interface CsrfState {
   token: string | null;
@@ -59,7 +59,7 @@ export const useCsrf = () => {
     inFlight.value = true;
 
     try {
-      const { tokenManager } = await import('../services/tokenManager');
+      const { tokenManager } = await import('@/services/tokenManager');
       const maybeExisting = tokenManager.getCsrfTokenValue();
       if (maybeExisting && !force) {
         token.value = maybeExisting;
@@ -91,7 +91,7 @@ export const useCsrf = () => {
           const refreshResult = await refreshToken();
           if (refreshResult) {
 
-            const { tokenManager } = await import('../services/tokenManager');
+            const { tokenManager } = await import('@/services/tokenManager');
             const retried = await tokenManager.getCsrfToken();
             if (retried) {
               token.value = retried;
@@ -122,7 +122,7 @@ export const useCsrf = () => {
 
     try {
 
-      const { tokenManager } = await import('../services/tokenManager');
+      const { tokenManager } = await import('@/services/tokenManager');
       const ok = await tokenManager.refreshCsrfToken();
       if (ok) {
         const value = tokenManager.getCsrfTokenValue();
@@ -180,13 +180,13 @@ export const useCsrf = () => {
     
     try {
       // Clear user store
-      const { useUserStore } = await import('../stores/user');
+      const { useUserStore } = await import('@/stores/user');
       const userStore = useUserStore();
       userStore.setUser(null);
       userStore.persistToStorage();
       
       // Clear auth store
-      const { useAuthStore } = await import('../stores/auth');
+      const { useAuthStore } = await import('@/stores/auth');
       const authStore = useAuthStore();
       authStore.clearError();
       authStore.clearCaches();

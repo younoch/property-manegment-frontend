@@ -264,7 +264,7 @@ import { ref, computed, watch, defineComponent, onMounted, defineAsyncComponent 
 import { useToast } from '#imports'
 import DeletePortfolioModal from './DeletePortfolioModal.vue'
 import { createProtectedApiClient } from '~/utils/api'
-import type { PortfolioRow } from '../../../types/portfolio'
+import type { PortfolioRow } from '~/types/portfolio'
 import timezones from 'timezones-list'
 
 // Initialize API client

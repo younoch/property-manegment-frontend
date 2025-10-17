@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useUserStore } from './user';
-import { createApiClient, createProtectedApiClient } from '../utils/api';
-import type { User } from '../types/auth';
+import { createApiClient, createProtectedApiClient } from '@/utils/api';
+import type { User } from '@/types/auth';
 
 type SignupData = {
   email: string;

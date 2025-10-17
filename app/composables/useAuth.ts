@@ -1,8 +1,8 @@
 import { computed } from 'vue';
 import { useCsrf } from './useCsrf';
-import { useAuthStore } from '../stores/auth';
-import { useUserStore } from '../stores/user';
-import type { User, AuthState } from '../types/auth';
+import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/user';
+import type { User, AuthState } from '@/types/auth';
 
 export const useAuth = () => {
   const authStore = useAuthStore();

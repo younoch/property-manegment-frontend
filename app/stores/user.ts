@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import type { User } from '../types/auth';
-import { createApiClient } from '../utils/api';
+import type { User } from '@/types/auth';
+import { createApiClient } from '@/utils/api';
 
 export interface UserState {
   user: User | null;

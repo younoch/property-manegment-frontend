@@ -1,5 +1,5 @@
-import { ENDPOINTS } from '../config/api';
-import { createApiClient } from '../utils/api';
+import { ENDPOINTS } from '@/config/api';
+import { createApiClient } from '@/utils/api';
 
 export interface TokenResponse {
   message: string;
@@ -166,11 +166,11 @@ export class TokenManager {
       if (!apiConfig) {
         // Safe import: in Nitro/server where composables are not available, use getRuntimeApiConfig
         try {
-          const { getRuntimeApiConfig } = await import('../config/api');
+          const { getRuntimeApiConfig } = await import('@/config/api');
           apiConfig = getRuntimeApiConfig();
         } catch {
           // Fallback to client composable when available
-          const { useApiConfig } = await import('../composables/useApiConfig');
+          const { useApiConfig } = await import('@/composables/useApiConfig');
           apiConfig = useApiConfig().API_CONFIG;
         }
       }

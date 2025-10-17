@@ -4,11 +4,11 @@ export default defineNuxtPlugin(async () => {
 
   try {
     // Initialize token manager
-    const { tokenManager } = await import('../services/tokenManager');
+    const { tokenManager } = await import('@/services/tokenManager');
     const { $fetch } = await import('ofetch');
     
     // Get initial CSRF token only if already authenticated (proactive fetch on boot)
-    const { useAuth } = await import('../composables/useAuth');
+    const { useAuth } = await import('@/composables/useAuth');
     const auth = useAuth();
     if (auth.isAuthenticated.value) {
       await tokenManager.getCsrfToken();

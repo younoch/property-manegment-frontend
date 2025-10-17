@@ -1,5 +1,5 @@
-import type { Property, AddPropertyPayload } from '../../types/properties'
-import { createProtectedApiClient } from '../utils/api'
+import type { Property, AddPropertyPayload } from '~/types/properties'
+import { createProtectedApiClient } from '~/utils/api'
 
 export interface UpdatePropertyData extends Partial<AddPropertyPayload> {
   id: string;

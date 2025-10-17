@@ -184,9 +184,9 @@ import {
   email
 } from "valibot";
 import { createProtectedApiClient } from "@/utils/api";
-import { useApiToast } from "../../composables/useApiToast";
-import { ROLE_OPTIONS, getRoleLabel } from "../../constants/roles";
-import { useUserStore } from "../../stores/user";
+import { useApiToast } from "@/composables/useApiToast";
+import { ROLE_OPTIONS, getRoleLabel } from "@/constants/roles";
+import { useUserStore } from "@/stores/user";
 
 interface ProfileUpdatePayload {
   email: string;
