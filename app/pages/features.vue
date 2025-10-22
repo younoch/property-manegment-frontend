@@ -104,7 +104,7 @@ const features = [
 const faqs = [
   {
     question: 'How does the free trial work?',
-    answer: 'Our 14-day free trial gives you full access to all features. No credit card required. Cancel anytime.'
+    answer: 'Our 2-month free trial gives you full access to all features. No credit card required. Cancel anytime.'
   },
   {
     question: 'Can I manage multiple properties?',
@@ -336,7 +336,7 @@ onMounted(() => {
                 Start Free Trial
               </UButton>
             </div>
-            <p class="mt-3 md:mt-4 text-xs sm:text-sm text-primary-100 opacity-80">No credit card required • 14-day free trial • Cancel anytime</p>
+            <p class="mt-3 md:mt-4 text-xs sm:text-sm text-primary-100 opacity-80">No credit card required • 2-month free trial • Cancel anytime</p>
           </div>
         </div>
       </div>
