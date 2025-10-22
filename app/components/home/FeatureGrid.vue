@@ -1,8 +1,8 @@
 <template>
   <section id="features" class="py-4 md:py-16">
     <div class="container mx-auto px-4">
-      <header class="text-center">
-        <h2 class="text-3xl md:text-4xl font-bold">Everything you need to run rentals</h2>
+      <header class="text-center" aria-labelledby="features-heading">
+        <h2 id="features-heading" class="text-3xl md:text-4xl font-bold">Everything you need to run rentals</h2>
         <p class="mt-3 text-gray-600">Built for small landlords: fast, accurate, and audit-friendly.</p>
       </header>
 

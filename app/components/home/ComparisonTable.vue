@@ -1,7 +1,7 @@
 <template>
-  <section class="py-16 md:py-24 bg-white" id="compare">
+  <section class="py-16 md:py-24 bg-white" id="compare" aria-labelledby="comparison-heading">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-center text-gray-900">
+      <h2 id="comparison-heading" class="text-3xl md:text-4xl font-extrabold text-center text-gray-900">
         Why LeaseDirector Outperforms Spreadsheets
       </h2>
       <p class="mt-4 text-center text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
@@ -14,13 +14,13 @@
         <div class="bg-white/80 backdrop-blur border border-gray-200/70 rounded-2xl shadow-lg overflow-hidden">
           
           <!-- Table Header -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gradient-to-r from-primary-50 to-gray-50">
-            <div class="px-4 py-3 font-semibold text-gray-700">Feature</div>
-            <div class="px-4 py-3 font-semibold text-center text-slate-700">
+          <div role="rowgroup" class="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gradient-to-r from-primary-50 to-gray-50">
+            <div role="columnheader" class="px-4 py-3 font-semibold text-gray-700">Feature</div>
+            <div role="columnheader" class="px-4 py-3 font-semibold text-center text-slate-700">
               <span class="block text-sm font-normal text-slate-500">Traditional Approach</span>
               Spreadsheets
             </div>
-            <div class="px-4 py-3 font-semibold text-center text-primary-700">
+            <div role="columnheader" class="px-4 py-3 font-semibold text-center text-primary-700">
               <span class="block text-sm font-normal text-primary-500">Modern Solution</span>
               LeaseDirector
             </div>
