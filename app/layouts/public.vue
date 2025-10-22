@@ -24,7 +24,6 @@
             <ul class="space-y-2 text-sm text-gray-600">
               <li><NuxtLink to="/features" class="hover:text-primary-600">Features</NuxtLink></li>
               <li><NuxtLink to="/pricing" class="hover:text-primary-600">Pricing</NuxtLink></li>
-              <li><NuxtLink to="/demo" class="hover:text-primary-600">Demo</NuxtLink></li>
             </ul>
           </div>
           <div>

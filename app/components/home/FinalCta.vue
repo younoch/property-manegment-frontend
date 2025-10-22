@@ -7,7 +7,6 @@
         <UButton color="primary" size="lg" to="/auth/signup" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">
           Get Started Free
         </UButton>
-        <UButton variant="soft" color="gray" size="lg" to="/demo">See Live Demo</UButton>
       </div>
       <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
         <img src="https://picsum.photos/300/200?random=21" class="h-24 w-full object-cover rounded-lg border border-gray-200" alt="CTA sample 1"/>
