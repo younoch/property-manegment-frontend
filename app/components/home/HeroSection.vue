@@ -43,13 +43,12 @@
             :property="{ name: 'Parkview Apartments', unit: '#2B', period: 'Oct 1 - Oct 31, 2025', dueDate: 'Nov 5, 2025' }"
             :items="[
               { description: 'Monthly Rent', qty: 1, rate: 1200 },
-              { description: 'Maintenance Fee', qty: 1, rate: 50 }
+              { description: 'Maintenance Fee', qty: 1, rate: 50 },
+              { description: 'Late Fee', qty: 1, rate: 100 },
             ]"
             :taxRate="0"
             :payment="{ bankName: 'LeaseDirector LLC', bank: 'Wells Fargo Bank', account: '123-456-789', swift: 'WFBIUS6S' }"
           />
-
-          <!-- <img src="https://picsum.photos/400/600?random=4" alt="Invoice Preview A4" class="rounded-md w-full h-auto"> -->
         </div>
       </div>
     </div>
