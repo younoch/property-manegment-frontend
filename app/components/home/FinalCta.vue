@@ -5,7 +5,7 @@
       <p class="mt-2 text-gray-600">Create your first lease and send an invoice in minutes.</p>
       <div class="mt-6 flex justify-center gap-3">
         <UButton color="primary" size="lg" to="/auth/signup" class="shadow-lg shadow-primary-200 hover:shadow-primary-300">
-          Get Started Free
+          Start Managing Properties Now
         </UButton>
       </div>
       <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
