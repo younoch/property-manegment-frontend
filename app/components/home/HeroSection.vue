@@ -34,8 +34,22 @@
         <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
           <img src="/hero-dashboard.jpg" alt="Hero Dashboard Mockup" class="w-full h-auto">
         </div>
-        <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-3 animate-float">
-          <img src="https://picsum.photos/400/600?random=4" alt="Invoice Preview A4" class="rounded-md w-full h-auto">
+        <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
+          <RentalInvoice
+            style="zoom: 0.32;"
+            invoiceNumber="LD-INV-0021"
+            invoiceDate="Oct 23, 2025"
+            :tenant="{ name: 'John Doe', address: '123 Elm Street', city: 'San Francisco, CA', email: 'john@example.com' }"
+            :property="{ name: 'Parkview Apartments', unit: '#2B', period: 'Oct 1 - Oct 31, 2025', dueDate: 'Nov 5, 2025' }"
+            :items="[
+              { description: 'Monthly Rent', qty: 1, rate: 1200 },
+              { description: 'Maintenance Fee', qty: 1, rate: 50 }
+            ]"
+            :taxRate="0"
+            :payment="{ bankName: 'LeaseDirector LLC', bank: 'Wells Fargo Bank', account: '123-456-789', swift: 'WFBIUS6S' }"
+          />
+
+          <!-- <img src="https://picsum.photos/400/600?random=4" alt="Invoice Preview A4" class="rounded-md w-full h-auto"> -->
         </div>
       </div>
     </div>
