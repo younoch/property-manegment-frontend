@@ -7,7 +7,8 @@
         </p>
 
         <h1 class="mt-5 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
-          Smart Property Management Software for
+          Property Management Software for
+          <br />
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
         </h1>
 

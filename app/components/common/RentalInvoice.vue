@@ -6,7 +6,7 @@
         <div>
             <div class="flex items-center">
                 <Logo size="w-6 h-6" color="text-primary-600" />
-                <h1 class="ml-2 text-2xl font-bold text-primary-600">LeaseDirector</h1>
+                <p class="ml-2 text-2xl font-bold text-primary-600">LeaseDirector</p>
             </div>
           <p class="text-sm text-gray-500">Property Management for Small Landlords</p>
           <p class="text-sm text-gray-500">www.leasedirector.com</p>
