@@ -18,31 +18,36 @@
         <UButton
           block
           color="white"
+          :loading="loadingGoogle"
+          :disabled="loadingGoogle || loadingFacebook"
           class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
           @click="signInWithGoogle"
         >
           <template #leading>
             <img 
+              v-if="!loadingGoogle"
               src="https://www.google.com/favicon.ico" 
               alt="Google" 
               class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3"
             />
           </template>
-          Continue with Google
+          {{ loadingGoogle ? 'Signing in with Google...' : 'Continue with Google' }}
         </UButton>
         
         <UButton
           block
           color="white"
+          :loading="loadingFacebook"
+          :disabled="loadingGoogle || loadingFacebook"
           class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
           @click="signInWithFacebook"
         >
           <template #leading>
-            <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
+            <svg v-if="!loadingFacebook" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
               <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
             </svg>
           </template>
-          Continue with Facebook
+          {{ loadingFacebook ? 'Signing in with Facebook...' : 'Continue with Facebook' }}
         </UButton>
       </div>
       
@@ -232,12 +237,45 @@ const errors = ref<FormErrors>({
 });
 
 const loading = ref(false);
+const loadingGoogle = ref(false);
+const loadingFacebook = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
 
 // Password visibility toggles
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+
+// Social login functions
+const signInWithGoogle = async () => {
+  try {
+    loadingGoogle.value = true;
+    errorMessage.value = '';
+    
+    // Redirect to your backend's Google OAuth endpoint
+    window.location.href = '/api/auth/google';
+    
+  } catch (error: any) {
+    errorMessage.value = error?.message || 'Failed to sign in with Google';
+  } finally {
+    loadingGoogle.value = false;
+  }
+};
+
+const signInWithFacebook = async () => {
+  try {
+    loadingFacebook.value = true;
+    errorMessage.value = '';
+    
+    // Redirect to your backend's Facebook OAuth endpoint
+    window.location.href = '/api/auth/facebook';
+    
+  } catch (error: any) {
+    errorMessage.value = error?.message || 'Failed to sign in with Facebook';
+  } finally {
+    loadingFacebook.value = false;
+  }
+};
 
 // Watch for auth store changes
 watchEffect(() => {

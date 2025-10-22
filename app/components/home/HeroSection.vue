@@ -32,10 +32,10 @@
 
       <div class="relative">
         <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
-          <img src="https://picsum.photos/800/600?random=4" alt="Hero Dashboard Mockup" class="w-full h-auto">
+          <img src="/hero-dashboard.jpg" alt="Hero Dashboard Mockup" class="w-full h-auto">
         </div>
-        <div class="hidden md:block absolute -bottom-6 -right-6 w-64 rounded-xl border border-gray-200 shadow-md bg-white/80 p-3 animate-float">
-          <img src="https://picsum.photos/400/600?random=5" alt="Invoice Preview A4" class="rounded-md w-full h-auto">
+        <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-3 animate-float">
+          <img src="https://picsum.photos/400/600?random=4" alt="Invoice Preview A4" class="rounded-md w-full h-auto">
         </div>
       </div>
     </div>
