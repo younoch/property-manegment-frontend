@@ -158,29 +158,12 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-white text-gray-900 relative overflow-x-hidden">
-    <!-- Hero Section -->
-    <section class="relative bg-white overflow-hidden py-12 md:py-20">
-      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-          <span class="block">Everything You Need to</span>
-          <span class="block text-primary-600">Grow Your Property Portfolio</span>
-        </h1>
-        <p class="mt-6 text-xl text-gray-600">
-          LeaseDirector combines powerful tools with an intuitive interface to help you manage properties efficiently, reduce administrative work, and improve tenant satisfaction.
-        </p>
-        <div class="mt-8">
-          <a href="#" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 md:py-4 md:text-lg md:px-10">
-            Get Started
-          </a>
-        </div>
-      </div>
-    </section>
 
     <!-- Main Features Grid -->
     <section id="pricing" class="py-6 md:py-12 bg-gray-50 scroll-mt-20">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12 scroll-animate">
-          <span class="inline-block px-3 py-1 text-xs font-semibold text-primary-700 bg-primary-50 rounded-full mb-4">COMPREHENSIVE SOLUTIONS</span>
+          <span class="inline-block px-3 py-1 text-base md:text-lg font-semibold text-primary-700 bg-primary-50 rounded-full mb-4">COMPREHENSIVE SOLUTIONS</span>
           <h2 class="text-3xl md:text-4xl font-bold mb-4">Everything You Need to Grow Your Property Portfolio</h2>
           <p class="text-gray-600 max-w-3xl mx-auto text-lg">LeaseDirector combines powerful tools with an intuitive interface to help you manage properties efficiently, reduce administrative work, and improve tenant satisfaction.</p>
           <div class="mt-6 flex flex-wrap justify-center gap-4">
@@ -197,6 +180,15 @@ onMounted(() => {
               <span>24/7 customer support</span>
             </div>
           </div>
+          <UButton
+            to="/auth/signup"
+            color="primary"
+            variant="soft"
+            size="lg"
+            class="px-8 sm:px-12 text-sm sm:text-base mt-4 md:mt-6"
+          >
+            Claim Your 2-Month Free Trial
+          </UButton>
         </div>
         
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

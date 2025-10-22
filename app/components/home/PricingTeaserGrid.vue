@@ -15,7 +15,7 @@
             'Portfolio timezone support',
             'Email support (48h)'
           ]"
-          cta-text="Get Started"
+          cta-text="Claim Your 2-Month Free Trial"
           cta-to="/auth/signup"
         />
         <PricingTeaserCard
