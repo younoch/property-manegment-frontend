@@ -107,7 +107,7 @@
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'Pricing - LeaseDirector Property Management Software',
+  title: 'Pricing | LeaseDirector Property Management Software',
   meta: [{ name: 'description', content: 'Simple pricing...' }]
 })
 

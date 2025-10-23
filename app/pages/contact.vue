@@ -105,7 +105,7 @@ import { useHead } from '#imports'
 definePageMeta({ layout: 'public' })
 // Page metadata
 useHead({
-  title: 'Contact - LeaseDirector Property Management Software',
+  title: 'Contact | LeaseDirector Property Management Software',
   meta: [
     { name: 'description', content: 'Contact LeaseDirector for product questions, pricing, onboarding, or support. We usually respond within one business day.' }
   ]

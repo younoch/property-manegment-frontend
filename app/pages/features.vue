@@ -3,7 +3,7 @@
 // SEO: Set up meta for this page
 definePageMeta({ layout: 'public' })
 useHead({
-  title: 'Features - LeaseDirector Property Management Software',
+  title: 'Features | LeaseDirector Property Management Software',
   meta: [
     { 
       name: 'description', 
