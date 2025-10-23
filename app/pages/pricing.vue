@@ -23,14 +23,14 @@
 
     <!-- Pricing plans (no inline components; safe for hydration) -->
 <section class="py-8 md:py-16">
-  <div class="container mx-auto px-4 grid md:grid-cols-3 gap-8 relative">
+  <div class="container mx-auto px-4 grid sm:grid-cols-3 md:grid-cols-4 gap-8 relative">
     <div
       v-for="(plan, index) in plans"
       :key="plan.name"
-      class="relative p-6 rounded-2xl border shadow-sm bg-white/80 backdrop-blur transition-all duration-300 hover:border-primary-500 hover:shadow-lg hover:md:scale-105 border-gray-200"
-      :class="{ 'opacity-70 grayscale': index > 0 }"
+      class="relative p-6 rounded-2xl border shadow-sm bg-white/80 backdrop-blur transition-all duration-300 hover:border-primary-500 hover:shadow-lg hover:md:scale-105 border-gray-200 flex flex-col"
+      :class="{ 'opacity-70 grayscale': index > 1 }"
     >
-      <div v-if="index > 0" class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">Coming Soon</div>
+      <div v-if="index > 1" class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">Coming Soon</div>
       <h3 class="text-lg font-bold">{{ plan.name }}</h3>
       <p class="text-sm text-gray-600 mt-1">{{ plan.desc }}</p>
 
@@ -41,7 +41,7 @@
         <span class="text-xs text-gray-600 mb-1">{{ periodLabel }}</span>
       </div>
 
-      <ul class="mt-5 space-y-2 text-xs text-gray-700">
+      <ul class="mt-5 space-y-2 text-xs text-gray-700 flex-1">
         <li v-for="f in plan.features" :key="f" class="flex items-center gap-2">
           <UIcon name="i-heroicons-check-circle" class="text-primary-600" /> {{ f }}
         </li>
@@ -49,13 +49,14 @@
 
       <div class="mt-6">
         <UButton 
-          :color="index === 0 ? 'primary' : 'gray'" 
+          :color="index < 2 ? 'primary' : 'gray'" 
           size="md" 
-          class="w-full" 
+          class="w-full font-semibold" 
           :ui="{ base: 'justify-center' }"
-          :disabled="index > 0"
+          :disabled="index > 1"
+          variant="solid"
         >
-          {{ index === 0 ? plan.cta : 'Coming Soon' }}
+          {{ index < 2 ? plan.cta : 'Coming Soon' }}
         </UButton>
       </div>
     </div>
@@ -68,13 +69,13 @@
         <h2 class="text-xl md:text-2xl font-bold">How our pricing works</h2>
         <p class="mt-3 text-gray-600">
           LeaseDirector pricing is based on the number of <strong>units</strong> you manage,
-          not the number of users. Invite unlimited teammates at no extra cost. Start free with 5 units, upgrade as you grow.
+          not the number of users. Invite unlimited teammates at no extra cost. Start free with 3 units, upgrade as you grow.
         </p>
         <ul class="mt-6 text-gray-700 text-left max-w-md mx-auto space-y-2">
           <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Units drive pricing, not users</li>
           <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Unlimited users per portfolio</li>
           <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Cancel or upgrade anytime</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Free forever for 5 units</li>
+          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Free forever for 3 units</li>
         </ul>
       </div>
     </section>
@@ -121,6 +122,20 @@ const periodLabel = computed(() => {
 })
 
 const plans = [
+  {
+    name: 'Free',
+    desc: 'Perfect for getting started',
+    cta: 'Get Started Free',
+    highlight: false,
+    price: { monthly: '$0', quarterly: '$0', yearly: '$0' },
+    features: [
+      '1 property with up to 3 units',
+      'Basic property management',
+      'Tenant & lease tracking',
+      'Rent payment tracking',
+      'Email support (48h)'
+    ],
+  },
   {
     name: 'Early Bird',
     desc: 'Limited to first 100 adopters',
