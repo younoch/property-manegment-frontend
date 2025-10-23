@@ -25,7 +25,7 @@
         <p class="mt-3 text-xs sm:text-sm text-gray-600">No credit card required · 1-minute signup · Works on mobile</p>
 
         <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
-          <img src="https://picsum.photos/200/300?random=1" alt="Sample building" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
+          <img src="/apartment-building-preview.jpg" alt="apartment building" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
           <img src="https://picsum.photos/200/300?random=2" alt="Sample dashboard" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
           <img src="https://picsum.photos/200/300?random=3" alt="Landlord workspace" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
         </div>
