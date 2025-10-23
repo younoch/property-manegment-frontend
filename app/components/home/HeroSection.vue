@@ -26,7 +26,7 @@
 
         <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
           <img src="/apartment-building-preview.jpg" alt="apartment building" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
-          <img src="https://picsum.photos/200/300?random=2" alt="Sample dashboard" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
+          <img src="/agreement-deal.jpg" alt="agreement eal" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
           <img src="https://picsum.photos/200/300?random=3" alt="Landlord workspace" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
         </div>
       </div>
