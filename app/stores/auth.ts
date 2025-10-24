@@ -267,34 +267,67 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         const api = createApiClient();
+        
         interface GoogleLoginResponse {
-          user: User;
-          token: string;
-          error?: string;
+          access_token: string;
+          refresh_token: string;
+          user: {
+            id: string;
+            email: string;
+            name: string;
+            googleId?: string;
+            profile_image_url?: string;
+            role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+            isEmailVerified: boolean;
+            requires_onboarding: boolean;
+            is_active: boolean;
+            last_login_at?: string;
+            created_at: string;
+            updated_at: string;
+          };
         }
         
         const response = await api.post<GoogleLoginResponse>('/auth/google/login', { token, role });
 
-        if (response.data?.user && response.data?.token) {
-          // Store the token in local storage
-          localStorage.setItem('auth_token', response.data.token);
+        if (response.data?.user && response.data?.access_token) {
+          // Store the tokens in local storage
+          localStorage.setItem('auth_token', response.data.access_token);
+          localStorage.setItem('refresh_token', response.data.refresh_token);
+          
+          // Map the API user to our User type
+          const userData = response.data.user;
+          const user: User = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            role: userData.role,
+            profile_image_url: userData.profile_image_url,
+            is_active: userData.is_active,
+            requires_onboarding: userData.requires_onboarding,
+            googleId: userData.googleId,
+            isEmailVerified: userData.isEmailVerified,
+            last_login_at: userData.last_login_at,
+            created_at: userData.created_at,
+            updated_at: userData.updated_at
+          };
           
           // Update auth store
-          this.user = response.data.user;
+          this.user = user;
           
           // Update user store
           const userStore = useUserStore();
-          userStore.setUser(response.data.user);
+          userStore.setUser(user);
           
-          return { success: true, user: response.data.user };
+          return { success: true, user };
         }
         
-        throw new Error(response.data?.error || 'Authentication failed - Missing user data or token');
+        throw new Error('Authentication failed - Missing user data or access token');
         
       } catch (error: any) {
         // Clear any partial auth state on error
         this.user = null;
         localStorage.removeItem('auth_token');
+        localStorage.removeItem('refresh_token');
         
         const errorMessage = error.response?.data?.message || error.message || 'Failed to sign in with Google';
         this.setError(errorMessage);

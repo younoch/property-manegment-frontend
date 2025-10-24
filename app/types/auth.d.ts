@@ -11,6 +11,11 @@ export interface User {
   requires_onboarding?: boolean;
   onboarding_completed_at?: string | null;
   last_activity?: string;
+  googleId?: string;
+  isEmailVerified?: boolean;
+  last_login_at?: string;
+  created_at?: string;
+  updated_at?: string;
   owned_portfolios?: PortfolioRow[];
 }
 
