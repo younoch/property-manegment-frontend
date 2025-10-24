@@ -21,7 +21,7 @@
           :loading="loadingGoogle"
           :disabled="loadingGoogle || loadingFacebook"
           class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
-          @click="signInWithGoogle"
+          @click="initiateGoogleSignIn"
         >
           <template #leading>
             <img 
@@ -126,15 +126,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 import { useToast } from '#imports';
-import { useNuxtApp } from '#app';
+import { useRuntimeConfig } from '#imports';
 
 // Initialize stores and composables
 const authStore = useAuthStore();
 const toast = useToast();
-const { $googleSignIn } = useNuxtApp();
+const config = useRuntimeConfig();
+
+// Google Sign-In
+const googleClientId = config.public.googleClientId;
+let googleAuth: any = null;
+
+// Initialize Google Sign-In
+const initGoogleAuth = () => {
+  if (typeof window !== 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      // @ts-ignore
+      google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: handleGoogleSignIn
+      });
+    };
+    document.head.appendChild(script);
+  }
+};
+
+// Initialize on component mount
+onMounted(() => {
+  initGoogleAuth();
+});
 
 useHead({
   title: 'Login | LeaseDirector: Rent & Lease Management Software',
@@ -163,20 +190,49 @@ const loading = computed(() => authStore.isAuthenticating);
 const loadingGoogle = ref(false);
 const loadingFacebook = ref(false);
 
-// Social login functions
-const signInWithGoogle = async () => {
+// Initiate Google Sign-In
+const initiateGoogleSignIn = () => {
+  try {
+    // @ts-ignore
+    google.accounts.id.prompt();
+    
+    // @ts-ignore
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignInButton'),
+      { 
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        width: '100%',
+        text: 'continue_with',
+        shape: 'rectangular',
+        logo_alignment: 'left',
+      }
+    );
+    
+    // @ts-ignore
+    google.accounts.id.prompt();
+  } catch (error) {
+    console.error('Error initializing Google Sign-In:', error);
+  }
+};
+
+// Handle Google Sign-In response
+const handleGoogleSignIn = async (response: any) => {
   try {
     loadingGoogle.value = true;
-    // Clear any previous errors
     
-    // Sign in with Google
-    const googleUser = await $googleSignIn.signIn();
-    const idToken = googleUser.getAuthResponse().id_token;
+    // Get the ID token from the Google Sign-In response
+    const { credential } = response;
     
-    // Call the store method without role parameter
+    if (!credential) {
+      throw new Error('No credential received from Google');
+    }
+    
+    // Call the store method with the ID token
     const result = await authStore.signInWithGoogle({
-      token: idToken,
-      role: 'tenant' // Default role for login, will be overridden by backend if needed
+      token: credential,
+      role: 'tenant' // Default role for login
     });
     
     if (result.success && result.user) {

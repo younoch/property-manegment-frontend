@@ -21,7 +21,7 @@
           :loading="loadingGoogle"
           :disabled="loadingGoogle || loadingFacebook"
           class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
-          @click="signInWithGoogle"
+          @click="initiateGoogleSignIn"
         >
           <template #leading>
             <img 
@@ -188,6 +188,8 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
 import { ROLE_OPTIONS } from '~/constants';
+import { useRuntimeConfig } from '#imports';
+import { useToast } from '#imports';
 import { createApiClient } from '@/utils/api';
 definePageMeta({
   layout: 'auth',
@@ -203,6 +205,7 @@ useHead({
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const router = useRouter();
+const toast = useToast();
 
 // Destructure store values with proper typing
 const { signup } = authStore;
@@ -248,38 +251,91 @@ const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
 // Google Sign-In
-const { $googleSignIn } = useNuxtApp();
-const router = useRouter();
+const config = useRuntimeConfig();
+const googleClientId = config.public.googleClientId;
 
-const signInWithGoogle = async () => {
+// Initialize Google Sign-In
+const initGoogleAuth = () => {
+  if (typeof window !== 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      // @ts-ignore
+      google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: handleGoogleSignIn
+      });
+    };
+    document.head.appendChild(script);
+  }
+};
+
+// Initialize on component mount
+onMounted(() => {
+  initGoogleAuth();
+});
+
+// Initiate Google Sign-In
+const initiateGoogleSignIn = () => {
+  try {
+    // @ts-ignore
+    google.accounts.id.prompt();
+  } catch (error) {
+    console.error('Error initializing Google Sign-In:', error);
+  }
+};
+
+// Handle Google Sign-In response
+const handleGoogleSignIn = async (response: any) => {
   try {
     loadingGoogle.value = true;
     errorMessage.value = '';
     
-    // Sign in with Google
-    const googleUser = await $googleSignIn.signIn();
-    const idToken = googleUser.getAuthResponse().id_token;
+    // Get the ID token from the Google Sign-In response
+    const { credential } = response;
     
-    // Call the store method
+    if (!credential) {
+      throw new Error('No credential received from Google');
+    }
+    
+    // Call the store method with the ID token and selected role
     const result = await authStore.signInWithGoogle({
-      token: idToken,
-      role: form.value.role
+      token: credential,
+      role: form.value.role || 'tenant' // Default to 'tenant' if no role selected
     });
     
     if (result.success && result.user) {
       successMessage.value = 'Successfully signed in with Google!';
       
+      // Show success message
+      toast.add({
+        title: 'Success',
+        description: 'Successfully signed in with Google',
+        color: 'success',
+        icon: 'i-heroicons-check-circle',
+        duration: 3000
+      });
+      
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         navigateTo('/app/dashboard');
-      }, 1500);
+      }, 1000);
     } else {
-      errorMessage.value = result.error || 'Failed to sign in with Google';
+      throw new Error(result.error || 'Failed to sign in with Google');
     }
     
   } catch (error: any) {
     console.error('Google Sign-In Error:', error);
-    errorMessage.value = error.message || 'Failed to sign in with Google';
+    errorMessage.value = error?.message || 'Failed to sign in with Google';
+    toast.add({
+      title: 'Error',
+      description: error?.message || 'Failed to sign in with Google',
+      color: 'error',
+      icon: 'i-heroicons-exclamation-circle',
+      duration: 5000
+    });
   } finally {
     loadingGoogle.value = false;
   }
