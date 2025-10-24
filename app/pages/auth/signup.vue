@@ -303,7 +303,7 @@ const handleGoogleSignIn = async (response: any) => {
     // Call the store method with the ID token and selected role
     const result = await authStore.signInWithGoogle({
       token: credential,
-      role: form.value.role || 'tenant' // Default to 'tenant' if no role selected
+      role: form.value.role || 'landlord' // Default to 'tenant' if no role selected
     });
     
     if (result.success && result.user) {
