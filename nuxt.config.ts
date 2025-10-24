@@ -17,11 +17,11 @@ export default defineNuxtConfig({
         headers: {
           // Security Headers
           'X-Content-Type-Options': 'nosniff',
-          'X-Frame-Options': 'DENY',
+          'X-Frame-Options': 'SAMEORIGIN',
           'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:;"
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: *.google.com *.googleapis.com; style-src 'self' 'unsafe-inline' https: *.google.com *.googleapis.com; img-src 'self' data: https: *.google.com *.gstatic.com; font-src 'self' data: https: *.gstatic.com; connect-src 'self' https: *.google.com *.googleapis.com; frame-src 'self' https://accounts.google.com; frame-ancestors 'self' https://accounts.google.com;"
         }
       }
     }
