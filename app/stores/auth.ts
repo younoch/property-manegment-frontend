@@ -358,28 +358,41 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = createApiClient();
         
-        const response = await api.post<{
-          id: string;
-          email: string;
-          name: string;
-          phone: string | null;
-          role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-          profile_image_url: string | null;
-          is_active: boolean;
-          created_at: string;
-          updated_at: string;
-          owned_portfolios: any[];
-          notifications: any[];
-          requires_onboarding: boolean;
-          onboarding_completed_at: string | null;
-          last_login_at: string;
-          accessToken: string;
-          refreshToken: string;
-          google_id?: string;
-        }>('/auth/google/login', { token, role });
+        interface GoogleLoginResponse {
+          success: boolean;
+          message: string;
+          data: {
+            id: string;
+            email: string;
+            name: string;
+            phone: string | null;
+            role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+            profile_image_url: string | null;
+            is_active: boolean;
+            created_at: string;
+            updated_at: string;
+            owned_portfolios: any[];
+            notifications: any[];
+            requires_onboarding: boolean;
+            onboarding_completed_at: string | null;
+            last_login_at: string;
+            accessToken: string;
+            refreshToken: string;
+            google_id?: string;
+          };
+          timestamp: string;
+          path: string;
+        }
+
+        const response = await api.post<GoogleLoginResponse>('/auth/google/login', { token, role });
 
         console.log('Google Login API Response:', response.data);
-        const userData = response.data;
+        
+        if (!response.data?.success || !response.data.data) {
+          throw new Error(response.data?.message || 'Authentication failed');
+        }
+        
+        const userData = response.data.data;
         
         if (!userData) {
           throw new Error('No user data received from Google sign-in');
