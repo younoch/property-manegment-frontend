@@ -319,29 +319,47 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       try {
-        // Call server-side logout
-        const api = createProtectedApiClient();
-        await api.post('/auth/logout');
+        // Only try to call server-side logout if we have a token
+        const authToken = localStorage.getItem('auth_token');
+        if (authToken) {
+          try {
+            const api = createProtectedApiClient();
+            await api.post('/auth/logout');
+          } catch (error) {
+            console.warn('Server-side logout failed, continuing with client-side cleanup', error);
+            // Continue with client-side cleanup even if server logout fails
+          }
+        }
       } catch (error) {
-        console.error('Logout error:', error);
+        console.error('Unexpected error during logout:', error);
       } finally {
         // Clear all auth-related data from client storage
         localStorage.removeItem('auth_token');
+        localStorage.removeItem('refresh_token');
         
-        // Clear all cookies (handles httpOnly cookies on the next request)
-        document.cookie.split(';').forEach(c => {
-          document.cookie = c.trim().split('=')[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
-        });
+        // Clear all cookies by setting them to expire in the past
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const eqPos = cookie.indexOf('=');
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
         
-        // Clear stores
+        // Clear session storage
+        sessionStorage.clear();
+        
+        // Reset auth state
         this.user = null;
+        this.error = null;
+        this.loading = false;
+        
+        // Clear user store
         const userStore = useUserStore();
         userStore.clearUser();
         
-        // Redirect to login page
-        if (process.client) {
-          window.location.href = '/auth/login';
-        }
+        // Force a hard redirect to ensure all state is cleared
+        window.location.href = '/auth/login';
       }
     },
 
