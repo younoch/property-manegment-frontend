@@ -21,7 +21,7 @@ export default defineNuxtConfig({
           'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: *.google.com *.googleapis.com; style-src 'self' 'unsafe-inline' https: *.google.com *.googleapis.com; img-src 'self' data: https: *.google.com *.gstatic.com; font-src 'self' data: https: *.gstatic.com; connect-src 'self' https: *.google.com *.googleapis.com; frame-src 'self' https://accounts.google.com; frame-ancestors 'self' https://accounts.google.com;"
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: *.google.com *.googleapis.com; style-src 'self' 'unsafe-inline' https: *.google.com *.googleapis.com; img-src 'self' data: https: *.google.com *.gstatic.com; font-src 'self' data: https: *.gstatic.com; connect-src 'self' http://localhost:8000 wss://localhost:8000 https: *.google.com *.googleapis.com; frame-src 'self' https://accounts.google.com; frame-ancestors 'self' https://accounts.google.com;"
         }
       }
     }

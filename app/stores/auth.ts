@@ -188,6 +188,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async signin(credentials: LoginCredentials) {
+      console.log('Starting signin with credentials:', JSON.stringify(credentials, null, 2));
       const userStore = useUserStore();
       const apiClient = createApiClient();
       
@@ -195,75 +196,124 @@ export const useAuthStore = defineStore('auth', {
       this.clearError();
       
       try {
+        console.log('Sending login request to /auth/signin');
         const response = await apiClient.post<{
-          success: boolean;
-          data: {
-            user: {
-              id: string;
-              email: string;
-              name: string;
-              role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-              profile_image_url?: string;
-              is_email_verified: boolean;
-              requires_onboarding: boolean;
-              phone?: string;
-            };
-            tokens: {
-              access_token: string;
-              refresh_token: string;
-            };
-          };
+          id: string;
+          email: string;
+          name: string;
+          phone: string | null;
+          role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+          profile_image_url: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+          owned_portfolios: any[];
+          notifications: any[];
+          requires_onboarding: boolean;
+          onboarding_completed_at: string | null;
+          last_login_at: string;
+          accessToken: string;
+          refreshToken: string;
         }>('/auth/signin', credentials);
+
+        console.log('Raw API Response:', JSON.stringify(response.data, null, 2));
         
-        if (response.data?.success && response.data.data) {
-          const { user, tokens } = response.data.data;
+        // The response is the user data directly
+        const userData = response.data;
+        
+        if (!userData) {
+          console.error('No user data in response');
+          throw new Error('No user data received from server');
+        }
           
+          console.log('Processing user data:', {
+            hasAccessToken: 'accessToken' in userData,
+            hasUserData: 'id' in userData,
+            userDataKeys: Object.keys(userData)
+          });
+
+          // Log token information (without logging actual tokens in production)
+          console.log('Token info:', {
+            hasAccessToken: !!userData.accessToken,
+            hasRefreshToken: !!userData.refreshToken,
+            accessTokenPrefix: userData.accessToken ? userData.accessToken.substring(0, 10) + '...' : 'none',
+            refreshTokenPrefix: userData.refreshToken ? userData.refreshToken.substring(0, 10) + '...' : 'none'
+          });
+
           // Store tokens
-          if (tokens?.access_token) {
-            localStorage.setItem('auth_token', tokens.access_token);
-          }
-          if (tokens?.refresh_token) {
-            localStorage.setItem('refresh_token', tokens.refresh_token);
+          if (!userData.accessToken) {
+            console.error('No access token in response');
+            throw new Error('No access token received from server');
           }
           
+          localStorage.setItem('auth_token', userData.accessToken);
+          console.log('Access token stored in localStorage');
+          
+          if (userData.refreshToken) {
+            localStorage.setItem('refresh_token', userData.refreshToken);
+            console.log('Refresh token stored in localStorage');
+          } else {
+            console.warn('No refresh token in response');
+          }
+
           // Map user data to our User type
-          const userData: User = {
+          const user: User = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            phone: userData.phone || '',
+            role: userData.role,
+            profile_image_url: userData.profile_image_url || undefined,
+            is_active: userData.is_active,
+            isEmailVerified: true, // Assuming verified since login succeeded
+            requires_onboarding: userData.requires_onboarding,
+            onboarding_completed_at: userData.onboarding_completed_at,
+            last_login_at: userData.last_login_at,
+            created_at: userData.created_at,
+            updated_at: userData.updated_at,
+            owned_portfolios: userData.owned_portfolios || []
+          };
+
+          console.log('Mapped user data:', {
             id: user.id,
             email: user.email,
             name: user.name,
-            phone: user.phone || '',
             role: user.role,
-            profile_image_url: user.profile_image_url,
-            is_active: true, // Assuming active since login succeeded
-            isEmailVerified: user.is_email_verified,
-            requires_onboarding: user.requires_onboarding
-          };
-          
+            hasProfileImage: !!user.profile_image_url,
+            portfolioCount: user.owned_portfolios?.length || 0,
+            requiresOnboarding: user.requires_onboarding
+          });
+
           // Update stores
-          this.user = userData;
-          userStore.setUser(userData);
-          
-          return { 
-            success: true, 
-            user: userData,
+          console.log('Updating user store...');
+          this.user = user;
+          userStore.setUser(user);
+
+          console.log('Login successful, redirecting...');
+          return {
+            success: true,
+            user,
             requiresOnboarding: user.requires_onboarding
           };
-        }
-        
-        throw new Error('Invalid response from server');
       } catch (error: any) {
         this.user = null;
         userStore.clearUser();
         
         const errorMessage = error.response?.data?.message || error.message || 'Login failed';
-        this.setError(errorMessage);
+        this.error = errorMessage;
         
-        return { 
-          success: false, 
-          error: errorMessage 
+        console.error('Login Error:', {
+          error,
+          errorMessage,
+          response: error.response?.data
+        });
+        
+        return {
+          success: false,
+          error: errorMessage
         };
       } finally {
-        this.setLoading(false);
+        this.loading = false;
       }
     },
 
@@ -300,84 +350,123 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async signInWithGoogle({ token, role }: GoogleSignInData) {
-      this.setLoading(true);
-      this.clearError();
+      console.log('Starting Google sign-in with token and role:', { hasToken: !!token, role });
+      this.loading = true;
+      this.error = null;
       const userStore = useUserStore();
 
       try {
         const api = createApiClient();
         
         const response = await api.post<{
-          success: boolean;
-          data: {
-            user: {
-              id: string;
-              email: string;
-              name: string;
-              role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-              profile_image_url?: string;
-              is_email_verified: boolean;
-              requires_onboarding: boolean;
-              phone?: string;
-              google_id?: string;
-            };
-            tokens: {
-              access_token: string;
-              refresh_token: string;
-            };
-          };
+          id: string;
+          email: string;
+          name: string;
+          phone: string | null;
+          role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+          profile_image_url: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+          owned_portfolios: any[];
+          notifications: any[];
+          requires_onboarding: boolean;
+          onboarding_completed_at: string | null;
+          last_login_at: string;
+          accessToken: string;
+          refreshToken: string;
+          google_id?: string;
         }>('/auth/google/login', { token, role });
 
-        if (response.data?.success && response.data?.data) {
-          const { user, tokens } = response.data.data;
-          
-          // Store tokens
-          if (tokens?.access_token) {
-            localStorage.setItem('auth_token', tokens.access_token);
-          }
-          if (tokens?.refresh_token) {
-            localStorage.setItem('refresh_token', tokens.refresh_token);
-          }
-          
-          // Map user data to our User type
-          const userData: User = {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            phone: user.phone || '',
-            role: user.role,
-            profile_image_url: user.profile_image_url,
-            is_active: true, // Assuming active since login succeeded
-            isEmailVerified: user.is_email_verified,
-            requires_onboarding: user.requires_onboarding,
-            googleId: user.google_id
-          };
-          
-          // Update stores
-          this.user = userData;
-          userStore.setUser(userData);
-          
-          return { 
-            success: true, 
-            user: userData,
-            requiresOnboarding: user.requires_onboarding
-          };
+        console.log('Google Login API Response:', response.data);
+        const userData = response.data;
+        
+        if (!userData) {
+          throw new Error('No user data received from Google sign-in');
+        }
+
+        console.log('Processing Google user data:', {
+          hasAccessToken: 'accessToken' in userData,
+          hasUserData: 'id' in userData,
+          userDataKeys: Object.keys(userData)
+        });
+
+        // Store tokens
+        if (!userData.accessToken) {
+          throw new Error('No access token received from Google sign-in');
         }
         
-        throw new Error('Authentication failed - Missing user data or access token');
+        localStorage.setItem('auth_token', userData.accessToken);
+        console.log('Google access token stored');
+        
+        if (userData.refreshToken) {
+          localStorage.setItem('refresh_token', userData.refreshToken);
+          console.log('Google refresh token stored');
+        } else {
+          console.warn('No refresh token in Google sign-in response');
+        }
+
+        // Map user data to our User type
+        const user: User = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name,
+          phone: userData.phone || '',
+          role: userData.role,
+          profile_image_url: userData.profile_image_url || undefined,
+          is_active: userData.is_active,
+          isEmailVerified: true, // Google sign-in is always verified
+          requires_onboarding: userData.requires_onboarding,
+          onboarding_completed_at: userData.onboarding_completed_at,
+          last_login_at: userData.last_login_at,
+          created_at: userData.created_at,
+          updated_at: userData.updated_at,
+          owned_portfolios: userData.owned_portfolios || [],
+          googleId: userData.google_id
+        };
+
+        console.log('Mapped Google user data:', {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          hasProfileImage: !!user.profile_image_url,
+          requiresOnboarding: user.requires_onboarding
+        });
+
+        // Update stores
+        this.user = user;
+        userStore.setUser(user);
+
+        console.log('Google sign-in successful, redirecting...');
+        return {
+          success: true,
+          user,
+          requiresOnboarding: user.requires_onboarding
+        };
         
       } catch (error: any) {
         // Clear any partial auth state on error
         this.user = null;
+        userStore.clearUser();
         localStorage.removeItem('auth_token');
         localStorage.removeItem('refresh_token');
         
         const errorMessage = error.response?.data?.message || error.message || 'Failed to sign in with Google';
-        this.setError(errorMessage);
-        console.error('Google Sign-In Error:', error);
-        return { success: false, error: errorMessage };
+        this.error = errorMessage;
+        
+        console.error('Google Sign-In Error:', {
+          error,
+          errorMessage,
+          response: error.response?.data
+        });
+        
+        return { 
+          success: false, 
+          error: errorMessage 
+        };
       } finally {
-        this.setLoading(false);
+        this.loading = false;
       }
     }
   }
