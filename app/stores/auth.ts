@@ -189,30 +189,68 @@ export const useAuthStore = defineStore('auth', {
 
     async signin(credentials: LoginCredentials) {
       const userStore = useUserStore();
-      const apiClient = createProtectedApiClient();
+      const apiClient = createApiClient();
       
       this.setLoading(true);
       this.clearError();
       
       try {
-        // The ProtectedApiClient will automatically handle CSRF tokens
-        const response = await apiClient.post<any>('/auth/signin', credentials);
+        const response = await apiClient.post<{
+          success: boolean;
+          data: {
+            user: {
+              id: string;
+              email: string;
+              name: string;
+              role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+              profile_image_url?: string;
+              is_email_verified: boolean;
+              requires_onboarding: boolean;
+              phone?: string;
+            };
+            tokens: {
+              access_token: string;
+              refresh_token: string;
+            };
+          };
+        }>('/auth/signin', credentials);
         
-        if (response) {
-          const userData = response.data || response.user || response;
+        if (response.data?.success && response.data.data) {
+          const { user, tokens } = response.data.data;
           
-          if (userData) {
-            // Update both auth store and user store
-            this.user = userData;
-            userStore.setUser(userData);
-            // Ensure the state is persisted
-            userStore.persistToStorage();
-            
-            return { success: true, user: userData };
+          // Store tokens
+          if (tokens?.access_token) {
+            localStorage.setItem('auth_token', tokens.access_token);
           }
+          if (tokens?.refresh_token) {
+            localStorage.setItem('refresh_token', tokens.refresh_token);
+          }
+          
+          // Map user data to our User type
+          const userData: User = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            phone: user.phone || '',
+            role: user.role,
+            profile_image_url: user.profile_image_url,
+            is_active: true, // Assuming active since login succeeded
+            isEmailVerified: user.is_email_verified,
+            requires_onboarding: user.requires_onboarding
+          };
+          
+          // Update stores
+          this.user = userData;
+          userStore.setUser(userData);
+          
+          return { 
+            success: true, 
+            user: userData,
+            requiresOnboarding: user.requires_onboarding
+          };
         }
         
-        throw new Error('No response data received');
+        throw new Error('Invalid response from server');
       } catch (error: any) {
         this.user = null;
         userStore.clearUser();
@@ -264,61 +302,66 @@ export const useAuthStore = defineStore('auth', {
     async signInWithGoogle({ token, role }: GoogleSignInData) {
       this.setLoading(true);
       this.clearError();
+      const userStore = useUserStore();
 
       try {
         const api = createApiClient();
         
-        interface GoogleLoginResponse {
-          access_token: string;
-          refresh_token: string;
-          user: {
-            id: string;
-            email: string;
-            name: string;
-            googleId?: string;
-            profile_image_url?: string;
-            role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-            isEmailVerified: boolean;
-            requires_onboarding: boolean;
-            is_active: boolean;
-            last_login_at?: string;
-            created_at: string;
-            updated_at: string;
+        const response = await api.post<{
+          success: boolean;
+          data: {
+            user: {
+              id: string;
+              email: string;
+              name: string;
+              role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+              profile_image_url?: string;
+              is_email_verified: boolean;
+              requires_onboarding: boolean;
+              phone?: string;
+              google_id?: string;
+            };
+            tokens: {
+              access_token: string;
+              refresh_token: string;
+            };
           };
-        }
-        
-        const response = await api.post<GoogleLoginResponse>('/auth/google/login', { token, role });
+        }>('/auth/google/login', { token, role });
 
-        if (response.data?.user && response.data?.access_token) {
-          // Store the tokens in local storage
-          localStorage.setItem('auth_token', response.data.access_token);
-          localStorage.setItem('refresh_token', response.data.refresh_token);
+        if (response.data?.success && response.data?.data) {
+          const { user, tokens } = response.data.data;
           
-          // Map the API user to our User type
-          const userData = response.data.user;
-          const user: User = {
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-            role: userData.role,
-            profile_image_url: userData.profile_image_url,
-            is_active: userData.is_active,
-            requires_onboarding: userData.requires_onboarding,
-            googleId: userData.googleId,
-            isEmailVerified: userData.isEmailVerified,
-            last_login_at: userData.last_login_at,
-            created_at: userData.created_at,
-            updated_at: userData.updated_at
+          // Store tokens
+          if (tokens?.access_token) {
+            localStorage.setItem('auth_token', tokens.access_token);
+          }
+          if (tokens?.refresh_token) {
+            localStorage.setItem('refresh_token', tokens.refresh_token);
+          }
+          
+          // Map user data to our User type
+          const userData: User = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            phone: user.phone || '',
+            role: user.role,
+            profile_image_url: user.profile_image_url,
+            is_active: true, // Assuming active since login succeeded
+            isEmailVerified: user.is_email_verified,
+            requires_onboarding: user.requires_onboarding,
+            googleId: user.google_id
           };
           
-          // Update auth store
-          this.user = user;
+          // Update stores
+          this.user = userData;
+          userStore.setUser(userData);
           
-          // Update user store
-          const userStore = useUserStore();
-          userStore.setUser(user);
-          
-          return { success: true, user };
+          return { 
+            success: true, 
+            user: userData,
+            requiresOnboarding: user.requires_onboarding
+          };
         }
         
         throw new Error('Authentication failed - Missing user data or access token');
