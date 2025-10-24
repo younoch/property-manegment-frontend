@@ -372,88 +372,110 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true;
       this.error = null;
       const userStore = useUserStore();
+      
+      // Clear any existing tokens to ensure a clean state
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('refresh_token');
 
       try {
         const api = createApiClient();
         
+        interface UserData {
+          id: string;
+          email: string;
+          name: string;
+          phone: string | null;
+          role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+          profile_image_url: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+          owned_portfolios: any[];
+          notifications: any[];
+          requires_onboarding: boolean;
+          onboarding_completed_at: string | null;
+          last_login_at: string;
+          accessToken: string;
+          refreshToken: string;
+          google_id?: string;
+        }
+        
         interface GoogleLoginResponse {
           success: boolean;
           message: string;
-          data: {
-            success: boolean;
-            message: string;
-            data: {
-              id: string;
-              email: string;
-              name: string;
-              phone: string | null;
-              role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-              profile_image_url: string | null;
-              is_active: boolean;
-              created_at: string;
-              updated_at: string;
-              owned_portfolios: any[];
-              notifications: any[];
-              requires_onboarding: boolean;
-              onboarding_completed_at: string | null;
-              last_login_at: string;
-              accessToken: string;
-              refreshToken: string;
-              google_id?: string;
-            };
-            timestamp: string;
-            path: string;
-          };
+          data: UserData;
           timestamp: string;
           path: string;
         }
 
+        console.log('Sending Google login request...');
         const response = await api.post<GoogleLoginResponse>('/auth/google/login', { token, role });
 
         console.log('Google Login API Response:', response.data);
         
-        // Check for nested success and data
-        if (!response.data?.success || !response.data.data?.success || !response.data.data.data) {
-          throw new Error(response.data?.data?.message || response.data?.message || 'Authentication failed');
+        // Check for successful response
+        if (!response.data?.success) {
+          throw new Error(response.data?.message || 'Authentication failed');
         }
         
-        // Extract the actual user data from the nested structure
-        const userData = response.data.data.data;
+        // Extract user data from response
+        const userData = response.data.data;
+        console.log('Extracted user data:', userData);
         
         if (!userData) {
           throw new Error('No user data received from Google sign-in');
         }
-
-        console.log('Processing Google user data:', {
-          hasAccessToken: 'accessToken' in userData,
-          hasUserData: 'id' in userData,
-          userDataKeys: Object.keys(userData)
-        });
-
+        
         // Store tokens
         if (!userData.accessToken) {
-          throw new Error('No access token received from Google sign-in');
+          throw new Error('No access token in response');
         }
-        
+
+        console.log('Storing authentication tokens...');
         // Store tokens in localStorage
         localStorage.setItem('auth_token', userData.accessToken);
-        console.log('Google access token stored');
         
         if (userData.refreshToken) {
           localStorage.setItem('refresh_token', userData.refreshToken);
-          console.log('Google refresh token stored');
-        } else {
-          console.warn('No refresh token in Google sign-in response');
         }
         
-        // Also store tokens in cookies for server-side access
-        const config = useRuntimeConfig();
+        // Set up cookie options
         const cookieOptions = {
           path: '/',
           secure: true,
           sameSite: 'lax' as const,
           maxAge: 60 * 60 * 24 * 7 // 7 days
         };
+        
+        // Store tokens in cookies for server-side access with proper security settings
+        const cookieOptions = {
+          path: '/',
+          secure: true,
+          sameSite: 'lax' as const,
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          domain: window.location.hostname,
+          httpOnly: false // Needs to be accessible from client-side
+        };
+        
+        // Set auth token cookie
+        document.cookie = `auth_token=${userData.accessToken}; ` +
+                         `Path=${cookieOptions.path}; ` +
+                         `SameSite=${cookieOptions.sameSite}; ` +
+                         `${cookieOptions.secure ? 'Secure; ' : ''}` +
+                         `Max-Age=${cookieOptions.maxAge}; ` +
+                         `Domain=${cookieOptions.domain}`;
+        
+        // Set refresh token cookie if available
+        if (userData.refreshToken) {
+          document.cookie = `refresh_token=${userData.refreshToken}; ` +
+                           `Path=${cookieOptions.path}; ` +
+                           `SameSite=${cookieOptions.sameSite}; ` +
+                           `${cookieOptions.secure ? 'Secure; ' : ''}` +
+                           `Max-Age=${cookieOptions.maxAge}; ` +
+                           `Domain=${cookieOptions.domain}`;
+        }
+        
+        console.log('Authentication tokens stored successfully');
         
         useCookie('auth_token', cookieOptions).value = userData.accessToken;
         if (userData.refreshToken) {
@@ -478,6 +500,14 @@ export const useAuthStore = defineStore('auth', {
           owned_portfolios: userData.owned_portfolios || [],
           googleId: userData.google_id
         };
+        
+        console.log('Mapped user data:', {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          requiresOnboarding: user.requires_onboarding
+        });
 
         console.log('Mapped Google user data:', {
           id: user.id,
