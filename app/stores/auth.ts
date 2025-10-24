@@ -395,8 +395,7 @@ export const useAuthStore = defineStore('auth', {
           requires_onboarding: boolean;
           onboarding_completed_at: string | null;
           last_login_at: string;
-          accessToken: string;
-          refreshToken: string;
+          is_email_verified: boolean;
           google_id?: string;
         }
         
@@ -406,6 +405,8 @@ export const useAuthStore = defineStore('auth', {
           data: UserData;
           timestamp: string;
           path: string;
+          accessToken?: string;
+          refreshToken?: string;
         }
 
         console.log('Sending Google login request...');
@@ -426,17 +427,17 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('No user data received from Google sign-in');
         }
         
-        // Store tokens
-        if (!userData.accessToken) {
+        // Store tokens from response root
+        if (!response.data.accessToken) {
           throw new Error('No access token in response');
         }
 
         console.log('Storing authentication tokens...');
         // Store tokens in localStorage
-        localStorage.setItem('auth_token', userData.accessToken);
+        localStorage.setItem('auth_token', response.data.accessToken);
         
-        if (userData.refreshToken) {
-          localStorage.setItem('refresh_token', userData.refreshToken);
+        if (response.data.refreshToken) {
+          localStorage.setItem('refresh_token', response.data.refreshToken);
         }
         
         // Set up cookie options
@@ -449,7 +450,7 @@ export const useAuthStore = defineStore('auth', {
         };
         
         // Set auth token cookie
-        const authCookie = `auth_token=${userData.accessToken}; ` +
+        const authCookie = `auth_token=${response.data.accessToken}; ` +
                          `Path=${cookieOptions.path}; ` +
                          `SameSite=${cookieOptions.sameSite}; ` +
                          `${cookieOptions.secure ? 'Secure; ' : ''}` +
@@ -457,8 +458,8 @@ export const useAuthStore = defineStore('auth', {
         
         // Set refresh token cookie if available
         let refreshCookie = '';
-        if (userData.refreshToken) {
-          refreshCookie = `refresh_token=${userData.refreshToken}; ` +
+        if (response.data.refreshToken) {
+          refreshCookie = `refresh_token=${response.data.refreshToken}; ` +
                          `Path=${cookieOptions.path}; ` +
                          `SameSite=${cookieOptions.sameSite}; ` +
                          `${cookieOptions.secure ? 'Secure; ' : ''}` +
@@ -484,7 +485,7 @@ export const useAuthStore = defineStore('auth', {
           role: userData.role,
           profile_image_url: userData.profile_image_url || undefined,
           is_active: userData.is_active,
-          isEmailVerified: true, // Google sign-in is always verified
+          isEmailVerified: userData.is_email_verified || true, // Use server's verification status
           requires_onboarding: userData.requires_onboarding,
           onboarding_completed_at: userData.onboarding_completed_at,
           last_login_at: userData.last_login_at,
