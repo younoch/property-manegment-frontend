@@ -442,45 +442,38 @@ export const useAuthStore = defineStore('auth', {
         // Set up cookie options
         const cookieOptions = {
           path: '/',
-          secure: true,
-          sameSite: 'lax' as const,
-          maxAge: 60 * 60 * 24 * 7 // 7 days
-        };
-        
-        // Store tokens in cookies for server-side access with proper security settings
-        const cookieOptions = {
-          path: '/',
-          secure: true,
+          secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax' as const,
           maxAge: 60 * 60 * 24 * 7, // 7 days
-          domain: window.location.hostname,
-          httpOnly: false // Needs to be accessible from client-side
+          domain: typeof window !== 'undefined' ? window.location.hostname : ''
         };
         
         // Set auth token cookie
-        document.cookie = `auth_token=${userData.accessToken}; ` +
+        const authCookie = `auth_token=${userData.accessToken}; ` +
                          `Path=${cookieOptions.path}; ` +
                          `SameSite=${cookieOptions.sameSite}; ` +
                          `${cookieOptions.secure ? 'Secure; ' : ''}` +
-                         `Max-Age=${cookieOptions.maxAge}; ` +
-                         `Domain=${cookieOptions.domain}`;
+                         `Max-Age=${cookieOptions.maxAge}`;
         
         // Set refresh token cookie if available
+        let refreshCookie = '';
         if (userData.refreshToken) {
-          document.cookie = `refresh_token=${userData.refreshToken}; ` +
-                           `Path=${cookieOptions.path}; ` +
-                           `SameSite=${cookieOptions.sameSite}; ` +
-                           `${cookieOptions.secure ? 'Secure; ' : ''}` +
-                           `Max-Age=${cookieOptions.maxAge}; ` +
-                           `Domain=${cookieOptions.domain}`;
+          refreshCookie = `refresh_token=${userData.refreshToken}; ` +
+                         `Path=${cookieOptions.path}; ` +
+                         `SameSite=${cookieOptions.sameSite}; ` +
+                         `${cookieOptions.secure ? 'Secure; ' : ''}` +
+                         `Max-Age=${cookieOptions.maxAge}`;
+        }
+        
+        // Set cookies in the browser
+        if (typeof document !== 'undefined') {
+          document.cookie = authCookie;
+          if (refreshCookie) {
+            document.cookie = refreshCookie;
+          }
         }
         
         console.log('Authentication tokens stored successfully');
-        
-        useCookie('auth_token', cookieOptions).value = userData.accessToken;
-        if (userData.refreshToken) {
-          useCookie('refresh_token', cookieOptions).value = userData.refreshToken;
-        }
 
         // Map user data to our User type
         const user: User = {
