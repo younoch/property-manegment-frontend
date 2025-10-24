@@ -1,7 +1,7 @@
 {
-    "name": "LeaseDirector – Property Management Software",
+    "name": "LeaseDirector | Rent & Lease Management Software",
     "short_name": "LeaseDirector",
-    "description": "LeaseDirector helps landlords and property managers handle leases, tenants, invoices, and payments easily in one platform.",
+    "description": "Manage leases, auto-generate rent invoices, track payments and late fees. Handle maintenance, expenses, and tenant communication — all in one dashboard. Built for small landlords. Free to start.",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",

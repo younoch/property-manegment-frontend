@@ -1,6 +1,6 @@
-# Property Management Frontend
+# Rent & Lease Management Frontend
 
-A modern property management application built with Nuxt.js 3 and Nuxt UI 3.
+A modern rent & lease Management application built with Nuxt.js 3 and Nuxt UI 3.
 
 ## 🚀 Features
 

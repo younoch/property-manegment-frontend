@@ -59,7 +59,7 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en'
       },
-      title: 'LeaseDirector — Property Management Software for Small Landlords',
+      title: 'LeaseDirector | Rent & Lease Management Software for Small Landlords',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

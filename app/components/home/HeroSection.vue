@@ -3,11 +3,11 @@
     <div class="grid lg:grid-cols-2 gap-3 md:gap-10 items-center">
       <div>
         <p class="inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
-          LeaseDirector · Smart Property Management Software
+          LeaseDirector · Smart Rent & Lease Management Software
         </p>
 
-        <h1 class="mt-5 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
-          Property Management Software for
+        <h1 class="mt-5 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
+          Rent & Lease Management Software for
           <br />
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
         </h1>
@@ -37,6 +37,7 @@
         </div>
         <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
           <RentalInvoice
+            aria-labelledby="sample-rental-invoice"
             style="zoom: 0.32;"
             invoiceNumber="LD-INV-0021"
             invoiceDate="Oct 23, 2025"

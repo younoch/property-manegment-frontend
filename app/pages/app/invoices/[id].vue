@@ -429,7 +429,7 @@ const sendInvoice = async () => {
       recipient_name: `${lease.value?.lease_tenants?.[0]?.tenant?.first_name || ''} ${lease.value?.lease_tenants?.[0]?.tenant?.last_name || ''}`.trim(),
       recipient_phone: lease.value?.lease_tenants?.[0]?.tenant?.phone || '',
       subject: `Invoice #${model.id} for ${lease.value?.property?.name || 'Property'} - ${lease.value?.unit?.label || ''}`,
-      message: `Dear ${lease.value?.lease_tenants?.[0]?.tenant?.first_name || 'Tenant'},\n\nPlease find attached your invoice for ${lease.value?.property?.name || 'the property'}, Unit ${lease.value?.unit?.label || ''}.\n\nInvoice Details:\n- Invoice #${model.id}\n- Issue Date: ${model.issue_date}\n- Due Date: ${model.due_date}\n- Amount Due: ${fmtBDT(total.value)}\n\nBest regards,\nYour Property Management Team`,
+      message: `Dear ${lease.value?.lease_tenants?.[0]?.tenant?.first_name || 'Tenant'},\n\nPlease find attached your invoice for ${lease.value?.property?.name || 'the property'}, Unit ${lease.value?.unit?.label || ''}.\n\nInvoice Details:\n- Invoice #${model.id}\n- Issue Date: ${model.issue_date}\n- Due Date: ${model.due_date}\n- Amount Due: ${fmtBDT(total.value)}\n\nBest regards,\nYour Rent & Lease Management Team`,
       property_address: `${lease.value?.property?.name || ''}${lease.value?.unit?.label ? `, Unit ${lease.value.unit.label}` : ''}`,
       cc_emails: [],
       bcc_emails: [],

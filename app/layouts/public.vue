@@ -17,7 +17,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div class="col-span-2 md:col-span-1">
             <h3 class="font-bold text-gray-900 mb-4">LeaseDirector</h3>
-            <p class="text-sm text-gray-600">Smart property management made easy for small landlords and property managers.</p>
+            <p class="text-sm text-gray-600">Smart rent & lease Management made easy for small landlords and property managers.</p>
           </div>
           <div>
             <h4 class="font-semibold text-gray-900 mb-4">Product</h4>

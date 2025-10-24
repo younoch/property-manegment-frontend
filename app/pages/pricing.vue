@@ -108,7 +108,7 @@
 definePageMeta({ layout: 'public' })
 
 useHead({
-  title: 'Pricing | LeaseDirector Property Management Software',
+  title: 'Pricing | LeaseDirector: Rent & Lease Management Software',
   meta: [{ name: 'description', content: 'Simple pricing...' }]
 })
 
@@ -130,7 +130,7 @@ const plans = [
     price: { monthly: '$0', quarterly: '$0', yearly: '$0' },
     features: [
       '1 property with up to 3 units',
-      'Basic property management',
+      'Basic rent & lease Management',
       'Tenant & lease tracking',
       'Rent payment tracking',
       'Email support (48h)'

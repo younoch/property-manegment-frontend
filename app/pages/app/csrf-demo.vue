@@ -119,9 +119,9 @@
         </div>
       </div>
 
-      <!-- Property Management Demo -->
+      <!-- Rent & Lease Management Demo -->
       <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold mb-4 text-gray-900">Property Management Demo</h2>
+        <h2 class="text-2xl font-bold mb-4 text-gray-900">Rent & Lease Management Demo</h2>
         <p class="text-gray-600 mb-4">
           This section demonstrates how CSRF protection works with actual API endpoints.
         </p>
@@ -291,7 +291,7 @@ const handleTestUnprotectedRequest = async () => {
   }
 };
 
-// Property Management
+// Rent & Lease Management
 const handleCreateProperty = async () => {
   if (!propertyForm.value.title || !propertyForm.value.price) {
     requestResult.value = '⚠️ Please fill in all fields';
