@@ -231,14 +231,29 @@ export const useAuthStore = defineStore('auth', {
 
     async logout() {
       try {
+        // Call server-side logout
         const api = createProtectedApiClient();
         await api.post('/auth/logout');
       } catch (error) {
         console.error('Logout error:', error);
       } finally {
+        // Clear all auth-related data from client storage
+        localStorage.removeItem('auth_token');
+        
+        // Clear all cookies (handles httpOnly cookies on the next request)
+        document.cookie.split(';').forEach(c => {
+          document.cookie = c.trim().split('=')[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+        });
+        
+        // Clear stores
         this.user = null;
         const userStore = useUserStore();
         userStore.clearUser();
+        
+        // Redirect to login page
+        if (process.client) {
+          window.location.href = '/auth/login';
+        }
       }
     },
 
@@ -252,24 +267,39 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         const api = createApiClient();
-        const response = await api.post('/auth/google/login', { token, role });
+        interface GoogleLoginResponse {
+          user: User;
+          token: string;
+          error?: string;
+        }
+        
+        const response = await api.post<GoogleLoginResponse>('/auth/google/login', { token, role });
 
-        if (response.data?.user) {
+        if (response.data?.user && response.data?.token) {
+          // Store the token in local storage
+          localStorage.setItem('auth_token', response.data.token);
+          
+          // Update auth store
           this.user = response.data.user;
           
-          // Update user store if needed
+          // Update user store
           const userStore = useUserStore();
           userStore.setUser(response.data.user);
           
           return { success: true, user: response.data.user };
         }
         
-        throw new Error(response.data?.error || 'Authentication failed');
+        throw new Error(response.data?.error || 'Authentication failed - Missing user data or token');
         
       } catch (error: any) {
-        this.setError(error.response?.data?.message || error.message || 'Failed to sign in with Google');
+        // Clear any partial auth state on error
+        this.user = null;
+        localStorage.removeItem('auth_token');
+        
+        const errorMessage = error.response?.data?.message || error.message || 'Failed to sign in with Google';
+        this.setError(errorMessage);
         console.error('Google Sign-In Error:', error);
-        return { success: false, error: this.error };
+        return { success: false, error: errorMessage };
       } finally {
         this.setLoading(false);
       }
