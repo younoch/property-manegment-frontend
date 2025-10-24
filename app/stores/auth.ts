@@ -397,6 +397,8 @@ export const useAuthStore = defineStore('auth', {
           last_login_at: string;
           is_email_verified: boolean;
           google_id?: string;
+          accessToken?: string;
+          refreshToken?: string;
         }
         
         interface GoogleLoginResponse {
@@ -405,8 +407,6 @@ export const useAuthStore = defineStore('auth', {
           data: UserData;
           timestamp: string;
           path: string;
-          accessToken?: string;
-          refreshToken?: string;
         }
 
         console.log('Sending Google login request...');
@@ -427,17 +427,25 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('No user data received from Google sign-in');
         }
         
-        // Store tokens from response root
-        if (!response.data.accessToken) {
+        // Check if we have valid user data
+        if (!userData) {
+          throw new Error('No user data received from Google sign-in');
+        }
+        
+        // Get tokens from the response data object
+        if (!userData.accessToken) {
+          console.error('No access token in response data:', userData);
           throw new Error('No access token in response');
         }
 
         console.log('Storing authentication tokens...');
         // Store tokens in localStorage
-        localStorage.setItem('auth_token', response.data.accessToken);
+        localStorage.setItem('auth_token', userData.accessToken);
+        console.log('Stored access token in localStorage');
         
-        if (response.data.refreshToken) {
-          localStorage.setItem('refresh_token', response.data.refreshToken);
+        if (userData.refreshToken) {
+          localStorage.setItem('refresh_token', userData.refreshToken);
+          console.log('Stored refresh token in localStorage');
         }
         
         // Set up cookie options
@@ -450,7 +458,7 @@ export const useAuthStore = defineStore('auth', {
         };
         
         // Set auth token cookie
-        const authCookie = `auth_token=${response.data.accessToken}; ` +
+        const authCookie = `auth_token=${userData.accessToken}; ` +
                          `Path=${cookieOptions.path}; ` +
                          `SameSite=${cookieOptions.sameSite}; ` +
                          `${cookieOptions.secure ? 'Secure; ' : ''}` +
@@ -458,8 +466,8 @@ export const useAuthStore = defineStore('auth', {
         
         // Set refresh token cookie if available
         let refreshCookie = '';
-        if (response.data.refreshToken) {
-          refreshCookie = `refresh_token=${response.data.refreshToken}; ` +
+        if (userData.refreshToken) {
+          refreshCookie = `refresh_token=${userData.refreshToken}; ` +
                          `Path=${cookieOptions.path}; ` +
                          `SameSite=${cookieOptions.sameSite}; ` +
                          `${cookieOptions.secure ? 'Secure; ' : ''}` +
