@@ -362,23 +362,29 @@ export const useAuthStore = defineStore('auth', {
           success: boolean;
           message: string;
           data: {
-            id: string;
-            email: string;
-            name: string;
-            phone: string | null;
-            role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-            profile_image_url: string | null;
-            is_active: boolean;
-            created_at: string;
-            updated_at: string;
-            owned_portfolios: any[];
-            notifications: any[];
-            requires_onboarding: boolean;
-            onboarding_completed_at: string | null;
-            last_login_at: string;
-            accessToken: string;
-            refreshToken: string;
-            google_id?: string;
+            success: boolean;
+            message: string;
+            data: {
+              id: string;
+              email: string;
+              name: string;
+              phone: string | null;
+              role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+              profile_image_url: string | null;
+              is_active: boolean;
+              created_at: string;
+              updated_at: string;
+              owned_portfolios: any[];
+              notifications: any[];
+              requires_onboarding: boolean;
+              onboarding_completed_at: string | null;
+              last_login_at: string;
+              accessToken: string;
+              refreshToken: string;
+              google_id?: string;
+            };
+            timestamp: string;
+            path: string;
           };
           timestamp: string;
           path: string;
@@ -388,11 +394,13 @@ export const useAuthStore = defineStore('auth', {
 
         console.log('Google Login API Response:', response.data);
         
-        if (!response.data?.success || !response.data.data) {
-          throw new Error(response.data?.message || 'Authentication failed');
+        // Check for nested success and data
+        if (!response.data?.success || !response.data.data?.success || !response.data.data.data) {
+          throw new Error(response.data?.data?.message || response.data?.message || 'Authentication failed');
         }
         
-        const userData = response.data.data;
+        // Extract the actual user data from the nested structure
+        const userData = response.data.data.data;
         
         if (!userData) {
           throw new Error('No user data received from Google sign-in');
@@ -409,6 +417,7 @@ export const useAuthStore = defineStore('auth', {
           throw new Error('No access token received from Google sign-in');
         }
         
+        // Store tokens in localStorage
         localStorage.setItem('auth_token', userData.accessToken);
         console.log('Google access token stored');
         
@@ -417,6 +426,20 @@ export const useAuthStore = defineStore('auth', {
           console.log('Google refresh token stored');
         } else {
           console.warn('No refresh token in Google sign-in response');
+        }
+        
+        // Also store tokens in cookies for server-side access
+        const config = useRuntimeConfig();
+        const cookieOptions = {
+          path: '/',
+          secure: true,
+          sameSite: 'lax' as const,
+          maxAge: 60 * 60 * 24 * 7 // 7 days
+        };
+        
+        useCookie('auth_token', cookieOptions).value = userData.accessToken;
+        if (userData.refreshToken) {
+          useCookie('refresh_token', cookieOptions).value = userData.refreshToken;
         }
 
         // Map user data to our User type
