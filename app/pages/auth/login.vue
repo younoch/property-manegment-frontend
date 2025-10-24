@@ -311,7 +311,7 @@ const handleLogin = async () => {
   if (!validateForm()) return;
   
   try {
-    const result = await signin({
+    const result = await authStore.signin({
       email: form.value.email,
       password: form.value.password
     });
