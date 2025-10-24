@@ -37,7 +37,7 @@
             <div class="grid grid-cols-2 gap-3 sm:gap-4 max-w-md">
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                 <img 
-                  src="https://picsum.photos/300/200?random=12" 
+                  src="/management-messy-spreadsheet.jpg" 
                   class="absolute inset-0 w-full h-full object-cover" 
                   alt="Messy spreadsheets"
                   loading="lazy"

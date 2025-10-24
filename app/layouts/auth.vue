@@ -39,7 +39,7 @@
     </div>
     
     <!-- Right Side - Authentication Form -->
-    <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
       <div class="w-full max-w-sm sm:max-w-md lg:max-w-lg">
         <slot />
       </div>

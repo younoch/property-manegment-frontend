@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="text-center mb-6 sm:mb-8">
+    <div class="text-center mb-2 sm:mb-4">
       <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2 sm:mb-3">
         Create your account
       </h2>
@@ -51,7 +51,7 @@
         </UButton>
       </div>
       
-      <div class="relative mb-4 sm:mb-6">
+      <div class="relative mb-3 sm:mb-4">
         <div class="absolute inset-0 flex items-center">
           <div class="w-full border-t border-gray-300"></div>
         </div>
@@ -159,7 +159,7 @@
           </div>
         </div>
         
-        <div class="pt-2 sm:pt-3">
+        <div>
           <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 sm:gap-6 pt-2">
             <div class="text-sm w-full sm:w-auto text-center sm:text-left">
               <span class="text-gray-600">
@@ -188,6 +188,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
 import { ROLE_OPTIONS } from '~/constants';
+import { createApiClient } from '@/utils/api';
 definePageMeta({
   layout: 'auth',
   middleware: 'guest'
@@ -246,17 +247,39 @@ const successMessage = ref('');
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-// Social login functions
+// Google Sign-In
+const { $googleSignIn } = useNuxtApp();
+const router = useRouter();
+
 const signInWithGoogle = async () => {
   try {
     loadingGoogle.value = true;
     errorMessage.value = '';
     
-    // Redirect to your backend's Google OAuth endpoint
-    window.location.href = '/api/auth/google';
+    // Sign in with Google
+    const googleUser = await $googleSignIn.signIn();
+    const idToken = googleUser.getAuthResponse().id_token;
+    
+    // Call the store method
+    const result = await authStore.signInWithGoogle({
+      token: idToken,
+      role: form.value.role
+    });
+    
+    if (result.success && result.user) {
+      successMessage.value = 'Successfully signed in with Google!';
+      
+      // Redirect to dashboard after a short delay
+      setTimeout(() => {
+        navigateTo('/app/dashboard');
+      }, 1500);
+    } else {
+      errorMessage.value = result.error || 'Failed to sign in with Google';
+    }
     
   } catch (error: any) {
-    errorMessage.value = error?.message || 'Failed to sign in with Google';
+    console.error('Google Sign-In Error:', error);
+    errorMessage.value = error.message || 'Failed to sign in with Google';
   } finally {
     loadingGoogle.value = false;
   }

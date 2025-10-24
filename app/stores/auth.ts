@@ -16,6 +16,11 @@ type LoginCredentials = {
   password: string;
 };
 
+type GoogleSignInData = {
+  token: string;
+  role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+};
+
 interface AuthState {
   user: User | null;
   loading: boolean;
@@ -238,7 +243,36 @@ export const useAuthStore = defineStore('auth', {
     },
 
     clearCaches() {
-      // Implementation for clearing caches
+      // Clear any cached data when needed
+    },
+
+    async signInWithGoogle({ token, role }: GoogleSignInData) {
+      this.setLoading(true);
+      this.clearError();
+
+      try {
+        const api = createApiClient();
+        const response = await api.post('/auth/google/login', { token, role });
+
+        if (response.data?.user) {
+          this.user = response.data.user;
+          
+          // Update user store if needed
+          const userStore = useUserStore();
+          userStore.setUser(response.data.user);
+          
+          return { success: true, user: response.data.user };
+        }
+        
+        throw new Error(response.data?.error || 'Authentication failed');
+        
+      } catch (error: any) {
+        this.setError(error.response?.data?.message || error.message || 'Failed to sign in with Google');
+        console.error('Google Sign-In Error:', error);
+        return { success: false, error: this.error };
+      } finally {
+        this.setLoading(false);
+      }
     }
   }
 });

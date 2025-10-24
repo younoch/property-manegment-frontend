@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="text-center mb-6 sm:mb-8">
+    <div class="text-center mb-2 sm:mb-4">
       <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2 sm:mb-3">
         Sign in to your account
       </h2>
@@ -51,7 +51,7 @@
         </UButton>
       </div>
       
-      <div class="relative mb-4 sm:mb-6">
+      <div class="relative mb-3 sm:mb-4">
         <div class="absolute inset-0 flex items-center">
           <div class="w-full border-t border-gray-300"></div>
         </div>
@@ -62,7 +62,7 @@
       
       <form @submit.prevent="handleLogin" class="space-y-4 sm:space-y-6">
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email address</label>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
           <UInput
             v-model="form.email"
             type="email"
@@ -74,7 +74,7 @@
         </div>
         
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
           <UInput
             v-model="form.password"
             placeholder="Enter your password"
@@ -99,7 +99,7 @@
           </UInput>
         </div>
         
-        <div class="pt-2 sm:pt-3">
+        <div>
           <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 sm:gap-6 pt-2">
             <div class="text-sm w-full sm:w-auto text-center sm:text-left">
               <span class="text-gray-600">
@@ -126,6 +126,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useAuthStore } from '~/stores/auth';
+import { useToast } from '#imports';
+import { useNuxtApp } from '#app';
+
+// Initialize stores and composables
+const authStore = useAuthStore();
+const toast = useToast();
+const { $googleSignIn } = useNuxtApp();
+
 useHead({
   title: 'Login | LeaseDirector: Rent & Lease Management Software',
   meta: [
@@ -136,14 +146,6 @@ definePageMeta({
   layout: 'auth',
   middleware: 'guest'
 });
-
-import { useAuthStore } from '~/stores/auth'
-import { useUserStore } from '~/stores/user'
-import { useToast } from '#imports'
-
-const { signin, isAuthenticating, currentError } = useAuthStore();
-const router = useRouter();
-const toast = useToast();
 
 const form = ref({
   email: '',
@@ -157,7 +159,7 @@ const errors = ref({
 
 const showPassword = ref(false);
 
-const loading = computed(() => isAuthenticating);
+const loading = computed(() => authStore.isAuthenticating);
 const loadingGoogle = ref(false);
 const loadingFacebook = ref(false);
 
@@ -165,11 +167,38 @@ const loadingFacebook = ref(false);
 const signInWithGoogle = async () => {
   try {
     loadingGoogle.value = true;
+    // Clear any previous errors
     
-    // Redirect to your backend's Google OAuth endpoint
-    window.location.href = '/api/auth/google';
+    // Sign in with Google
+    const googleUser = await $googleSignIn.signIn();
+    const idToken = googleUser.getAuthResponse().id_token;
+    
+    // Call the store method without role parameter
+    const result = await authStore.signInWithGoogle({
+      token: idToken,
+      role: 'tenant' // Default role for login, will be overridden by backend if needed
+    });
+    
+    if (result.success && result.user) {
+      // Show success message
+      toast.add({
+        title: 'Success',
+        description: 'Successfully signed in with Google',
+        color: 'success',
+        icon: 'i-heroicons-check-circle',
+        duration: 3000
+      });
+      
+      // Redirect to dashboard after a short delay
+      setTimeout(() => {
+        navigateTo('/app/dashboard');
+      }, 1000);
+    } else {
+      throw new Error(result.error || 'Failed to sign in with Google');
+    }
     
   } catch (error: any) {
+    console.error('Google Sign-In Error:', error);
     toast.add({
       title: 'Error',
       description: error?.message || 'Failed to sign in with Google',
