@@ -15,9 +15,12 @@
     <UCard class="w-full">
       <!-- Social Login Buttons -->
       <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-        <div 
-          ref="googleButton"
-          class="w-full flex justify-center py-2.5 sm:py-3 px-4"
+        <UButton
+          block
+          color="white"
+          :loading="loadingGoogle"
+          :disabled="loadingGoogle || loadingFacebook"
+          class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
         >
           <template #leading>
             <div v-if="!loadingGoogle" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3">
@@ -43,6 +46,10 @@
           </template>
           {{ loadingGoogle ? 'Signing in with Google...' : 'Continue with Google' }}
         </UButton>
+        <div 
+          ref="googleButton"
+          class="hidden"
+        ></div>
         
         <UButton
           block
