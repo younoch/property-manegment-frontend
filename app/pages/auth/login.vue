@@ -15,14 +15,9 @@
     <UCard class="w-full">
       <!-- Social Login Buttons -->
       <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-        <UButton
-          id="googleSignInButton"
-          block
-          color="white"
-          :loading="loadingGoogle"
-          :disabled="loadingGoogle || loadingFacebook"
-          class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
-          @click="initiateGoogleSignIn"
+        <div 
+          ref="googleButton"
+          class="w-full flex justify-center py-2.5 sm:py-3 px-4"
         >
           <template #leading>
             <div v-if="!loadingGoogle" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3">
@@ -158,7 +153,61 @@ const toast = useToast();
 const config = useRuntimeConfig();
 
 // Google Sign-In
-const googleClientId = config.public.googleClientId;
+const googleButton = ref<HTMLElement | null>(null);
+const loadingGoogle = ref(false);
+const loadingFacebook = ref(false);
+
+// Handle Google Sign-In response
+const handleGoogleSignIn = async (response: any) => {
+  try {
+    loadingGoogle.value = true;
+    
+    if (!response.credential) {
+      throw new Error('No credential received from Google');
+    }
+    
+    console.log('Received Google credential, authenticating...');
+    
+    // Call the store method with the ID token
+    const result = await authStore.signInWithGoogle({
+      token: response.credential
+    });
+    
+    if (result.success && result.user) {
+      console.log('Google authentication successful', { user: result.user });
+      
+      // Show success message
+      toast.add({
+        title: 'Success',
+        description: 'Successfully signed in with Google',
+        color: 'success',
+        icon: 'i-heroicons-check-circle',
+        duration: 3000
+      });
+      
+      // Redirect to dashboard or appropriate page
+      const redirectTo = result.requiresOnboarding ? '/onboarding' : '/dashboard';
+      
+      // Small delay before navigation to ensure UI updates
+      setTimeout(() => {
+        navigateTo(redirectTo);
+      }, 500);
+    } else {
+      throw new Error(result.error || 'Authentication failed');
+    }
+  } catch (error: any) {
+    console.error('Error during Google authentication:', error);
+    toast.add({
+      title: 'Authentication Error',
+      description: error?.message || 'Failed to authenticate with Google. Please try again.',
+      color: 'error',
+      icon: 'i-heroicons-exclamation-circle',
+      duration: 5000
+    });
+  } finally {
+    loadingGoogle.value = false;
+  }
+};
 
 // Initialize Google Sign-In
 const initGoogleAuth = () => {
@@ -177,18 +226,33 @@ const initGoogleAuth = () => {
   script.defer = true;
   
   script.onload = () => {
-    if (!window.google || !window.google.accounts) {
+    if (!window.google?.accounts) {
       console.error('Google Identity Services not loaded properly');
       return;
     }
     
     // Initialize the Google Sign-In client
     window.google.accounts.id.initialize({
-      client_id: googleClientId,
+      client_id: config.public.googleClientId,
       callback: handleGoogleSignIn,
       auto_select: false,
-      cancel_on_tap_outside: false
+      cancel_on_tap_outside: false,
+      use_fedcm_for_prompt: true,
+      itp_support: false
     });
+    
+    // Render the Google Sign-In button
+    if (googleButton.value) {
+      window.google.accounts.id.renderButton(googleButton.value, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        logo_alignment: 'left',
+        width: 300
+      });
+    }
     
     console.log('Google Identity Services initialized successfully');
   };
@@ -229,104 +293,6 @@ const errors = ref({
 const showPassword = ref(false);
 
 const loading = computed(() => authStore.isAuthenticating);
-const loadingGoogle = ref(false);
-const loadingFacebook = ref(false);
-
-// Initiate Google Sign-In
-const initiateGoogleSignIn = () => {
-  try {
-    loadingGoogle.value = true;
-    
-    if (!window.google || !window.google.accounts) {
-      throw new Error('Google Sign-In not available');
-    }
-    
-    // Trigger the Google Sign-In flow
-    window.google.accounts.id.prompt((notification: { isNotDisplayed: () => boolean; isSkippedMoment: () => boolean }) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        // If One Tap UI is not available, use the button click handler
-        window.google.accounts.id.renderButton(
-          document.getElementById('googleSignInButton'),
-          { 
-            type: 'standard',
-            theme: 'outline',
-            size: 'large',
-            width: 300,
-            text: 'continue_with',
-            shape: 'rectangular',
-            logo_alignment: 'left'
-          }
-        );
-      }
-    });
-  } catch (error) {
-    console.error('Error during Google Sign-In:', error);
-    loadingGoogle.value = false;
-    toast.add({
-      title: 'Error',
-      description: 'Failed to start Google Sign-In. Please try again.',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle',
-      duration: 5000
-    });
-  } finally {
-    loadingGoogle.value = false;
-  }
-};
-
-// Handle Google Sign-In response
-const handleGoogleSignIn = async (response: { credential: string }) => {
-  try {
-    loadingGoogle.value = true;
-    
-    // Get the ID token from the Google Sign-In response
-    const { credential } = response;
-    
-    if (!credential) {
-      throw new Error('No credential received from Google');
-    }
-    
-    console.log('Received Google credential, authenticating...');
-    
-    // Call the store method with the ID token
-    const result = await authStore.signInWithGoogle({
-      token: credential
-    });
-    
-    if (result.success && result.user) {
-      console.log('Google authentication successful', { user: result.user });
-      
-      // Show success message
-      toast.add({
-        title: 'Success',
-        description: 'Successfully signed in with Google',
-        color: 'success',
-        icon: 'i-heroicons-check-circle',
-        duration: 3000
-      });
-      
-      // Redirect to dashboard or appropriate page
-      const redirectTo = result.requiresOnboarding ? '/onboarding' : '/dashboard';
-      
-      // Small delay before navigation to ensure UI updates
-      setTimeout(() => {
-        navigateTo(redirectTo);
-      }, 500);
-    } else {
-      throw new Error(result.error || 'Authentication failed');
-    }
-  } catch (error: any) {
-    console.error('Error during Google authentication:', error);
-    toast.add({
-      title: 'Authentication Error',
-      description: error?.message || 'Failed to authenticate with Google. Please try again.',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle',
-      duration: 5000
-    });
-  } finally {
-    loadingGoogle.value = false;
-  }
 };
 
 const signInWithFacebook = async () => {
