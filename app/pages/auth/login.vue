@@ -165,7 +165,6 @@ declare global {
 // Initialize stores and composables
 const authStore = useAuthStore();
 const toast = useToast();
-const config = useRuntimeConfig();
 
 // Google Sign-In
 const googleButton = ref<HTMLElement | null>(null);
