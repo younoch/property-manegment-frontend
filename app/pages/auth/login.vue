@@ -300,7 +300,6 @@ const errors = ref({
 const showPassword = ref(false);
 
 const loading = computed(() => authStore.isAuthenticating);
-};
 
 const signInWithFacebook = async () => {
   try {
