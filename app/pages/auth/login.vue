@@ -150,11 +150,11 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
-import { useToast } from '#imports';
+import { useToast, useRuntimeConfig } from '#imports';
 
+const config = useRuntimeConfig();
 const router = useRouter();
 const navigateTo = router.push;
-import { useRuntimeConfig } from '#imports';
 
 declare global {
   interface Window {
@@ -270,8 +270,8 @@ const handleGoogleButtonClick = () => {
     return;
   }
 
-  // Create a client ID configuration
-  const clientId = process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID; // Make sure this is set in your .env file
+  // Get client ID from runtime config
+  const clientId = config.public.googleClientId;
   
   if (!clientId) {
     console.error('Google Client ID is not configured');
