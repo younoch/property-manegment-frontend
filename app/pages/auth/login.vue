@@ -271,7 +271,19 @@ const handleGoogleButtonClick = () => {
   }
 
   // Create a client ID configuration
-  const clientId = process.env.GOOGLE_CLIENT_ID; // Make sure this is set in your .env file
+  const clientId = process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID; // Make sure this is set in your .env file
+  
+  if (!clientId) {
+    console.error('Google Client ID is not configured');
+    toast.add({
+      title: 'Configuration Error',
+      description: 'Google Sign-In is not properly configured. Please contact support.',
+      color: 'error',
+      icon: 'i-heroicons-exclamation-circle',
+      duration: 5000
+    });
+    return;
+  }
   
   // Initialize Google Auth2
   const client = window.google.accounts.oauth2.initTokenClient({
