@@ -16,6 +16,7 @@
       <!-- Social Login Buttons -->
       <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
         <UButton
+          id="googleSignInButton"
           block
           color="white"
           :loading="loadingGoogle"
@@ -24,12 +25,26 @@
           @click="initiateGoogleSignIn"
         >
           <template #leading>
-            <img 
-              v-if="!loadingGoogle"
-              src="https://www.google.com/favicon.ico" 
-              alt="Google" 
-              class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3"
-            />
+            <div v-if="!loadingGoogle" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3">
+              <svg viewBox="0 0 24 24" class="w-full h-full">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                ></path>
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.28-1.93-6.14-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                ></path>
+                <path
+                  fill="#FBBC05"
+                  d="M5.86 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.68-2.84z"
+                ></path>
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.68 2.84c.86-2.6 3.28-4.53 6.14-4.53z"
+                ></path>
+              </svg>
+            </div>
           </template>
           {{ loadingGoogle ? 'Signing in with Google...' : 'Continue with Google' }}
         </UButton>
@@ -142,20 +157,45 @@ let googleAuth: any = null;
 
 // Initialize Google Sign-In
 const initGoogleAuth = () => {
-  if (typeof window !== 'undefined') {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
+  if (typeof window === 'undefined') return;
+
+  // Remove any existing script to prevent multiple initializations
+  const existingScript = document.querySelector('script[src^="https://accounts.google.com/gsi/client"]');
+  if (existingScript) {
+    document.head.removeChild(existingScript);
+  }
+
+  const script = document.createElement('script');
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.async = true;
+  script.defer = true;
+  script.onload = () => {
+    try {
+      // @ts-ignore
+      if (!window.google || !window.google.accounts) {
+        console.error('Google Identity Services not loaded properly');
+        return;
+      }
+      
       // @ts-ignore
       google.accounts.id.initialize({
         client_id: googleClientId,
-        callback: handleGoogleSignIn
+        callback: handleGoogleSignIn,
+        auto_select: false, // Disable auto-select to prevent automatic sign-in
+        cancel_on_tap_outside: false // Prevent auto-dismissal
       });
-    };
-    document.head.appendChild(script);
-  }
+      
+      console.log('Google Identity Services initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Google Identity Services:', error);
+    }
+  };
+  
+  script.onerror = (error) => {
+    console.error('Failed to load Google Identity Services script:', error);
+  };
+  
+  document.head.appendChild(script);
 };
 
 // Initialize on component mount
@@ -194,26 +234,46 @@ const loadingFacebook = ref(false);
 const initiateGoogleSignIn = () => {
   try {
     // @ts-ignore
-    google.accounts.id.prompt();
+    if (!window.google || !window.google.accounts) {
+      console.error('Google Identity Services not loaded');
+      toast.add({
+        title: 'Error',
+        description: 'Failed to load Google Sign-In. Please refresh the page and try again.',
+        color: 'error',
+        icon: 'i-heroicons-exclamation-circle',
+        duration: 5000
+      });
+      return;
+    }
     
     // @ts-ignore
-    google.accounts.id.renderButton(
-      document.getElementById('googleSignInButton'),
-      { 
-        type: 'standard',
-        theme: 'outline',
-        size: 'large',
-        width: '100%',
-        text: 'continue_with',
-        shape: 'rectangular',
-        logo_alignment: 'left',
+    google.accounts.id.prompt(notification => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        // If the One Tap prompt can't be shown, render the button
+        // @ts-ignore
+        google.accounts.id.renderButton(
+          document.getElementById('googleSignInButton'),
+          { 
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            width: 300,
+            text: 'continue_with',
+            shape: 'rectangular',
+            logo_alignment: 'left'
+          }
+        );
       }
-    );
-    
-    // @ts-ignore
-    google.accounts.id.prompt();
+    });
   } catch (error) {
-    console.error('Error initializing Google Sign-In:', error);
+    console.error('Error initiating Google Sign-In:', error);
+    toast.add({
+      title: 'Error',
+      description: 'Failed to start Google Sign-In. Please try again.',
+      color: 'error',
+      icon: 'i-heroicons-exclamation-circle',
+      duration: 5000
+    });
   }
 };
 
@@ -229,13 +289,16 @@ const handleGoogleSignIn = async (response: any) => {
       throw new Error('No credential received from Google');
     }
     
+    console.log('Received Google credential, authenticating...');
+    
     // Call the store method with the ID token
     const result = await authStore.signInWithGoogle({
-      token: credential,
-      role: 'tenant' // Default role for login
+      token: credential
     });
     
     if (result.success && result.user) {
+      console.log('Google authentication successful', { user: result.user });
+      
       // Show success message
       toast.add({
         title: 'Success',

@@ -18,7 +18,7 @@ type LoginCredentials = {
 
 type GoogleSignInData = {
   token: string;
-  role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
+  role?: 'tenant' | 'landlord' | 'manager' | 'super_admin';
 };
 
 interface AuthState {
