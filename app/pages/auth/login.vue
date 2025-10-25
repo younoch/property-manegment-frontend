@@ -197,7 +197,7 @@ const handleGoogleSignIn = async (response: any) => {
       });
       
       // Redirect to dashboard or appropriate page
-      const redirectTo = result.requiresOnboarding ? '/onboarding' : '/dashboard';
+      const redirectTo = '/app/dashboard';
       
       // Small delay before navigation to ensure UI updates
       setTimeout(() => {
