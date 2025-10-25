@@ -396,7 +396,7 @@ export const useAuthStore = defineStore('auth', {
         const api = createApiClient();
         
         console.log('Sending Google login request...');
-        const response = await api.post('/auth/google', { token, role });
+        const response = await api.post('/auth/google/login', { token, role });
         
         console.log('Google Login API Response:', response);
         
