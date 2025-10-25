@@ -3,6 +3,21 @@ import { useUserStore } from './user';
 import { createApiClient, createProtectedApiClient } from '@/utils/api';
 import type { User } from '@/types/auth';
 
+interface AuthResponse {
+  accessToken: string;
+  refreshToken?: string;
+  user: User;
+  [key: string]: any; // For any additional properties that might be returned
+}
+
+// Default cookie options
+const cookieOptions = {
+  path: '/',
+  sameSite: 'Lax' as const,
+  secure: process.env.NODE_ENV === 'production',
+  maxAge: 60 * 60 * 24 * 7, // 7 days in seconds
+};
+
 type SignupData = {
   email: string;
   password: string;
@@ -367,7 +382,7 @@ export const useAuthStore = defineStore('auth', {
       // Clear any cached data when needed
     },
 
-    async signInWithGoogle({ token, role }: GoogleSignInData) {
+    async signInWithGoogle({ token, role = 'landlord' }: GoogleSignInData) {
       console.log('Starting Google sign-in with token and role:', { hasToken: !!token, role });
       this.loading = true;
       this.error = null;
@@ -380,82 +395,27 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = createApiClient();
         
-        interface UserData {
-          id: string;
-          email: string;
-          name: string;
-          phone: string | null;
-          role: 'tenant' | 'landlord' | 'manager' | 'super_admin';
-          profile_image_url: string | null;
-          is_active: boolean;
-          created_at: string;
-          updated_at: string;
-          owned_portfolios: any[];
-          notifications: any[];
-          requires_onboarding: boolean;
-          onboarding_completed_at: string | null;
-          last_login_at: string;
-          is_email_verified: boolean;
-          google_id?: string;
-          accessToken?: string;
-          refreshToken?: string;
-        }
-        
-        interface GoogleLoginResponse {
-          success: boolean;
-          message: string;
-          data: UserData;
-          timestamp: string;
-          path: string;
-        }
-
         console.log('Sending Google login request...');
-        const response = await api.post<GoogleLoginResponse>('/auth/google/login', { token, role });
+        const response = await api.post('/auth/google', { token, role });
+        
+        console.log('Google Login API Response:', response);
+        
+        if (!response) {
+          throw new Error('No response received from server');
+        }
 
-        console.log('Google Login API Response:', response.data);
+        const userData = (response.data || response) as AuthResponse;
         
-        // Check for successful response
-        if (!response.data?.success) {
-          throw new Error(response.data?.message || 'Authentication failed');
-        }
-        
-        // Extract user data from response
-        const userData = response.data.data;
-        console.log('Extracted user data:', userData);
-        
-        if (!userData) {
-          throw new Error('No user data received from Google sign-in');
-        }
-        
-        // Check if we have valid user data
-        if (!userData) {
-          throw new Error('No user data received from Google sign-in');
-        }
-        
-        // Get tokens from the response data object
-        if (!userData.accessToken) {
-          console.error('No access token in response data:', userData);
+        if (!userData?.accessToken) {
           throw new Error('No access token in response');
         }
 
-        console.log('Storing authentication tokens...');
-        // Store tokens in localStorage
+        // Store tokens
         localStorage.setItem('auth_token', userData.accessToken);
-        console.log('Stored access token in localStorage');
         
         if (userData.refreshToken) {
           localStorage.setItem('refresh_token', userData.refreshToken);
-          console.log('Stored refresh token in localStorage');
         }
-        
-        // Set up cookie options
-        const cookieOptions = {
-          path: '/',
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax' as const,
-          maxAge: 60 * 60 * 24 * 7, // 7 days
-          domain: typeof window !== 'undefined' ? window.location.hostname : ''
-        };
         
         // Set auth token cookie
         const authCookie = `auth_token=${userData.accessToken}; ` +
