@@ -146,6 +146,12 @@ import { useAuthStore } from '~/stores/auth';
 import { useToast } from '#imports';
 import { useRuntimeConfig } from '#imports';
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 // Initialize stores and composables
 const authStore = useAuthStore();
 const toast = useToast();
@@ -153,42 +159,38 @@ const config = useRuntimeConfig();
 
 // Google Sign-In
 const googleClientId = config.public.googleClientId;
-let googleAuth: any = null;
 
 // Initialize Google Sign-In
 const initGoogleAuth = () => {
   if (typeof window === 'undefined') return;
-
+  
   // Remove any existing script to prevent multiple initializations
   const existingScript = document.querySelector('script[src^="https://accounts.google.com/gsi/client"]');
   if (existingScript) {
     document.head.removeChild(existingScript);
   }
 
+  // Load the Google Identity Services script
   const script = document.createElement('script');
   script.src = 'https://accounts.google.com/gsi/client';
   script.async = true;
   script.defer = true;
+  
   script.onload = () => {
-    try {
-      // @ts-ignore
-      if (!window.google || !window.google.accounts) {
-        console.error('Google Identity Services not loaded properly');
-        return;
-      }
-      
-      // @ts-ignore
-      google.accounts.id.initialize({
-        client_id: googleClientId,
-        callback: handleGoogleSignIn,
-        auto_select: false, // Disable auto-select to prevent automatic sign-in
-        cancel_on_tap_outside: false // Prevent auto-dismissal
-      });
-      
-      console.log('Google Identity Services initialized successfully');
-    } catch (error) {
-      console.error('Error initializing Google Identity Services:', error);
+    if (!window.google || !window.google.accounts) {
+      console.error('Google Identity Services not loaded properly');
+      return;
     }
+    
+    // Initialize the Google Sign-In client
+    window.google.accounts.id.initialize({
+      client_id: googleClientId,
+      callback: handleGoogleSignIn,
+      auto_select: false,
+      cancel_on_tap_outside: false
+    });
+    
+    console.log('Google Identity Services initialized successfully');
   };
   
   script.onerror = (error) => {
@@ -233,25 +235,17 @@ const loadingFacebook = ref(false);
 // Initiate Google Sign-In
 const initiateGoogleSignIn = () => {
   try {
-    // @ts-ignore
+    loadingGoogle.value = true;
+    
     if (!window.google || !window.google.accounts) {
-      console.error('Google Identity Services not loaded');
-      toast.add({
-        title: 'Error',
-        description: 'Failed to load Google Sign-In. Please refresh the page and try again.',
-        color: 'error',
-        icon: 'i-heroicons-exclamation-circle',
-        duration: 5000
-      });
-      return;
+      throw new Error('Google Sign-In not available');
     }
     
-    // @ts-ignore
-    google.accounts.id.prompt(notification => {
+    // Trigger the Google Sign-In flow
+    window.google.accounts.id.prompt((notification: { isNotDisplayed: () => boolean; isSkippedMoment: () => boolean }) => {
       if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        // If the One Tap prompt can't be shown, render the button
-        // @ts-ignore
-        google.accounts.id.renderButton(
+        // If One Tap UI is not available, use the button click handler
+        window.google.accounts.id.renderButton(
           document.getElementById('googleSignInButton'),
           { 
             type: 'standard',
@@ -266,7 +260,8 @@ const initiateGoogleSignIn = () => {
       }
     });
   } catch (error) {
-    console.error('Error initiating Google Sign-In:', error);
+    console.error('Error during Google Sign-In:', error);
+    loadingGoogle.value = false;
     toast.add({
       title: 'Error',
       description: 'Failed to start Google Sign-In. Please try again.',
@@ -274,11 +269,13 @@ const initiateGoogleSignIn = () => {
       icon: 'i-heroicons-exclamation-circle',
       duration: 5000
     });
+  } finally {
+    loadingGoogle.value = false;
   }
 };
 
 // Handle Google Sign-In response
-const handleGoogleSignIn = async (response: any) => {
+const handleGoogleSignIn = async (response: { credential: string }) => {
   try {
     loadingGoogle.value = true;
     
@@ -308,19 +305,21 @@ const handleGoogleSignIn = async (response: any) => {
         duration: 3000
       });
       
-      // Redirect to dashboard after a short delay
+      // Redirect to dashboard or appropriate page
+      const redirectTo = result.requiresOnboarding ? '/onboarding' : '/dashboard';
+      
+      // Small delay before navigation to ensure UI updates
       setTimeout(() => {
-        navigateTo('/app/dashboard');
-      }, 1000);
+        navigateTo(redirectTo);
+      }, 500);
     } else {
-      throw new Error(result.error || 'Failed to sign in with Google');
+      throw new Error(result.error || 'Authentication failed');
     }
-    
   } catch (error: any) {
-    console.error('Google Sign-In Error:', error);
+    console.error('Error during Google authentication:', error);
     toast.add({
-      title: 'Error',
-      description: error?.message || 'Failed to sign in with Google',
+      title: 'Authentication Error',
+      description: error?.message || 'Failed to authenticate with Google. Please try again.',
       color: 'error',
       icon: 'i-heroicons-exclamation-circle',
       duration: 5000
