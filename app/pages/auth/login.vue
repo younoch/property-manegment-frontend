@@ -148,8 +148,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
 import { useToast } from '#imports';
+
+const router = useRouter();
+const navigateTo = router.push;
 import { useRuntimeConfig } from '#imports';
 
 declare global {
@@ -242,30 +246,7 @@ const initGoogleAuth = () => {
       return;
     }
     
-    // Initialize the Google Sign-In client
-    window.google.accounts.id.initialize({
-      client_id: config.public.googleClientId,
-      callback: handleGoogleSignIn,
-      auto_select: false,
-      cancel_on_tap_outside: false,
-      use_fedcm_for_prompt: true,
-      itp_support: false
-    });
-    
-    // Render the Google Sign-In button
-    if (googleButton.value) {
-      window.google.accounts.id.renderButton(googleButton.value, {
-        type: 'standard',
-        theme: 'outline',
-        size: 'large',
-        text: 'continue_with',
-        shape: 'rectangular',
-        logo_alignment: 'left',
-        width: 300
-      });
-    }
-    
-    console.log('Google Identity Services initialized successfully');
+    console.log('Google Identity Services loaded successfully');
   };
   
   script.onerror = (error) => {
@@ -288,23 +269,56 @@ const handleGoogleButtonClick = () => {
     });
     return;
   }
+
+  // Create a client ID configuration
+  const clientId = process.env.GOOGLE_CLIENT_ID; // Make sure this is set in your .env file
   
-  // Trigger the Google Sign-In flow
-  window.google.accounts.id.prompt((notification: any) => {
-    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-      // If the One Tap UI is not shown, render the button
-      if (googleButton.value) {
-        window.google.accounts.id.renderButton(googleButton.value, {
-          type: 'standard',
-          theme: 'outline',
-          size: 'large',
-          text: 'signin_with',
-          shape: 'rectangular',
-          width: googleButton.value.offsetWidth
+  // Initialize Google Auth2
+  const client = window.google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: 'email profile',
+    callback: async (response: any) => {
+      if (response.access_token) {
+        try {
+          loadingGoogle.value = true;
+          // Send the token to your backend for verification
+          await authStore.signInWithGoogle({ 
+            token: response.access_token,
+            role: 'landlord' // or get this from user selection
+          });
+          // Redirect after successful login
+          navigateTo('/app/dashboard');
+        } catch (error) {
+          console.error('Google Sign-In error:', error);
+          toast.add({
+            title: 'Sign in failed',
+            description: 'There was an error signing in with Google. Please try again.',
+            color: 'error',
+            icon: 'i-heroicons-exclamation-circle',
+            duration: 5000
+          });
+        } finally {
+          loadingGoogle.value = false;
+        }
+      }
+    },
+    error_callback: (error: any) => {
+      console.error('Google Sign-In error:', error);
+      if (error.error !== 'popup_closed_by_user') {
+        toast.add({
+          title: 'Sign in failed',
+          description: 'There was an error signing in with Google. Please try again.',
+          color: 'error',
+          icon: 'i-heroicons-exclamation-circle',
+          duration: 5000
         });
       }
+      loadingGoogle.value = false;
     }
   });
+
+  // Request access token
+  client.requestAccessToken();
 };
 
 // Initialize on component mount
