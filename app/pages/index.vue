@@ -18,7 +18,7 @@
             <StatCard value="Portfolio TZ" label="Accurate due & overdue" />
             <StatCard value="Minutes" label="From lease to first invoice" />
           </div>
-          <LogoCloud class="mt-8 sm:mt-10 md:mt-14 opacity-70" />
+          <!-- <LogoCloud class="mt-8 sm:mt-10 md:mt-14 opacity-70" /> -->
         </div>
       </section>
 
@@ -69,7 +69,7 @@ const reqUrl = process.server ? useRequestURL() : null
 const currentPath = reqUrl ? reqUrl.pathname : '/'
 const canonicalUrl = siteUrl ? `${siteUrl}${currentPath}` : undefined
 
-const title = 'LeaseDirector | Rent & Lease Management Software for Small Landlords'
+const title = 'LeaseDirector | Rental Management Software for Small Landlords'
 const description = 'Manage leases, auto-generate rent invoices, track payments and late fees. Handle maintenance, expenses, and tenant communication — all in one dashboard. Built for small landlords. Free to start.'
 const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.jpg'
 

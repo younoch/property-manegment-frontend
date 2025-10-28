@@ -196,7 +196,7 @@ definePageMeta({
   middleware: 'guest'
 });
 useHead({
-  title: 'Sign Up | LeaseDirector: Rent & Lease Management Software',
+  title: 'Sign Up | LeaseDirector: Rental Management Software',
   meta: [
     { name: 'description', content: 'Sign up for a LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
   ]

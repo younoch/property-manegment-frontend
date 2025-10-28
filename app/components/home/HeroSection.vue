@@ -2,14 +2,16 @@
   <section class="container mx-auto px-4 pt-2 md:pt-20 mb-2 md:mb-20">
     <div class="grid lg:grid-cols-2 gap-3 md:gap-10 items-center">
       <div>
-        <p class="inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
-          LeaseDirector · Smart Rent & Lease Management Software
+        <p class="inline-flex text-center md:text-left items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
+          LeaseDirector · Smart Rental Management Software
         </p>
 
-        <h1 class="mt-5 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
-          Rent & Lease Management Software for
+        <h1 class="mt-3 md:mt-5 text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
+          Rental Management Software 
           <br />
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
+          for
+          
+          <span class="bg-clip-text text-2xl md:text-3xl lg:text-4xl text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
         </h1>
 
         <p class="mt-4 text-gray-700 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed text-center sm:text-left">
@@ -27,7 +29,7 @@
         <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
           <img src="/apartment-building-preview.jpg" alt="apartment building" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
           <img src="/agreement-deal.jpg" alt="agreement eal" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
-          <img src="https://picsum.photos/200/300?random=3" alt="Landlord workspace" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
+          <img src="/whatsapp-notification.jpg" alt="WhatsApp notification" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
         </div>
       </div>
 

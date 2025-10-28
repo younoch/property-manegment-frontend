@@ -131,7 +131,7 @@ import TermsSection from '~/components/terms/TermsSection.vue'
 const effectiveDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
 
 useHead({
-  title: 'Terms & Conditions | LeaseDirector: Rent & Lease Management Software',
+  title: 'Terms & Conditions | LeaseDirector: Rental Management Software',
   meta: [
     { name: 'description', content: 'Terms & Conditions governing the use of LeaseDirector. Learn about accounts, subscriptions, acceptable use, liability, and legal details.' }
   ]

@@ -24,7 +24,7 @@ export const USER_ROLES: Role[] = [
   {
     value: 'manager',
     label: 'Property Manager',
-    description: 'Professional rent & lease Management staff',
+    description: 'Professional rental Management staff',
     color: 'warning',
     permissions: ['manage_properties', 'manage_tenants', 'handle_maintenance', 'view_reports', 'manage_rentals']
   },

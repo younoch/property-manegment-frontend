@@ -4,9 +4,9 @@
     <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 to-teal-800">
       <div class="flex flex-col justify-center px-8 xl:px-12 py-12 xl:py-16 text-white">
         <div class="mb-8">
-          <h1 class="text-3xl xl:text-4xl font-bold mb-4">Rent & Lease Management Software</h1>
+          <h1 class="text-3xl xl:text-4xl font-bold mb-4">Rental Management Software</h1>
           <p class="text-lg xl:text-xl text-primary-100">
-            Streamline your rent & lease Management operations with our comprehensive platform.
+            Streamline your rental Management operations with our comprehensive platform.
           </p>
         </div>
         
@@ -14,7 +14,7 @@
           <div class="flex items-start">
             <UIcon name="i-heroicons-home" class="h-6 w-6 xl:h-8 xl:w-8 text-primary-200 mr-3 xl:mr-4 mt-1 flex-shrink-0" />
             <div>
-              <h3 class="font-semibold text-sm xl:text-base">Rent & Lease Management Software</h3>
+              <h3 class="font-semibold text-sm xl:text-base">Rental Management Software</h3>
               <p class="text-primary-200 text-sm xl:text-base">Efficiently manage properties, tenants, and maintenance</p>
             </div>
           </div>
