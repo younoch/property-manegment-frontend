@@ -338,7 +338,7 @@ onMounted(() => {
 });
 
 useHead({
-  title: 'Login | LeaseDirector: Rental Management Software',
+  title: 'Login | LeaseDirector: Property Management Software',
   meta: [
     { name: 'description', content: 'Log in to your LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
   ]
