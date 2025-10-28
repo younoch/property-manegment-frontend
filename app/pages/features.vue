@@ -7,10 +7,10 @@ useHead({
   meta: [
     { 
       name: 'description', 
-      content: 'Discover powerful rental Management features including lease tracking, rent collection, maintenance requests, and financial reporting. Built for small landlords.' 
+      content: 'Discover powerful property Management features including lease tracking, rent collection, maintenance requests, and financial reporting. Built for small landlords.' 
     },
     { property: 'og:title', content: 'Features - LeaseDirector: Property Management Software' },
-    { property: 'og:description', content: 'Discover powerful rental Management features designed specifically for small landlords and property managers.' },
+    { property: 'og:description', content: 'Discover powerful property Management features designed specifically for small landlords and property managers.' },
   ]
 });
 
@@ -241,7 +241,7 @@ onMounted(() => {
       <div class="container mx-auto px-4">
         <div class="text-center mb-8 md:mb-12 scroll-animate">
           <span class="inline-block px-3 py-1 text-xs font-semibold text-primary-700 bg-primary-50 rounded-full mb-3 md:mb-4">SIMPLE WORKFLOW</span>
-          <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4 px-2">Streamline Your Rental Management in 3 Simple Steps</h2>
+          <h2 class="text-2xl md:text-4xl font-bold mb-3 md:mb-4 px-2">Streamline Your Property Management in 3 Simple Steps</h2>
           <p class="text-gray-600 max-w-3xl mx-auto text-base md:text-lg px-2">Our intuitive platform makes it easy to manage your properties efficiently, whether you have one unit or hundreds.</p>
         </div>
         
@@ -318,7 +318,7 @@ onMounted(() => {
         
         <div class="mt-10 md:mt-16 bg-gradient-to-r from-primary-600 to-teal-600 rounded-xl md:rounded-2xl p-5 md:p-12 text-white scroll-animate mx-2 sm:mx-4">
           <div class="max-w-3xl mx-auto text-center">
-            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to transform your rental Management?</h3>
+            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to transform your property Management?</h3>
             <p class="text-primary-100 text-base sm:text-lg mb-5 md:mb-6 px-2">Join thousands of landlords who trust LeaseDirector to save time and grow their rental business.</p>
             <div class="flex justify-center">
               <UButton 
@@ -428,7 +428,7 @@ onMounted(() => {
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold">Powerful features for modern landlords</h2>
-          <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Designed to save you time and reduce the headaches of rental Management</p>
+          <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Designed to save you time and reduce the headaches of property Management</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-12 items-center">

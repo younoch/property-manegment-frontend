@@ -39,7 +39,7 @@
         </div>
         <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
           <RentalInvoice
-            aria-labelledby="sample-rental-invoice"
+            aria-labelledby="sample-property-invoice"
             style="zoom: 0.32;"
             invoiceNumber="LD-INV-0021"
             invoiceDate="Oct 23, 2025"

@@ -130,7 +130,7 @@ const plans = [
     price: { monthly: '$0', quarterly: '$0', yearly: '$0' },
     features: [
       '1 property with up to 3 units',
-      'Basic rental Management',
+      'Basic property Management',
       'Tenant & lease tracking',
       'Rent payment tracking',
       'Email support (48h)'

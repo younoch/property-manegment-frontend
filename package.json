@@ -1,7 +1,7 @@
 {
   "name": "nuxt-app",
   "version": "0.0.2",
-  "description": "LeaseDirector: Property & Rental Management for Small Landlords - A comprehensive NuxtJS application",
+  "description": "LeaseDirector: Property Management for Small Landlords - A comprehensive NuxtJS application",
   "author": "Mohammad Younoch",
   "type": "module",
   "private": true,

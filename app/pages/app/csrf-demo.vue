@@ -119,9 +119,9 @@
         </div>
       </div>
 
-      <!-- Rental Management Demo -->
+      <!-- Property Management Demo -->
       <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold mb-4 text-gray-900">Rental Management Demo</h2>
+        <h2 class="text-2xl font-bold mb-4 text-gray-900">Property Management Demo</h2>
         <p class="text-gray-600 mb-4">
           This section demonstrates how CSRF protection works with actual API endpoints.
         </p>

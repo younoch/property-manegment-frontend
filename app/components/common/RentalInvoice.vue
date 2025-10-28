@@ -8,11 +8,11 @@
                 <Logo size="w-6 h-6" color="text-primary-600" />
                 <p class="ml-2 text-2xl font-bold text-primary-600">LeaseDirector</p>
             </div>
-          <p class="text-sm text-gray-500">Rental Management for Small Landlords</p>
+          <p class="text-sm text-gray-500">Property Management for Small Landlords</p>
           <p class="text-sm text-gray-500">www.leasedirector.com</p>
         </div>
         <div class="text-right">
-          <h2 class="text-xl font-semibold text-gray-800">RENTAL INVOICE</h2>
+          <h2 class="text-xl font-semibold text-gray-800">PROPERTY INVOICE</h2>
           <p class="text-sm text-gray-500 mt-1">
             Invoice #: <span class="font-medium text-gray-700">{{ invoiceNumber }}</span>
           </p>
@@ -103,7 +103,7 @@
           <a href="https://www.leasedirector.com" class="text-emerald-600 underline" target="_blank">
             LeaseDirector.com
           </a>
-          — Rental Management for Small Landlords
+          — Property Management for Small Landlords
         </p>
         <p class="text-xs text-gray-400 mt-1">
           This is a computer-generated document. No signature required.

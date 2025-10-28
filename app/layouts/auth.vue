@@ -6,7 +6,7 @@
         <div class="mb-8">
           <h1 class="text-3xl xl:text-4xl font-bold mb-4">Property Management Software</h1>
           <p class="text-lg xl:text-xl text-primary-100">
-            Streamline your rental Management operations with our comprehensive platform.
+            Streamline your Property Management operations with our comprehensive platform.
           </p>
         </div>
         
