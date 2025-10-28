@@ -2,17 +2,17 @@
   <section class="container mx-auto px-4 pt-2 md:pt-20 mb-2 md:mb-20">
     <div class="grid lg:grid-cols-2 gap-3 md:gap-10 items-center">
       <div>
-        <p class="inline-flex text-center md:text-left items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
+        <h1 class="inline-flex text-center md:text-left items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
           LeaseDirector · Smart Property Management Software
-        </p>
+        </h1>
 
-        <h1 class="mt-3 md:mt-5 text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
+        <h2  class="mt-3 md:mt-5 text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
           Property Management Software 
           <br />
           for
           
           <span class="bg-clip-text text-2xl md:text-3xl lg:text-4xl text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
-        </h1>
+        </h2>
 
         <p class="mt-4 text-gray-700 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed text-center sm:text-left">
           <strong>LeaseDirector</strong> makes it easy to manage leases, send invoices, and track payments—all in one place.
