@@ -419,13 +419,7 @@ const handleLogin = async () => {
       const userStore = useUserStore();
       
       if (userStore.isAuthenticated) {
-        // Show success toast
-        toast.add({
-          title: 'Sign In Successful',
-          description: 'Welcome back! Redirecting to your dashboard...',
-          color: 'success',
-          icon: 'i-heroicons-check-circle'
-        });
+
         // Use Nuxt navigation to avoid a full page reload
         await navigateTo('/app/dashboard');
       } else {
