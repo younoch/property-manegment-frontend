@@ -63,7 +63,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Manage leases, auto-generate rent invoices, track payments and late fees. Built for small landlords. Free to start.' },
+        { name: 'description', content: 'Manage leases, invoice automation track payments and late fees. Built for small landlords. Free to start.' },
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
