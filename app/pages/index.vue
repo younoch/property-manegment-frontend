@@ -70,7 +70,7 @@ const currentPath = reqUrl ? reqUrl.pathname : '/'
 const canonicalUrl = siteUrl ? `${siteUrl}${currentPath}` : undefined
 
 const title = 'LeaseDirector | Property Management Software for Small Landlords'
-const description = 'Manage leases, auto-generate rent invoices, track payments and late fees. Handle maintenance, expenses, and tenant communication — all in one dashboard. Built for small landlords. Free to start.'
+const description = 'Property management software for small landlords: manage leases, auto-generate rent invoices, track payments & maintenance, communicate with tenants — free to start.'
 const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.jpg'
 
 useHead({
