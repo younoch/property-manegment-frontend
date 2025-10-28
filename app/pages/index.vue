@@ -69,7 +69,7 @@ const reqUrl = process.server ? useRequestURL() : null
 const currentPath = reqUrl ? reqUrl.pathname : '/'
 const canonicalUrl = siteUrl ? `${siteUrl}${currentPath}` : undefined
 
-const title = 'LeaseDirector | Property Management Software for Small Landlords'
+const title = 'LeaseDirector | Property Management for Small Landlords'
 const description = 'Property management software for small landlords: manage leases, auto-generate rent invoices, track payments & maintenance, communicate with tenants — free to start.'
 const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.jpg'
 
