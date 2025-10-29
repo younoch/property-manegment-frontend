@@ -8,7 +8,7 @@ export const useActivePortfolio = () => {
   const { error: showError } = useNotification()
   
   // Set the active portfolio and optionally redirect
-  const setActivePortfolio = async (portfolioId: string, redirectPath: string = '/dashboard') => {
+  const setActivePortfolio = async (portfolioId: string, redirectPath: string = '/app/dashboard') => {
     try {
       await portfolioStore.loadPortfolio(portfolioId)
       if (redirectPath) {

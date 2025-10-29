@@ -18,7 +18,7 @@
         </nav>
         <div class="flex items-center space-x-4">
           <template v-if="isLoggedIn">
-            <NuxtLink to="/dashboard" class="hidden sm:inline-flex px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+            <NuxtLink to="/app/dashboard" class="hidden sm:inline-flex px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
               Dashboard
             </NuxtLink>
           </template>
@@ -91,7 +91,7 @@
                 </template>
                 <template v-else>
                   <UButton 
-                    to="/dashboard" 
+                    to="/app/dashboard" 
                     block 
                     color="primary"
                     class="justify-center"

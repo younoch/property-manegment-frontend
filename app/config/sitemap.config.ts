@@ -14,29 +14,14 @@ export const sitemapConfig = {
       '/contact',
       '/privacy',
       '/terms',
-      '/support'
+      '/support',
+      '/app/auth/login',
+      '/auth/**',
     ],
   
     // 🚫 Exclude app-internal pages
     exclude: [
-      '/dashboard/**',
-      '/auth/**',
-      '/leases/**',
-      '/properties/**',
-      '/tenants/**',
-      '/units/**',
-      '/users/**',
-      '/maintenance/**',
-      '/expenses/**',
-      '/payments/**',
-      '/messages/**',
-      '/communication/**',
-      '/settings/**',
-      '/management/**',
-      '/profile',
-      '/test-stores',
-      '/unauthorized',
-      '/csrf-demo'
+      '/app/**',
     ]
   }
   

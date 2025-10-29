@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalized) => 
   // If already authenticated, redirect to dashboard
   if (userStore.isLoggedIn) {
 
-    return navigateTo('/dashboard');
+    return navigateTo('/app/dashboard');
   }
   
   // For auth pages, only do a quick check to avoid interfering with login process
@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalized) => 
     // This prevents interference with the login process
     if (userStore.currentUser) {
 
-      return navigateTo('/dashboard');
+      return navigateTo('/app/dashboard');
     }
     return;
   }
