@@ -6,6 +6,7 @@
   >
     <template #body>
       <UForm
+        ref="form"
         :schema="schema"
         :state="state"
         class="space-y-4 sm:space-y-6"
@@ -170,6 +171,25 @@ const state = reactive<PaymentFormState>({
   lease_id: props.leaseId
 })
 
+const form = ref()
+
+const resetForm = () => {
+  // Reset all form fields to their initial state
+  Object.assign(state, {
+    amount: props.invoice.totalAmount ?? 0,
+    payment_method: 'bank_transfer',
+    received_at: getToday(),
+    reference: '',
+    notes: '',
+    lease_id: props.leaseId
+  })
+  
+  // Reset any form validation errors if using form validation library
+  if (form) {
+    form.reset()
+  }
+}
+
 // Auto-sync amount when invoice/total changes
 watchEffect(() => {
   if (props.invoice.id) {
@@ -186,7 +206,6 @@ const validateAmount = (val: unknown): boolean => {
   const max = props.invoice.totalAmount ?? props.totalAmount ?? Infinity
   return num <= max
 }
-
 
 const schema = v.object({
   amount: v.pipe(
@@ -210,29 +229,21 @@ const openModel = computed({
 // ─── Submit ─────────────────────────────────────────────────
 const userStore = useUserStore()
 
-const resetForm = () => {
-  Object.assign(state, {
-    amount: 0,
-    payment_method: 'bank_transfer',
-    received_at: getToday(),
-    reference: '',
-    notes: ''
-  })
-}
-
-const onSubmit = () => {
+const onSubmit = async () => {
   try {
-    emit('submitted', {
-      ...state,
-      amount: Number(state.amount),
-      portfolio_id: props.portfolioId,
-      user_id: userStore.user?.id,
-      invoice_id: props.invoice.id ?? null
-    })
+    // Emit the submitted event with the form data
+    emit('submitted', { ...state })
+    
+    // Reset the form
     resetForm()
-  } catch (err) {
-    console.error('Payment submission error:', err)
-    emit('error', 'Failed to process payment. Please try again.')
+    
+    // Close the modal after a short delay to show success state
+    setTimeout(() => {
+      emit('update:open', false)
+    }, 300)
+  } catch (error) {
+    console.error('Error submitting payment:', error)
+    emit('error', 'Failed to process payment')
   }
 }
 </script>
