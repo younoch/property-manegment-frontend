@@ -7,19 +7,19 @@
           name="Sadia R."
           role="Landlord, 6 units"
           quote="LeaseDirector cut my rent follow-up time in half. Invoices and late fees just work."
-          avatar="https://picsum.photos/200/200?random=25"
+          avatar="/user-1.jpg"
         />
         <TestimonialCard
           name="Nafiz H."
           role="Property Manager"
           quote="The grace period logic and credits saved us from so many mistakes."
-          avatar="https://picsum.photos/200/200?random=26"
+          avatar="/user-2.jpg"
         />
         <TestimonialCard
           name="Anika K."
           role="Owner, small portfolio"
           quote="Finally a tool that’s not overkill. Simple, fast, reliable."
-          avatar="https://picsum.photos/200/200?random=27"
+          avatar="/user-3.jpg"
         />
       </div>
     </div>
