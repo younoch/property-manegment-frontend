@@ -55,7 +55,7 @@
           </div>
         </div>
         
-        <UButton
+        <!-- <UButton
           block
           color="white"
           :loading="loadingFacebook"
@@ -69,7 +69,7 @@
             </svg>
           </template>
           {{ loadingFacebook ? 'Signing in with Facebook...' : 'Continue with Facebook' }}
-        </UButton>
+        </UButton> -->
       </div>
       
       <div class="relative mb-3 sm:mb-4">
