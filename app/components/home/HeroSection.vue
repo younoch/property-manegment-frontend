@@ -11,7 +11,7 @@
           <br />
           for
           
-          <span class="bg-clip-text text-4xl md:text-5xl lg:text-6xl text-transparent bg-gradient-to-r from-primary-600 to-teal-600 leading-loose">Small Landlords</span>
+          <span class="bg-clip-text text-[120%] text-transparent bg-gradient-to-r from-primary-600 to-teal-600 leading-loose">Small Landlords</span>
         </h2>
 
         <p class="mt-4 text-gray-700 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed text-center sm:text-left">
