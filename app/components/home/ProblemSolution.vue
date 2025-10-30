@@ -58,17 +58,34 @@
         <div class="mt-8 lg:mt-0">
           <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-gray-50 w-full max-w-[400px] mx-auto aspect-[9/13]">
             <div class="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-primary-100/20 z-10 mix-blend-multiply"></div>
-            <video 
-              class="w-full h-full object-contain" 
-              autoplay 
-              loop 
-              muted 
-              playsinline
-              preload="metadata"
-            >
-              <source src="/money-flow-diagram.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <div class="relative w-full h-full">
+              <video 
+                class="w-full h-full object-contain" 
+                autoplay 
+                loop 
+                muted 
+                playsinline
+                preload="metadata"
+                aria-label="LeaseDirector workflow demonstration"
+              >
+                <source src="/money-flow-diagram.mp4" type="video/mp4" />
+                <track
+                  src="/captions/money-flow-captions.vtt"
+                  kind="captions"
+                  srclang="en"
+                  label="English"
+                  default
+                >
+                Your browser does not support the video tag or the captions.
+              </video>
+              <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center text-xs py-1 px-2">
+                <button onclick="this.closest('video').muted = !this.closest('video').muted" class="mr-2 focus:outline-none">
+                  <span class="sr-only">Toggle mute</span>
+                  <UIcon name="i-heroicons-speaker-wave" class="w-4 h-4 inline-block" />
+                </button>
+                <span>Video: Property Management Workflow</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
