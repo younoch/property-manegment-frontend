@@ -6,12 +6,12 @@
           LeaseDirector · Smart Property Management Software
         </h1>
 
-        <h2  class="mt-3 md:mt-5 text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
+        <h2  class="mt-3 md:mt-5 text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight md:leading-tight text-center sm:text-left">
           Property Management Software 
           <br />
           for
           
-          <span class="bg-clip-text text-2xl md:text-3xl lg:text-4xl text-transparent bg-gradient-to-r from-primary-600 to-teal-600 leading-loose">Small Landlords</span>
+          <span class="bg-clip-text text-4xl md:text-5xl lg:text-6xl text-transparent bg-gradient-to-r from-primary-600 to-teal-600 leading-loose">Small Landlords</span>
         </h2>
 
         <p class="mt-4 text-gray-700 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed text-center sm:text-left">
