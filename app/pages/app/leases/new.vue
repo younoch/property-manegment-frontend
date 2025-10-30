@@ -179,7 +179,7 @@ async function activateLease(opts: { createFirstInvoice: boolean; createDepositI
       create_deposit_invoice: opts.createDepositInvoice
     })
     toastSuccess('Lease activated')
-    router.push(`/leases/${leaseId}`)
+    navigateTo(`/app/leases/${leaseId}`)
   } catch (e: any) {
     toastError(e?.message || 'Activation failed')
   } finally {
