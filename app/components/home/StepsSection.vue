@@ -25,7 +25,7 @@
           color="primary" 
           size="md"
           to="/auth/signup" 
-          class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base font-medium shadow-md shadow-primary-200 hover:shadow-primary-300 active:scale-[0.98] transition-all duration-150"
+          class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base font-medium bg-primary-700 hover:bg-primary-800 text-white shadow-md shadow-primary-200 hover:shadow-primary-300 active:scale-[0.98] transition-all duration-150"
         >
           <span>Start Free Trial</span>
           <span class="hidden sm:inline"> - No Credit Card</span>

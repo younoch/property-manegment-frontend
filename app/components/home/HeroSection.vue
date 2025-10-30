@@ -20,7 +20,7 @@
         </p>
 
         <div class="mt-7 flex flex-col sm:flex-row gap-3">
-          <UButton color="primary" size="lg" to="/auth/signup" class=" justify-center items-center shadow-lg shadow-primary-200 hover:shadow-primary-300">
+          <UButton color="primary" size="lg" to="/auth/signup" class="justify-center items-center bg-primary-700 hover:bg-primary-800 text-white shadow-lg shadow-primary-200 hover:shadow-primary-300">
             Get Started Free
           </UButton>
         </div>
