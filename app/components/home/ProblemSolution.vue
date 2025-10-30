@@ -56,13 +56,19 @@
         </div>
 
         <div class="mt-8 lg:mt-0">
-          <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg">
-            <img 
-              src="https://picsum.photos/800/500?random=14" 
-              alt="Money Flow Diagram" 
-              class="w-full h-auto"
-              loading="lazy"
-            />
+          <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-gray-50 w-full max-w-[400px] mx-auto aspect-[9/13]">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-primary-100/20 z-10 mix-blend-multiply"></div>
+            <video 
+              class="w-full h-full object-contain" 
+              autoplay 
+              loop 
+              muted 
+              playsinline
+              preload="metadata"
+            >
+              <source src="/money-flow-diagram.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>
