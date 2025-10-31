@@ -84,40 +84,46 @@ useHead({
             "author": {
               "@type": "Organization",
               "name": "LeaseDirector",
-              "url": "https://www.leasedirector.com/"
+              "url": "https://www.leasedirector.com/",
+              "sameAs": [
+                "https://www.facebook.com/leasedirector",
+                "https://twitter.com/leasedirector",
+                "https://www.linkedin.com/company/leasedirector"
+              ]
             },
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
               "price": "0",
               "priceCurrency": "USD",
-              "availability": "https://schema.org/InStock"
+              "availability": "https://schema.org/InStock",
+              "priceValidUntil": "2026-12-31"
             },
             "featureList": [
-              "Comprehensive property management solutions",
-              "Bank-grade security",
-              "Mobile-friendly interface",
-              "24/7 customer support",
-              "Automated lease lifecycle management",
+              "Comprehensive property management solutions for small landlords",
+              "Bank-grade security for all tenant and financial data",
+              "Mobile-friendly interface accessible on all devices",
+              "24/7 customer support for landlords and property managers",
+              "Automated lease lifecycle management from creation to renewal",
               "Digital lease creation with customizable templates",
-              "Automated renewal reminders",
-              "Electronic signatures for paperless processing",
-              "Lease term tracking with visual calendar",
-              "Document version control and history",
+              "Automated renewal reminders for tenants and landlords",
+              "Electronic signatures for fully paperless processing",
+              "Visual calendar for lease term tracking and reminders",
+              "Document version control and secure history tracking",
               "Automated rent collection with multiple payment options",
-              "Late fee enforcement and reminders",
-              "Detailed payment tracking and rent roll",
+              "Grace period-aware late fee enforcement and reminders",
+              "Detailed payment tracking and rent roll reporting",
               "Maintenance request management with automated workflows",
-              "Vendor assignment and tracking",
-              "Photo documentation uploads",
-              "Preventive maintenance scheduling",
-              "Comprehensive financial reporting",
-              "Income and expense tracking",
+              "Vendor assignment and task tracking for repairs",
+              "Photo documentation uploads for property records",
+              "Preventive maintenance scheduling and reminders",
+              "Comprehensive financial reporting with export options",
+              "Income and expense tracking across all properties",
               "Custom report builder and portfolio analytics",
               "Tenant self-service portal with 24/7 access",
               "Online rent payments, document access, and messaging",
               "Secure document storage with role-based access",
-              "Automatic backup, versioning, and bulk organization"
+              "Automatic backup, versioning, and bulk organization of files"
             ],
             "aggregateRating": {
               "@type": "AggregateRating",
@@ -133,7 +139,7 @@ useHead({
                 "name": "What is LeaseDirector?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "LeaseDirector is a web-based property management software for small landlords to manage tenants, leases, invoices, maintenance, and expenses."
+                  "text": "LeaseDirector is a web-based property management software for small landlords to manage tenants, leases, invoices, maintenance, and expenses efficiently."
                 }
               },
               {
@@ -165,7 +171,7 @@ useHead({
                 "name": "Is it suitable for small landlords?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes, LeaseDirector is designed specifically for small landlords and property managers to simplify property management."
+                  "text": "Yes, LeaseDirector is designed specifically for small landlords and property managers to simplify property management tasks."
                 }
               }
             ]
@@ -175,4 +181,5 @@ useHead({
     }
   ]
 })
+
 </script>
