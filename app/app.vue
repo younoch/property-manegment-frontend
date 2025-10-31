@@ -70,7 +70,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: `{
+      innerHTML: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
           {
@@ -171,7 +171,7 @@ useHead({
             ]
           }
         ]
-      }`
+      })
     }
   ]
 })

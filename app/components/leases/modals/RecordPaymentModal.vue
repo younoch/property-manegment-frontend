@@ -231,8 +231,20 @@ const userStore = useUserStore()
 
 const onSubmit = async () => {
   try {
-    // Emit the submitted event with the form data
-    emit('submitted', { ...state })
+    // Get user store and current user
+    const userStore = useUserStore()
+    
+    if (!userStore.user?.id) {
+      throw new Error('User not authenticated')
+    }
+    
+    // Emit the submitted event with the form data and user_id
+    const paymentData = {
+      ...state,
+      user_id: userStore.user.id.toString() // Ensure user_id is a string
+    }
+    
+    emit('submitted', paymentData)
     
     // Reset the form
     resetForm()
@@ -243,7 +255,7 @@ const onSubmit = async () => {
     }, 300)
   } catch (error) {
     console.error('Error submitting payment:', error)
-    emit('error', 'Failed to process payment')
+    emit('error', error.message || 'Failed to process payment')
   }
 }
 </script>
