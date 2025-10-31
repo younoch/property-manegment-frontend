@@ -73,6 +73,7 @@ useHead({
       innerHTML: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
+          // --- Main Software Application ---
           {
             "@type": "SoftwareApplication",
             "name": "LeaseDirector",
@@ -131,6 +132,8 @@ useHead({
               "reviewCount": "10"
             }
           },
+
+          // --- FAQ Page ---
           {
             "@type": "FAQPage",
             "mainEntity": [
@@ -175,6 +178,60 @@ useHead({
                 }
               }
             ]
+          },
+
+          // --- Pricing Plans ---
+          {
+            "@type": "Product",
+            "name": "LeaseDirector Free Plan",
+            "description": "1 property with up to 3 units. Basic property management, tenant & lease tracking, rent payment tracking, email support (48h).",
+            "offers": {
+              "@type": "Offer",
+              "url": "https://www.leasedirector.com/pricing",
+              "price": "0",
+              "priceCurrency": "USD",
+              "priceValidUntil": "2026-12-31",
+              "availability": "https://schema.org/InStock"
+            }
+          },
+          {
+            "@type": "Product",
+            "name": "LeaseDirector Early Bird Plan",
+            "description": "Up to 20 units, automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging & ledger export, priority email support (24h). Limited to first 100 customers.",
+            "offers": {
+              "@type": "Offer",
+              "url": "https://www.leasedirector.com/pricing",
+              "price": "18",
+              "priceCurrency": "USD",
+              "priceValidUntil": "2025-12-31",
+              "availability": "https://schema.org/InStock"
+            }
+          },
+          {
+            "@type": "Product",
+            "name": "LeaseDirector Pro Plan",
+            "description": "For growing landlords with up to 20 units. Automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging & ledger export, priority email support (24h).",
+            "offers": {
+              "@type": "Offer",
+              "url": "https://www.leasedirector.com/pricing",
+              "price": "25",
+              "priceCurrency": "USD",
+              "priceValidUntil": "2026-12-31",
+              "availability": "https://schema.org/InStock"
+            }
+          },
+          {
+            "@type": "Product",
+            "name": "LeaseDirector Business Plan",
+            "description": "Unlimited units, multi-portfolio roles & permissions, advanced reports & exports, audit log & compliance tools, custom branding, SLA support (8h).",
+            "offers": {
+              "@type": "Offer",
+              "url": "https://www.leasedirector.com/pricing",
+              "price": "75",
+              "priceCurrency": "USD",
+              "priceValidUntil": "2026-12-31",
+              "availability": "https://schema.org/InStock"
+            }
           }
         ]
       })
