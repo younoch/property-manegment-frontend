@@ -29,7 +29,7 @@
 
       <template #footer>
         <div class="flex justify-end">
-          <button @click="save()" class="px-3 py-1.5 rounded bg-primary-600 text-white hover:bg-primary-700 text-sm">Save changes</button>
+          <button @click="save()" class="px-3 py-1.5 rounded bg-primary-600 text-white hover:bg-primary-600 text-sm">Save changes</button>
         </div>
       </template>
     </UCard>

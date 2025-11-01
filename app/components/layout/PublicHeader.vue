@@ -18,7 +18,7 @@
         </nav>
         <div class="flex items-center space-x-4">
           <template v-if="isLoggedIn">
-            <NuxtLink to="/app/dashboard" class="hidden sm:inline-flex px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+            <NuxtLink to="/app/dashboard" class="hidden sm:inline-flex px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors">
               Dashboard
             </NuxtLink>
           </template>
@@ -26,7 +26,7 @@
             <NuxtLink to="/auth/login" class="hidden sm:inline-flex text-sm font-medium hover:text-primary-600 transition-colors">
               Log in
             </NuxtLink>
-            <NuxtLink to="auth/signup" class="hidden sm:inline-flex px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+            <NuxtLink to="auth/signup" class="hidden sm:inline-flex px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition-colors">
               Get Started
             </NuxtLink>
           </template>

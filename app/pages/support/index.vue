@@ -24,7 +24,7 @@
                 @keyup.enter="searchArticles"
               >
               <button 
-                class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-600 text-white p-2 rounded-lg hover:bg-primary-700 transition-colors"
+                class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-600 text-white p-2 rounded-lg hover:bg-primary-600 transition-colors"
                 @click="searchArticles"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,7 +102,7 @@
           <div class="mt-6 flex flex-col sm:flex-row justify-center gap-4">
             <NuxtLink 
               to="/contact" 
-              class="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+              class="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-600 transition-colors"
             >
               Contact Support
             </NuxtLink>
