@@ -124,12 +124,13 @@ interface PaymentFormState {
 const props = withDefaults(defineProps<{
   open: boolean
   loading: boolean
-  invoice: Invoice
+  invoice: Invoice | null
   totalAmount?: number
   paidAmount?: number
   leaseId: string
   portfolioId?: string
 }>(), {
+  invoice: () => ({}),
   totalAmount: undefined,
   paidAmount: 0,
   portfolioId: undefined
@@ -147,7 +148,7 @@ const today = new Date().toISOString().split('T')[0]
 const getToday = () => today
 
 const modalTitle = computed(() =>
-  props.invoice.id ? 'Record Invoice Payment' : 'Record Payment'
+  props.invoice?.id ? 'Record Invoice Payment' : 'Record Payment'
 )
 
 const modalUi = {
@@ -176,7 +177,7 @@ const form = ref()
 const resetForm = () => {
   // Reset all form fields to their initial state
   Object.assign(state, {
-    amount: props.invoice.totalAmount ?? 0,
+    amount: props.invoice?.totalAmount ?? 0,
     payment_method: 'bank_transfer',
     received_at: getToday(),
     reference: '',
@@ -192,7 +193,7 @@ const resetForm = () => {
 
 // Auto-sync amount when invoice/total changes
 watchEffect(() => {
-  if (props.invoice.id) {
+  if (props.invoice?.id) {
     state.amount = props.totalAmount || props.invoice.totalAmount || 0
   } else {
     state.amount = 0
@@ -203,7 +204,7 @@ watchEffect(() => {
 const validateAmount = (val: unknown): boolean => {
   const num = Number(val)
   if (isNaN(num) || num <= 0) return false
-  const max = props.invoice.totalAmount ?? props.totalAmount ?? Infinity
+  const max = props.invoice?.totalAmount ?? props.totalAmount ?? Infinity
   return num <= max
 }
 

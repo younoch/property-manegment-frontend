@@ -14,11 +14,6 @@
         <FeatureCard title="Role-Based Access" desc="Owner, Manager, Accountant, Read-only permissions." icon="i-heroicons-lock-closed"/>
         <FeatureCard title="Audit & Exports" desc="Immutable paid/void, CSV exports, clean history." icon="i-heroicons-arrow-down-tray"/>
       </div>
-
-      <div class="mt-10 grid lg:grid-cols-2 gap-6">
-        <img src="https://picsum.photos/800/600?random=15" alt="Invoice Items Inline Edit" class="rounded-xl border border-gray-200 shadow-sm w-full h-auto"/>
-        <img src="https://picsum.photos/800/600?random=16" alt="Lease Header with Grace Deadline" class="rounded-xl border border-gray-200 shadow-sm w-full h-auto"/>
-      </div>
     </div>
   </section>
 </template>
