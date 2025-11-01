@@ -11,7 +11,7 @@
     <div class="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
       <HeroSection />
 
-      <section class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12">
+      <section class=" md:py-16 mb-4 md:mb-12">
         <div class="container mx-auto px-4 sm:px-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <StatCard value="99.9%" label="Uptime on secure cloud" />
@@ -22,19 +22,19 @@
         </div>
       </section>
 
-      <ProblemSolution class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <ProblemSolution class=" md:py-16 md:mb-12" />
 
-      <FeatureGrid class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <FeatureGrid class=" md:py-16 mb-4 md:mb-12" />
 
-      <SecurityIntegrations class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <SecurityIntegrations class=" md:py-16 mb-4 md:mb-12" />
 
-      <AudienceSection class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <AudienceSection class=" md:py-16 mb-4 md:mb-12" />
 
-      <ComparisonTable class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <ComparisonTable class=" md:py-16 mb-4 md:mb-12" />
 
-      <TestimonialGrid class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <TestimonialGrid class=" md:py-16 mb-4 md:mb-12" />
 
-      <StepsSection class="py-8 sm:py-12 md:py-16 mb-4 md:mb-12" />
+      <StepsSection class=" md:py-16 mb-4 md:mb-12" />
 
       <FinalCta class="py-12 sm:py-16 md:py-20" />
     </div>
