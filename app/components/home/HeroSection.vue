@@ -1,5 +1,5 @@
 <template>
-  <section class="container mx-auto px-4 pt-2 md:pt-20 mb-2 md:mb-20">
+  <section class="container mx-auto px-4 pt-2 md:pt-12 mb-2 md:mb-12">
     <div class="grid lg:grid-cols-2 gap-3 md:gap-10 items-center">
       <div>
         <h1 class="inline-flex text-center md:text-left items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60">
