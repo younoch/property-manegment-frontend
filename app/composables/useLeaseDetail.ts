@@ -149,14 +149,12 @@ export function useLeaseDetail(leaseId: string) {
       const { user_id, invoice_id, received_at, method, amount, reference, notes } = paymentData;
       
       await api.post(`/payments`, {
-        user_id,
+        user_id: user_id || null,
         invoice_id: invoice_id || null,
-        received_at,
         method,
         amount,
         reference,
-        notes,
-        user_id: paymentData.user_id || null
+        notes
       })
       toastSuccess('Payment recorded successfully')
       await reload()
