@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-6xl mx-auto p-2 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6 w-full">
-    <LeaseHeader :leaseId="leaseId" :lease="lease" />
+    <LeaseHeader :leaseId="leaseId.toString()" :lease="lease" />
 
     <LeaseActions
       :lease="lease"
@@ -128,6 +128,9 @@ definePageMeta({ middleware: ['auth'] })
 const route = useRoute()
 
 const leaseId = route.params.id
+if (!leaseId || typeof leaseId !== 'string') {
+  throw new Error('Invalid lease ID')
+}
 
 const {
   // state

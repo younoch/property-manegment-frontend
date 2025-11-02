@@ -68,7 +68,7 @@
           <UFormField class="sm:col-span-2" label="Notes" name="notes">
             <UTextarea
               v-model="state.notes"
-              rows="3"
+              :rows="3"
               placeholder="Add any additional notes about this payment"
               class="w-full"
             />
@@ -106,9 +106,10 @@ import { paymentMethods } from '~/constants/expense'
 
 interface Invoice {
   id?: string
-  totalAmount?: number
-  paidAmount?: number
-  dueAmount?: number
+  totalAmount?: number | string
+  balance_due?: number | string
+  total_amount?: number | string
+  [key: string]: any
 }
 
 interface PaymentFormState {
@@ -172,29 +173,48 @@ const state = reactive<PaymentFormState>({
   lease_id: props.leaseId
 })
 
-const form = ref()
+const form = ref<{ reset: () => void } | null>(null)
 
 const resetForm = () => {
   // Reset all form fields to their initial state
-  Object.assign(state, {
-    amount: props.invoice?.totalAmount ?? 0,
-    payment_method: 'bank_transfer',
-    received_at: getToday(),
-    reference: '',
-    notes: '',
-    lease_id: props.leaseId
-  })
+  const balanceDue = props.invoice?.balance_due ? 
+    (typeof props.invoice.balance_due === 'string' ? 
+      parseFloat(props.invoice.balance_due) : 
+      props.invoice.balance_due) : 0
+      
+  const totalAmount = props.invoice?.totalAmount ?
+    (typeof props.invoice.totalAmount === 'string' ?
+      parseFloat(props.invoice.totalAmount) :
+      props.invoice.totalAmount) : 0
+      
+  state.amount = balanceDue || totalAmount || 0
+  state.payment_method = 'bank_transfer'
+  state.received_at = getToday()
+  state.reference = ''
+  state.notes = ''
+  state.lease_id = props.leaseId || ''
   
-  // Reset any form validation errors if using form validation library
-  if (form) {
-    form.reset()
+  // Reset form validation if the form ref exists and has a reset method
+  if (form.value?.reset) {
+    form.value.reset()
   }
 }
 
-// Auto-sync amount when invoice/total changes
+// Auto-sync amount when invoice changes
 watchEffect(() => {
   if (props.invoice?.id) {
-    state.amount = props.totalAmount || props.invoice.totalAmount || 0
+    // Set amount to the invoice's balance_due if available, otherwise use totalAmount
+    const balanceDue = props.invoice.balance_due ? 
+      (typeof props.invoice.balance_due === 'string' ? 
+        parseFloat(props.invoice.balance_due) : 
+        props.invoice.balance_due) : 0
+        
+    const totalAmount = props.invoice.total_amount ?
+      (typeof props.invoice.total_amount === 'string' ?
+        parseFloat(props.invoice.total_amount) :
+        props.invoice.total_amount) : 0
+        
+    state.amount = balanceDue || totalAmount || 0
   } else {
     state.amount = 0
   }
@@ -204,7 +224,13 @@ watchEffect(() => {
 const validateAmount = (val: unknown): boolean => {
   const num = Number(val)
   if (isNaN(num) || num <= 0) return false
-  const max = props.invoice?.totalAmount ?? props.totalAmount ?? Infinity
+  
+  const invoiceTotal = props.invoice?.totalAmount ?
+    (typeof props.invoice.totalAmount === 'string' ?
+      parseFloat(props.invoice.totalAmount) :
+      props.invoice.totalAmount) : 0
+      
+  const max = invoiceTotal || (props.totalAmount ? parseFloat(props.totalAmount) : Infinity)
   return num <= max
 }
 

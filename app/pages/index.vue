@@ -11,14 +11,45 @@
     <div class="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
       <HeroSection />
 
-      <section class=" md:py-16 mb-4 md:mb-12">
+      <section class="py-8 md:py-12 bg-white/50 backdrop-blur-sm">
         <div class="container mx-auto px-4 sm:px-6">
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <StatCard value="99.9%" label="Uptime on secure cloud" />
-            <StatCard value="Portfolio TZ" label="Accurate due & overdue" />
-            <StatCard value="Minutes" label="From lease to first invoice" />
+          <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-900">Why Property Managers Choose Us</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <StatCard 
+              value="99.9%" 
+              label="System Uptime"
+            />
+            <StatCard 
+              value="24/7" 
+              label="Support Available"
+            />
+            <StatCard 
+              value="<5 Min" 
+              label="Lease to Invoice"
+            />
+            <StatCard 
+              value="1000+" 
+              label="Properties Managed"
+            />
           </div>
-          <!-- <LogoCloud class="mt-8 sm:mt-10 md:mt-14 opacity-70" /> -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-4 sm:mt-6">
+            <StatCard 
+              value="Auto" 
+              label="Rent Collection"
+            />
+            <StatCard 
+              value="Real-time" 
+              label="Financial Reports"
+            />
+            <StatCard 
+              value="Cloud" 
+              label="Document Storage"
+            />
+            <StatCard 
+              value="95%" 
+              label="Tenant Satisfaction"
+            />
+          </div>
         </div>
       </section>
 

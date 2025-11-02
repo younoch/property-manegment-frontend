@@ -2,7 +2,7 @@ import { createProtectedApiClient } from '@/utils/api'
 import { h, resolveComponent } from 'vue'
 import { useApiToast } from '@/composables/useApiToast'
 
-export function useLeaseDetail(leaseId: number) {
+export function useLeaseDetail(leaseId: string) {
   const api = createProtectedApiClient()
   const { success: toastSuccess, error: toastError } = useApiToast()
 
@@ -145,17 +145,17 @@ export function useLeaseDetail(leaseId: number) {
     submittingPayment.value = true
     try {
       // Extract only the fields we want to send to the API
-      const { portfolio_id, ...paymentData } = payload;
+      const { portfolio_id, lease_id, ...paymentData } = payload;
+      const { user_id, invoice_id, received_at, method, amount, reference, notes } = paymentData;
+      
       await api.post(`/payments`, {
-        ...paymentData,
-        // Ensure we're sending the correct field names expected by the API
-        received_at: paymentData.received_at,
-        method: paymentData.method,
-        amount: paymentData.amount,
-        reference: paymentData.reference,
-        notes: paymentData.notes,
-        lease_id: paymentData.lease_id,
-        invoice_id: paymentData.invoice_id || null,
+        user_id,
+        invoice_id: invoice_id || null,
+        received_at,
+        method,
+        amount,
+        reference,
+        notes,
         user_id: paymentData.user_id || null
       })
       toastSuccess('Payment recorded successfully')

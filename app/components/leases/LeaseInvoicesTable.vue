@@ -26,9 +26,10 @@
         <thead class="bg-gray-50/70 dark:bg-white/5 text-gray-600 dark:text-gray-300">
           <tr class="whitespace-nowrap">
             <th class="py-2 px-2 sm:px-3 text-left">#</th>
-            <th class="py-2 px-1 sm:px-3 text-left">Issue</th>
             <th class="py-2 px-1 sm:px-3 text-left">Due</th>
             <th class="py-2 px-1 sm:px-3 text-right">Total</th>
+            <th class="py-2 px-1 sm:px-3 text-right">Amount Paid</th>
+            <th class="py-2 px-1 sm:px-3 text-right">Balance Due</th>
             <th class="py-2 px-1 sm:px-3 text-left">Status</th>
             <th class="py-2 px-2 sm:px-3 text-right">Action</th>
           </tr>
@@ -38,12 +39,13 @@
             <td class="py-2 px-2 sm:px-3 font-medium">
               <ULink :to="`/app/invoices/${inv.id}`" class="text-primary-600 hover:underline">#{{ inv.invoice_number }}</ULink>
             </td>
-            <td class="py-2 px-1 sm:px-3 whitespace-nowrap">{{ fmtDate(inv.issue_date) }}</td>
             <td class="py-2 px-1 sm:px-3 whitespace-nowrap">{{ fmtDate(inv.due_date) }}</td>
             <td class="py-2 px-1 sm:px-3 text-right font-medium whitespace-nowrap">{{ fmtBDT(inv.total_amount) }}</td>
+            <td class="py-2 px-1 sm:px-3 text-right font-medium whitespace-nowrap">{{ fmtBDT(inv.amount_paid) }}</td>
+            <td class="py-2 px-1 sm:px-3 text-right font-medium whitespace-nowrap">{{ fmtBDT(inv.balance_due) }}</td>
             <td class="py-2 px-1 sm:px-3">
               <UBadge 
-                :color="inv.status==='paid' ? 'primary' : inv.status==='overdue' ? 'amber' : inv.status==='void' ? 'gray' : 'neutral'" 
+                :color="inv.status==='paid' ? 'primary' : inv.status==='overdue' ? 'warning' : inv.status==='void' ? 'error' : 'neutral'" 
                 variant="soft" 
                 size="xs"
                 class="capitalize"
