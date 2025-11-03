@@ -1,5 +1,6 @@
 // nuxt.config.ts
 import { defineNuxtConfig } from 'nuxt/config'
+import { sitemapConfig } from './app/config/sitemap.config'
 import type { ModuleOptions } from '@nuxt/ui'
 
 // Load environment variables early
@@ -72,7 +73,7 @@ export default defineNuxtConfig({
       {
         autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
-    ]
+    ],
   ],
 
   /**
