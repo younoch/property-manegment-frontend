@@ -10,13 +10,42 @@
         </ul>
       </div>
       <div class="grid grid-cols-2 gap-3">
-        <img src="https://picsum.photos/400/400?random=17" class="h-40 w-full object-cover rounded-xl border border-gray-200" alt="Small landlord"/>
-        <img src="https://picsum.photos/400/400?random=18" class="h-40 w-full object-cover rounded-xl border border-gray-200" alt="Team workflow"/>
-        <img src="https://picsum.photos/400/400?random=19" class="h-40 w-full object-cover rounded-xl border border-gray-200" alt="Invoices"/>
-        <img src="https://picsum.photos/400/400?random=20" class="h-40 w-full object-cover rounded-xl border border-gray-200" alt="Payments"/>
+        <ImageOptimizer 
+          src="https://picsum.photos/400/400?random=17" 
+          alt="Small landlord reviewing property documents"
+          :width="400"
+          :height="400"
+          sizes="(max-width: 640px) 45vw, 200px"
+          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
+        />
+        <ImageOptimizer 
+          src="https://picsum.photos/400/400?random=18" 
+          alt="Team collaborating on property management"
+          :width="400"
+          :height="400"
+          sizes="(max-width: 640px) 45vw, 200px"
+          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
+        />
+        <ImageOptimizer 
+          src="https://picsum.photos/400/400?random=19" 
+          alt="Organized property invoices and documents"
+          :width="400"
+          :height="400"
+          sizes="(max-width: 640px) 45vw, 200px"
+          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
+        />
+        <ImageOptimizer 
+          src="https://picsum.photos/400/400?random=20" 
+          alt="Secure online payment processing"
+          :width="400"
+          :height="400"
+          sizes="(max-width: 640px) 45vw, 200px"
+          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
+        />
       </div>
     </div>
   </section>
 </template>
-<script setup lang="ts">
+<script setup>
+import ImageOptimizer from '~/components/common/ImageOptimizer.vue';
 </script>

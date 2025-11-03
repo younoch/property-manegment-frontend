@@ -9,10 +9,38 @@
         </UButton>
       </div>
       <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
-        <img src="https://picsum.photos/300/200?random=21" class="h-24 w-full object-cover rounded-lg border border-gray-200" alt="CTA sample 1"/>
-        <img src="https://picsum.photos/300/200?random=22" class="h-24 w-full object-cover rounded-lg border border-gray-200" alt="CTA sample 2"/>
-        <img src="https://picsum.photos/300/200?random=23" class="h-24 w-full object-cover rounded-lg border border-gray-200" alt="CTA sample 3"/>
-        <img src="https://picsum.photos/300/200?random=24" class="h-24 w-full object-cover rounded-lg border border-gray-200" alt="CTA sample 4"/>
+        <ImageOptimizer 
+          src="https://picsum.photos/300/200?random=21"
+          alt="Property management dashboard preview"
+          :width="300"
+          :height="200"
+          sizes="(max-width: 640px) 40vw, 150px"
+          img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
+        />
+        <ImageOptimizer 
+          src="https://picsum.photos/300/200?random=22"
+          alt="Mobile app interface for rent collection"
+          :width="300"
+          :height="200"
+          sizes="(max-width: 640px) 40vw, 150px"
+          img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
+        />
+        <ImageOptimizer 
+          src="https://picsum.photos/300/200?random=23"
+          alt="Financial reports and analytics"
+          :width="300"
+          :height="200"
+          sizes="(max-width: 640px) 40vw, 150px"
+          img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
+        />
+        <ImageOptimizer 
+          src="https://picsum.photos/300/200?random=24"
+          alt="Tenant communication portal"
+          :width="300"
+          :height="200"
+          sizes="(max-width: 640px) 40vw, 150px"
+          img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
+        />
       </div>
     </div>
   </section>

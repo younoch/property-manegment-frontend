@@ -91,7 +91,17 @@
             <div><strong>External ID:</strong> {{ portfolio.provider_customer_id || 'N/A' }}</div>
             <div v-if="portfolio.logo_url" class="mt-2">
               <strong>Logo:</strong>
-              <img :src="portfolio.logo_url" alt="Logo" class="mt-1 h-12 w-auto rounded" />
+              <div class="mt-1">
+                <ImageOptimizer 
+                  :src="portfolio.logo_url" 
+                  alt="Portfolio logo"
+                  :width="120"
+                  :height="60"
+                  format="webp"
+                  quality="80"
+                  img-class="max-h-12 w-auto rounded border border-gray-200"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -261,6 +271,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, defineComponent, onMounted, defineAsyncComponent } from 'vue'
+import ImageOptimizer from '~/components/common/ImageOptimizer.vue'
 import { useToast } from '#imports'
 import DeletePortfolioModal from './DeletePortfolioModal.vue'
 import { createProtectedApiClient } from '~/utils/api'

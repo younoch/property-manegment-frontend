@@ -30,6 +30,7 @@ export default defineNuxtConfig({
   // Server routes are handled in /app/server/routes/
 
   // Modules
+  // Image optimization
   modules: [
     ['@nuxt/ui', {
       icons: ['mdi', 'heroicons']
@@ -44,8 +45,47 @@ export default defineNuxtConfig({
         ]
       }
     ],
-    '@nuxtjs/sitemap' // ✅ Added sitemap module
+    '@nuxtjs/sitemap', // ✅ Added sitemap module
+    '@nuxt/image' // ✅ Added image optimization module
   ],
+
+  // Image module configuration
+  image: {
+    domains: ['picsum.photos'],
+    provider: 'ipx',
+    ipx: {
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      domains: ['picsum.photos']
+    },
+    presets: {
+      cover: {
+        modifiers: {
+          format: 'webp',
+          quality: 80,
+          fit: 'cover'
+        }
+      },
+      avatar: {
+        modifiers: {
+          format: 'webp',
+          quality: 70,
+          width: 100,
+          height: 100,
+          fit: 'cover'
+        }
+      }
+    },
+    format: ['webp'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+      '2xl': 1536
+    },
+  },
 
   components: [
     { path: '~/components', pathPrefix: false },

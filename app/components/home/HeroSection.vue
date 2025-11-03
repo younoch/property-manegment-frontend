@@ -27,15 +27,46 @@
         <p class="mt-3 text-xs sm:text-sm text-gray-600">No credit card required · 1-minute signup · Works on mobile</p>
 
         <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
-          <img src="/apartment-building-preview.jpg" alt="apartment building" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
-          <img src="/agreement-deal.jpg" alt="agreement eal" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
-          <img src="/whatsapp-notification.jpg" alt="WhatsApp notification" class="h-24 w-full object-cover rounded-xl border border-gray-200"/>
+          <ImageOptimizer 
+            src="/apartment-building-preview.jpg" 
+            alt="Modern apartment building with clean architecture"
+            :width="200"
+            :height="96"
+            sizes="(max-width: 640px) 30vw, 200px"
+            img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
+          />
+          <ImageOptimizer 
+            src="/agreement-deal.jpg" 
+            alt="Business handshake closing a deal"
+            :width="200"
+            :height="96"
+            sizes="(max-width: 640px) 30vw, 200px"
+            img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
+          />
+          <ImageOptimizer 
+            src="/whatsapp-notification.jpg" 
+            alt="Mobile phone showing WhatsApp rent payment notification"
+            :width="200"
+            :height="96"
+            sizes="(max-width: 640px) 30vw, 200px"
+            img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
+          />
         </div>
       </div>
 
       <div class="relative">
         <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
-          <img src="/hero-dashboard.jpg" alt="Hero Dashboard Mockup" class="w-full h-auto">
+          <ImageOptimizer 
+            src="/hero-dashboard.jpg" 
+            alt="LeaseDirector dashboard interface showing property management features"
+            :width="1200"
+            :height="800"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 800px"
+            loading="eager"
+            quality="85"
+            preload
+            img-class="w-full h-auto"
+          />
         </div>
         <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
           <RentalInvoice
@@ -58,3 +89,7 @@
     </div>
   </section>
 </template>
+
+<script setup>
+import ImageOptimizer from '~/components/common/ImageOptimizer.vue';
+</script>
