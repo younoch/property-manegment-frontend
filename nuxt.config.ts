@@ -69,8 +69,8 @@ export default defineNuxtConfig({
     [
       '@nuxt/image',
       {
-        // Use IPX for local development and static generation
-        provider: process.env.NODE_ENV === 'production' ? 'ipx' : 'ipx',
+        // Use IPX for both development and production
+        provider: 'ipx',
         // Add your production domain and any CDN domains here
         domains: [
           'leasedirector.com',
@@ -79,7 +79,7 @@ export default defineNuxtConfig({
           'images.unsplash.com'
         ],
         // Default image format and quality
-        format: ['webp'],
+        format: 'webp',
         quality: 80,
         // Screen sizes for responsive images
         screens: {
@@ -97,9 +97,8 @@ export default defineNuxtConfig({
             animated: false, 
             limitInputPixels: false 
           },
-          // In production, use the same domain for IPX
-          domains: process.env.NODE_ENV === 'production' ? 
-            ['leasedirector.com', 'www.leasedirector.com'] : []
+          // Allow images from these domains
+          domains: ['leasedirector.com', 'www.leasedirector.com']
         },
         // Static file handling
         static: {
@@ -150,7 +149,14 @@ export default defineNuxtConfig({
             // Use the same domain for IPX in production
             baseURL: process.env.NODE_ENV === 'production' 
               ? 'https://www.leasedirector.com/_ipx' 
-              : '/_ipx'
+              : '/_ipx',
+            // Enable this for production
+            ...(process.env.NODE_ENV === 'production' && {
+              sharp: {
+                animated: false,
+                limitInputPixels: false
+              }
+            })
           }
         }
       }

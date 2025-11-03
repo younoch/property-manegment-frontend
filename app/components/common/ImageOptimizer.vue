@@ -1,24 +1,58 @@
 <template>
-  <NuxtImg
-    :src="src"
-    :alt="alt"
-    :class="['block', imgClass]"
-    :width="width"
-    :height="height"
-    :loading="loading"
-    :fit="fit"
-    :position="position"
-    :sizes="sizes"
-    :quality="quality"
-    :format="format"
-    :preload="preload"
-    :placeholder="placeholder"
-    :provider="provider"
-    @error="handleError"
-  />
+  <div :class="['image-container', imgClass]" :style="{ width: width ? `${width}px` : '100%', height: height ? `${height}px` : 'auto' }">
+    <NuxtImg
+      :src="src"
+      :alt="alt"
+      :class="['block w-full h-full object-cover', { 'opacity-0': isLoading }]"
+      :width="width"
+      :height="height"
+      :loading="loading"
+      :fit="fit"
+      :position="position"
+      :sizes="sizes"
+      :quality="quality"
+      :format="format"
+      :preload="preload"
+      :placeholder="placeholder"
+      :provider="provider"
+      @load="onImageLoad"
+      @error="handleError"
+    />
+    <div v-if="showPlaceholder" class="absolute inset-0 bg-gray-100 animate-pulse"></div>
+  </div>
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
+
+const isLoading = ref(true);
+const showPlaceholder = ref(true);
+
+const onImageLoad = () => {
+  isLoading.value = false;
+  showPlaceholder.value = false;
+};
+
+const emit = defineEmits(['error']);
+
+const handleError = (e) => {
+  console.error('Image failed to load:', e);
+  showPlaceholder.value = true;
+  
+  // If the image fails to load, emit the error event
+  emit('error', e);
+  
+  // Fallback to a simple error state
+  if (e.target) {
+    e.target.classList.add('bg-gray-100', 'p-4');
+    
+    // Only update if we have a valid target and it's not already showing an error state
+    if (!e.target.classList.contains('bg-red-50')) {
+      e.target.classList.add('bg-red-50', 'border', 'border-red-200');
+    }
+  }
+};
+
 const props = defineProps({
   // Source URL of the image
   src: {
@@ -100,22 +134,6 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['error']);
-
-const handleError = (e) => {
-  // If the image fails to load, emit the error event
-  emit('error', e);
-  
-  // Fallback to a simple error state
-  if (e.target) {
-    e.target.classList.add('bg-gray-100', 'p-4');
-    
-    // Only update if we have a valid target and it's not already showing an error state
-    if (!e.target.classList.contains('bg-red-50')) {
-      e.target.classList.add('bg-red-50', 'border', 'border-red-200');
-    }
-  }
-};
 
 // Generate responsive sizes based on width and height
 const generateSizes = (width) => {
