@@ -18,7 +18,5 @@
 </template>
 
 <script setup lang="ts">
-import ImageOptimizer from '~/components/common/ImageOptimizer.vue';
-
 defineProps<{ name: string; role: string; quote: string; avatar: string }>()
 </script>

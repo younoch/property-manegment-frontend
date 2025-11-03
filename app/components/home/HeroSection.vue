@@ -11,7 +11,7 @@
           <br />
           for
           
-          <span class="bg-clip-text text-[120%] text-transparent bg-gradient-to-r from-primary-600 to-teal-600 leading-loose">Small Landlords</span>
+          <span class="bg-clip-text text-[120%] text-transparent bg-gradient-to-r from-primary-600 to-teal-600">Small Landlords</span>
         </h2>
 
         <p class="mt-4 text-gray-700 text-base sm:text-lg md:text-xl max-w-xl leading-relaxed text-center sm:text-left">
@@ -19,7 +19,7 @@
           Automate rent collection, generate professional invoices, and get paid on time, every time.
         </p>
 
-        <div class="mt-7 flex flex-col sm:flex-row gap-3">
+        <div class="mt-4 flex flex-col sm:flex-row gap-3">
           <UButton color="primary" size="lg" to="/auth/signup" class="justify-center items-center bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-200 hover:shadow-primary-300">
             Get Started Free
           </UButton>
@@ -33,7 +33,7 @@
             :width="200"
             :height="96"
             sizes="(max-width: 640px) 30vw, 200px"
-            img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
+            class="h-24 w-full object-cover rounded-xl border border-gray-200"
           />
           <img 
             src="/agreement-deal.webp" 
@@ -41,7 +41,7 @@
             :width="200"
             :height="96"
             sizes="(max-width: 640px) 30vw, 200px"
-            img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
+            class="h-24 w-full object-cover rounded-xl border border-gray-200"
           />
           <img 
             src="/whatsapp-notification.webp" 
@@ -49,7 +49,7 @@
             :width="200"
             :height="96"
             sizes="(max-width: 640px) 30vw, 200px"
-            img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
+            class="h-24 w-full object-cover rounded-xl border border-gray-200"
           />
         </div>
       </div>
@@ -60,12 +60,11 @@
             src="/hero-dashboard.webp" 
             alt="LeaseDirector dashboard interface showing property management features"
             :width="1200"
-            :height="800"
+            :height="900"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 800px"
             loading="eager"
-            quality="85"
-            preload
-            img-class="w-full h-auto"
+            class="w-full h-auto"
+            fetchpriority="high"
           />
         </div>
         <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
@@ -91,5 +90,5 @@
 </template>
 
 <script setup>
-import ImageOptimizer from '~/components/common/ImageOptimizer.vue';
+import RentalInvoice from '~/components/common/RentalInvoice.vue';
 </script>

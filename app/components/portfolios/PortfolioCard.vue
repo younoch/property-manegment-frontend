@@ -271,7 +271,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, defineComponent, onMounted, defineAsyncComponent } from 'vue'
-import ImageOptimizer from '~/components/common/ImageOptimizer.vue'
 import { useToast } from '#imports'
 import DeletePortfolioModal from './DeletePortfolioModal.vue'
 import { createProtectedApiClient } from '~/utils/api'

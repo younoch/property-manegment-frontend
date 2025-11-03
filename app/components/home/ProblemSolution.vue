@@ -1,5 +1,5 @@
 <template>
-  <section class="py-8 sm:py-12 md:py-16 lg:py-20 border-t border-gray-100" id="problem">
+  <section class="py-8 sm:py-12 md:py-16 lg:py-20 border-t border-gray-100 mb-4 md:mb-12" id="problem">
     <div class="container mx-auto px-4 sm:px-6">
       <div class="grid lg:grid-cols-2 gap-6 md:gap-12 lg:gap-16 items-center">
         <div class="space-y-2 sm:space-y-5">
@@ -42,7 +42,7 @@
                   :width="400"
                   :height="300"
                   sizes="(max-width: 640px) 45vw, 200px"
-                  img-class="w-full h-full object-cover"
+                  class="w-full h-full object-cover"
                 />
               </div>
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
@@ -52,7 +52,7 @@
                   :width="400"
                   :height="300"
                   sizes="(max-width: 640px) 45vw, 200px"
-                  img-class="w-full h-full object-cover"
+                  class="w-full h-full object-cover"
                 />
               </div>
             </div>

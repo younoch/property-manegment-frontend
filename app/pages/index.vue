@@ -11,7 +11,7 @@
     <div class="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
       <HeroSection />
 
-      <section class="py-8 md:py-12 bg-white/50 backdrop-blur-sm">
+      <section class="py-4 md:py-8 bg-white/50 backdrop-blur-sm mb-4 md:mb-12">
         <div class="container mx-auto px-4 sm:px-6">
           <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-900">Why Property Managers Choose Us</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">

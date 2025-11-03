@@ -15,5 +15,4 @@
 </template>
 
 <script setup>
-import ImageOptimizer from '~/components/common/ImageOptimizer.vue';
 </script>
