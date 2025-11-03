@@ -32,17 +32,23 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Content-Security-Policy': [
             "default-src 'self'",
-            // ✅ Allow GTM & Google APIs
+            // Allow GTM & Google APIs
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.google.com https://*.googleapis.com",
-            "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com",
-            "img-src 'self' data: https://*.google.com https://*.gstatic.com",
-            "font-src 'self' data: https://*.gstatic.com",
-            // ✅ Added api.iconify.design to connect-src
+            "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com https://fonts.googleapis.com",
+            // Allow images from various sources
+            "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://picsum.photos https://www.picsum.photos https://images.unsplash.com https://*.unsplash.com",
+            "font-src 'self' data: https: https://fonts.gstatic.com https://*.googleapis.com",
+            // API and WebSocket connections
             "connect-src 'self' " +
               (process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000') +
-              " https://*.google.com https://*.googleapis.com https://api.iconify.design",
-            "frame-src 'self' https://accounts.google.com",
-            "frame-ancestors 'self' https://accounts.google.com"
+              " wss: https: http: https://*.google.com https://*.googleapis.com https://api.iconify.design https://picsum.photos https://www.picsum.photos",
+            // Frame sources
+            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://youtube.com",
+            "frame-ancestors 'self' https://accounts.google.com",
+            // Additional security headers
+            "form-action 'self'",
+            "media-src 'self' https: http:",
+            "child-src 'self' blob:"
           ].join('; ')
         }
       }
@@ -68,58 +74,7 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
     ],
-    '@nuxtjs/sitemap',
-    [
-      '@nuxt/image',
-      {
-        provider: 'static',
-        domains: ['picsum.photos', 'leasedirector.com', 'www.leasedirector.com'],
-        format: ['webp'],
-        quality: 80,
-        screens: {
-          xs: 320,
-          sm: 640,
-          md: 768,
-          lg: 1024,
-          xl: 1280,
-          '2xl': 1536
-        },
-        ipx: {
-          maxAge: 60 * 60 * 24 * 365, // 1 year
-          sharp: { animated: false, limitInputPixels: false }
-        },
-        static: {
-          dir: 'public',
-          prefix: '/_image/static',
-          maxAge: 60 * 60 * 24 * 30 // 30 days
-        },
-        presets: {
-          cover: {
-            modifiers: { format: 'webp', quality: 80, fit: 'cover', preload: true }
-          },
-          avatar: {
-            modifiers: {
-              format: 'webp',
-              quality: 70,
-              width: 100,
-              height: 100,
-              fit: 'cover',
-              preload: true
-            }
-          },
-          thumbnail: {
-            modifiers: {
-              format: 'webp',
-              quality: 75,
-              width: 300,
-              height: 200,
-              fit: 'cover'
-            }
-          }
-        },
-        modifiers: { format: 'webp', quality: 80, loading: 'lazy' }
-      }
-    ]
+    '@nuxtjs/sitemap'
   ],
 
   /**
