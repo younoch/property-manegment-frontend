@@ -1,14 +1,13 @@
 <template>
   <div class="p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
     <div class="flex items-center gap-3">
-      <ImageOptimizer 
-        :src="avatar" 
-        :alt="`${name}'s profile picture`"
-        :width="80"
-        :height="80"
-        format="webp"
-        quality="80"
-        img-class="h-10 w-10 rounded-full object-cover border border-gray-200" />
+      <div class="h-12 w-12 flex-shrink-0">
+        <img 
+          :src="avatar" 
+          :alt="`${name}'s profile picture`"
+          class="h-full w-full rounded-full object-cover border-2 border-white shadow-sm"
+        />
+      </div>
       <div>
         <p class="font-semibold">{{ name }}</p>
         <p class="text-xs text-gray-500">{{ role }}</p>

@@ -10,42 +10,41 @@
         </ul>
       </div>
       <div class="grid grid-cols-2 gap-3">
-        <ImageOptimizer 
-          src="/reviewing-documents.webp" 
-          alt="Small landlord reviewing property documents"
-          :width="400"
-          :height="400"
-          sizes="(max-width: 640px) 45vw, 200px"
-          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
-        />
-        <ImageOptimizer 
-          src="https://picsum.photos/400/400?random=18" 
-          alt="Team collaborating on property management"
-          :width="400"
-          :height="400"
-          sizes="(max-width: 640px) 45vw, 200px"
-          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
-        />
-        <ImageOptimizer 
-          src="https://picsum.photos/400/400?random=19" 
-          alt="Organized property invoices and documents"
-          :width="400"
-          :height="400"
-          sizes="(max-width: 640px) 45vw, 200px"
-          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
-        />
-        <ImageOptimizer 
-          src="https://picsum.photos/400/400?random=20" 
-          alt="Secure online payment processing"
-          :width="400"
-          :height="400"
-          sizes="(max-width: 640px) 45vw, 200px"
-          img-class="h-40 w-full object-cover rounded-xl border border-gray-200"
-        />
+        <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
+          <img 
+            src="/reviewing-documents.webp" 
+            alt="Small landlord reviewing property documents"
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
+          <img 
+            src="https://picsum.photos/1600/900?random=18" 
+            alt="Team collaborating on property management"
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
+          <img 
+            src="https://picsum.photos/1600/900?random=19" 
+            alt="Organized property invoices and documents"
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
+          <img 
+            src="https://picsum.photos/1600/900?random=20" 
+            alt="Secure online payment processing"
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
       </div>
     </div>
   </section>
 </template>
 <script setup>
-import ImageOptimizer from '~/components/common/ImageOptimizer.vue';
 </script>

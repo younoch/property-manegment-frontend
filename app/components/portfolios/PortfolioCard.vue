@@ -92,7 +92,7 @@
             <div v-if="portfolio.logo_url" class="mt-2">
               <strong>Logo:</strong>
               <div class="mt-1">
-                <ImageOptimizer 
+                <img 
                   :src="portfolio.logo_url" 
                   alt="Portfolio logo"
                   :width="120"

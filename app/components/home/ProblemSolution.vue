@@ -36,7 +36,7 @@
           <div class="pt-2">
             <div class="grid grid-cols-2 gap-3 sm:gap-4 max-w-md">
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                <ImageOptimizer 
+                <img 
                   src="/management-messy-spreadsheet.webp"
                   alt="Messy spreadsheets with property data"
                   :width="400"
@@ -46,7 +46,7 @@
                 />
               </div>
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                <ImageOptimizer 
+                <img 
                   src="https://picsum.photos/300/200?random=13"
                   alt="Clean dashboard"
                   :width="400"
