@@ -1,148 +1,158 @@
 // nuxt.config.ts
-import 'dotenv/config'
 import { defineNuxtConfig } from 'nuxt/config'
-import type { ModuleOptions } from '@nuxt/ui'
 import { sitemapConfig } from './app/config/sitemap.config'
+import type { ModuleOptions } from '@nuxt/ui'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// Load environment variables early
+import 'dotenv/config'
+
+// ✅ Helper: fallback env
+const env = (key: string, fallback = '') => process.env[key] || fallback
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV !== 'production' },
+
   srcDir: 'app',
 
-  // Nitro configuration for security headers
+  /**
+   * ------------------------------------------
+   * ⚙️ Nitro Server Configuration
+   * ------------------------------------------
+   */
   nitro: {
     routeRules: {
       '/**': {
         headers: {
-          // Security Headers
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'SAMEORIGIN',
           'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: *.google.com *.googleapis.com; style-src 'self' 'unsafe-inline' https: *.google.com *.googleapis.com; img-src 'self' data: https: *.google.com *.gstatic.com; font-src 'self' data: https: *.gstatic.com; connect-src 'self' http://localhost:8000 wss://localhost:8000 https: *.google.com *.googleapis.com; frame-src 'self' https://accounts.google.com; frame-ancestors 'self' https://accounts.google.com;"
+          'Content-Security-Policy': [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.google.com https://*.googleapis.com",
+            "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com",
+            "img-src 'self' data: https://*.google.com https://*.gstatic.com",
+            "font-src 'self' data: https://*.gstatic.com",
+            "connect-src 'self' " +
+              (process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000') +
+              " https://*.google.com https://*.googleapis.com",
+            "frame-src 'self' https://accounts.google.com",
+            "frame-ancestors 'self' https://accounts.google.com"
+          ].join('; ')
         }
       }
     }
   },
 
-  // Server routes are handled in /app/server/routes/
-
-  // Modules
-  // Image optimization
+  /**
+   * ------------------------------------------
+   * 🧩 Nuxt Modules
+   * ------------------------------------------
+   */
   modules: [
-    ['@nuxt/ui', {
-      icons: ['mdi', 'heroicons']
-    } as Partial<ModuleOptions>],
+    [
+      '@nuxt/ui',
+      {
+        icons: ['mdi', 'heroicons'],
+        colors: { primary: 'emerald' }
+      } as Partial<ModuleOptions>
+    ],
     [
       '@pinia/nuxt',
       {
-        autoImports: [
-          'defineStore',
-          'storeToRefs',
-          'acceptHMRUpdate'
-        ]
+        autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
     ],
-    '@nuxtjs/sitemap', // ✅ Added sitemap module
-    '@nuxt/image' // ✅ Added image optimization module
+    '@nuxtjs/sitemap',
+    [
+      '@nuxt/image',
+      {
+        provider: 'ipx',
+        domains: ['picsum.photos'],
+        format: ['webp'],
+        quality: 80,
+        screens: {
+          xs: 320,
+          sm: 640,
+          md: 768,
+          lg: 1024,
+          xl: 1280,
+          '2xl': 1536
+        },
+        ipx: {
+          maxAge: 60 * 60 * 24 * 365, // 1 year
+          sharp: { animated: false, limitInputPixels: false }
+        },
+        static: {
+          dir: 'public',
+          prefix: '/_image/static',
+          maxAge: 60 * 60 * 24 * 30 // 30 days
+        },
+        presets: {
+          cover: {
+            modifiers: { format: 'webp', quality: 80, fit: 'cover', preload: true }
+          },
+          avatar: {
+            modifiers: {
+              format: 'webp',
+              quality: 70,
+              width: 100,
+              height: 100,
+              fit: 'cover',
+              preload: true
+            }
+          },
+          thumbnail: {
+            modifiers: {
+              format: 'webp',
+              quality: 75,
+              width: 300,
+              height: 200,
+              fit: 'cover'
+            }
+          }
+        },
+        modifiers: { format: 'webp', quality: 80, loading: 'lazy' }
+      }
+    ]
   ],
 
-  // Image module configuration
-  image: {
-    // Domains that are allowed to be optimized
-    domains: ['picsum.photos'],
-    // Use the IPX provider for local image optimization
-    provider: 'ipx',
-    // IPX specific options
-    ipx: {
-      // Cache images for 1 year
-      maxAge: 60 * 60 * 24 * 365,
-      // Sharp configuration
-      sharp: {
-        animated: false, // Disable animated images
-        limitInputPixels: false // Disable pixel limit for large images
-      },
-      // Disable processing for static files that are already optimized
-      static: {
-        dir: 'public',
-        prefix: '/_image/static',
-        maxAge: 60 * 60 * 24 * 30 // 30 days
-      }
-    },
-    // Default image format (will be converted to this format if needed)
-    format: ['webp'],
-    // Default image quality (1-100)
-    quality: 80,
-    // Screen breakpoints for responsive images
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      xxl: 1536,
-      '2xl': 1536
-    },
-    // Presets for common image usages
-    presets: {
-      // Cover image preset
-      cover: {
-        modifiers: {
-          format: 'webp',
-          quality: 80,
-          fit: 'cover',
-          preload: true
-        }
-      },
-      // Avatar preset
-      avatar: {
-        modifiers: {
-          format: 'webp',
-          quality: 70,
-          width: 100,
-          height: 100,
-          fit: 'cover',
-          preload: true
-        }
-      },
-      // Thumbnail preset
-      thumbnail: {
-        modifiers: {
-          format: 'webp',
-          quality: 75,
-          width: 300,
-          height: 200,
-          fit: 'cover'
-        }
-      }
-    },
-    // Default modifiers for all images
-    modifiers: {
-      format: 'webp',
-      quality: 80,
-      loading: 'lazy'
-    }
-  },
+  /**
+   * ------------------------------------------
+   * 🧱 Components / Imports
+   * ------------------------------------------
+   */
+  components: [{ path: '~/components', pathPrefix: false }],
+  imports: { dirs: ['stores', 'composables'] },
 
-  components: [
-    { path: '~/components', pathPrefix: false },
-  ],
+  /**
+   * ------------------------------------------
+   * 🎨 Global Styles
+   * ------------------------------------------
+   */
+  css: ['~/assets/css/main.css'],
 
-  // App Configuration
+  /**
+   * ------------------------------------------
+   * 🌐 App Meta & SEO
+   * ------------------------------------------
+   */
   app: {
     baseURL: '/',
     buildAssetsDir: '/_nuxt/',
     head: {
-      htmlAttrs: {
-        lang: 'en'
-      },
+      htmlAttrs: { lang: 'en' },
       title: 'LeaseDirector | Property Management for Small Landlords',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Manage leases, invoice automation track payments and late fees. Built for small landlords. Free to start.' },
+        {
+          name: 'description',
+          content:
+            'Manage leases, automate invoices, track payments, and late fees — built for small landlords. Free to start.'
+        },
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
@@ -158,6 +168,7 @@ export default defineNuxtConfig({
           src: `https://www.googletagmanager.com/gtag/js?id=${process.env.NUXT_PUBLIC_GTAG_ID}`
         },
         {
+          id: 'gtag-inline',
           innerHTML: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -170,31 +181,34 @@ export default defineNuxtConfig({
     }
   },
 
-  imports: {
-    dirs: ['stores', 'composables']
+  /**
+   * ------------------------------------------
+   * ⚠️ Allow inline GTAG script
+   * ------------------------------------------
+   */
+  __dangerouslyDisableSanitizersByTagID: {
+    'gtag-inline': ['innerHTML']
   },
 
-  css: [
-    '~/assets/css/main.css'
-  ],
-
-  ui: {
-    colors: {
-      primary: 'emerald'   // <- your brand
-    }
-  },
-
+  /**
+   * ------------------------------------------
+   * 🔐 Runtime Configuration
+   * ------------------------------------------
+   */
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
-      frontendDomain: process.env.NUXT_PUBLIC_FRONTEND_DOMAIN || 'yourapp.com',
-      backendDomain: process.env.NUXT_PUBLIC_BACKEND_DOMAIN || 'api.yourapp.com',
-      GTAG_ID: process.env.NUXT_PUBLIC_GTAG_ID,
-      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || ''
+      apiBase: env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000'),
+      frontendDomain: env('NUXT_PUBLIC_FRONTEND_DOMAIN', 'leasedirector.com'),
+      backendDomain: env('NUXT_PUBLIC_BACKEND_DOMAIN', 'api.leasedirector.com'),
+      GTAG_ID: env('NUXT_PUBLIC_GTAG_ID'),
+      googleClientId: env('NUXT_PUBLIC_GOOGLE_CLIENT_ID')
     }
   },
 
-  // ✅ Sitemap configuration
-  sitemap: sitemapConfig  
+  /**
+   * ------------------------------------------
+   * 🗺️ Sitemap
+   * ------------------------------------------
+   */
+  sitemap: sitemapConfig
 })
