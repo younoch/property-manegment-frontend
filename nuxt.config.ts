@@ -71,7 +71,7 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
     ],
-    '@nuxtjs/sitemap'
+    ['@nuxtjs/sitemap', sitemapConfig]
   ],
 
   /**
