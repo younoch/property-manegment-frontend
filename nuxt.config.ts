@@ -6,11 +6,12 @@ import type { ModuleOptions } from '@nuxt/ui'
 // Load environment variables early
 import 'dotenv/config'
 
-// ✅ Helper: fallback env
+// ✅ Helper: safely read environment vars
 const env = (key: string, fallback = '') => process.env[key] || fallback
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
 
   srcDir: 'app',
@@ -31,13 +32,15 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Content-Security-Policy': [
             "default-src 'self'",
+            // ✅ Allow GTM & Google APIs
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.google.com https://*.googleapis.com",
             "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com",
             "img-src 'self' data: https://*.google.com https://*.gstatic.com",
             "font-src 'self' data: https://*.gstatic.com",
+            // ✅ Added api.iconify.design to connect-src
             "connect-src 'self' " +
               (process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000') +
-              " https://*.google.com https://*.googleapis.com",
+              " https://*.google.com https://*.googleapis.com https://api.iconify.design",
             "frame-src 'self' https://accounts.google.com",
             "frame-ancestors 'self' https://accounts.google.com"
           ].join('; ')
@@ -69,19 +72,10 @@ export default defineNuxtConfig({
     [
       '@nuxt/image',
       {
-        // Use IPX for both development and production
         provider: 'ipx',
-        // Add your production domain and any CDN domains here
-        domains: [
-          'leasedirector.com',
-          'www.leasedirector.com',
-          'picsum.photos',
-          'images.unsplash.com'
-        ],
-        // Default image format and quality
-        format: 'webp',
+        domains: ['picsum.photos'],
+        format: ['webp'],
         quality: 80,
-        // Screen sizes for responsive images
         screens: {
           xs: 320,
           sm: 640,
@@ -90,31 +84,18 @@ export default defineNuxtConfig({
           xl: 1280,
           '2xl': 1536
         },
-        // IPX configuration
         ipx: {
           maxAge: 60 * 60 * 24 * 365, // 1 year
-          sharp: { 
-            animated: false, 
-            limitInputPixels: false 
-          },
-          // Allow images from these domains
-          domains: ['leasedirector.com', 'www.leasedirector.com']
+          sharp: { animated: false, limitInputPixels: false }
         },
-        // Static file handling
         static: {
           dir: 'public',
           prefix: '/_image/static',
           maxAge: 60 * 60 * 24 * 30 // 30 days
         },
-        // Image presets
         presets: {
           cover: {
-            modifiers: { 
-              format: 'webp', 
-              quality: 80, 
-              fit: 'cover', 
-              preload: true 
-            }
+            modifiers: { format: 'webp', quality: 80, fit: 'cover', preload: true }
           },
           avatar: {
             modifiers: {
@@ -132,33 +113,11 @@ export default defineNuxtConfig({
               quality: 75,
               width: 300,
               height: 200,
-              fit: 'cover',
-              loading: 'lazy'
+              fit: 'cover'
             }
           }
         },
-        // Default modifiers for all images
-        modifiers: { 
-          format: 'webp', 
-          quality: 80, 
-          loading: 'lazy' 
-        },
-        // Add this to fix production issues with IPX
-        providerOptions: {
-          ipx: {
-            // Use the same domain for IPX in production
-            baseURL: process.env.NODE_ENV === 'production' 
-              ? 'https://www.leasedirector.com/_ipx' 
-              : '/_ipx',
-            // Enable this for production
-            ...(process.env.NODE_ENV === 'production' && {
-              sharp: {
-                animated: false,
-                limitInputPixels: false
-              }
-            })
-          }
-        }
+        modifiers: { format: 'webp', quality: 80, loading: 'lazy' }
       }
     ]
   ],
@@ -209,7 +168,7 @@ export default defineNuxtConfig({
       script: [
         {
           async: true,
-          src: `https://www.googletagmanager.com/gtag/js?id=${process.env.NUXT_PUBLIC_GTAG_ID}`
+          src: `https://www.googletagmanager.com/gtag/js?id=${env('NUXT_PUBLIC_GTAG_ID')}`
         },
         {
           id: 'gtag-inline',
@@ -217,7 +176,7 @@ export default defineNuxtConfig({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${process.env.NUXT_PUBLIC_GTAG_ID}', { send_page_view: true });
+            gtag('config', '${env('NUXT_PUBLIC_GTAG_ID')}', { send_page_view: true });
           `,
           type: 'text/javascript'
         }
@@ -225,11 +184,14 @@ export default defineNuxtConfig({
     }
   },
 
-  // Type assertion to handle __dangerouslyDisableSanitizersByTagID
-  // @ts-ignore - This is a valid Nuxt configuration
+  /**
+   * ------------------------------------------
+   * ⚠️ Disable Sanitization for GTAG Inline Script
+   * ------------------------------------------
+   */
   __dangerouslyDisableSanitizersByTagID: {
     'gtag-inline': ['innerHTML']
-  } as any,
+  },
 
   /**
    * ------------------------------------------
