@@ -22,6 +22,7 @@ export const sitemapConfig = {
     // 🚫 Exclude app-internal pages
     exclude: [
       '/app/**',
+      '/system-monitor/**'
     ]
   }
   
