@@ -27,10 +27,17 @@
 import { useThemeColor } from '~/composables/useThemeColor'
 import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useSeoMeta, useHead } from '#app'
+import { useSeoMeta, useHead } from '#imports'
 
 // Initialize theme
 const { initFromStorage, current } = useThemeColor()
+
+// Add standard mobile web app capable meta tag
+useHead({
+  meta: [
+    { name: 'mobile-web-app-capable', content: 'yes' }
+  ]
+})
 
 // Watch for theme changes to update meta theme-color
 watch(current, (newTheme) => {
