@@ -3,9 +3,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { sitemapConfig } from './app/config/sitemap.config'
 import type { ModuleOptions } from '@nuxt/ui'
 
-// Load environment variables early
-import 'dotenv/config'
-
 // ✅ Helper: safely read environment vars
 const env = (key: string, fallback = '') => process.env[key] || fallback
 
@@ -74,6 +71,7 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
     ],
+    '@nuxtjs/sitemap'
   ],
 
   /**
