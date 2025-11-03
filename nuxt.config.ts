@@ -51,20 +51,31 @@ export default defineNuxtConfig({
 
   // Image module configuration
   image: {
+    // Domains that are allowed to be optimized
     domains: ['picsum.photos'],
+    // Use the IPX provider for local image optimization
     provider: 'ipx',
+    // IPX specific options
     ipx: {
-      maxAge: 60 * 60 * 24 * 365, // 1 year
+      // Cache images for 1 year
+      maxAge: 60 * 60 * 24 * 365,
+      // Sharp configuration
       sharp: {
-        // Disable image processing for static files
-        animated: false,
+        animated: false, // Disable animated images
+        limitInputPixels: false // Disable pixel limit for large images
       },
+      // Disable processing for static files that are already optimized
+      static: {
+        dir: 'public',
+        prefix: '/_image/static',
+        maxAge: 60 * 60 * 24 * 30 // 30 days
+      }
     },
-    // Use webp format when possible
+    // Default image format (will be converted to this format if needed)
     format: ['webp'],
-    // Set default quality
+    // Default image quality (1-100)
     quality: 80,
-    // Define screen breakpoints
+    // Screen breakpoints for responsive images
     screens: {
       xs: 320,
       sm: 640,
@@ -74,26 +85,46 @@ export default defineNuxtConfig({
       xxl: 1536,
       '2xl': 1536
     },
-    // Define presets for common image usages
+    // Presets for common image usages
     presets: {
+      // Cover image preset
       cover: {
         modifiers: {
           format: 'webp',
           quality: 80,
-          fit: 'cover'
+          fit: 'cover',
+          preload: true
         }
       },
+      // Avatar preset
       avatar: {
         modifiers: {
           format: 'webp',
           quality: 70,
           width: 100,
           height: 100,
+          fit: 'cover',
+          preload: true
+        }
+      },
+      // Thumbnail preset
+      thumbnail: {
+        modifiers: {
+          format: 'webp',
+          quality: 75,
+          width: 300,
+          height: 200,
           fit: 'cover'
         }
       }
+    },
+    // Default modifiers for all images
+    modifiers: {
+      format: 'webp',
+      quality: 80,
+      loading: 'lazy'
     }
-  } as any, // Temporary type assertion to bypass type checking
+  }
 
   components: [
     { path: '~/components', pathPrefix: false },
