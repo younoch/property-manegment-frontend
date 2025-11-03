@@ -43,8 +43,8 @@ const props = defineProps({
   },
   format: {
     type: String,
-    default: 'webp',
-    validator: (value) => ['webp', 'avif', 'jpeg', 'png'].includes(value)
+    default: null, // Let @nuxt/image handle format based on browser support
+    validator: (value) => value === null || ['webp', 'avif', 'jpeg', 'png'].includes(value)
   },
   quality: {
     type: [Number, String],
@@ -64,15 +64,10 @@ const props = defineProps({
 const emit = defineEmits(['error']);
 
 const handleError = (e) => {
-  // Fallback to original format if WebP/AVIF fails
-  if (props.format !== 'jpeg' && !e.target.src.endsWith('.jpeg') && !e.target.src.endsWith('.jpg')) {
-    e.target.src = props.src;
-  } else {
-    // If fallback also fails, show error placeholder
-    e.target.src = '/image-placeholder.svg';
-    e.target.alt = 'Image not available';
-    e.target.classList.add('bg-gray-100', 'p-4');
-  }
+  // If the image fails to load, show error placeholder
+  e.target.src = '/image-placeholder.svg';
+  e.target.alt = 'Image not available';
+  e.target.classList.add('bg-gray-100', 'p-4');
   emit('error', e);
 };
 </script>
