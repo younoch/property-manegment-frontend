@@ -124,7 +124,7 @@ export default defineNuxtConfig({
       quality: 80,
       loading: 'lazy'
     }
-  }
+  },
 
   components: [
     { path: '~/components', pathPrefix: false },
