@@ -69,10 +69,19 @@ export default defineNuxtConfig({
     [
       '@nuxt/image',
       {
-        provider: 'ipx',
-        domains: ['picsum.photos'],
+        // Use IPX for local development and static generation
+        provider: process.env.NODE_ENV === 'production' ? 'ipx' : 'ipx',
+        // Add your production domain and any CDN domains here
+        domains: [
+          'leasedirector.com',
+          'www.leasedirector.com',
+          'picsum.photos',
+          'images.unsplash.com'
+        ],
+        // Default image format and quality
         format: ['webp'],
         quality: 80,
+        // Screen sizes for responsive images
         screens: {
           xs: 320,
           sm: 640,
@@ -81,18 +90,32 @@ export default defineNuxtConfig({
           xl: 1280,
           '2xl': 1536
         },
+        // IPX configuration
         ipx: {
           maxAge: 60 * 60 * 24 * 365, // 1 year
-          sharp: { animated: false, limitInputPixels: false }
+          sharp: { 
+            animated: false, 
+            limitInputPixels: false 
+          },
+          // In production, use the same domain for IPX
+          domains: process.env.NODE_ENV === 'production' ? 
+            ['leasedirector.com', 'www.leasedirector.com'] : []
         },
+        // Static file handling
         static: {
           dir: 'public',
           prefix: '/_image/static',
           maxAge: 60 * 60 * 24 * 30 // 30 days
         },
+        // Image presets
         presets: {
           cover: {
-            modifiers: { format: 'webp', quality: 80, fit: 'cover', preload: true }
+            modifiers: { 
+              format: 'webp', 
+              quality: 80, 
+              fit: 'cover', 
+              preload: true 
+            }
           },
           avatar: {
             modifiers: {
@@ -110,11 +133,26 @@ export default defineNuxtConfig({
               quality: 75,
               width: 300,
               height: 200,
-              fit: 'cover'
+              fit: 'cover',
+              loading: 'lazy'
             }
           }
         },
-        modifiers: { format: 'webp', quality: 80, loading: 'lazy' }
+        // Default modifiers for all images
+        modifiers: { 
+          format: 'webp', 
+          quality: 80, 
+          loading: 'lazy' 
+        },
+        // Add this to fix production issues with IPX
+        providerOptions: {
+          ipx: {
+            // Use the same domain for IPX in production
+            baseURL: process.env.NODE_ENV === 'production' 
+              ? 'https://www.leasedirector.com/_ipx' 
+              : '/_ipx'
+          }
+        }
       }
     ]
   ],
@@ -181,14 +219,11 @@ export default defineNuxtConfig({
     }
   },
 
-  /**
-   * ------------------------------------------
-   * ⚠️ Allow inline GTAG script
-   * ------------------------------------------
-   */
+  // Type assertion to handle __dangerouslyDisableSanitizersByTagID
+  // @ts-ignore - This is a valid Nuxt configuration
   __dangerouslyDisableSanitizersByTagID: {
     'gtag-inline': ['innerHTML']
-  },
+  } as any,
 
   /**
    * ------------------------------------------
