@@ -72,8 +72,8 @@ export default defineNuxtConfig({
     [
       '@nuxt/image',
       {
-        provider: 'ipx',
-        domains: ['picsum.photos'],
+        provider: 'static',
+        domains: ['picsum.photos', 'leasedirector.com', 'www.leasedirector.com'],
         format: ['webp'],
         quality: 80,
         screens: {
