@@ -37,7 +37,7 @@
             <div class="grid grid-cols-2 gap-3 sm:gap-4 max-w-md">
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                 <ImageOptimizer 
-                  src="/management-messy-spreadsheet.jpg"
+                  src="/management-messy-spreadsheet.webp"
                   alt="Messy spreadsheets with property data"
                   :width="400"
                   :height="300"

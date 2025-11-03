@@ -28,7 +28,7 @@
 
         <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
           <ImageOptimizer 
-            src="/apartment-building-preview.jpg" 
+            src="/apartment-building-preview.webp" 
             alt="Modern apartment building with clean architecture"
             :width="200"
             :height="96"
@@ -36,7 +36,7 @@
             img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
           />
           <ImageOptimizer 
-            src="/agreement-deal.jpg" 
+            src="/agreement-deal.webp" 
             alt="Business handshake closing a deal"
             :width="200"
             :height="96"
@@ -44,7 +44,7 @@
             img-class="h-24 w-full object-cover rounded-xl border border-gray-200"
           />
           <ImageOptimizer 
-            src="/whatsapp-notification.jpg" 
+            src="/whatsapp-notification.webp" 
             alt="Mobile phone showing WhatsApp rent payment notification"
             :width="200"
             :height="96"
@@ -57,7 +57,7 @@
       <div class="relative">
         <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
           <ImageOptimizer 
-            src="/hero-dashboard.jpg" 
+            src="/hero-dashboard.webp" 
             alt="LeaseDirector dashboard interface showing property management features"
             :width="1200"
             :height="800"

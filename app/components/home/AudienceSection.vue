@@ -11,7 +11,7 @@
       </div>
       <div class="grid grid-cols-2 gap-3">
         <ImageOptimizer 
-          src="https://picsum.photos/400/400?random=17" 
+          src="/reviewing-documents.webp" 
           alt="Small landlord reviewing property documents"
           :width="400"
           :height="400"
