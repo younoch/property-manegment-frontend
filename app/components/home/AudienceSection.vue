@@ -20,7 +20,7 @@
         </div>
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
           <img 
-            src="https://picsum.photos/1600/900?random=18" 
+            src="/team-collabarating.webp" 
             alt="Team collaborating on property management"
             class="h-full w-full object-cover"
             loading="lazy"
