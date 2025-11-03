@@ -130,7 +130,7 @@ const props = defineProps({
   // Image provider (ipx, cloudinary, etc.)
   provider: {
     type: String,
-    default: 'ipx'
+    default: 'static'
   }
 });
 
