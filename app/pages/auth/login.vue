@@ -150,225 +150,108 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
+import { useUserStore } from '~/stores/user';
 import { useToast, useRuntimeConfig } from '#imports';
+import { useGoogleSignIn } from '~/composables/useGoogleSignIn';
 
 const config = useRuntimeConfig();
 const router = useRouter();
 const navigateTo = router.push;
 
-declare global {
-  interface Window {
-    google: any;
-  }
-}
-
-// Initialize stores and composables
 const authStore = useAuthStore();
+const userStore = useUserStore();
 const toast = useToast();
 
-// Google Sign-In
-const googleButton = ref<HTMLElement | null>(null);
-const loadingGoogle = ref(false);
-const loadingFacebook = ref(false);
-
-// Handle Google Sign-In response
-const handleGoogleSignIn = async (response: any) => {
-  try {
-    loadingGoogle.value = true;
-    
-    if (!response.credential) {
-      throw new Error('No credential received from Google');
-    }
-    
-    console.log('Received Google credential, authenticating...');
-    
-    // Call the store method with the ID token
-    const result = await authStore.signInWithGoogle({
-      token: response.credential
-    });
-    
-    if (result.success && result.user) {
-      console.log('Google authentication successful', { user: result.user });
-      
-      // Show success message
-      toast.add({
-        title: 'Success',
-        description: 'Successfully signed in with Google',
-        color: 'success',
-        icon: 'i-heroicons-check-circle',
-        duration: 3000
-      });
-      
-      // Redirect to dashboard or appropriate page
-      const redirectTo = '/app/dashboard';
-      
-      // Small delay before navigation to ensure UI updates
-      setTimeout(() => {
-        navigateTo(redirectTo);
-      }, 500);
-    } else {
-      throw new Error(result.error || 'Authentication failed');
-    }
-  } catch (error: any) {
-    console.error('Error during Google authentication:', error);
-    toast.add({
-      title: 'Authentication Error',
-      description: error?.message || 'Failed to authenticate with Google. Please try again.',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle',
-      duration: 5000
-    });
-  } finally {
-    loadingGoogle.value = false;
-  }
-};
-
-// Initialize Google Sign-In
-const initGoogleAuth = () => {
-  if (typeof window === 'undefined') return;
-  
-  // Remove any existing script to prevent multiple initializations
-  const existingScript = document.querySelector('script[src^="https://accounts.google.com/gsi/client"]');
-  if (existingScript) {
-    document.head.removeChild(existingScript);
-  }
-
-  // Load the Google Identity Services script
-  const script = document.createElement('script');
-  script.src = 'https://accounts.google.com/gsi/client';
-  script.async = true;
-  script.defer = true;
-  
-  script.onload = () => {
-    if (!window.google?.accounts) {
-      console.error('Google Identity Services not loaded properly');
-      return;
-    }
-    
-    console.log('Google Identity Services loaded successfully');
-  };
-  
-  script.onerror = (error) => {
-    console.error('Failed to load Google Identity Services script:', error);
-  };
-  
-  document.head.appendChild(script);
-};
-
-// Handle Google button click
-const handleGoogleButtonClick = () => {
-  if (!window.google?.accounts) {
-    console.error('Google Sign-In not available');
-    toast.add({
-      title: 'Error',
-      description: 'Google Sign-In is not available. Please try again later or use another sign-in method.',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle',
-      duration: 5000
-    });
-    return;
-  }
-
-  // Get client ID from runtime config
-  const clientId = config.public.googleClientId;
-  
-  if (!clientId) {
-    console.error('Google Client ID is not configured');
-    toast.add({
-      title: 'Configuration Error',
-      description: 'Google Sign-In is not properly configured. Please contact support.',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle',
-      duration: 5000
-    });
-    return;
-  }
-  
-  // Initialize Google Auth2
-  const client = window.google.accounts.oauth2.initTokenClient({
-    client_id: clientId,
-    scope: 'email profile',
-    callback: async (response: any) => {
-      if (response.access_token) {
-        try {
-          loadingGoogle.value = true;
-          // Send the token to your backend for verification
-          await authStore.signInWithGoogle({ 
-            token: response.access_token,
-            role: 'landlord' // or get this from user selection
-          });
-          // Redirect after successful login
-          navigateTo('/app/dashboard');
-        } catch (error) {
-          console.error('Google Sign-In error:', error);
-          toast.add({
-            title: 'Sign in failed',
-            description: 'There was an error signing in with Google. Please try again.',
-            color: 'error',
-            icon: 'i-heroicons-exclamation-circle',
-            duration: 5000
-          });
-        } finally {
-          loadingGoogle.value = false;
-        }
-      }
-    },
-    error_callback: (error: any) => {
-      console.error('Google Sign-In error:', error);
-      if (error.error !== 'popup_closed_by_user') {
-        toast.add({
-          title: 'Sign in failed',
-          description: 'There was an error signing in with Google. Please try again.',
-          color: 'error',
-          icon: 'i-heroicons-exclamation-circle',
-          duration: 5000
-        });
-      }
-      loadingGoogle.value = false;
-    }
-  });
-
-  // Request access token
-  client.requestAccessToken();
-};
-
-// Initialize on component mount
-onMounted(() => {
-  initGoogleAuth();
-});
-
-useHead({
-  title: 'Login | LeaseDirector: Property Management Software',
-  meta: [
-    { name: 'description', content: 'Log in to your LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
-  ]
-})
-definePageMeta({
-  layout: 'auth',
-  middleware: 'guest'
-});
-
-const form = ref({
-  email: '',
-  password: ''
-});
-
-const errors = ref({
-  email: '',
-  password: ''
-});
-
+// Form state
+const form = ref({ email: '', password: '' });
+const errors = ref({ email: '', password: '' });
 const showPassword = ref(false);
-
 const loading = computed(() => authStore.isAuthenticating);
 
+// Google Sign-In composable
+const { googleButton, loadingGoogle, renderButton, handleButtonClick } = useGoogleSignIn();
+
+// Render Google button on mount
+onMounted(() => {
+  if (googleButton.value) {
+    renderButton(googleButton.value, { width: 300 });
+  }
+});
+
+// Validate form fields
+const validateForm = () => {
+  errors.value = { email: '', password: '' };
+  let isValid = true;
+
+  if (!form.value.email) {
+    errors.value.email = 'Email is required';
+    isValid = false;
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
+    errors.value.email = 'Please enter a valid email';
+    isValid = false;
+  }
+
+  if (!form.value.password) {
+    errors.value.password = 'Password is required';
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+// Handle traditional login
+const handleLogin = async () => {
+  if (!validateForm()) return;
+
+  try {
+    const result = await authStore.signin({
+      email: form.value.email,
+      password: form.value.password
+    });
+
+    if (result?.success) {
+      // Wait briefly to ensure store is updated
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      if (userStore.isAuthenticated) {
+        await navigateTo('/app/dashboard');
+      } else {
+        toast.add({
+          title: 'Sign In Error',
+          description: result?.error || 'Unknown error occurred during sign in',
+          color: 'error',
+          icon: 'i-heroicons-exclamation-circle'
+        });
+        console.error('User not authenticated after login');
+      }
+    } else {
+      toast.add({
+        title: 'Sign In Failed',
+        description: result?.error || 'Invalid email or password',
+        color: 'error',
+        icon: 'i-heroicons-exclamation-circle'
+      });
+      console.error('Login failed:', result?.error || 'Unknown error');
+    }
+  } catch (error: any) {
+    console.error('Login error:', error);
+    toast.add({
+      title: 'Sign In Error',
+      description: error?.message || 'Unexpected error occurred',
+      color: 'error',
+      icon: 'i-heroicons-exclamation-circle'
+    });
+    userStore.clearUser();
+    userStore.clearStorage();
+  }
+};
+
+// Optional: Facebook login redirect
+const loadingFacebook = ref(false);
 const signInWithFacebook = async () => {
   try {
     loadingFacebook.value = true;
-    
-    // Redirect to your backend's Facebook OAuth endpoint
     window.location.href = '/api/auth/facebook';
-    
   } catch (error: any) {
     toast.add({
       title: 'Error',
@@ -382,80 +265,17 @@ const signInWithFacebook = async () => {
   }
 };
 
-const validateForm = () => {
-  errors.value = { email: '', password: '' };
-  let isValid = true;
-  
-  if (!form.value.email) {
-    errors.value.email = 'Email is required';
-    isValid = false;
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
-    errors.value.email = 'Please enter a valid email';
-    isValid = false;
-  }
-  
-  if (!form.value.password) {
-    errors.value.password = 'Password is required';
-    isValid = false;
-  }
-  
-  return isValid;
-};
-
-const handleLogin = async () => {
-  if (!validateForm()) return;
-  
-  try {
-    const result = await authStore.signin({
-      email: form.value.email,
-      password: form.value.password
-    });
-    
-    if (result?.success) {
-      // Wait a small amount of time to ensure stores are updated
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Get the user store to check authentication state
-      const userStore = useUserStore();
-      
-      if (userStore.isAuthenticated) {
-
-        // Use Nuxt navigation to avoid a full page reload
-        await navigateTo('/app/dashboard');
-      } else {
-        toast.add({
-          title: 'Sign In Error',
-          description: result?.error || 'An unknown error occurred during sign in',
-          color: 'error',
-          icon: 'i-heroicons-exclamation-circle'
-        });
-        console.error('User not authenticated after successful login');
-      }
-    } else {
-      // Show error toast for failed login
-      toast.add({
-        title: 'Sign In Failed',
-        description: result?.error || 'Invalid email or password. Please try again.',
-        color: 'error',
-        icon: 'i-heroicons-exclamation-circle'
-      });
-      console.error('Login failed:', result?.error || 'Unknown error');
-    }
-  } catch (error: any) {
-    console.error('Login error:', error);
-    // Show error toast for unexpected errors
-    toast.add({
-      title: 'Sign In Error',
-      description: error?.message || 'An unexpected error occurred. Please try again.',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle'
-    });
-    // Clear any potentially invalid auth state on error
-    const userStore = useUserStore();
-    userStore.clearUser();
-    userStore.clearStorage();
-  }
-};
+// Page metadata
+useHead({
+  title: 'Login | LeaseDirector: Property Management Software',
+  meta: [
+    { name: 'description', content: 'Log in to your LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
+  ]
+});
+definePageMeta({
+  layout: 'auth',
+  middleware: 'guest'
+});
 </script>
 
 <style>
