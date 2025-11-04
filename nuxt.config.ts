@@ -29,8 +29,8 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Content-Security-Policy': [
             "default-src 'self'",
-            // Allow GTM & Google APIs - only from our plugin
-            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com 'nonce-${Date.now()}'",
+            // Allow GTM, Google APIs, and Google Sign-In
+            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://accounts.google.com https://apis.google.com 'unsafe-eval';",
             "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com https://fonts.googleapis.com",
             // Allow images from various sources
             "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://picsum.photos https://www.picsum.photos https://images.unsplash.com https://*.unsplash.com",
@@ -40,7 +40,7 @@ export default defineNuxtConfig({
               (process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000') +
               " wss: https: http: https://*.google.com https://*.googleapis.com https://api.iconify.design https://picsum.photos https://www.picsum.photos",
             // Frame sources
-            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://youtube.com",
+            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://youtube.com https://www.googletagmanager.com https://apis.google.com",
             "frame-ancestors 'self' https://accounts.google.com",
             // Additional security headers
             "form-action 'self'",
