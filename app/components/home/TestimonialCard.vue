@@ -2,10 +2,14 @@
   <div class="p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
     <div class="flex items-center gap-3">
       <div class="h-12 w-12 flex-shrink-0">
-        <img 
+        <NuxtImg 
           :src="avatar" 
           :alt="`${name}'s profile picture`"
           class="h-full w-full rounded-full object-cover border-2 border-white shadow-sm"
+          width="48"
+          height="48"
+          loading="lazy"
+          format="webp"
         />
       </div>
       <div>

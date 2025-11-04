@@ -71,7 +71,8 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
     ],
-    ['@nuxtjs/sitemap', sitemapConfig]
+    ['@nuxtjs/sitemap', sitemapConfig],
+    '@nuxt/image-edge',
   ],
 
   /**
@@ -141,5 +142,17 @@ export default defineNuxtConfig({
    * 🗺️ Sitemap
    * ------------------------------------------
    */
-  sitemap: sitemapConfig
+  sitemap: sitemapConfig,
+  image: {
+    dir: 'public', // where your images are stored
+    screens: {
+      sm: 320,
+      md: 640,
+      lg: 1024,
+      xl: 1280
+    },
+    format: ['webp'], // prefer modern image formats
+    quality: 100, // compression level
+    densities: [1, 2] // for retina displays
+  }
 })
