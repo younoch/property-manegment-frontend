@@ -11,46 +11,13 @@
         </NuxtLink>
       </p>
     </div>
-    
+
     <UCard class="w-full">
       <!-- Social Login Buttons -->
       <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-        <UButton
-          block
-          color="white"
-          :loading="loadingGoogle"
-          :disabled="loadingGoogle || loadingFacebook"
-          class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
-          @click="initiateGoogleSignIn"
-        >
-          <template #leading>
-            <img 
-              v-if="!loadingGoogle"
-              src="https://www.google.com/favicon.ico" 
-              alt="Google" 
-              class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3"
-            />
-          </template>
-          {{ loadingGoogle ? 'Signing in with Google...' : 'Continue with Google' }}
-        </UButton>
-        
-        <!-- <UButton
-          block
-          color="white"
-          :loading="loadingFacebook"
-          :disabled="loadingGoogle || loadingFacebook"
-          class="py-2.5 sm:py-3 px-4 border border-gray-300 hover:bg-gray-50 transition-colors justify-center text-sm sm:text-base"
-          @click="signInWithFacebook"
-        >
-          <template #leading>
-            <svg v-if="!loadingFacebook" class="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" viewBox="0 0 24 24" fill="#1877F2" aria-hidden="true">
-              <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-            </svg>
-          </template>
-          {{ loadingFacebook ? 'Signing in with Facebook...' : 'Continue with Facebook' }}
-        </UButton> -->
+        <div ref="googleButton" class="w-full"></div>
       </div>
-      
+
       <div class="relative mb-3 sm:mb-4">
         <div class="absolute inset-0 flex items-center">
           <div class="w-full border-t border-gray-300"></div>
@@ -59,123 +26,60 @@
           <span class="px-3 bg-white text-gray-500 text-xs sm:text-sm">Or continue with email</span>
         </div>
       </div>
-      
+
       <UForm :state="form" :validate="validate" @submit="handleRegister" class="space-y-4 sm:space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <UFormField label="Full Name" name="name" :error="errors.name" class="sm:col-span-2">
-            <UInput
-              v-model="form.name"
-              type="text"
-              placeholder="Enter your full name"
-              required
-              class="w-full"
-            />
+            <UInput v-model="form.name" type="text" placeholder="Enter your full name" required class="w-full"/>
           </UFormField>
-          
+
           <UFormField label="Email Address" name="email" :error="errors.email">
-            <UInput
-              v-model="form.email"
-              type="email"
-              placeholder="Enter your email"
-              required
-              class="w-full"
-            />
+            <UInput v-model="form.email" type="email" placeholder="Enter your email" required class="w-full"/>
           </UFormField>
-          
+
           <UFormField label="Phone Number" name="phone" :error="errors.phone">
-            <UInput
-              v-model="form.phone"
-              type="tel"
-              placeholder="Enter your phone number"
-              required
-              class="w-full"
-            />
+            <UInput v-model="form.phone" type="tel" placeholder="Enter your phone number" required class="w-full"/>
           </UFormField>
-          
-          <!-- <UFormField label="Role" name="role" :error="errors.role">
-            <USelect
-              v-model="form.role"
-              :items="roleOptions"
-              placeholder="Select your role"
-              required
-              class="w-full"
-            />
-          </UFormField> -->
-          
+
           <UFormField label="Password" name="password" :error="errors.password" class="relative">
             <UInputGroup class="relative">
-              <UInput
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                placeholder="••••••••"
-                required
-                class="w-full pr-10"
-              />
-              <UButton
-                type="button"
-                variant="ghost"
-                color="gray"
+              <UInput v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="••••••••" required class="w-full pr-10"/>
+              <UButton type="button" variant="ghost" color="gray"
                 :icon="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
                 class="absolute right-1 top-1/2 -translate-y-1/2"
-                @click="showPassword = !showPassword"
-                :padded="false"
-                tabindex="-1"
-              />
+                @click="showPassword = !showPassword" :padded="false" tabindex="-1"/>
             </UInputGroup>
           </UFormField>
-          
+
           <UFormField label="Confirm Password" name="confirmPassword" :error="errors.confirmPassword" class="relative">
             <UInputGroup class="relative">
-              <UInput
-                v-model="form.confirmPassword"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                placeholder="••••••••"
-                required
-                class="w-full pr-10"
-              />
-              <UButton
-                type="button"
-                variant="ghost"
-                color="gray"
+              <UInput v-model="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" placeholder="••••••••" required class="w-full pr-10"/>
+              <UButton type="button" variant="ghost" color="gray"
                 :icon="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'"
                 class="absolute right-1 top-1/2 -translate-y-1/2"
-                @click="showConfirmPassword = !showConfirmPassword"
-                :padded="false"
-                tabindex="-1"
-              />
+                @click="showConfirmPassword = !showConfirmPassword" :padded="false" tabindex="-1"/>
             </UInputGroup>
           </UFormField>
         </div>
-        
-        
+
         <div v-if="successMessage" class="rounded-md bg-green-50 p-3 sm:p-4">
           <div class="flex">
-            <UIcon name="i-heroicons-check-circle" class="h-4 w-4 sm:h-5 sm:w-5 text-green-400 flex-shrink-0 mt-0.5" />
+            <UIcon name="i-heroicons-check-circle" class="h-4 w-4 sm:h-5 sm:w-5 text-green-400 flex-shrink-0 mt-0.5"/>
             <div class="ml-2 sm:ml-3">
-              <h3 class="text-xs sm:text-sm font-medium text-green-800">
-                {{ successMessage }}
-              </h3>
+              <h3 class="text-xs sm:text-sm font-medium text-green-800">{{ successMessage }}</h3>
             </div>
           </div>
         </div>
-        
+
         <div>
           <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 sm:gap-6 pt-2">
             <div class="text-sm w-full sm:w-auto text-center sm:text-left">
-              <span class="text-gray-600">
-                Already have an account? 
-              </span>
+              <span class="text-gray-600">Already have an account?</span>
               <NuxtLink to="/auth/login" class="font-medium text-primary-600 hover:text-primary-500 transition-colors whitespace-nowrap">
                 Sign in
               </NuxtLink>
             </div>
-            <UButton
-              type="submit"
-              :loading="loading"
-              :disabled="loading"
-              class="w-full sm:w-auto px-6 py-2.5 sm:py-2 text-sm sm:text-base justify-center"
-              size="md"
-            >
+            <UButton type="submit" :loading="loading" :disabled="loading" class="w-full sm:w-auto px-6 py-2.5 sm:py-2 text-sm sm:text-base justify-center" size="md">
               Create Account
             </UButton>
           </div>
@@ -186,260 +90,80 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-import { ROLE_OPTIONS } from '~/constants';
-import { useRuntimeConfig } from '#imports';
-import { useToast } from '#imports';
-import { createApiClient } from '@/utils/api';
-definePageMeta({
-  layout: 'auth',
-  middleware: 'guest'
-});
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '~/stores/auth';
+import { useUserStore } from '~/stores/user';
+import { useToast, useRuntimeConfig } from '#imports';
+import { useGoogleSignIn } from '~/composables/useGoogleSignIn';
+
+definePageMeta({ layout: 'auth', middleware: 'guest' });
 useHead({
-  title: 'Sign Up | LeaseDirector: Property Management Software',
+  title: 'Sign Up | LeaseDirector',
   meta: [
-    { name: 'description', content: 'Sign up for a LeaseDirector account to manage tenants, invoices, and property payments securely. Built for small landlords and property managers.' }
+    { name: 'description', content: 'Sign up for a LeaseDirector account to manage tenants, invoices, and property payments securely.' }
   ]
-})
+});
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const router = useRouter();
+const navigateTo = router.push;
 const toast = useToast();
 
-// Destructure store values with proper typing
-const { signup } = authStore;
-const isAuthenticating = computed(() => authStore.isAuthenticating);
-const currentError = computed(() => authStore.currentError);
-
+// Form state
 const form = ref({
   name: '',
   email: '',
+  phone: '',
   password: '',
   confirmPassword: '',
-  phone: '',
-  role: 'landlord' as 'tenant' | 'landlord' | 'manager' | 'super_admin'
+  role: 'landlord'
 });
-
-interface FormErrors {
-  [key: string]: string;
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  phone: string;
-  role: string;
-}
-
-const errors = ref<FormErrors>({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-  phone: '',
-  role: ''
-});
-
+const errors = ref<Record<string, string>>({});
 const loading = ref(false);
-const loadingGoogle = ref(false);
-const loadingFacebook = ref(false);
-const errorMessage = ref('');
 const successMessage = ref('');
-
-// Password visibility toggles
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
 // Google Sign-In
-const config = useRuntimeConfig();
-const googleClientId = config.public.googleClientId;
+const { googleButton, loadingGoogle, handleGoogleButtonClick, renderGoogleButton } = useGoogleSignIn();
 
-// Initialize Google Sign-In
-const initGoogleAuth = () => {
-  if (typeof window !== 'undefined') {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      // @ts-ignore
-      google.accounts.id.initialize({
-        client_id: googleClientId,
-        callback: handleGoogleSignIn
-      });
-    };
-    document.head.appendChild(script);
-  }
-};
-
-// Initialize on component mount
 onMounted(() => {
-  initGoogleAuth();
+  if (googleButton.value) renderGoogleButton(googleButton.value, { width: 300 });
 });
 
-// Initiate Google Sign-In
-const initiateGoogleSignIn = () => {
-  try {
-    // @ts-ignore
-    google.accounts.id.prompt();
-  } catch (error) {
-    console.error('Error initializing Google Sign-In:', error);
-  }
-};
-
-// Handle Google Sign-In response
-const handleGoogleSignIn = async (response: any) => {
-  try {
-    loadingGoogle.value = true;
-    errorMessage.value = '';
-    
-    // Get the ID token from the Google Sign-In response
-    const { credential } = response;
-    
-    if (!credential) {
-      throw new Error('No credential received from Google');
-    }
-    
-    // Call the store method with the ID token and selected role
-    const result = await authStore.signInWithGoogle({
-      token: credential,
-      role: form.value.role || 'landlord' // Default to 'tenant' if no role selected
-    });
-    
-    if (result.success && result.user) {
-      successMessage.value = 'Successfully signed in with Google!';
-      
-      // Show success message
-      toast.add({
-        title: 'Success',
-        description: 'Successfully signed in with Google',
-        color: 'success',
-        icon: 'i-heroicons-check-circle',
-        duration: 3000
-      });
-      
-      // Redirect to dashboard after a short delay
-      setTimeout(() => {
-        navigateTo('/app/dashboard');
-      }, 1000);
-    } else {
-      throw new Error(result.error || 'Failed to sign in with Google');
-    }
-    
-  } catch (error: any) {
-    console.error('Google Sign-In Error:', error);
-    errorMessage.value = error?.message || 'Failed to sign in with Google';
-    toast.add({
-      title: 'Error',
-      description: error?.message || 'Failed to sign in with Google',
-      color: 'error',
-      icon: 'i-heroicons-exclamation-circle',
-      duration: 5000
-    });
-  } finally {
-    loadingGoogle.value = false;
-  }
-};
-
-const signInWithFacebook = async () => {
-  try {
-    loadingFacebook.value = true;
-    errorMessage.value = '';
-    
-    // Redirect to your backend's Facebook OAuth endpoint
-    window.location.href = '/api/auth/facebook';
-    
-  } catch (error: any) {
-    errorMessage.value = error?.message || 'Failed to sign in with Facebook';
-  } finally {
-    loadingFacebook.value = false;
-  }
-};
-
-// Watch for auth store changes
-watchEffect(() => {
-  errorMessage.value = currentError.value || '';
-  loading.value = isAuthenticating.value;
-});
-
-// Import constants
-
-
-const roleOptions = ROLE_OPTIONS;
-
+// Validation
 const validate = (state: any) => {
-  const issues: Array<{ path: string[]; message: string }> = [];
-  
-  if (!state.name?.trim()) {
-    issues.push({ path: ['name'], message: 'Name is required' });
-  }
-  
-  if (!state.email) {
-    issues.push({ path: ['email'], message: 'Email is required' });
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-    issues.push({ path: ['email'], message: 'Please enter a valid email' });
-  }
-  
-  if (!state.password) {
-    issues.push({ path: ['password'], message: 'Password is required' });
-  } else if (state.password.length < 6) {
-    issues.push({ path: ['password'], message: 'Password must be at least 6 characters' });
-  }
-  
-  if (state.password !== state.confirmPassword) {
-    issues.push({ path: ['confirmPassword'], message: 'Passwords do not match' });
-  }
-  
-  if (!state.role) {
-    issues.push({ path: ['role'], message: 'Role is required' });
-  }
-  
-  // Clear previous errors
-  Object.keys(errors.value).forEach(key => {
-    errors.value[key] = '';
-  });
-  
-  // Set new errors
-  issues.forEach(issue => {
-    if (issue.path?.[0]) {
-      errors.value[issue.path[0]] = issue.message;
-    }
-  });
-  
+  const issues: Array<{ path: string[], message: string }> = [];
+  if (!state.name?.trim()) issues.push({ path: ['name'], message: 'Name is required' });
+  if (!state.email?.trim()) issues.push({ path: ['email'], message: 'Email is required' });
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) issues.push({ path: ['email'], message: 'Invalid email' });
+  if (!state.password) issues.push({ path: ['password'], message: 'Password is required' });
+  else if (state.password.length < 6) issues.push({ path: ['password'], message: 'Password must be at least 6 characters' });
+  if (state.password !== state.confirmPassword) issues.push({ path: ['confirmPassword'], message: 'Passwords do not match' });
+  Object.keys(errors.value).forEach(key => errors.value[key] = '');
+  issues.forEach(issue => { if(issue.path?.[0]) errors.value[issue.path[0]] = issue.message });
   return issues;
 };
 
+// Handle email/password registration
 const handleRegister = async () => {
+  if (validate(form.value).length) return;
+
   try {
     loading.value = true;
-    errorMessage.value = '';
     successMessage.value = '';
-
-    const result = await signup({
-      name: form.value.name,
-      email: form.value.email,
-      password: form.value.password,
-      phone: form.value.phone,
-      role: form.value.role,
-    });
-    
-    if (result?.success) {
-      successMessage.value = 'Account created successfully! Redirecting to dashboard...';
-      
-      // Update the user store with the returned user data
-      if (result.user) {
-        userStore.setUser(result.user);
-      }
-      
-      // Redirect to dashboard after a short delay
-      setTimeout(() => {
-        navigateTo('/app/dashboard');
-      }, 1500);
+    const result = await authStore.signup(form.value);
+    if (result.success) {
+      successMessage.value = 'Account created successfully! Redirecting...';
+      if(result.user) userStore.setUser(result.user);
+      setTimeout(() => navigateTo('/app/dashboard'), 1200);
     } else {
-      errorMessage.value = result?.error || 'Registration failed';
+      toast.add({ title: 'Error', description: result.error || 'Registration failed', color: 'error', icon: 'i-heroicons-exclamation-circle' });
     }
   } catch (error: any) {
-    errorMessage.value = error?.message || 'An unexpected error occurred';
+    toast.add({ title: 'Error', description: error?.message || 'Unexpected error occurred', color: 'error', icon: 'i-heroicons-exclamation-circle' });
   } finally {
     loading.value = false;
   }
@@ -447,8 +171,5 @@ const handleRegister = async () => {
 </script>
 
 <style>
-/* Hide the password reveal button in Edge */
-::-ms-reveal {
-  display: none;
-}
+::-ms-reveal { display: none; }
 </style>
