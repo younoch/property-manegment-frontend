@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   // @ts-ignore - This is a valid configuration for @nuxt/image
   image: {
     dir: 'public',
-    provider: 'ipx',
+    provider: 'static',
     domains: [],
     screens: {
       xs: 320,
