@@ -24,8 +24,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
     window.gtag('config', gtmId, { 
       'send_page_view': false, // We'll trigger this manually
       'transport_url': 'https://www.google-analytics.com',
-      'first_party_collection': true,
-      'optimize_id': 'OPT-XXXXXXX' // Add your optimize container ID if using Optimize
+      'first_party_collection': true
     });
 
     // Function to load GTM with performance optimization
