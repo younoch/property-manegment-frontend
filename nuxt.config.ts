@@ -1,62 +1,15 @@
-// nuxt.config.ts
 import { defineNuxtConfig } from 'nuxt/config'
 import { sitemapConfig } from './app/config/sitemap.config'
 import type { ModuleOptions } from '@nuxt/ui'
+import type { ImageModuleOptions } from '@nuxt/image-edge'
 
-// ✅ Helper: safely read environment vars
 const env = (key: string, fallback = '') => process.env[key] || fallback
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
-
   srcDir: 'app',
 
-  /**
-   * ------------------------------------------
-   * ⚙️ Nitro Server Configuration
-   * ------------------------------------------
-   */
-  nitro: {
-    routeRules: {
-      '/**': {
-        headers: {
-          'X-Content-Type-Options': 'nosniff',
-          'X-Frame-Options': 'SAMEORIGIN',
-          'X-XSS-Protection': '1; mode=block',
-          'Referrer-Policy': 'strict-origin-when-cross-origin',
-          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-          'Content-Security-Policy': [
-            "default-src 'self'",
-            // Allow GTM, Google APIs, and Google Sign-In
-            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://accounts.google.com https://apis.google.com 'unsafe-eval';",
-            "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com https://fonts.googleapis.com",
-            // Allow images from various sources
-            "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://picsum.photos https://www.picsum.photos https://images.unsplash.com https://*.unsplash.com",
-            "font-src 'self' data: https: https://fonts.gstatic.com https://*.googleapis.com",
-            // API and WebSocket connections
-            "connect-src 'self' " +
-              (process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000') +
-              " wss: https: http: https://*.google.com https://*.googleapis.com https://api.iconify.design https://picsum.photos https://www.picsum.photos",
-            // Frame sources
-            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://youtube.com https://www.googletagmanager.com https://apis.google.com",
-            "frame-ancestors 'self' https://accounts.google.com",
-            // Additional security headers
-            "form-action 'self'",
-            "media-src 'self' https: http:",
-            "child-src 'self' blob:"
-          ].join('; ')
-        }
-      }
-    }
-  },
-
-  /**
-   * ------------------------------------------
-   * 🧩 Nuxt Modules
-   * ------------------------------------------
-   */
   modules: [
     [
       '@nuxt/ui',
@@ -72,29 +25,62 @@ export default defineNuxtConfig({
       }
     ],
     ['@nuxtjs/sitemap', sitemapConfig],
-    '@nuxt/image-edge',
+    '@nuxt/image-edge'
   ],
 
-  /**
-   * ------------------------------------------
-   * 🧱 Components / Imports
-   * ------------------------------------------
-   */
+  image: {
+    dir: 'public',
+    provider: 'ipx',
+    domains: [
+      'picsum.photos',
+      'unsplash.com',
+      'images.unsplash.com',
+      'cdn.jsdelivr.net'
+    ],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536
+    },
+    format: ['webp', 'avif'],
+    quality: 80,
+    densities: [1, 2]
+  } as ImageModuleOptions,
+
+  nitro: {
+    routeRules: {
+      '/**': {
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'SAMEORIGIN',
+          'X-XSS-Protection': '1; mode=block',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+          'Content-Security-Policy': [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://accounts.google.com https://apis.google.com 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.googleapis.com",
+            "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://images.unsplash.com https://*.unsplash.com",
+            "font-src 'self' data: https: https://fonts.gstatic.com https://*.googleapis.com",
+            `connect-src 'self' ${env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000')} wss: https: http: https://*.google.com https://*.googleapis.com https://api.iconify.design`,
+            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.googletagmanager.com https://apis.google.com",
+            "frame-ancestors 'self' https://accounts.google.com",
+            "form-action 'self'",
+            "media-src 'self' https: http:",
+            "child-src 'self' blob:"
+          ].join('; ')
+        }
+      }
+    }
+  },
+
   components: [{ path: '~/components', pathPrefix: false }],
   imports: { dirs: ['stores', 'composables'] },
-
-  /**
-   * ------------------------------------------
-   * 🎨 Global Styles
-   * ------------------------------------------
-   */
   css: ['~/assets/css/main.css'],
 
-  /**
-   * ------------------------------------------
-   * 🌐 App Meta & SEO
-   * ------------------------------------------
-   */
   app: {
     baseURL: '/',
     buildAssetsDir: '/_nuxt/',
@@ -115,18 +101,11 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
-        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
         { rel: 'manifest', href: '/site.webmanifest' }
-      ],
-      script: []
+      ]
     }
   },
 
-  /**
-   * ------------------------------------------
-   * 🔐 Runtime Configuration
-   * ------------------------------------------
-   */
   runtimeConfig: {
     public: {
       apiBase: env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000'),
@@ -137,22 +116,5 @@ export default defineNuxtConfig({
     }
   },
 
-  /**
-   * ------------------------------------------
-   * 🗺️ Sitemap
-   * ------------------------------------------
-   */
-  sitemap: sitemapConfig,
-  image: {
-    dir: 'public', // where your images are stored
-    screens: {
-      sm: 320,
-      md: 640,
-      lg: 1024,
-      xl: 1280
-    },
-    format: ['webp'], // prefer modern image formats
-    quality: 100, // compression level
-    densities: [1, 2] // for retina displays
-  }
+  sitemap: sitemapConfig
 })
