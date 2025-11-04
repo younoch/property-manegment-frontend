@@ -65,12 +65,13 @@
           <NuxtImg 
             src="/hero-dashboard.webp" 
             alt="LeaseDirector dashboard interface showing property management features"
-            :width="1200"
-            :height="900"
+            width="1200"
+            height="900"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 800px"
             loading="eager"
             class="w-full h-auto"
             format="webp"
+            :provider="isProduction ? 'static' : 'ipx'"
             fetchpriority="high"
           />
         </div>
@@ -96,6 +97,10 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import RentalInvoice from '~/components/common/RentalInvoice.vue';
+
+const config = useRuntimeConfig()
+const isProduction = computed(() => process.client ? window.location.hostname !== 'localhost' : config.public.nodeEnv === 'production')
 </script>

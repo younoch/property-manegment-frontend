@@ -6,6 +6,31 @@ const env = (key: string, fallback = '') => process.env[key] || fallback
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // @ts-ignore - This is a valid configuration for @nuxt/image
+  image: {
+    provider: process.env.NODE_ENV === 'production' ? 'static' : 'ipx',
+    dir: 'public',
+    domains: [],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536
+    },
+    format: ['webp', 'avif'],
+    quality: 80,
+    densities: [1, 2],
+    inject: true,
+    ...(process.env.NODE_ENV === 'production' && {
+      static: {
+        baseURL: '/_nuxt/image',
+        dir: 'public'
+      }
+    })
+  },
+
   compatibilityDate: '2025-07-15',
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   srcDir: 'app',
@@ -28,27 +53,6 @@ export default defineNuxtConfig({
     '@nuxt/image'
   ],
 
-  // @ts-ignore - This is a valid configuration for @nuxt/image
-  image: {
-    dir: 'public',
-    provider: 'static',
-    domains: [],
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      '2xl': 1536
-    },
-    format: ['webp', 'avif'],
-    quality: 80,
-    densities: [1, 2],
-    inject: true,
-    presets: {},
-    alias: {},
-    providers: {}
-  },
 
   nitro: {
     routeRules: {
@@ -108,6 +112,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
+      nodeEnv: process.env.NODE_ENV || 'development',
       apiBase: env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000'),
       frontendDomain: env('NUXT_PUBLIC_FRONTEND_DOMAIN', 'leasedirector.com'),
       backendDomain: env('NUXT_PUBLIC_BACKEND_DOMAIN', 'api.leasedirector.com'),
