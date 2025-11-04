@@ -29,8 +29,8 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Content-Security-Policy': [
             "default-src 'self'",
-            // Allow GTM & Google APIs
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.google.com https://*.googleapis.com",
+            // Allow GTM & Google APIs - only from our plugin
+            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com 'nonce-${Date.now()}'",
             "style-src 'self' 'unsafe-inline' https://*.google.com https://*.googleapis.com https://fonts.googleapis.com",
             // Allow images from various sources
             "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://picsum.photos https://www.picsum.photos https://images.unsplash.com https://*.unsplash.com",
@@ -117,31 +117,8 @@ export default defineNuxtConfig({
         { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
         { rel: 'manifest', href: '/site.webmanifest' }
       ],
-      script: [
-        {
-          async: true,
-          src: `https://www.googletagmanager.com/gtag/js?id=${env('NUXT_PUBLIC_GTAG_ID')}`
-        },
-        {
-          id: 'gtag-inline',
-          innerHTML: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${env('NUXT_PUBLIC_GTAG_ID')}', { send_page_view: true });
-          `,
-          type: 'text/javascript'
-        }
-      ]
+      script: []
     }
-  },
-  /**
-   * ------------------------------------------
-   * ⚠️ Disable Sanitization for GTAG Inline Script
-   * ------------------------------------------
-   */
-  __dangerouslyDisableSanitizersByTagID: {
-    'gtag-inline': ['innerHTML']
   },
 
   /**
