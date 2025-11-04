@@ -135,7 +135,6 @@ export default defineNuxtConfig({
       ]
     }
   },
-
   /**
    * ------------------------------------------
    * ⚠️ Disable Sanitization for GTAG Inline Script
