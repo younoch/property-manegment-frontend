@@ -37,7 +37,7 @@ export function useGoogleSignIn() {
   };
 
   /** Render Google Sign-In button */
-  const renderButton = (element: HTMLElement, options: any = {}) => {
+  const renderGoogleButton = (element: HTMLElement, options: any = {}) => {
     if (!window.google?.accounts || !element) return;
     const defaultOptions = {
       type: 'standard',
@@ -51,7 +51,7 @@ export function useGoogleSignIn() {
   };
 
   /** Handle OAuth2 token flow */
-  const handleButtonClick = () => {
+  const handleGoogleButtonClick = () => {
     const clientId = config.public.googleClientId;
     if (!clientId) {
       toast.add({
@@ -128,16 +128,16 @@ export function useGoogleSignIn() {
     client.requestAccessToken();
   };
 
-  /** Initialize on mount */
   onMounted(() => {
     init();
+    if (googleButton.value) renderGoogleButton(googleButton.value);
   });
 
   return {
     googleButton,
     loadingGoogle,
     init,
-    renderButton,
-    handleButtonClick
+    renderGoogleButton,
+    handleGoogleButtonClick
   };
 }
