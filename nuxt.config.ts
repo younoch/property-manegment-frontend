@@ -1,10 +1,10 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { sitemapConfig } from './app/config/sitemap.config'
 import type { ModuleOptions } from '@nuxt/ui'
-import type { ImageModuleOptions } from '@nuxt/image-edge'
 
 const env = (key: string, fallback = '') => process.env[key] || fallback
 
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
@@ -25,18 +25,14 @@ export default defineNuxtConfig({
       }
     ],
     ['@nuxtjs/sitemap', sitemapConfig],
-    '@nuxt/image-edge'
+    '@nuxt/image'
   ],
 
+  // @ts-ignore - This is a valid configuration for @nuxt/image
   image: {
     dir: 'public',
     provider: 'ipx',
-    domains: [
-      'picsum.photos',
-      'unsplash.com',
-      'images.unsplash.com',
-      'cdn.jsdelivr.net'
-    ],
+    domains: [],
     screens: {
       xs: 320,
       sm: 640,
@@ -47,8 +43,12 @@ export default defineNuxtConfig({
     },
     format: ['webp', 'avif'],
     quality: 80,
-    densities: [1, 2]
-  } as ImageModuleOptions,
+    densities: [1, 2],
+    inject: true,
+    presets: {},
+    alias: {},
+    providers: {}
+  },
 
   nitro: {
     routeRules: {
