@@ -6,7 +6,7 @@ const env = (key: string, fallback = '') => process.env[key] || fallback
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  
+
   compatibilityDate: '2025-07-15',
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   srcDir: 'app',
@@ -31,23 +31,23 @@ export default defineNuxtConfig({
 
   // @ts-ignore - This is a valid configuration for @nuxt/image
   image: {
-  provider: 'ipx',
-  dir: 'public',
-  domains: ['picsum.photos'],
-  format: ['webp', 'avif'],
-  quality: 80,
-  screens: {
-    xs: 320,
-    sm: 640,
-    md: 768,
-    lg: 1024,
-    xl: 1280,
-    '2xl': 1536
-  },
-  ipx: {
-    maxAge: 60 * 60 * 24 * 365
+    provider: 'static',
+    dir: 'public',
+    domains: ['picsum.photos'],
+    format: ['webp', 'avif'],
+    quality: 80,
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      '2xl': 1536
+    },
+    ipx: {
+      maxAge: 60 * 60 * 24 * 365
+    }
   }
-}
 
 
   nitro: {
