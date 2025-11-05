@@ -4,9 +4,7 @@ import type { ModuleOptions } from '@nuxt/ui'
 
 const env = (key: string, fallback = '') => process.env[key] || fallback
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-
   compatibilityDate: '2025-07-15',
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   srcDir: 'app',
@@ -29,9 +27,10 @@ export default defineNuxtConfig({
     '@nuxt/image'
   ],
 
-  // @ts-ignore - This is a valid configuration for @nuxt/image
+  // Nuxt Image configuration
+  // Use 'ipx' for dev, 'static' for production (Vercel-friendly)
   image: {
-    provider: 'ipx',
+    provider: process.env.NODE_ENV === 'production' ? 'static' : 'ipx',
     dir: 'public',
     format: ['webp', 'avif'],
     quality: 80,
@@ -44,13 +43,16 @@ export default defineNuxtConfig({
       '2xl': 1536
     },
     ipx: {
+      dir: 'public', // ensure IPX finds public images locally
       maxAge: 60 * 60 * 24 * 365
     }
   },
+
   nitro: {
     preset: 'vercel',
     prerender: {
       crawlLinks: true,
+      // Only prerender pages that do NOT use IPX dynamic images
       routes: [
         '/',
         '/features',
@@ -60,7 +62,6 @@ export default defineNuxtConfig({
         '/privacy',
         '/terms',
         '/support',
-        '/app/auth/login',
         '/auth/signin',
         '/auth/signup',
         '/auth/forgot-password',
@@ -80,12 +81,12 @@ export default defineNuxtConfig({
       '/support': { prerender: true },
       '/auth/**': { prerender: true },
       '/sitemap.xml': { prerender: true },
-      
-      // Dynamic routes that should not be prerendered
+
+      // App pages or pages with IPX images should NOT be prerendered
       '/app/**': { prerender: false },
       '/system-monitor/**': { prerender: false },
-      
-      // Global headers for all routes
+
+      // Global security headers
       '/**': {
         headers: {
           'X-Content-Type-Options': 'nosniff',
