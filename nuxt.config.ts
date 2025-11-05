@@ -47,10 +47,46 @@ export default defineNuxtConfig({
       maxAge: 60 * 60 * 24 * 365
     }
   },
-
   nitro: {
     preset: 'vercel',
+    prerender: {
+      crawlLinks: true,
+      routes: [
+        '/',
+        '/features',
+        '/pricing',
+        '/about',
+        '/contact',
+        '/privacy',
+        '/terms',
+        '/support',
+        '/app/auth/login',
+        '/auth/signin',
+        '/auth/signup',
+        '/auth/forgot-password',
+        '/auth/reset-password',
+        '/sitemap.xml'
+      ]
+    },
     routeRules: {
+      // Public pages that are prerendered
+      '/': { prerender: true },
+      '/features': { prerender: true },
+      '/pricing': { prerender: true },
+      '/about': { prerender: true },
+      '/contact': { prerender: true },
+      '/privacy': { prerender: true },
+      '/terms': { prerender: true },
+      '/support': { prerender: true },
+      '/app/auth/login': { prerender: true },
+      '/auth/**': { prerender: true },
+      '/sitemap.xml': { prerender: true },
+      
+      // Dynamic routes that should not be prerendered
+      '/app/**': { prerender: false },
+      '/system-monitor/**': { prerender: false },
+      
+      // Global headers for all routes
       '/**': {
         headers: {
           'X-Content-Type-Options': 'nosniff',
