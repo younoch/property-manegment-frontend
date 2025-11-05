@@ -31,9 +31,8 @@ export default defineNuxtConfig({
 
   // @ts-ignore - This is a valid configuration for @nuxt/image
   image: {
-    provider: 'static',
+    provider: 'ipx',
     dir: 'public',
-    domains: ['picsum.photos'],
     format: ['webp', 'avif'],
     quality: 80,
     screens: {
@@ -50,6 +49,7 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    preset: 'vercel',
     routeRules: {
       '/**': {
         headers: {
