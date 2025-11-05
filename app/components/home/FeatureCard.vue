@@ -1,5 +1,5 @@
 <template>
-  <div class="group relative p-5 rounded-2xl bg-white/70 backdrop-blur border border-gray-200 shadow-sm hover:shadow-md transition">
+  <div role="listitem" class="group relative p-5 rounded-2xl bg-white/70 backdrop-blur border border-gray-200 shadow-sm hover:shadow-md transition">
     <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-50 to-transparent opacity-0 group-hover:opacity-100 transition"></div>
     <div class="relative flex items-start gap-3">
       <UIcon :name="icon" class="text-primary-600 mt-1" />
