@@ -40,10 +40,8 @@ export default defineNuxtConfig({
         '/privacy',
         '/terms',
         '/support',
-        '/auth/signin',
+        '/auth/login',
         '/auth/signup',
-        '/auth/forgot-password',
-        '/auth/reset-password',
         '/sitemap.xml'
       ]
     },

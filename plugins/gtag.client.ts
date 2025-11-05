@@ -60,12 +60,21 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   };
 
-  // Load GA script with low priority
+  // Load GA script after page load
   const loadGA = () => {
-    // Create script with fetchpriority=low
+    if (document.readyState === 'complete') {
+      initGA();
+    } else {
+      window.addEventListener('load', initGA, { once: true });
+    }
+  };
+
+  // Initialize GA4
+  const initGA = () => {
+    // Create script with defer and async
     const script = document.createElement('script');
     script.async = true;
-    script.fetchPriority = 'low';
+    script.defer = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${gtagId}`;
     
     script.onload = () => {
@@ -73,33 +82,26 @@ export default defineNuxtPlugin((nuxtApp) => {
         console.log('✅ Google Analytics initialized with ID:', gtagId);
       }
       
-      // Configure GA4 after a small delay to avoid blocking main thread
-      setTimeout(() => {
-        window.gtag('js', new Date());
-        window.gtag('config', gtagId, {
-          send_page_view: false, // We handle page views manually
-          transport_type: 'beacon',
-          allow_google_signals: false,
-          anonymize_ip: true,
-          debug_mode: process.env.NODE_ENV !== 'production'
-        });
+      // Configure GA4
+      window.gtag('js', new Date());
+      window.gtag('config', gtagId, {
+        send_page_view: false, // We handle page views manually
+        transport_type: 'beacon',
+        allow_google_signals: false,
+        anonymize_ip: true,
+        debug_mode: process.env.NODE_ENV !== 'production'
+      });
 
-        // Initial page view with a small delay
-        setTimeout(trackPageView, 100);
-      }, 0);
+      // Track initial page view
+      trackPageView();
     };
 
     // Add script to document
     document.head.appendChild(script);
   };
 
-  // Wait for the browser to be idle before loading GA
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(loadGA, { timeout: 2000 });
-  } else {
-    // Fallback: Load after a short delay
-    setTimeout(loadGA, 2000);
-  }
+  // Start loading GA after a short delay
+  setTimeout(loadGA, 0);
 
   // Track route changes
   nuxtApp.hook('page:finish', () => {
