@@ -60,7 +60,7 @@
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import type { PropType } from 'vue';
 import type { ChartOptions } from '~/types/dashboard';
-import { useGoogleCharts } from '~/composables/useGoogleCharts';
+import { useGoogleCharts } from '@/composables/useGoogleCharts';
 
 const props = defineProps({
   showChart: {

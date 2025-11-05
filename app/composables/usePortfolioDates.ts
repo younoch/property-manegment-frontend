@@ -1,67 +1,70 @@
-import { ref, computed } from 'vue'
-import { format, parseISO } from 'date-fns'
+import { usePortfolioStore } from '~/stores/portfolio'
+import { format, parseISO, formatInTimeZone } from 'date-fns-tz'
 
-export function usePortfolioDates() {
-  const formatDate = (date: string | Date, formatString = 'MMM d, yyyy'): string => {
+export const usePortfolioDates = () => {
+  const portfolioStore = usePortfolioStore()
+  
+  // Format a date in the portfolio's timezone
+  const formatDate = (date: Date | string | null | undefined, formatString = 'PPP', options = {}) => {
     if (!date) return ''
+    
+    const timeZone = portfolioStore.currentTimezone || 'UTC'
+    const dateObj = typeof date === 'string' ? new Date(date) : date
+    
     try {
-      const dateObj = typeof date === 'string' ? parseISO(date) : date
-      return format(dateObj, formatString)
+      return formatInTimeZone(dateObj, timeZone, formatString, {
+        timeZone,
+        ...options
+      })
     } catch (e) {
-      console.error('Error formatting date:', e)
-      return String(date)
+      return 'Invalid date'
     }
   }
-
-  const formatDateTime = (date: string | Date): string => {
-    return formatDate(date, 'MMM d, yyyy h:mm a')
+  
+  // Format a date range in the portfolio's timezone
+  const formatDateRange = (startDate: Date | string, endDate: Date | string, formatString = 'PPP', options = {}) => {
+    const start = formatDate(startDate, formatString, options)
+    const end = formatDate(endDate, formatString, options)
+    return `${start} - ${end}`
   }
-
-  const formatDateShort = (date: string | Date): string => {
-    return formatDate(date, 'MM/dd/yyyy')
+  
+  // Parse a date string in the portfolio's timezone
+  const parseDate = (dateString: string) => {
+    const timeZone = portfolioStore.currentTimezone || 'UTC'
+    return parseISO(dateString, { timeZone })
   }
-
-  const formatDateLong = (date: string | Date): string => {
-    return formatDate(date, 'EEEE, MMMM d, yyyy')
+  
+  // Get today's date in the portfolio's timezone
+  const getToday = () => {
+    const timeZone = portfolioStore.currentTimezone || 'UTC'
+    return formatInTimeZone(new Date(), timeZone, 'yyyy-MM-dd')
   }
-
-  const getCurrentDate = (): Date => {
-    return new Date()
+  
+  // Format a date for API submission (YYYY-MM-DD)
+  const formatForApi = (date: Date | string | null | undefined) => {
+    if (!date) return ''
+    return formatDate(date, 'yyyy-MM-dd')
   }
-
-  const addDays = (date: Date, days: number): Date => {
-    const result = new Date(date)
-    result.setDate(result.getDate() + days)
-    return result
+  
+  // Get the timezone abbreviation (e.g., 'EST', 'PST')
+  const getTimezoneAbbreviation = () => {
+    const timeZone = portfolioStore.currentTimezone || 'UTC'
+    try {
+      return new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' })
+        .formatToParts(new Date())
+        .find(part => part.type === 'timeZoneName')?.value || timeZone
+    } catch (e) {
+      return timeZone
+    }
   }
-
-  const isPast = (date: string | Date): boolean => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date
-    return dateObj < new Date()
-  }
-
-  const isFuture = (date: string | Date): boolean => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date
-    return dateObj > new Date()
-  }
-
-  const isToday = (date: string | Date): boolean => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date
-    const today = new Date()
-    return dateObj.toDateString() === today.toDateString()
-  }
-
+  
   return {
     formatDate,
-    formatDateTime,
-    formatDateShort,
-    formatDateLong,
-    getCurrentDate,
-    addDays,
-    isPast,
-    isFuture,
-    isToday
+    formatDateRange,
+    parseDate,
+    getToday,
+    formatForApi,
+    getTimezoneAbbreviation,
+    currentTimezone: portfolioStore.currentTimezone
   }
 }
-
-export default usePortfolioDates

@@ -1,7 +1,4 @@
 // composables/useThemeColor.ts
-import { useCookie } from '#imports'
-import { useAppConfig } from '#imports'
-
 export type ThemeKey =
   | 'black' | 'red' | 'orange' | 'amber' | 'yellow' | 'lime'
   | 'green' | 'emerald' | 'teal' | 'cyan' | 'sky' | 'blue'
@@ -30,43 +27,26 @@ export const THEME_OPTIONS: Record<ThemeKey, ThemeOption> = {
   teal:    { tailwind: 'teal',    cssVar: 'var(--color-teal-500)',    foreground: 'white', bgClass: 'bg-teal-500' },
   cyan:    { tailwind: 'cyan',    cssVar: 'var(--color-cyan-500)',    foreground: 'white', bgClass: 'bg-cyan-500' },
   sky:     { tailwind: 'sky',     cssVar: 'var(--color-sky-500)',     foreground: 'white', bgClass: 'bg-sky-500' },
+  blue:    { tailwind: 'blue',    cssVar: 'var(--color-blue-500)',    foreground: 'white', bgClass: 'bg-blue-500' },
   indigo:  { tailwind: 'indigo',  cssVar: 'var(--color-indigo-500)',  foreground: 'white', bgClass: 'bg-indigo-500' },
   violet:  { tailwind: 'violet',  cssVar: 'var(--color-violet-500)',  foreground: 'white', bgClass: 'bg-violet-500' },
   purple:  { tailwind: 'purple',  cssVar: 'var(--color-purple-500)',  foreground: 'white', bgClass: 'bg-purple-500' },
   fuchsia: { tailwind: 'fuchsia', cssVar: 'var(--color-fuchsia-500)', foreground: 'white', bgClass: 'bg-fuchsia-500' },
   pink:    { tailwind: 'pink',    cssVar: 'var(--color-pink-500)',    foreground: 'white', bgClass: 'bg-pink-500' },
-  rose:    { tailwind: 'rose',    cssVar: 'var(--color-rose-500)',    foreground: 'white', bgClass: 'bg-rose-500' },
-  blue:    { tailwind: 'blue',    cssVar: 'var(--color-blue-500)',    foreground: 'white', bgClass: 'bg-blue-500' }
-} as const
+  rose:    { tailwind: 'rose',    cssVar: 'var(--color-rose-500)',    foreground: 'white', bgClass: 'bg-rose-500' }
+}
 
-// Using cookie with 7-day expiration for theme persistence
+const STORAGE_KEY = 'ui.primary.theme'
 
 export function useThemeColor() {
-  const themeCookie = useCookie<ThemeKey>('theme-color', {
-    maxAge: 60 * 60 * 24 * 7, // 7 days in seconds
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/'
-  })
-
-  // Initialize state with cookie value or default
-  const current = useState<ThemeKey>('theme-color', () => {
-    // During SSR, use the cookie value if it exists and is valid
-    if (process.server && themeCookie.value && THEME_OPTIONS[themeCookie.value]) {
-      return themeCookie.value
-    }
-    return 'emerald' // Default theme
-  })
+  const current = useState<ThemeKey>('theme-color', () => 'emerald')
 
   function applyToDOM(key: ThemeKey) {
-    if (!process.client) return
-    
     const opt = THEME_OPTIONS[key]
-    if (!opt) return
-    
     const root = document.documentElement
     root.style.setProperty('--ui-primary', opt.cssVar)
-    
+    root.style.setProperty('--ui-primary-foreground', opt.foreground)
+
     // Keep Nuxt UI tokens aligned for components using color="primary"
     const cfg = useAppConfig()
     // @ts-expect-error runtime assignment is fine
@@ -80,28 +60,18 @@ export function useThemeColor() {
   function setTheme(key: ThemeKey) {
     current.value = key
     if (process.client) {
-      // Save to cookie with 7-day expiration
-      themeCookie.value = key
+      localStorage.setItem(STORAGE_KEY, key)
       applyToDOM(key)
     }
   }
 
   function initFromStorage() {
     if (!process.client) return
-    
-    // Get theme from cookie or use current state
-    const saved = themeCookie.value
-    const fallback = current.value || 'emerald'
+    const saved = localStorage.getItem(STORAGE_KEY) as ThemeKey | null
+    const fallback: ThemeKey = 'emerald'
     const key = (saved && THEME_OPTIONS[saved] ? saved : fallback) as ThemeKey
-    
-    // Only update if different from current
-    if (key !== current.value) {
-      current.value = key
-    }
-    
-    // Always apply to DOM and ensure cookie is set
+    current.value = key
     applyToDOM(key)
-    themeCookie.value = key
   }
 
   const keys = Object.keys(THEME_OPTIONS) as ThemeKey[]

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
-import { useGoogleCharts } from '~/composables/useGoogleCharts'
+import { useGoogleCharts } from '../../../composables/useGoogleCharts'
 
 type ChartType = 'LineChart' | 'ColumnChart' | 'BarChart' | 'PieChart' | 'Table' | 'ComboChart'
 

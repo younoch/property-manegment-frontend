@@ -1,93 +1,87 @@
 import { computed } from 'vue'
+import { usePortfolioStore } from '~/stores/portfolio'
 
-export function useMoney() {
-  const currency = 'BDT'
-  const locale = 'en-BD'
-
-  const formatMoney = (amount: number | string): string => {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
-    if (isNaN(numAmount)) return '৳0.00'
+export const useMoney = () => {
+  const portfolioStore = usePortfolioStore()
+  
+  // Format a number as currency
+  const formatCurrency = (amount: number | string | null | undefined, options: Intl.NumberFormatOptions = {}) => {
+    if (amount === null || amount === undefined) return ''
     
-    return new Intl.NumberFormat(locale, {
+    const value = typeof amount === 'string' ? parseFloat(amount) : amount
+    if (isNaN(value)) return 'Invalid amount'
+    
+    // Default options
+    const defaultOptions: Intl.NumberFormatOptions = {
       style: 'currency',
-      currency,
+      currency: 'USD',
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(numAmount).replace(/^\D+/, '৳')
-  }
-
-  const formatMoneyNoSymbol = (amount: number | string): string => {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
-    if (isNaN(numAmount)) return '0.00'
+      maximumFractionDigits: 2,
+      ...options
+    }
     
-    return new Intl.NumberFormat(locale, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(numAmount)
+    try {
+      return new Intl.NumberFormat('en-US', defaultOptions).format(value)
+    } catch (e) {
+      return value.toFixed(2)
+    }
   }
-
-  const formatMoneyRounded = (amount: number | string): string => {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount
-    if (isNaN(numAmount)) return '৳0'
+  
+  // Format a number as a percentage
+  const formatPercent = (value: number | string | null | undefined, decimals = 2) => {
+    if (value === null || value === undefined) return ''
     
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(Math.round(numAmount)).replace(/^\D+/, '৳')
+    const num = typeof value === 'string' ? parseFloat(value) : value
+    if (isNaN(num)) return 'Invalid percentage'
+    
+    return `${num.toFixed(decimals)}%`
   }
-
-  const parseMoney = (value: string): number => {
-    if (!value) return 0
-    // Remove all non-numeric characters except decimal point
-    const numericValue = value.replace(/[^0-9.]/g, '')
-    return parseFloat(numericValue) || 0
+  
+  // Calculate total from an array of items with amount property
+  const calculateTotal = (items: Array<{ amount: number | string } | number | string> | null | undefined): number => {
+    if (!items || !Array.isArray(items)) return 0
+    
+    return items.reduce<number>((sum: number, item) => {
+      let amount = 0
+      
+      if (typeof item === 'object' && item !== null && 'amount' in item) {
+        amount = typeof item.amount === 'string' ? parseFloat(item.amount) || 0 : item.amount || 0
+      } else if (typeof item === 'number') {
+        amount = item
+      } else if (typeof item === 'string') {
+        amount = parseFloat(item) || 0
+      }
+      
+      return sum + amount
+    }, 0)
   }
-
-  const add = (a: number, b: number): number => {
-    return Math.round((a + b) * 100) / 100
+  
+  // Format a number with a specific number of decimal places
+  const toFixed = (value: number | string | null | undefined, decimals = 2) => {
+    if (value === null || value === undefined) return ''
+    
+    const num = typeof value === 'string' ? parseFloat(value) : value
+    if (isNaN(num)) return '0.00'
+    
+    return num.toFixed(decimals)
   }
-
-  const subtract = (a: number, b: number): number => {
-    return Math.round((a - b) * 100) / 100
+  
+  // Check if a value is a valid monetary amount
+  const isValidAmount = (value: any): boolean => {
+    if (value === null || value === undefined) return false
+    if (typeof value === 'number') return !isNaN(value) && isFinite(value)
+    if (typeof value === 'string') {
+      const num = parseFloat(value)
+      return !isNaN(num) && isFinite(num)
+    }
+    return false
   }
-
-  const multiply = (a: number, b: number): number => {
-    return Math.round(a * b * 100) / 100
-  }
-
-  const divide = (a: number, b: number): number => {
-    if (b === 0) return 0
-    return Math.round((a / b) * 100) / 100
-  }
-
-  const isPositive = (amount: number): boolean => {
-    return amount > 0
-  }
-
-  const isNegative = (amount: number): boolean => {
-    return amount < 0
-  }
-
-  const isZero = (amount: number): boolean => {
-    return amount === 0
-  }
-
+  
   return {
-    currency,
-    formatMoney,
-    formatMoneyNoSymbol,
-    formatMoneyRounded,
-    parseMoney,
-    add,
-    subtract,
-    multiply,
-    divide,
-    isPositive,
-    isNegative,
-    isZero
+    formatCurrency,
+    formatPercent,
+    calculateTotal,
+    toFixed,
+    isValidAmount
   }
 }
-
-export default useMoney
