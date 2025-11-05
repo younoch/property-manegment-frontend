@@ -27,30 +27,30 @@
         <p class="mt-3 text-xs sm:text-sm text-gray-600">No credit card required · 1-minute signup · Works on mobile</p>
 
         <div class="mt-6 grid grid-cols-3 gap-3 max-w-md" role="list" aria-label="Sample property images">
-          <NuxtImg 
+          <img 
             src="/apartment-building-preview.webp" 
             alt="Modern apartment building with clean architecture"
-            :width="200"
+            width="200"
             :height="96"
             sizes="(max-width: 640px) 30vw, 200px"
             class="h-24 w-full object-cover rounded-xl border border-gray-200"
             format="webp"
             loading="lazy"
           />
-          <NuxtImg 
+          <img 
             src="/agreement-deal.webp" 
             alt="Business handshake closing a deal"
-            :width="200"
+            width="200"
             :height="96"
             sizes="(max-width: 640px) 30vw, 200px"
             class="h-24 w-full object-cover rounded-xl border border-gray-200"
             format="webp"
             loading="lazy"
           />
-          <NuxtImg 
+          <img 
             src="/whatsapp-notification.webp" 
             alt="Mobile phone showing WhatsApp rent payment notification"
-            :width="200"
+            width="200"
             :height="96"
             sizes="(max-width: 640px) 30vw, 200px"
             class="h-24 w-full object-cover rounded-xl border border-gray-200"
@@ -63,10 +63,10 @@
 
       <div class="relative">
         <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
-          <NuxtImg 
+          <img 
             src="/hero-dashboard.webp" 
             alt="LeaseDirector dashboard interface showing property management features"
-            :width="1200"
+            width="1200"
             :height="900"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 800px"
             loading="lazy"

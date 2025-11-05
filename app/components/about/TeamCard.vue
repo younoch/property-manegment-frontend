@@ -1,6 +1,6 @@
 <template>
   <div class='p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm'>
-    <NuxtImg 
+    <img 
       :src='img' 
       :alt='name'
       class='w-full h-44 object-cover rounded-xl border border-gray-200'

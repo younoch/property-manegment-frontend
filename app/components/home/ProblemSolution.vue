@@ -36,10 +36,10 @@
           <div class="pt-2">
             <div class="grid grid-cols-2 gap-3 sm:gap-4 max-w-md">
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                <NuxtImg 
+                <img 
                   src="/management-messy-spreadsheet.webp"
                   alt="Messy spreadsheets with property data"
-                  :width="400"
+                  width="400"
                   :height="300"
                   sizes="(max-width: 640px) 45vw, 200px"
                   class="w-full h-full object-cover"

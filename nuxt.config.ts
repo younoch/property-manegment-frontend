@@ -23,31 +23,8 @@ export default defineNuxtConfig({
         autoImports: ['defineStore', 'storeToRefs', 'acceptHMRUpdate']
       }
     ],
-    ['@nuxtjs/sitemap', sitemapConfig],
-    '@nuxt/image'
+    ['@nuxtjs/sitemap', sitemapConfig]
   ],
-
-  // Nuxt Image configuration
-  image: {
-    // Use IPX + Sharp in dev and prod
-    provider: 'ipx',
-    dir: 'public',
-    format: ['webp', 'avif'],
-    quality: 80,
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      '2xl': 1536
-    },
-    ipx: {
-      // Enable sharp for fast processing
-      sharp: {},
-      maxAge: 60 * 60 * 24 * 365
-    }
-  },
 
   nitro: {
     preset: 'vercel',
@@ -140,5 +117,6 @@ export default defineNuxtConfig({
     }
   },
 
+  // @ts-ignore - sitemap config is valid
   sitemap: sitemapConfig
 })

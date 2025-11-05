@@ -11,7 +11,7 @@
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
-          <NuxtImg 
+          <img 
             src="/reviewing-documents.webp" 
             alt="Small landlord reviewing property documents"
             class="h-full w-full object-cover"
@@ -21,7 +21,7 @@
           />
         </div>
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
-          <NuxtImg 
+          <img 
             src="/team-collabarating.webp" 
             alt="Team collaborating on property management"
             class="h-full w-full object-cover"
