@@ -6,54 +6,7 @@ const env = (key: string, fallback = '') => process.env[key] || fallback
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // @ts-ignore - This is a valid configuration for @nuxt/image
-  image: {
-    // Use 'ipx' in development and 'static' in production
-    provider: process.env.NODE_ENV === 'production' ? 'ipx' : 'ipx',
-    // Directory where your images are stored
-    dir: 'public',
-    // Domains for external images (if any)
-    domains: ['picsum.photos'],
-    // IPX configuration
-    ipx: {
-      maxAge: 60 * 60 * 24 * 365, // 1 year
-    },
-    // Screen sizes for responsive images
-    screens: {
-      xs: 320,
-      sm: 640,
-      md: 768,
-      lg: 1024,
-      xl: 1280,
-      '2xl': 1536
-    },
-    // Image formats to generate
-    format: ['webp', 'avif'],
-    // Image quality (0-100)
-    quality: 80,
-    // Device pixel ratios to generate
-    densities: [1, 2],
-    // Inject the image module
-    inject: true,
-    // Production-specific config
-    ...(process.env.NODE_ENV === 'production' && {
-      // Use static provider in production
-      static: {
-        // This is the base URL where your optimized images will be served from
-        baseURL: '/_nuxt/image',
-        // Directory where your source images are located
-        dir: 'public',
-        // Enable image optimization
-        sharp: {},
-        // Cache optimized images
-        cache: {
-          // Cache for 1 year
-          maxAge: 60 * 60 * 24 * 365
-        }
-      }
-    })
-  },
-
+  
   compatibilityDate: '2025-07-15',
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   srcDir: 'app',
@@ -75,6 +28,26 @@ export default defineNuxtConfig({
     ['@nuxtjs/sitemap', sitemapConfig],
     '@nuxt/image'
   ],
+
+  // @ts-ignore - This is a valid configuration for @nuxt/image
+  image: {
+  provider: 'ipx',
+  dir: 'public',
+  domains: ['picsum.photos'],
+  format: ['webp', 'avif'],
+  quality: 80,
+  screens: {
+    xs: 320,
+    sm: 640,
+    md: 768,
+    lg: 1024,
+    xl: 1280,
+    '2xl': 1536
+  },
+  ipx: {
+    maxAge: 60 * 60 * 24 * 365
+  }
+}
 
 
   nitro: {
