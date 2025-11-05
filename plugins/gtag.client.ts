@@ -29,42 +29,77 @@ export default defineNuxtPlugin((nuxtApp) => {
     window.dataLayer.push(arguments);
   };
 
-  // Add gtag script
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${gtagId}`;
-  
-  // Initialize GA with config
-  script.onload = () => {
-    console.log('✅ Google Analytics initialized with ID:', gtagId);
-    
-    // Configure GA4
-    window.gtag('js', new Date());
-    window.gtag('config', gtagId, {
-      send_page_view: false, // We'll handle page views manually
-      transport_type: 'beacon', // Use Beacon API for better reliability
-      allow_google_signals: false,
-      anonymize_ip: true,
-      debug_mode: process.env.NODE_ENV !== 'production'
-    });
-
-    // Initial page view
-    trackPageView();
-  };
-
-  // Track page views
+  // Track page views - defined first to be hoisted
   const trackPageView = () => {
     if (process.env.NODE_ENV !== 'production') {
       console.log('📊 Tracking page view:', window.location.pathname);
       return;
     }
     
-    window.gtag('event', 'page_view', {
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: window.location.pathname
-    });
+    // Use requestIdleCallback to avoid blocking main thread
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(
+        () => {
+          window.gtag('event', 'page_view', {
+            page_title: document.title,
+            page_location: window.location.href,
+            page_path: window.location.pathname
+          });
+        },
+        { timeout: 2000 } // Max wait time of 2s
+      );
+    } else {
+      // Fallback for browsers that don't support requestIdleCallback
+      setTimeout(() => {
+        window.gtag('event', 'page_view', {
+          page_title: document.title,
+          page_location: window.location.href,
+          page_path: window.location.pathname
+        });
+      }, 0);
+    }
   };
+
+  // Load GA script with low priority
+  const loadGA = () => {
+    // Create script with fetchpriority=low
+    const script = document.createElement('script');
+    script.async = true;
+    script.fetchPriority = 'low';
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${gtagId}`;
+    
+    script.onload = () => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ Google Analytics initialized with ID:', gtagId);
+      }
+      
+      // Configure GA4 after a small delay to avoid blocking main thread
+      setTimeout(() => {
+        window.gtag('js', new Date());
+        window.gtag('config', gtagId, {
+          send_page_view: false, // We handle page views manually
+          transport_type: 'beacon',
+          allow_google_signals: false,
+          anonymize_ip: true,
+          debug_mode: process.env.NODE_ENV !== 'production'
+        });
+
+        // Initial page view with a small delay
+        setTimeout(trackPageView, 100);
+      }, 0);
+    };
+
+    // Add script to document
+    document.head.appendChild(script);
+  };
+
+  // Wait for the browser to be idle before loading GA
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(loadGA, { timeout: 2000 });
+  } else {
+    // Fallback: Load after a short delay
+    setTimeout(loadGA, 2000);
+  }
 
   // Track route changes
   nuxtApp.hook('page:finish', () => {
