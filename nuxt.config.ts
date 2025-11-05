@@ -28,9 +28,9 @@ export default defineNuxtConfig({
   ],
 
   // Nuxt Image configuration
-  // Use 'ipx' for dev, 'static' for production (Vercel-friendly)
   image: {
-    provider: process.env.NODE_ENV === 'production' ? 'static' : 'ipx',
+    // Use IPX + Sharp in dev and prod
+    provider: 'ipx',
     dir: 'public',
     format: ['webp', 'avif'],
     quality: 80,
@@ -43,7 +43,8 @@ export default defineNuxtConfig({
       '2xl': 1536
     },
     ipx: {
-      dir: 'public', // ensure IPX finds public images locally
+      // Enable sharp for fast processing
+      sharp: {},
       maxAge: 60 * 60 * 24 * 365
     }
   },
@@ -52,8 +53,7 @@ export default defineNuxtConfig({
     preset: 'vercel',
     prerender: {
       crawlLinks: true,
-      failOnError: false, 
-      // Only prerender pages that do NOT use IPX dynamic images
+      failOnError: false, // prevent build failure from missing pages
       routes: [
         '/',
         '/features',
@@ -71,23 +71,10 @@ export default defineNuxtConfig({
       ]
     },
     routeRules: {
-      // Public pages that are prerendered
-      '/': { prerender: true },
-      '/features': { prerender: true },
-      '/pricing': { prerender: true },
-      '/about': { prerender: true },
-      '/contact': { prerender: true },
-      '/privacy': { prerender: true },
-      '/terms': { prerender: true },
-      '/support': { prerender: true },
-      '/auth/**': { prerender: true },
-      '/sitemap.xml': { prerender: true },
-
-      // App pages or pages with IPX images should NOT be prerendered
+      // Pages with dynamic IPX images should not be prerendered
       '/app/**': { prerender: false },
       '/system-monitor/**': { prerender: false },
-
-      // Global security headers
+      // Global headers for all routes
       '/**': {
         headers: {
           'X-Content-Type-Options': 'nosniff',
