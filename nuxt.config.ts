@@ -78,7 +78,6 @@ export default defineNuxtConfig({
       '/privacy': { prerender: true },
       '/terms': { prerender: true },
       '/support': { prerender: true },
-      '/app/auth/login': { prerender: true },
       '/auth/**': { prerender: true },
       '/sitemap.xml': { prerender: true },
       
