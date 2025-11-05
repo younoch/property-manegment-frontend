@@ -18,7 +18,6 @@
             loading="lazy"
             width="600"
             height="400"
-            format="webp"
           />
         </div>
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">

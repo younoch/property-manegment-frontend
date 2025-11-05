@@ -9,11 +9,15 @@ export default defineNuxtConfig({
   // @ts-ignore - This is a valid configuration for @nuxt/image
   image: {
     // Use 'ipx' in development and 'static' in production
-    provider: process.env.NODE_ENV === 'production' ? 'static' : 'ipx',
+    provider: process.env.NODE_ENV === 'production' ? 'ipx' : 'ipx',
     // Directory where your images are stored
     dir: 'public',
     // Domains for external images (if any)
-    domains: [],
+    domains: ['picsum.photos'],
+    // IPX configuration
+    ipx: {
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+    },
     // Screen sizes for responsive images
     screens: {
       xs: 320,
