@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   srcDir: 'app',
-
+  
   modules: [
     [
       '@nuxt/ui',
@@ -83,6 +83,11 @@ export default defineNuxtConfig({
     baseURL: '/',
     buildAssetsDir: '/_nuxt/',
     head: {
+      link: [
+        // Preconnect to Google Fonts domains
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' }
+      ],
       htmlAttrs: { lang: 'en' },
       title: 'LeaseDirector | Property Management for Small Landlords',
       meta: [
