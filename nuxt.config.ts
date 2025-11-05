@@ -96,10 +96,7 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
-        // Preconnect to Google Fonts domains
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
-        // Favicons and manifest
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
