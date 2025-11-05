@@ -52,6 +52,7 @@ export default defineNuxtConfig({
     preset: 'vercel',
     prerender: {
       crawlLinks: true,
+      failOnError: false, 
       // Only prerender pages that do NOT use IPX dynamic images
       routes: [
         '/',

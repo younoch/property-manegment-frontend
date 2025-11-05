@@ -141,7 +141,7 @@
             <p><strong>Email:</strong> privacy@leasedirector.app</p>
             <p><strong>Support:</strong> <NuxtLink to="/contact" class="text-primary-700 hover:underline">Contact form</NuxtLink></p>
             <p><strong>Legal & Terms:</strong> <NuxtLink to="/terms" class="text-primary-700 hover:underline">Terms of Service</NuxtLink></p>
-            <p><strong>Status:</strong> <NuxtLink to="/status" class="text-primary-700 hover:underline">Status page</NuxtLink></p>
+            <!-- <p><strong>Status:</strong> <NuxtLink to="/status" class="text-primary-700 hover:underline">Status page</NuxtLink></p> -->
           </div>
         </PolicySection>
 

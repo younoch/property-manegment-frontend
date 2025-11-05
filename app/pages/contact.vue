@@ -27,7 +27,7 @@
           <div class="p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
             <h3 class="font-semibold">Status</h3>
             <p class="text-sm text-gray-600">Uptime & incidents are posted on our status page.</p>
-            <UButton variant="soft" color="gray" class="mt-3" to="/status">View status</UButton>
+            <!-- <UButton variant="soft" color="gray" class="mt-3" to="/status">View status</UButton> -->
           </div>
         </div>
 
