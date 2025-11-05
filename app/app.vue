@@ -192,7 +192,7 @@ useHead({
             "@type": "Product",
             "name": "LeaseDirector Free Plan",
             "description": "Perfect for getting started — 1 property with up to 3 units. Basic property management, tenant & lease tracking, rent payment tracking, and email support (48h).",
-            "image": "https://www.leasedirector.com/images/LeaseDirector-free-plan.png",
+            "image": "https://www.leasedirector.com/LeaseDirector-free-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
@@ -224,7 +224,7 @@ useHead({
             "@type": "Product",
             "name": "LeaseDirector Early Bird Plan",
             "description": "Limited to first 100 adopters — includes all Pro features, up to 20 units, automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging, and priority email support (24h).",
-            "image": "https://www.leasedirector.com/images/LeaseDirector-early-bird-plan.png",
+            "image": "https://www.leasedirector.com/LeaseDirector-early-bird-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
@@ -256,7 +256,7 @@ useHead({
             "@type": "Product",
             "name": "LeaseDirector Pro Plan",
             "description": "For growing landlords with up to 20 units — includes automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging & ledger export, and priority email support (24h).",
-            "image": "https://www.leasedirector.com/images/LeaseDirector-pro-plan.png",
+            "image": "https://www.leasedirector.com/LeaseDirector-pro-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
@@ -288,7 +288,7 @@ useHead({
             "@type": "Product",
             "name": "LeaseDirector Business Plan",
             "description": "Unlimited units & advanced controls — multi-portfolio roles & permissions, advanced reports & exports, audit log & compliance tools, custom branding, and SLA support (8h).",
-            "image": "https://www.leasedirector.com/images/LeaseDirector-business-plan.png",
+            "image": "https://www.leasedirector.com/LeaseDirector-business-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
