@@ -59,20 +59,19 @@
           />
         </div>
       </div>
+      
 
       <div class="relative">
         <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
           <NuxtImg 
             src="/hero-dashboard.webp" 
             alt="LeaseDirector dashboard interface showing property management features"
-            width="1200"
-            height="900"
+            :width="1200"
+            :height="900"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 800px"
-            loading="eager"
+            loading="lazy"
             class="w-full h-auto"
             format="webp"
-            :provider="isProduction ? 'static' : 'ipx'"
-            fetchpriority="high"
           />
         </div>
         <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
@@ -98,9 +97,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import RentalInvoice from '~/components/common/RentalInvoice.vue';
 
-const config = useRuntimeConfig()
-const isProduction = computed(() => process.client ? window.location.hostname !== 'localhost' : config.public.nodeEnv === 'production')
 </script>

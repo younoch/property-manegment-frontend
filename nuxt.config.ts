@@ -8,9 +8,13 @@ const env = (key: string, fallback = '') => process.env[key] || fallback
 export default defineNuxtConfig({
   // @ts-ignore - This is a valid configuration for @nuxt/image
   image: {
+    // Use 'ipx' in development and 'static' in production
     provider: process.env.NODE_ENV === 'production' ? 'static' : 'ipx',
+    // Directory where your images are stored
     dir: 'public',
+    // Domains for external images (if any)
     domains: [],
+    // Screen sizes for responsive images
     screens: {
       xs: 320,
       sm: 640,
@@ -19,14 +23,29 @@ export default defineNuxtConfig({
       xl: 1280,
       '2xl': 1536
     },
+    // Image formats to generate
     format: ['webp', 'avif'],
+    // Image quality (0-100)
     quality: 80,
+    // Device pixel ratios to generate
     densities: [1, 2],
+    // Inject the image module
     inject: true,
+    // Production-specific config
     ...(process.env.NODE_ENV === 'production' && {
+      // Use static provider in production
       static: {
+        // This is the base URL where your optimized images will be served from
         baseURL: '/_nuxt/image',
-        dir: 'public'
+        // Directory where your source images are located
+        dir: 'public',
+        // Enable image optimization
+        sharp: {},
+        // Cache optimized images
+        cache: {
+          // Cache for 1 year
+          maxAge: 60 * 60 * 24 * 365
+        }
       }
     })
   },
@@ -65,16 +84,16 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Content-Security-Policy': [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://accounts.google.com https://apis.google.com 'unsafe-eval'",
+            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://accounts.google.com https://apis.google.com 'unsafe-eval'",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.googleapis.com",
-            "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://images.unsplash.com https://*.unsplash.com",
+            "img-src 'self' data: blob: https: http: https://*.google.com https://*.gstatic.com https://www.google.com https://www.google-analytics.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://images.unsplash.com https://*.unsplash.com",
             "font-src 'self' data: https: https://fonts.gstatic.com https://*.googleapis.com",
-            `connect-src 'self' ${env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000')} wss: https: http: https://*.google.com https://*.googleapis.com https://api.iconify.design`,
-            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.googletagmanager.com https://apis.google.com",
+            `connect-src 'self' ${env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000')} wss: https: http: https://*.google.com https://*.googleapis.com https://www.google-analytics.com https://*.google-analytics.com https://stats.g.doubleclick.net https://api.iconify.design`,
+            "frame-src 'self' https://accounts.google.com https://www.youtube.com https://www.googletagmanager.com https://apis.google.com https://www.google-analytics.com",
             "frame-ancestors 'self' https://accounts.google.com",
             "form-action 'self'",
             "media-src 'self' https: http:",
-            "child-src 'self' blob:"
+            "child-src 'self' blob: https://www.googletagmanager.com"
           ].join('; ')
         }
       }
