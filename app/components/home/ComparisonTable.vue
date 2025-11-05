@@ -10,42 +10,66 @@
       </p>
 
       <!-- Responsive Comparison Table -->
-      <div class="mt-12 overflow-x-auto">
-        <div class="bg-white/80 backdrop-blur border border-gray-200/70 rounded-2xl shadow-lg overflow-hidden">
+      <div class="mt-12 overflow-x-auto" role="region" aria-label="Feature comparison table">
+        <div class="bg-white/80 backdrop-blur border border-gray-200/70 rounded-2xl shadow-lg overflow-hidden" role="table" aria-label="Comparison between traditional spreadsheets and LeaseDirector">
           
           <!-- Table Header -->
-          <div role="rowgroup" class="grid grid-cols-1 md:grid-cols-3 gap-2 bg-gradient-to-r from-primary-50 to-gray-50">
-            <div role="columnheader" class="px-4 py-3 font-semibold text-gray-700">Feature</div>
-            <div role="columnheader" class="px-4 py-3 font-semibold text-center text-slate-700">
-              <span class="block text-sm font-normal text-slate-500">Traditional Approach</span>
-              Spreadsheets
-            </div>
-            <div role="columnheader" class="px-4 py-3 font-semibold text-center text-primary-700">
-              <span class="block text-sm font-normal text-primary-500">Modern Solution</span>
-              LeaseDirector
+          <div role="rowgroup" class="bg-gradient-to-r from-primary-50 to-gray-50">
+            <div role="row" class="grid grid-cols-1 md:grid-cols-3 gap-2">
+              <div role="columnheader" scope="col" class="px-4 py-3 font-semibold text-gray-700">
+                <span class="sr-only">Feature</span>
+              </div>
+              <div role="columnheader" scope="col" class="px-4 py-3 font-semibold text-center text-slate-700">
+                <span class="block text-sm font-normal text-slate-500">Traditional Approach</span>
+                <span>Spreadsheets</span>
+              </div>
+              <div role="columnheader" scope="col" class="px-4 py-3 font-semibold text-center text-primary-700">
+                <span class="block text-sm font-normal text-primary-500">Modern Solution</span>
+                <span>LeaseDirector</span>
+              </div>
             </div>
           </div>
 
-          <!-- Table Rows -->
-          <div v-for="(row, index) in comparisonData" :key="index"
+          <!-- Table Body -->
+          <div role="rowgroup">
+            <div 
+              v-for="(row, index) in comparisonData" 
+              :key="index"
+              role="row"
               class="grid grid-cols-1 md:grid-cols-3 border-t border-gray-100"
-              :class="{ 'bg-gray-50/50': index % 2 === 0 }">
-            
-            <!-- Feature Name -->
-            <div class="px-4 py-3 font-medium text-gray-800 border-b md:border-b-0">
-              {{ row.feature }}
-            </div>
-            
-            <!-- Spreadsheets Column -->
-            <div class="px-4 py-3 flex items-start" :class="row.spreadsheetsClass || 'text-slate-600'">
-              <span class="mr-2">{{ row.spreadsheetsBadge || '•' }}</span>
-              <span>{{ row.spreadsheets }}</span>
-            </div>
-            
-            <!-- LeaseDirector Column -->
-            <div class="px-4 py-3 flex items-start" :class="row.leasedirectorClass || 'text-gray-700'">
-              <span class="mr-2">{{ row.leasedirectorBadge || '•' }}</span>
-              <span>{{ row.leasedirector }}</span>
+              :class="{ 'bg-gray-50/50': index % 2 === 0 }"
+            >
+              <!-- Feature Name -->
+              <div 
+                role="rowheader" 
+                scope="row"
+                class="px-4 py-3 font-medium text-gray-800 border-b md:border-b-0"
+                :id="'feature-' + kebabCase(row.feature)"
+              >
+                {{ row.feature }}
+              </div>
+              
+              <!-- Spreadsheets Column -->
+              <div 
+                role="cell" 
+                class="px-4 py-3 flex items-start" 
+                :class="row.spreadsheetsClass || 'text-slate-600'"
+                :aria-labelledby="'feature-' + kebabCase(row.feature) + ' spreadsheets-col'"
+              >
+                <span class="mr-2">{{ row.spreadsheetsBadge || '•' }}</span>
+                <span>{{ row.spreadsheets }}</span>
+              </div>
+              
+              <!-- LeaseDirector Column -->
+              <div 
+                role="cell" 
+                class="px-4 py-3 flex items-start" 
+                :class="row.leasedirectorClass || 'text-gray-700'"
+                :aria-labelledby="'feature-' + kebabCase(row.feature) + ' leasedirector-col'"
+              >
+                <span class="mr-2">{{ row.leasedirectorBadge || '•' }}</span>
+                <span>{{ row.leasedirector }}</span>
+              </div>
             </div>
           </div>
 
@@ -56,6 +80,14 @@
 </template>
 
 <script setup lang="ts">
+// Helper function to convert text to kebab-case for IDs
+const kebabCase = (str: string) => {
+  return str.toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-')       // Replace spaces with -
+    .replace(/--+/g, '-')       // Replace multiple - with single -
+    .trim();
+};
 const comparisonData = [
   {
     feature: 'Ease of Setup',

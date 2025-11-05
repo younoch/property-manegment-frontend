@@ -292,7 +292,7 @@ useHead({
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
-              "price": "25",
+              "price": "30",
               "priceCurrency": "USD",
               "priceValidUntil": "2026-12-31",
               "availability": "https://schema.org/PreOrder",
