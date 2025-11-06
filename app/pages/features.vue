@@ -163,10 +163,10 @@ onMounted(() => {
     <section id="pricing" class="py-6 md:py-12 bg-gray-50 scroll-mt-20">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12 scroll-animate">
-          <p class="inline-flex items-center gap-2 text-[11px] sm:text-sm uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60 mb-2 md:mb-4">
+          <h2 class="inline-flex items-center gap-2 text-[11px] sm:text-sm uppercase tracking-wider text-primary-700 font-semibold bg-primary-50 rounded-full px-3 py-1 shadow-sm ring-1 ring-primary-200/60 mb-2 md:mb-4">
           Comprehensive Solutions
-        </p>
-          <h2 class="text-3xl md:text-4xl font-bold mb-4">Everything You Need to Grow Your Property Portfolio</h2>
+        </h2>
+          <h1 class="text-3xl md:text-4xl font-bold mb-4">Everything You Need to Grow Your Property Portfolio</h1>
           <p class="text-gray-600 max-w-3xl mx-auto text-lg">LeaseDirector combines powerful tools with an intuitive interface to help you manage properties efficiently, reduce administrative work, and improve tenant satisfaction.</p>
           <div class="mt-6 flex flex-wrap justify-center gap-4">
             <div class="flex items-center text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-full">

@@ -13,11 +13,13 @@
 
     <!-- Footer -->
     <footer class="bg-gray-50 border-t border-gray-100">
+      <!-- Cookie Consent Banner -->
+      <CookieConsent />
       <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div class="col-span-2 md:col-span-1">
-            <h3 class="font-bold text-gray-900 mb-4">LeaseDirector</h3>
-            <p class="text-sm text-gray-600">Smart property Management made easy for small landlords and property managers.</p>
+            <h3 class="font-extrabold text-primary-600 mb-4">LeaseDirector</h3>
+            <h3 class="text-sm text-gray-600">Smart property Management made easy for small landlords and property managers.</h3>
           </div>
           <div>
             <h4 class="font-semibold text-gray-900 mb-4">Product</h4>
@@ -68,8 +70,10 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import CookieConsent from '~/components/common/CookieConsent.vue';
+
 // Theme is initialized in the theme-init.client.ts plugin
-const route = useRoute()
+const route = useRoute();
 </script>
 
 <style scoped>

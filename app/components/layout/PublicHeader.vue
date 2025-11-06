@@ -5,7 +5,7 @@
         <!-- Mobile menu button -->
         <div class="flex items-center">
             <Logo class="mr-2" />
-          <NuxtLink to="/" class="text-xl font-bold text-primary-600">LeaseDirector</NuxtLink>
+          <NuxtLink to="/" class="text-xl font-extrabold text-primary-600 font-inter">LeaseDirector</NuxtLink>
         </div>
         
         <!-- Desktop Navigation -->
