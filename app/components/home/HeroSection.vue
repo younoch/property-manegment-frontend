@@ -29,7 +29,8 @@
       
 
       <div class="relative">
-        <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
+        <!-- Hidden on mobile, visible from md breakpoint -->
+        <div class="hidden md:block rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
           <img 
             src="/hero-dashboard.webp" 
             alt="LeaseDirector dashboard interface showing property management features"
@@ -42,6 +43,35 @@
             class="w-full h-auto"
             format="webp"
           />
+        </div>
+        
+        <!-- Mobile invoice with label -->
+        <div class="md:hidden mt-4">
+          <div class="border border-gray-200 rounded-lg p-2 bg-white/80">
+            <RentalInvoice
+              aria-labelledby="sample-property-invoice"
+              style="zoom: 0.3;"
+              invoiceNumber="LD-INV-0021"
+              invoiceDate="Oct 23, 2025"
+              :tenant="{ name: 'John Doe', address: '123 Elm Street', city: 'San Francisco, CA', email: 'john@example.com' }"
+              :property="{ name: 'Parkview Apartments', unit: '#2B', period: 'Oct 1 - Oct 31, 2025', dueDate: 'Nov 5, 2025' }"
+              :items="[
+                { description: 'Monthly Rent', qty: 1, rate: 1200 },
+                { description: 'Maintenance Fee', qty: 1, rate: 50 },
+                { description: 'Late Fee', qty: 1, rate: 100 },
+              ]"
+              :taxRate="0"
+              :payment="{ bankName: 'LeaseDirector LLC', bank: 'Wells Fargo Bank', account: '123-456-789', swift: 'WFBIUS6S' }"
+            />
+            <div class="mt-2 text-center">
+              <span class="inline-flex items-center gap-1.5 bg-primary-50/50 text-primary-600 text-[10px] font-medium px-2.5 py-1 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clip-rule="evenodd" />
+                </svg>
+                Sample Rental Invoice
+              </span>
+            </div>
+          </div>
         </div>
         <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
           <RentalInvoice
