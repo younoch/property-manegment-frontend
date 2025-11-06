@@ -100,8 +100,8 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
-        { rel: 'manifest', href: '/site.webmanifest' }
-      ]
+        { rel: 'manifest', href: '/site.webmanifest' },
+        { rel: 'preload', as: 'style', href: '/_nuxt/entry.css', onload: "this.rel='stylesheet'" },      ]
     }
   },
 
