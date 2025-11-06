@@ -35,13 +35,10 @@
             <img 
               src="/hero-dashboard.webp" 
               alt="LeaseDirector dashboard interface showing property management features"
-              width="1200"
-              height="900"
               loading="eager"
               fetchpriority="high"
               decoding="async"
               class="absolute top-0 left-0 w-full h-full object-contain"
-              style="aspect-ratio: 1200/900"
             />
           </div>
         </div>
