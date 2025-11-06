@@ -1,17 +1,3 @@
-// Suppress GA/GTM CORS warnings in console
-if (process.client) {
-  const originalConsoleError = console.error;
-  console.error = function() {
-    const args = Array.from(arguments);
-    const message = args[0]?.message || args[0] || '';
-    if (typeof message === 'string' && 
-        (message.includes('google-analytics.com') || 
-         message.includes('googletagmanager.com'))) {
-      return;
-    }
-    originalConsoleError.apply(console, args);
-  };
-}
 
 export default defineNuxtPlugin((nuxtApp: any) => {
   if (process.client) {
