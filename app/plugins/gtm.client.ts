@@ -42,7 +42,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
         script.onload = () => {
           setTimeout(() => {
             window.gtag('event', 'page_view');
-          }, 100);
+          }, 10);
         };
       };
       
@@ -51,7 +51,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       } else {
         const delay = window.requestAnimationFrame ? 
           window.requestAnimationFrame(loadScript) : 
-          setTimeout(loadScript, 1000);
+          setTimeout(loadScript, 100);
       }
       
       const iframe = document.createElement('iframe');
@@ -68,7 +68,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       document.removeEventListener('DOMContentLoaded', loadOnInteraction);
       window.removeEventListener('load', loadOnInteraction);
       
-      setTimeout(loadGTM, 1000);
+      setTimeout(loadGTM, 100);
     };
 
     if (document.readyState === 'complete') {
