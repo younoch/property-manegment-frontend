@@ -24,7 +24,7 @@
             <p class="text-xs text-gray-600">
               We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic.
               <span class="block sm:inline">By clicking "Accept All", you consent to our use of cookies. </span>
-              <NuxtLink to="/privacy" class="text-primary-600 hover:underline whitespace-nowrap">Cookie Policy</NuxtLink>
+              <NuxtLink to="/privacy" class="text-primary-700 hover:text-primary-800 font-medium underline underline-offset-2 decoration-2 decoration-primary-600 hover:decoration-primary-800 transition-colors whitespace-nowrap">Cookie Policy</NuxtLink>
             </p>
           </div>
           <div class="flex flex-row justify-end sm:justify-center gap-2 flex-shrink-0 mt-2 sm:mt-0">
