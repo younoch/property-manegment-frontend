@@ -1,5 +1,5 @@
 <template>
-  <div class="group relative p-5 sm:p-6 rounded-xl bg-white/80 backdrop-blur-md border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden text-center">
+  <div class="group relative p-3 sm:p-4 md:p-5 lg:p-6 rounded-xl bg-white/80 backdrop-blur-md border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden text-center">
     <!-- Animated background highlight on hover -->
     <div class="absolute inset-0 bg-gradient-to-br from-primary-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     
@@ -8,10 +8,10 @@
     
     <!-- Content -->
     <div class="relative z-10">
-      <p class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary-600 to-teal-600 bg-clip-text text-transparent">
+      <p class="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-600 to-teal-600 bg-clip-text text-transparent">
         {{ value }}
       </p>
-      <p class="mt-2 text-sm sm:text-base font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
+      <p class="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
         {{ label }}
       </p>
     </div>

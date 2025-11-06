@@ -14,7 +14,7 @@
       <section class="py-4 md:py-8 bg-white/50 backdrop-blur-sm mb-4 md:mb-12">
         <div class="container mx-auto px-4 sm:px-6">
           <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-900">Why Property Managers Choose Us</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             <StatCard 
               value="99.9%" 
               label="System Uptime"
@@ -31,8 +31,6 @@
               value="1000+" 
               label="Properties Managed"
             />
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-4 sm:mt-6">
             <StatCard 
               value="Auto" 
               label="Rent Collection"
