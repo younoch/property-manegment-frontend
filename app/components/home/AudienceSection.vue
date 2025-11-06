@@ -9,6 +9,17 @@
           <li class="flex gap-3"><UIcon name="i-heroicons-queue-list" class="text-primary-600 mt-0.5"/> Teams that require an audit trail and clear roles</li>
         </ul>
       </div>
+        <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
+          <img 
+            src="/apartment-building-preview.webp" 
+            alt="Apartment building preview"
+            class="h-full w-full object-cover"
+            loading="lazy"
+            width="600"
+            height="400"
+            format="webp"
+          />
+        </div>
       <div class="grid grid-cols-2 gap-3">
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
           <img 
@@ -33,18 +44,13 @@
         </div>
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
           <img 
-            src="https://picsum.photos/1600/900?random=19" 
-            alt="Organized property invoices and documents"
+            src="/whatsapp-notification.webp" 
+            alt="WhatsApp notifications for property management"
             class="h-full w-full object-cover"
             loading="lazy"
-          />
-        </div>
-        <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
-          <img 
-            src="https://picsum.photos/1600/900?random=20" 
-            alt="Secure online payment processing"
-            class="h-full w-full object-cover"
-            loading="lazy"
+            width="600"
+            height="400"
+            format="webp"
           />
         </div>
       </div>
