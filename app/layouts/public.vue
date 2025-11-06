@@ -13,8 +13,14 @@
 
     <!-- Footer -->
     <footer class="bg-gray-50 border-t border-gray-100">
-      <!-- Cookie Consent Banner -->
-      <CookieConsent />
+      <!-- Cookie Consent Banner (loaded only on client side) -->
+      <ClientOnly>
+        <template #fallback>
+          <!-- Show nothing during SSR/SSG -->
+          <div></div>
+        </template>
+        <CookieConsent />
+      </ClientOnly>
       <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div class="col-span-2 md:col-span-1">
