@@ -9,6 +9,8 @@
           <li class="flex gap-3"><UIcon name="i-heroicons-queue-list" class="text-primary-600 mt-0.5"/> Teams that require an audit trail and clear roles</li>
         </ul>
       </div>
+        
+      <div class="grid grid-cols-2 gap-3">
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
           <img 
             src="/apartment-building-preview.webp" 
@@ -20,7 +22,6 @@
             format="webp"
           />
         </div>
-      <div class="grid grid-cols-2 gap-3">
         <div class="aspect-video overflow-hidden rounded-xl border border-gray-200">
           <img 
             src="/reviewing-documents.webp" 
