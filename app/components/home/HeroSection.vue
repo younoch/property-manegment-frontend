@@ -31,18 +31,19 @@
       <div class="relative">
         <!-- Hidden on mobile, visible from md breakpoint -->
         <div class="hidden md:block rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
-          <img 
-            src="/hero-dashboard.webp" 
-            alt="LeaseDirector dashboard interface showing property management features"
-            width="1200"
-            height="900"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 800px"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            class="w-full h-auto"
-            format="webp"
-          />
+          <div class="relative pb-[75%] w-full">
+            <img 
+              src="/hero-dashboard.webp" 
+              alt="LeaseDirector dashboard interface showing property management features"
+              width="1200"
+              height="900"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="absolute top-0 left-0 w-full h-full object-contain"
+              style="aspect-ratio: 1200/900"
+            />
+          </div>
         </div>
         
         <!-- Mobile invoice with label -->

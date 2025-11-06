@@ -38,7 +38,8 @@
             color="gray" 
             icon="i-heroicons-bars-3"
             :ui="{ rounded: 'rounded-full' }" 
-            @click="isDrawer = true" 
+            @click="isDrawer = true"
+            aria-label="Open navigation menu"
           />
         </div>
         
