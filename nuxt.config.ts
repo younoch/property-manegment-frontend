@@ -12,11 +12,11 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        // { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-regular.woff2', crossorigin: 'anonymous' },
-        // { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-500.woff2', crossorigin: 'anonymous' },
-        // { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-600.woff2', crossorigin: 'anonymous' },
-        // { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-700.woff2', crossorigin: 'anonymous' },
-        // { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-800.woff2', crossorigin: 'anonymous' }
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-500.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-600.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-700.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-800.woff2', crossorigin: 'anonymous' }
       ]
     }
   },
@@ -108,8 +108,8 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
-        // { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-regular.woff2', crossorigin: 'anonymous' },
-        // { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
 
