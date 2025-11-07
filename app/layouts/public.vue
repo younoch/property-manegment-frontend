@@ -76,15 +76,42 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const showCookieConsent = ref(false)
+const hasInteracted = ref(false)
+
+const handleUserInteraction = () => {
+  if (!hasInteracted.value) {
+    hasInteracted.value = true
+    showCookieConsent.value = true
+    // Remove event listeners after first interaction
+    window.removeEventListener('click', handleUserInteraction)
+    window.removeEventListener('scroll', handleUserInteraction, { passive: true })
+  }
+}
 
 onMounted(() => {
-  // Load cookie consent after page is fully loaded
-  setTimeout(() => {
-    showCookieConsent.value = true
-  }, 1000) // 1 second delay after page load
+  // Only add event listeners if cookie consent hasn't been shown yet
+  if (!hasInteracted.value) {
+    // Use passive: true for better scroll performance
+    window.addEventListener('click', handleUserInteraction, { passive: true })
+    window.addEventListener('scroll', handleUserInteraction, { passive: true })
+    
+    // Optional: Show after 30 seconds if no interaction
+    const timeout = setTimeout(() => {
+      if (!hasInteracted.value) {
+        showCookieConsent.value = true
+        hasInteracted.value = true
+        // Clean up event listeners
+        window.removeEventListener('click', handleUserInteraction)
+        window.removeEventListener('scroll', handleUserInteraction, { passive: true })
+      }
+    }, 30000)
+    
+    // Clean up the timeout if component is unmounted
+    return () => clearTimeout(timeout)
+  }
 })
 
 const route = useRoute();
