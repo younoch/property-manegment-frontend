@@ -13,13 +13,13 @@
 
     <!-- Footer -->
     <footer class="bg-gray-50 border-t border-gray-100">
-      <!-- Cookie Consent Banner (loaded only on client side) -->
+      <!-- Cookie Consent Banner (loaded after page load) -->
       <ClientOnly>
         <template #fallback>
           <!-- Show nothing during SSR/SSG -->
           <div></div>
         </template>
-        <CookieConsent />
+        <LazyCookieConsent v-if="showCookieConsent" />
       </ClientOnly>
       <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -76,9 +76,18 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue';
 import CookieConsent from '~/components/common/CookieConsent.vue';
 
-// Theme is initialized in the theme-init.client.ts plugin
+const showCookieConsent = ref(false)
+
+onMounted(() => {
+  // Load cookie consent after page is fully loaded
+  setTimeout(() => {
+    showCookieConsent.value = true
+  }, 1000) // 1 second delay after page load
+})
+
 const route = useRoute();
 </script>
 
