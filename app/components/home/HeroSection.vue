@@ -97,13 +97,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import RentalInvoice from '~/components/common/RentalInvoice.vue';
 
 const windowWidth = ref(0)
 
-onMounted(() => {
-  windowWidth.value = window.innerWidth
+onBeforeMount(() => {
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth
+  } else {
+    // Default to mobile-first approach if window is not available (SSR)
+    windowWidth.value = 0
+  }
 })
 
 </script>
