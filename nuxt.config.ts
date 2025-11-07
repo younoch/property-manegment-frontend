@@ -9,6 +9,18 @@ export default defineNuxtConfig({
   devtools: { enabled: process.env.NODE_ENV !== 'production' },
   srcDir: 'app',
 
+  app: {
+    head: {
+      link: [
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-regular.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-500.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-600.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-700.woff2', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-800.woff2', crossorigin: 'anonymous' }
+      ]
+    }
+  },
+
   modules: [
     [
       '@nuxt/ui',
@@ -96,23 +108,7 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' }
       ],
       link: [
-        // ✅ Optimize Google Fonts
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        {
-          rel: 'preload',
-          as: 'style',
-          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
-        },
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-          media: 'print',
-          onload: "this.media='all'"
-        },
-
-        // ✅ Your existing icons
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/inter-v20-latin-regular.woff2', crossorigin: 'anonymous' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
