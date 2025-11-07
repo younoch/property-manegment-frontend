@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const showCookieConsent = ref(false)
 const hasInteracted = ref(false)

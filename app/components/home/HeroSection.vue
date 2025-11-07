@@ -30,7 +30,7 @@
 
       <div class="relative">
         <!-- Hidden on mobile, visible from md breakpoint -->
-        <div class="hidden md:block rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur">
+        <div class="rounded-2xl border border-gray-200/70 shadow-xl overflow-hidden bg-white/70 backdrop-blur" v-if="windowWidth > 768">
           <div class="relative pb-[75%] w-full">
             <img 
               src="/hero-dashboard.webp" 
@@ -97,6 +97,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import RentalInvoice from '~/components/common/RentalInvoice.vue';
+
+const windowWidth = ref(0)
+
+onMounted(() => {
+  windowWidth.value = window.innerWidth
+})
 
 </script>
