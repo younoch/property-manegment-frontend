@@ -96,6 +96,7 @@
   </section>
 </template>
 
+
 <script setup lang="ts">
 import RentalInvoice from '~/components/common/RentalInvoice.vue';
 
