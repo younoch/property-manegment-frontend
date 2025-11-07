@@ -101,8 +101,12 @@ import RentalInvoice from '~/components/common/RentalInvoice.vue';
 
 const windowWidth = ref(0)
 
-if (process.client) {
-  windowWidth.value = window.innerWidth
-}
+onBeforeMount(() => {
+  if (typeof window !== 'undefined') {
+    windowWidth.value = window.innerWidth
+  } else {
+    windowWidth.value = 0
+  }
+})
 
 </script>
