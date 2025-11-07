@@ -61,6 +61,14 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 
+const cookieConsent = useCookie('cookieConsent', {
+  maxAge: 60 * 60 * 24 * 365, // 1 year
+  sameSite: 'lax', // or 'strict' for better security if your site allows it
+  secure: process.env.NODE_ENV === 'production',
+  httpOnly: false, // Needs to be accessible via client-side JS
+  path: '/'
+});
+
 const consentGiven = ref(true);
 const isMounted = ref(false);
 const isLoading = ref(null);
@@ -74,44 +82,41 @@ onMounted(() => {
   isMounted.value = true;
   nextTick(() => {
     if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-    requestIdleCallback(checkConsent, { timeout: 2000 });
-  } else {
-    setTimeout(checkConsent, 500);
-  }
+      requestIdleCallback(checkConsent, { timeout: 2000 });
+    } else {
+      setTimeout(checkConsent, 500);
+    }
   });
 });
 
 const checkConsent = () => {
-  if (process.client) {
-    consentGiven.value = !!localStorage.getItem('cookieConsent');
-  }
+  consentGiven.value = !!cookieConsent.value;
 };
 
 const setConsent = async (type) => {
-  if (process.client) {
-    try {
-      isLoading.value = type === 'all' ? 'all' : 'necessary';
-      
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      localStorage.setItem('cookieConsent', type);
-      
-      if (type === 'accepted') {
-        requestIdleCallback(() => {
-          console.log('All cookies accepted');
-        });
-      } else {
-        console.log('Only necessary cookies accepted');
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 150));
-      
-      consentGiven.value = true;
-    } catch (error) {
-      console.error('Error setting cookie consent:', error);
-    } finally {
-      isLoading.value = null;
+  try {
+    isLoading.value = type === 'all' ? 'all' : 'necessary';
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Update the cookie
+    cookieConsent.value = type;
+    
+    if (type === 'accepted') {
+      requestIdleCallback(() => {
+        console.log('All cookies accepted');
+      });
+    } else {
+      console.log('Only necessary cookies accepted');
     }
+    
+    await new Promise(resolve => setTimeout(resolve, 150));
+    
+    consentGiven.value = true;
+  } catch (error) {
+    console.error('Error setting cookie consent:', error);
+  } finally {
+    isLoading.value = null;
   }
 };
 
