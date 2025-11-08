@@ -51,7 +51,7 @@
           <div class="border border-gray-200 rounded-lg p-2 bg-white/80">
             <RentalInvoice
               aria-labelledby="sample-property-invoice"
-              style="zoom: 0.31;"
+              style="zoom: 0.38;"
               invoiceNumber="LD-INV-0021"
               invoiceDate="Oct 23, 2025"
               :tenant="{ name: 'John Doe', address: '123 Elm Street', city: 'San Francisco, CA', email: 'john@example.com' }"

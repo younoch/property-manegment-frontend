@@ -15,7 +15,7 @@ export default {
     },
   },
   corePlugins: {
-    preflight: false, // disable reset if you manage your own
+    preflight: false,
     float: false,
     objectFit: false,
     divideWidth: false,
