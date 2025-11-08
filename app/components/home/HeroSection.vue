@@ -77,7 +77,7 @@
         <div class="absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float" v-if="windowWidth > 768">
           <RentalInvoice
             aria-labelledby="sample-property-invoice"
-            style="zoom: 0.32;"
+            style="zoom: 0.35;"
             invoiceNumber="LD-INV-0021"
             invoiceDate="Oct 23, 2025"
             :tenant="{ name: 'John Doe', address: '123 Elm Street', city: 'San Francisco, CA', email: 'john@example.com' }"
