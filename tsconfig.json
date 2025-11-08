@@ -14,7 +14,7 @@
     "allowImportingTsExtensions": true,
 
     // Important: add Nuxt/Vue/Node/GTM types so globals work in editor
-    "types": ["@nuxt/schema", "@nuxt/schema/nuxt", "@types/node", "nuxt", "vue", "./app/types/gtag", "@nuxt/image"],
+    "types": ["@nuxt/schema", "@nuxt/schema/nuxt", "@types/node", "nuxt", "vue", "./app/types/gtag"],
 
     // Map Nuxt-generated type paths
     "paths": {
