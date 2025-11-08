@@ -47,7 +47,7 @@
         </div>
         
         <!-- Mobile invoice with label -->
-        <div class="md:hidden mt-4">
+        <div class="mt-4" v-if="windowWidth < 768">
           <div class="border border-gray-200 rounded-lg p-2 bg-white/80">
             <RentalInvoice
               aria-labelledby="sample-property-invoice"
@@ -74,7 +74,7 @@
             </div>
           </div>
         </div>
-        <div class="hidden md:block absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float">
+        <div class="absolute -top-6 -right-6 w-56 rounded-xl border border-gray-200 shadow-md bg-white/80 p-2 animate-float" v-if="windowWidth > 768">
           <RentalInvoice
             aria-labelledby="sample-property-invoice"
             style="zoom: 0.32;"
