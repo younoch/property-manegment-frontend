@@ -5,7 +5,7 @@
       <div class="space-y-8">
         <!-- Notifications Section -->
         <div>
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">Notifications</h2>
+          <h2 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-4">Notifications</h2>
           <div class="space-y-4">
             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div>
@@ -19,7 +19,7 @@
 
         <!-- Theme Color Section -->
         <div>
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">Theme Color</h2>
+          <h2 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-4">Theme Color</h2>
           <div class="space-y-4">
             <div class="p-3 bg-gray-50 rounded-lg">
               <div class="flex items-center justify-between">

@@ -17,6 +17,8 @@ export const sitemapConfig = {
       '/support',
       '/app/auth/login',
       '/auth/**',
+      '/blog',
+      '/blog/**',
     ],
   
     // 🚫 Exclude app-internal pages

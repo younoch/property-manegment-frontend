@@ -21,29 +21,29 @@
         </template>
         <LazyCookieConsent v-if="showCookieConsent" />
       </ClientOnly>
-      <div class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="container mx-auto px-4 py-4 md:px-6 md:py-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           <div class="col-span-2 md:col-span-1">
             <h3 class="font-extrabold text-primary-600 mb-4">LeaseDirector</h3>
             <h3 class="text-sm text-gray-600">Smart property Management made easy for small landlords and property managers.</h3>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 mb-4">Product</h4>
+            <h4 class="font-semibold text-gray-900 mb-2 sm:mb-4">Product</h4>
             <ul class="space-y-2 text-sm text-gray-600">
               <li><NuxtLink to="/features" class="hover:text-primary-600">Features</NuxtLink></li>
               <li><NuxtLink to="/pricing" class="hover:text-primary-600">Pricing</NuxtLink></li>
             </ul>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 mb-4">Company</h4>
+            <h4 class="font-semibold text-gray-900 mb-2 sm:mb-4">Company</h4>
             <ul class="space-y-2 text-sm text-gray-600">
               <li><NuxtLink to="/about" class="hover:text-primary-600">About Us</NuxtLink></li>
-              <!-- <li><NuxtLink to="/blog" class="hover:text-primary-600">Blog</NuxtLink></li> -->
+              <li><NuxtLink to="/blog" class="hover:text-primary-600">Blog</NuxtLink></li>
               <!-- <li><NuxtLink to="/careers" class="hover:text-primary-600">Careers</NuxtLink></li> -->
             </ul>
           </div>
           <div>
-            <h4 class="font-semibold text-gray-900 mb-4">Support</h4>
+            <h4 class="font-semibold text-gray-900 mb-2 sm:mb-4">Support</h4>
             <ul class="space-y-2 text-sm text-gray-600">
               <li><NuxtLink to="/contact" class="hover:text-primary-600">Contact Us</NuxtLink></li>
               <!-- <li><NuxtLink to="/help" class="hover:text-primary-600">Help Center</NuxtLink></li> -->
@@ -52,9 +52,9 @@
             </ul>
           </div>
         </div>
-        <div class="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div class="border-t border-gray-200 mt-2 md:mt-12 pt-2 md:pt-8 flex flex-col md:flex-row justify-between items-center">
           <p class="text-sm text-gray-500">© 2023 LeaseDirector. All rights reserved.</p>
-          <div class="flex space-x-6 mt-4 md:mt-0">
+          <div class="flex space-x-6 mt-2 md:mt-0">
             <a href="#" class="text-gray-400 hover:text-gray-500">
               <span class="sr-only">Twitter</span>
               <UIcon name="i-mdi-twitter" class="h-5 w-5" />
