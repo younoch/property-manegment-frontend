@@ -65,10 +65,6 @@ useSeoMeta({
   appleMobileWebAppTitle: 'LeaseDirector'
 } as const)
 
-watch(() => route.path, () => {
-  window.scrollTo(0, 0)
-})
-
 // Add JSON-LD structured data
 useHead({
   script: [
