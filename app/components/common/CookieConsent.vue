@@ -10,7 +10,7 @@
     >
       <UCard 
         v-if="!consentGiven && isMounted" 
-        class="fixed bottom-2 left-2 right-2 max-w-6xl mx-auto z-50 shadow-xl"
+        class="fixed bottom-2 left-2 right-2 max-w-6xl mx-auto z-50 shadow-xl border border-primary-500"
         :ui="{
           base: 'animate-fade-in-up',
           ring: 'ring-1 ring-primary-500',
