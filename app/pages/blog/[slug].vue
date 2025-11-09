@@ -139,7 +139,7 @@ import { blogPosts } from '~/data/blogPosts';
 
 // Set dynamic head content
 const post = computed(() => blogPosts.find(p => p.slug === slug) || null);
-const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.jpg'
+const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.png'
 
 useHead({
   title: post.value ? `${post.value.title} | Blog` : 'Blog Post',
