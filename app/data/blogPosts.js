@@ -52,7 +52,7 @@ export const blogPosts = [
       </p>
     </div>
   `,
-  image: 'https://images.unsplash.com/photo-1581091012184-24c0d24b048f?auto=format&fit=crop&w=1350&q=80',
+  image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1350&q=80',
   category: 'Property Management',
   date: 'Oct 15, 2024',
   datetime: '2024-10-15',
