@@ -71,6 +71,9 @@ definePageMeta({
   layout: 'public'
 });
 
+// Import blog posts data
+import { blogPosts } from '~/data/blogPosts';
+
 // SEO and Social Meta
 useHead({
   title: 'Blog - Latest Property Management Insights & Tips',

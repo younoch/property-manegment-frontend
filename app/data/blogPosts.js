@@ -1,12 +1,21 @@
 export const blogPosts = [
   {
-  id: 8,
-  title: 'Why Property Management Software is Better Than Spreadsheets',
-  slug: 'property-management-software-vs-spreadsheets',
-  excerpt: `Managing rental properties using spreadsheets can quickly become cumbersome, error-prone, and time-consuming, especially as your portfolio grows. Property management software automates rent collection, tracks maintenance requests, manages tenants, and generates accurate financial reports with ease. 
-  In this article, we explain why investing in a dedicated property management system saves time, reduces errors, improves tenant communication, and provides insights that spreadsheets simply cannot offer. 
-  From real-time dashboards to automated reminders, learn how modern software streamlines operations and empowers landlords to make smarter decisions.`,
-  content: `
+    id: 8,
+    title: 'Why Property Management Software is Better Than Spreadsheets',
+    slug: 'property-management-software-vs-spreadsheets',
+    excerpt: 'Managing rental properties using spreadsheets can quickly become cumbersome, error-prone, and time-consuming, especially as your portfolio grows. Property management software automates rent collection, tracks maintenance requests, manages tenants, and generates accurate financial reports with ease. In this article, we explain why investing in a dedicated property management system saves time, reduces errors, improves tenant communication, and provides insights that spreadsheets simply cannot offer. From real-time dashboards to automated reminders, learn how modern software streamlines operations and empowers landlords to make smarter decisions.',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1350&q=80',
+    category: 'Property Management',
+    date: 'Jun 25, 2025',
+    datetime: '2025-06-25',
+    readingTime: '5 min',
+    author: {
+      name: 'Alex Johnson',
+      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&h=100&q=80',
+      bio: 'Property management expert with 10+ years of experience helping landlords streamline their operations.'
+    },
+    tags: ['property management', 'software', 'landlord tips', 'automation'],
+    content: `
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
       <p>
         Many landlords start out using spreadsheets to track tenants, rents, and maintenance schedules. While this works for small portfolios, it quickly becomes inefficient and error-prone as properties increase.
