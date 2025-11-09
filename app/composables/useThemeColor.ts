@@ -39,7 +39,7 @@ export const THEME_OPTIONS: Record<ThemeKey, ThemeOption> = {
 const STORAGE_KEY = 'ui.primary.theme'
 
 export function useThemeColor() {
-  const current = useState<ThemeKey>('theme-color', () => 'emerald')
+  const current = useState<ThemeKey>('theme-color', () => 'indigo')
 
   function applyToDOM(key: ThemeKey) {
     const opt = THEME_OPTIONS[key]
