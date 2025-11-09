@@ -53,7 +53,7 @@
               <div 
                 role="cell" 
                 class="px-4 py-3 flex items-start" 
-                :class="row.spreadsheetsClass || 'text-slate-600'"
+                :class="row.spreadsheetsClass || 'text-gray-700'"
                 :aria-labelledby="'feature-' + kebabCase(row.feature) + ' spreadsheets-col'"
               >
                 <span class="mr-2">{{ row.spreadsheetsBadge || '•' }}</span>

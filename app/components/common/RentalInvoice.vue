@@ -107,7 +107,7 @@
           </a>
           — Property Management for Small Landlords
         </p>
-        <p class="text-xs text-gray-400 mt-1">
+        <p class="text-xs text-gray-600 mt-1">
           This is a computer-generated document. No signature required.
         </p>
       </footer>
