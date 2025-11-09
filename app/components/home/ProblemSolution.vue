@@ -1,7 +1,7 @@
 <template>
   <section class="py-8 sm:py-12 md:py-16 lg:py-20 border-t border-gray-100 mb-4 md:mb-12" id="problem">
-    <div class="container mx-auto px-4 sm:px-6">
-      <div class="grid lg:grid-cols-2 gap-6 md:gap-12 lg:gap-16 items-center">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-stretch relative lg:min-h-[600px]">
         <div class="space-y-2 sm:space-y-5">
           <header class="space-y-2" aria-labelledby="problem-solution-heading">
             <h2 id="problem-solution-heading" class="text-2xl sm:text-3xl md:text-4xl xl:text-[2.5rem] font-bold leading-tight text-center sm:text-left">
@@ -61,35 +61,20 @@
           </div>
         </div>
 
-        <div class="mt-8 lg:mt-0">
-          <div class="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-gray-50 w-full max-w-[400px] mx-auto aspect-[9/13]">
-            <div class="absolute inset-0 bg-gradient-to-br from-primary-50/30 to-primary-100/20 z-10 mix-blend-multiply"></div>
-            <div class="relative w-full h-full">
-              <video 
-                class="w-full h-full object-contain" 
-                autoplay 
-                loop 
-                muted 
-                playsinline
-                preload="metadata"
-                aria-label="LeaseDirector workflow demonstration"
-              >
-                <source src="/money-flow-diagram.mp4" type="video/mp4" />
-                <track
-                  src="/captions/money-flow-captions.vtt"
-                  kind="captions"
-                  srclang="en"
-                  label="English"
-                  default
-                >
-                Your browser does not support the video tag or the captions.
-              </video>
-              <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center text-xs py-1 px-2">
-                <button onclick="this.closest('video').muted = !this.closest('video').muted" class="mr-2 focus:outline-none">
-                  <span class="sr-only">Toggle mute</span>
-                  <UIcon name="i-heroicons-speaker-wave" class="w-4 h-4 inline-block" />
-                </button>
-                <span>Video: Property Management Workflow</span>
+        <div class="mt-8 lg:mt-0 lg:flex lg:items-center lg:justify-center">
+          <div class="relative w-full max-w-[600px] mx-auto">
+            <div class="relative bg-white p-4 rounded-2xl shadow-lg">
+              <img 
+                src="/LeaseDirector-workflow-demonstration.png" 
+                alt="LeaseDirector workflow demonstration"
+                class="max-w-full h-auto object-contain mx-auto"
+                loading="lazy"
+                width="1200"
+                height="800"
+              />
+              <div class="absolute inset-0 bg-gradient-to-br from-primary-50/20 to-primary-100/10 z-10 mix-blend-multiply rounded-2xl pointer-events-none"></div>
+              <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center text-xs py-1 px-2 rounded-b-2xl lg:rounded-bl-none">
+                <span>Property Management Workflow</span>
               </div>
             </div>
           </div>
