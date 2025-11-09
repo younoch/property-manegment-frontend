@@ -76,7 +76,7 @@ for
 
         <!-- Floating Mini Card -->
         <div
-          class="absolute text-center -top-8 md:-left-6 left-[50%] translate-x-[-50%] bg-white/80 border border-white/30 backdrop-blur-md shadow-xl rounded-xl px-3 py-2 text-[11px] text-primary-700 font-medium animate-float-delayed">
+          class="absolute text-center -top-8 md:-left-6 left-[50%] translate-x-[-50%] md:translate-x-0 bg-white/80 border border-white/30 backdrop-blur-md shadow-xl rounded-xl px-3 py-2 text-[11px] text-primary-700 font-medium animate-float-delayed">
           💰 Rent Received: <span class="font-bold text-primary-800">$1,200</span>
         </div>
       </div>

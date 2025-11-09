@@ -23,7 +23,7 @@ export default defineNuxtConfig({
       '@nuxt/ui',
       {
         icons: ['mdi', 'heroicons'],
-        colors: { primary: 'emerald' }
+        colors: { primary: 'indigo' }
       } as Partial<ModuleOptions>
     ],
     [

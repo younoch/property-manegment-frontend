@@ -362,7 +362,7 @@ function getTypeColor(type: string) {
   const colors: Record<string, string> = {
     bug: 'red',
     feature: 'blue',
-    idea: 'emerald',
+    idea: 'indigo',
     other: 'gray'
   }
   return colors[type] || 'gray'
