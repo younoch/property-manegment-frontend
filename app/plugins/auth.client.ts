@@ -20,7 +20,7 @@ export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
     } catch {}
   });
 
-  nuxtApp.hook('app:mounted', async () => {
+  nuxtApp.hook('app:onBeforeMount', async () => {
     try {
       await waitForUI();
       const currentRoute = nuxtApp.$router?.currentRoute?.value;

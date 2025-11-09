@@ -23,13 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeColor } from '~/composables/useThemeColor'
-
-// ---- Theme Initialization ----
-const { initFromStorage } = useThemeColor()
-
-initFromStorage()
-
 useHead({
   script: [
     {

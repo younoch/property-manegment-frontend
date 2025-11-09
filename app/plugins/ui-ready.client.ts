@@ -1,5 +1,7 @@
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   let uiComponentsReady = false;
+  const { initFromStorage } = useThemeColor()
+  initFromStorage()
   
   const waitForUIComponents = async () => {
     if (uiComponentsReady) return;
