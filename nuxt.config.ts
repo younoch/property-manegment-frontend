@@ -25,6 +25,13 @@ export default defineNuxtConfig({
     ],
     ['@nuxtjs/sitemap', sitemapConfig]
   ],
+  ui: {
+    theme: {
+      defaultVariants: {
+        color: 'indigo',
+      }
+    }
+  },
 
   nitro: {
     preset: 'vercel',
