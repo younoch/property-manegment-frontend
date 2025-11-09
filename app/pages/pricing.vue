@@ -113,7 +113,7 @@ useHead({
 })
 
 
-const billing = ref<'monthly' | 'quarterly' | 'yearly'>('quarterly')
+const billing = ref<'monthly' | 'quarterly' | 'yearly'>('monthly')
 
 const periodLabel = computed(() => {
   if (billing.value === 'monthly') return '/month'
