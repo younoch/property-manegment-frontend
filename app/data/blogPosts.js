@@ -1,5 +1,69 @@
 export const blogPosts = [
   {
+  id: 8,
+  title: 'Why Property Management Software is Better Than Spreadsheets',
+  slug: 'property-management-software-vs-spreadsheets',
+  excerpt: `Managing rental properties using spreadsheets can quickly become cumbersome, error-prone, and time-consuming, especially as your portfolio grows. Property management software automates rent collection, tracks maintenance requests, manages tenants, and generates accurate financial reports with ease. 
+  In this article, we explain why investing in a dedicated property management system saves time, reduces errors, improves tenant communication, and provides insights that spreadsheets simply cannot offer. 
+  From real-time dashboards to automated reminders, learn how modern software streamlines operations and empowers landlords to make smarter decisions.`,
+  content: `
+    <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
+      <p>
+        Many landlords start out using spreadsheets to track tenants, rents, and maintenance schedules. While this works for small portfolios, it quickly becomes inefficient and error-prone as properties increase.
+      </p>
+
+      <h2>1. Automation Saves Time</h2>
+      <p>
+        Property management software automates routine tasks such as rent reminders, late fee calculations, and maintenance scheduling. 
+        This eliminates repetitive manual entry and reduces the risk of mistakes that are common in spreadsheets.
+      </p>
+
+      <h2>2. Accurate Financial Reporting</h2>
+      <p>
+        Dedicated software generates comprehensive reports including income statements, cash flow, and tax-ready summaries. 
+        Unlike spreadsheets, which require manual formulas, software ensures accuracy and real-time data updates.
+      </p>
+
+      <h2>3. Better Tenant Communication</h2>
+      <p>
+        Most property management platforms include communication tools, allowing landlords to send notifications, track maintenance requests, and maintain a record of conversations. 
+        This helps avoid misunderstandings and builds stronger landlord-tenant relationships.
+      </p>
+
+      <h2>4. Centralized Data Management</h2>
+      <p>
+        A property management system consolidates tenant details, lease agreements, payment history, and maintenance logs in one secure location. 
+        Spreadsheets scatter information across multiple files, making it hard to track and secure data.
+      </p>
+
+      <h2>5. Insights and Decision-Making</h2>
+      <p>
+        Software dashboards provide visual insights into occupancy rates, overdue payments, maintenance trends, and portfolio performance. 
+        These insights enable landlords to make data-driven decisions and optimize profitability, something spreadsheets cannot provide effectively.
+      </p>
+
+      <blockquote class="border-l-4 border-blue-500 pl-4 italic text-gray-600">
+        “Investing in property management software transforms how landlords run their business, saving time, reducing errors, and improving tenant satisfaction.”
+      </blockquote>
+
+      <p>
+        By moving from spreadsheets to dedicated software, landlords gain efficiency, accuracy, and a clearer view of their portfolio. 
+        Modern systems provide tools to scale operations effortlessly while ensuring tenants have a smooth and professional rental experience.
+      </p>
+    </div>
+  `,
+  image: 'https://images.unsplash.com/photo-1581091012184-24c0d24b048f?auto=format&fit=crop&w=1350&q=80',
+  category: 'Property Management',
+  date: 'Oct 15, 2024',
+  datetime: '2024-10-15',
+  readingTime: '7 min',
+  author: {
+    name: 'Michael Anderson',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    bio: 'Experienced property manager helping landlords optimize operations with modern software.'
+  }
+},
+  {
     id: 1,
     title: '10 Essential Tips for First-Time Landlords',
     slug: '10-essential-tips-for-first-time-landlords',
@@ -42,9 +106,9 @@ export const blogPosts = [
   `,
     image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1473&q=80',
     category: 'Property Management',
-    date: 'Mar 16, 2024',
-    datetime: '2024-03-16',
-    readingTime: '6 min',
+    date: 'May 18, 2025',
+    datetime: '2025-05-18',
+    readingTime: '3 min',
     author: {
       name: 'Sarah Thompson',
       image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -120,9 +184,9 @@ export const blogPosts = [
   `,
     image: 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=1350&q=80',
     category: 'Rental Tips',
-    date: 'Apr 2, 2024',
-    datetime: '2024-04-02',
-    readingTime: '5 min',
+    date: 'Jul 12, 2025',
+    datetime: '2025-07-12',
+    readingTime: '3 min',
     author: {
       name: 'David Miller',
       image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
@@ -216,9 +280,9 @@ export const blogPosts = [
   `,
     image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1350&q=80',
     category: 'Tenant Screening',
-    date: 'May 12, 2024',
-    datetime: '2024-05-12',
-    readingTime: '7 min',
+    date: 'Jul 12, 2025',
+    datetime: '2025-07-12',
+    readingTime: '3 min',
     author: {
       name: 'Olivia Perez',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -312,9 +376,9 @@ export const blogPosts = [
   `,
     image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1350&q=80',
     category: 'Landlord Advice',
-    date: 'Jun 8, 2024',
-    datetime: '2024-06-08',
-    readingTime: '6 min',
+    date: 'Jan 15, 2025',
+    datetime: '2025-01-15',
+    readingTime: '3 min',
     author: {
       name: 'James Carter',
       image: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -375,9 +439,9 @@ export const blogPosts = [
   `,
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1350&q=80',
     category: 'Property Care',
-    date: 'Jul 22, 2024',
-    datetime: '2024-07-22',
-    readingTime: '4 min',
+    date: 'Sep 20, 2025',
+    datetime: '2025-09-20',
+    readingTime: '3 min',
     author: {
       name: 'Emma Wilson',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -447,9 +511,9 @@ By the end, you will be equipped with the knowledge to make an informed decision
   `,
     image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1350&q=80',
     category: 'Property Management',
-    date: 'Aug 10, 2024',
-    datetime: '2024-08-10',
-    readingTime: '6 min',
+    date: 'Oct 15, 2025',
+    datetime: '2025-10-15',
+    readingTime: '2 min',
     author: {
       name: 'Laura Stevens',
       image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
@@ -513,9 +577,9 @@ By implementing smart renovations, landlords can maximize rental income, enhance
   `,
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1350&q=80',
     category: 'Rental Tips',
-    date: 'Sep 5, 2024',
-    datetime: '2024-09-05',
-    readingTime: '8 min',
+    date: 'Apr 5, 2025',
+    datetime: '2025-04-05',
+    readingTime: '4 min',
     author: {
       name: 'Sarah Thompson',
       image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
