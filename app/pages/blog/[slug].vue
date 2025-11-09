@@ -132,12 +132,55 @@ definePageMeta({
 });
 
 const route = useRoute();
+const slug = route.params.slug;
 
 // Import blog posts data
 import { blogPosts } from '~/data/blogPosts';
 
+// Set dynamic head content
+const post = computed(() => blogPosts.find(p => p.slug === slug) || null);
+const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.jpg'
+
+useHead({
+  title: post.value ? `${post.value.title} | Blog` : 'Blog Post',
+  meta: [
+    { 
+      name: 'description', 
+      content: post.value?.excerpt?.substring(0, 160) + (post.value?.excerpt?.length > 160 ? '...' : '') || 'Read our latest blog post'
+    },
+    // Open Graph / Facebook
+    { property: 'og:type', content: 'article' },
+    { 
+      property: 'og:title', 
+      content: post.value?.title || 'Blog Post'
+    },
+    { 
+      property: 'og:description', 
+      content: post.value?.excerpt?.substring(0, 160) + (post.value?.excerpt?.length > 160 ? '...' : '') || 'Read our latest blog post'
+    },
+    {
+      property: 'og:image',
+      content: ogImage
+    },
+    // Twitter
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { 
+      name: 'twitter:title', 
+      content: post.value?.title || 'Blog Post'
+    },
+    { 
+      name: 'twitter:description', 
+      content: post.value?.excerpt?.substring(0, 160) + (post.value?.excerpt?.length > 160 ? '...' : '') || 'Read our latest blog post'
+    },
+    {
+      name: 'twitter:image',
+      content: post.value?.image || 'https://yourdomain.com/default-twitter-image.jpg'
+    }
+  ]
+});
+
 // Find the post with the matching slug
-const post = computed(() => {
+const postContent = computed(() => {
   return blogPosts.find(p => p.slug === route.params.slug) || {
     title: 'Post not found',
     excerpt: 'The requested blog post could not be found.',

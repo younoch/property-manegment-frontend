@@ -71,12 +71,9 @@ definePageMeta({
   layout: 'public'
 });
 
-// Import blog posts data
-import { blogPosts } from '~/data/blogPosts';
-
-// Set page metadata
+// SEO and Social Meta
 useHead({
-  title: 'Blog - LeaseDirector',
+  title: 'Blog - Latest Property Management Insights & Tips',
   meta: [
     { name: 'description', content: 'Latest property management tips, industry news, and company updates from LeaseDirector.' }
   ]
