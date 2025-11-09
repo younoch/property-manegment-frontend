@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       '@nuxt/ui',
       {
         icons: ['mdi', 'heroicons'],
-        colors: { primary: 'indigo' }
+        colors: { primary: 'green' }
       } as Partial<ModuleOptions>
     ],
     [
@@ -25,13 +25,6 @@ export default defineNuxtConfig({
     ],
     ['@nuxtjs/sitemap', sitemapConfig]
   ],
-  ui: {
-    theme: {
-      defaultVariants: {
-        color: 'indigo',
-      }
-    }
-  },
 
   nitro: {
     preset: 'vercel',

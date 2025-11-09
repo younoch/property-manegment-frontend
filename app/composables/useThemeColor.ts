@@ -5,13 +5,9 @@ export type ThemeKey =
   | 'indigo' | 'violet' | 'purple' | 'fuchsia' | 'pink' | 'rose'
 
 type ThemeOption = {
-  /** Tailwind color token Nuxt UI expects (e.g., 'indigo', 'blue', 'neutral') */
   tailwind: string
-  /** CSS var value we’ll set to --ui-primary */
   cssVar: string
-  /** 'white' or 'black' text for contrast */
   foreground: string
-  /** Tailwind bg utility for the swatch/dot (kept static for Tailwind v4) */
   bgClass: string
 }
 
@@ -39,7 +35,7 @@ export const THEME_OPTIONS: Record<ThemeKey, ThemeOption> = {
 const STORAGE_KEY = 'ui.primary.theme'
 
 export function useThemeColor() {
-  const current = useState<ThemeKey>('theme-color', () => 'indigo')
+  const current = useState<ThemeKey>('theme-color', () => 'green')
 
   function applyToDOM(key: ThemeKey) {
     const opt = THEME_OPTIONS[key]
@@ -68,7 +64,7 @@ export function useThemeColor() {
   function initFromStorage() {
     if (!process.client) return
     const saved = localStorage.getItem(STORAGE_KEY) as ThemeKey | null
-    const fallback: ThemeKey = 'indigo'
+    const fallback: ThemeKey = 'green'
     const key = (saved && THEME_OPTIONS[saved] ? saved : fallback) as ThemeKey
     current.value = key
     applyToDOM(key)
