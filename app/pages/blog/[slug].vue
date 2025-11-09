@@ -153,7 +153,7 @@ const relatedPosts = computed(() => {
   // Filter out current post and get up to 2 related posts
   return blogPosts
     .filter(p => p.id !== currentPostId)
-    .slice(0, 2);
+    .slice(0, 3);
 });
 
 // Breadcrumb items
