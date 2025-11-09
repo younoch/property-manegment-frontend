@@ -50,10 +50,10 @@
             </svg>
           </div>
           <div class="ml-3">
-            <p class="text-sm text-yellow-700">
+            <div class="text-sm text-yellow-700">
               No content found. Debug data:
-            <pre class="mt-2 text-xs overflow-auto p-2 bg-gray-100 rounded">{{ JSON.stringify(post, null, 2) }}</pre>
-            </p>
+              <pre class="mt-2 text-xs overflow-auto p-2 bg-gray-100 rounded">{{ JSON.stringify(post, null, 2) }}</pre>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +79,12 @@
 
       <!-- Author Bio -->
       <div class="mt-8 sm:mt-10 md:mt-12 p-4 sm:p-6 bg-gray-50 rounded-lg sm:rounded-xl flex items-center">
-        <img class="h-16 w-16 rounded-full" :src="post.author.image" :alt="post.author.name">
+        <img 
+          class="h-16 w-16 rounded-full object-cover bg-gray-200" 
+          :src="post.author.image || '/images/default-avatar.png'" 
+          :alt="post.author.name"
+          @error="handleImageError"
+        >
         <div class="ml-4">
           <h3 class="text-lg font-semibold text-gray-900">About {{ post.author.name }}</h3>
           <p class="mt-1 text-gray-600">{{ post.author.bio || 'Experienced professional in property management and real estate.' }}</p>
@@ -146,17 +151,44 @@ const route = useRoute();
 const slug = route.params.slug;
 const runtimeConfig = useRuntimeConfig();
 
+// Handle image loading errors
+const handleImageError = (event) => {
+  event.target.src = '/images/default-avatar.png';
+};
+
 // Reactive post
-const post = computed(() => blogPosts.find(p => p.slug === slug) || {
-  title: 'Post not found',
-  excerpt: 'The requested blog post could not be found.',
-  content: 'The blog post you are looking for does not exist or has been removed.',
-  author: { name: 'Unknown', image: '/default-avatar.png' },
-  tags: [],
-  category: 'Blog',
-  date: '',
-  datetime: '',
-  readingTime: ''
+const post = computed(() => {
+  const defaultPost = {
+    title: 'Post not found',
+    excerpt: 'The requested blog post could not be found.',
+    content: 'The blog post you are looking for does not exist or has been removed.',
+    author: { 
+      name: 'Unknown', 
+      image: '/images/default-avatar.png',
+      bio: 'Author information not available.'
+    },
+    tags: [],
+    category: 'Blog',
+    date: '',
+    datetime: '',
+    readingTime: ''
+  };
+  
+  const foundPost = blogPosts.find(p => p.slug === slug);
+  
+  // Ensure author object has all required fields
+  if (foundPost) {
+    return {
+      ...foundPost,
+      author: {
+        name: foundPost.author?.name || 'Unknown Author',
+        image: foundPost.author?.image || '/images/default-avatar.png',
+        bio: foundPost.author?.bio || 'Experienced professional in property management and real estate.'
+      }
+    };
+  }
+  
+  return defaultPost;
 });
 
 // Related posts (exclude current)

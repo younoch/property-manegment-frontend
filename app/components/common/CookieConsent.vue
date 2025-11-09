@@ -13,7 +13,7 @@
         class="fixed bottom-2 left-2 right-2 max-w-6xl mx-auto z-50 shadow-xl"
         :ui="{
           base: 'animate-fade-in-up',
-          ring: 'ring-1 ring-gray-200',
+          ring: 'ring-1 ring-primary-500',
           rounded: 'rounded-lg',
           shadow: 'shadow-lg'
         }"
