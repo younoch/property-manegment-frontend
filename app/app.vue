@@ -26,20 +26,9 @@
 import { useThemeColor } from '~/composables/useThemeColor'
 
 // ---- Theme Initialization ----
-const { initFromStorage, current } = useThemeColor()
+const { initFromStorage } = useThemeColor()
 
-onBeforeMount(() => initFromStorage())
-
-// ---- Dynamic ThemeColor Update ----
-if (process.client) {
-  watch(current, () => {
-    const themeColor =
-      getComputedStyle(document.documentElement)
-        .getPropertyValue('--color-background')
-        .trim() || '#ffffff'
-    useSeoMeta({ themeColor })
-  }, { immediate: true })
-}
+initFromStorage()
 
 useHead({
   script: [

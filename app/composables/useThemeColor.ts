@@ -1,11 +1,21 @@
+// composables/useThemeColor.ts
 export type ThemeKey =
   | 'black' | 'red' | 'orange' | 'amber' | 'yellow' | 'lime'
   | 'green' | 'emerald' | 'teal' | 'cyan' | 'sky' | 'blue'
   | 'indigo' | 'violet' | 'purple' | 'fuchsia' | 'pink' | 'rose'
 
-const STORAGE_KEY = 'ui.primary.theme'
+type ThemeOption = {
+  /** Tailwind color token Nuxt UI expects (e.g., 'indigo', 'blue', 'neutral') */
+  tailwind: string
+  /** CSS var value we’ll set to --ui-primary */
+  cssVar: string
+  /** 'white' or 'black' text for contrast */
+  foreground: string
+  /** Tailwind bg utility for the swatch/dot (kept static for Tailwind v4) */
+  bgClass: string
+}
 
-export const THEME_OPTIONS = {
+export const THEME_OPTIONS: Record<ThemeKey, ThemeOption> = {
   black:   { tailwind: 'neutral', cssVar: 'var(--color-neutral-900)', foreground: 'white', bgClass: 'bg-neutral-900' },
   red:     { tailwind: 'red',     cssVar: 'var(--color-red-500)',     foreground: 'white', bgClass: 'bg-red-500' },
   orange:  { tailwind: 'orange',  cssVar: 'var(--color-orange-500)',  foreground: 'white', bgClass: 'bg-orange-500' },
@@ -24,29 +34,30 @@ export const THEME_OPTIONS = {
   fuchsia: { tailwind: 'fuchsia', cssVar: 'var(--color-fuchsia-500)', foreground: 'white', bgClass: 'bg-fuchsia-500' },
   pink:    { tailwind: 'pink',    cssVar: 'var(--color-pink-500)',    foreground: 'white', bgClass: 'bg-pink-500' },
   rose:    { tailwind: 'rose',    cssVar: 'var(--color-rose-500)',    foreground: 'white', bgClass: 'bg-rose-500' }
-} as const satisfies Record<ThemeKey, {
-  tailwind: string
-  cssVar: string
-  foreground: string
-  bgClass: string
-}>
+}
+
+const STORAGE_KEY = 'ui.primary.theme'
 
 export function useThemeColor() {
   const current = useState<ThemeKey>('theme-color', () => 'indigo')
 
-  const applyToDOM = (key: ThemeKey) => {
+  function applyToDOM(key: ThemeKey) {
     const opt = THEME_OPTIONS[key]
     const root = document.documentElement
     root.style.setProperty('--ui-primary', opt.cssVar)
     root.style.setProperty('--ui-primary-foreground', opt.foreground)
 
+    // Keep Nuxt UI tokens aligned for components using color="primary"
     const cfg = useAppConfig()
-    cfg.ui = cfg.ui || {}
-    cfg.ui.colors = cfg.ui.colors || {}
+    // @ts-expect-error runtime assignment is fine
+    cfg.ui ??= {}
+    // @ts-expect-error
+    cfg.ui.colors ??= {}
+    // @ts-expect-error
     cfg.ui.colors.primary = opt.tailwind
   }
 
-  const setTheme = (key: ThemeKey) => {
+  function setTheme(key: ThemeKey) {
     current.value = key
     if (process.client) {
       localStorage.setItem(STORAGE_KEY, key)
@@ -54,13 +65,16 @@ export function useThemeColor() {
     }
   }
 
-  const initFromStorage = () => {
+  function initFromStorage() {
     if (!process.client) return
     const saved = localStorage.getItem(STORAGE_KEY) as ThemeKey | null
-    const key = (saved && THEME_OPTIONS[saved]) ? saved : 'indigo'
+    const fallback: ThemeKey = 'indigo'
+    const key = (saved && THEME_OPTIONS[saved] ? saved : fallback) as ThemeKey
     current.value = key
     applyToDOM(key)
   }
 
-  return { current, setTheme, initFromStorage, options: THEME_OPTIONS }
+  const keys = Object.keys(THEME_OPTIONS) as ThemeKey[]
+
+  return { current, setTheme, initFromStorage, options: THEME_OPTIONS, keys }
 }
