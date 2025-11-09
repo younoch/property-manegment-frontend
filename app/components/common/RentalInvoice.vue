@@ -1,6 +1,8 @@
 <template>
-  <div class="bg-gray-100 flex justify-center items-start font-sans text-gray-800">
-    <div class="page bg-white w-full max-w-3xl shadow-lg rounded-lg p-8">
+  <div class="bg-gray-100 min-h-screen flex justify-center items-start font-sans text-gray-800 print:bg-white print:block p-4">
+    <div class="page-container relative w-full mx-auto" style="aspect-ratio: 1/1.4142">
+      <div class="page bg-white w-full h-full p-2 md:p-8 overflow-auto print:shadow-none print:rounded-none print:p-0 print:max-w-[210mm] print:mx-auto print:my-0 print:min-h-[297mm] print:aspect-auto">
+        <div class="print:p-8 h-full">
       <!-- Header -->
       <header class="flex justify-between items-start mb-6 border-b pb-4">
         <div>
@@ -109,6 +111,8 @@
           This is a computer-generated document. No signature required.
         </p>
       </footer>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -163,17 +167,68 @@ const totalDue = computed(() => subtotal.value + taxAmount.value)
 </script>
 
 <style>
+@page {
+  size: A4;
+  margin: 0;
+}
+
 @media print {
-  body {
+  html, body {
+    width: 210mm;
+    height: 297mm;
     background: #fff !important;
     padding: 0 !important;
+    margin: 0 auto !important;
+    overflow: hidden;
   }
+  
+  .page-container {
+    aspect-ratio: auto !important;
+    height: 100% !important;
+    max-width: 100% !important;
+  }
+  
   .no-print {
     display: none !important;
   }
+  
   .page {
     box-shadow: none !important;
     margin: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+  
+  .page > div {
+    padding: 1.5cm;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure tables break nicely across pages */
+  table {
+    page-break-inside: auto;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  /* Adjust font sizes for print */
+  body {
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+  
+  h2 {
+    font-size: 16pt;
+  }
+  
+  h3 {
+    font-size: 12pt;
   }
 }
 </style>
