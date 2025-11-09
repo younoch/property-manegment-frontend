@@ -21,6 +21,27 @@
         <p class="mt-4 sm:mt-6 text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-2 sm:px-0">
           {{ post.excerpt }}
         </p>
+        <!-- Featured Image -->
+        <div v-if="post.image" class="mt-6 sm:mt-8 relative group">
+          <div class="relative overflow-hidden rounded-lg sm:rounded-xl shadow-md transition-all duration-300 transform group-hover:shadow-lg group-hover:-translate-y-0.5">
+            <img 
+              :src="post.image" 
+              :alt="post.title" 
+              class="w-full h-auto max-h-[400px] sm:max-h-[450px] object-cover transition-all duration-500 group-hover:scale-102"
+              loading="lazy"
+            >
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl sm:rounded-2xl"></div>
+            <!-- Caption (optional) -->
+            <div v-if="post.imageCaption" class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p class="text-sm sm:text-base font-medium">{{ post.imageCaption }}</p>
+            </div>
+          </div>
+          <!-- Image Credit -->
+          <p v-if="post.imageCredit" class="mt-2 text-xs text-gray-500 text-right italic">
+            {{ post.imageCredit }}
+          </p>
+        </div>
 
         <!-- Author Info -->
         <div class="mt-8 flex items-center justify-center space-x-4">
@@ -76,6 +97,7 @@
           </span>
         </div>
       </div>
+
 
       <!-- Author Bio -->
       <div class="mt-8 sm:mt-10 md:mt-12 p-4 sm:p-6 bg-gray-50 rounded-lg sm:rounded-xl flex items-center">
