@@ -89,7 +89,7 @@ const features = [
     icon: 'i-heroicons-shield-check',
     title: 'Document Storage',
     description: 'Secure, organized storage for all property-related documents with role-based access.',
-    color: 'emerald',
+    color: 'indigo',
     details: [
       'Unlimited document storage',
       'Automatic backup and versioning',
