@@ -1,7 +1,7 @@
 <template>
   <section class="relative isolate overflow-hidden bg-primary-600 text-white">
     <!-- Gradient Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-500 to-teal-600"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500 via-emerald-500 to-primary-600"></div>
 
     <div class="container relative z-10 mx-auto px-6 pt-8 pb-20 grid lg:grid-cols-3 gap-10 items-center">
       <!-- LEFT CONTENT -->
