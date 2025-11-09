@@ -49,11 +49,11 @@
       <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-gray-700">Email address</label>
-          <UInput v-model="form.email" type="email" placeholder="Enter your email" :error="errors.email" required />
+          <UInput v-model="form.email" type="email" placeholder="Enter your email" :error="errors.email" required class="w-full"/>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700">Password</label>
-          <UInput v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="Enter your password" :error="errors.password" required>
+          <UInput v-model="form.password" :type="showPassword ? 'text' : 'password'" placeholder="Enter your password" :error="errors.password" required class="w-full">
             <template #trailing>
               <UButton
                 variant="link"
