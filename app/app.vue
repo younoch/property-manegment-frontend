@@ -1,18 +1,20 @@
 <template>
-  <UApp :ui="{
-    notifications: { toaster: false },
-    container: {
-      constrained: 'max-w-screen-2xl',
-      padding: 'px-4 sm:px-6 lg:px-8',
-    }
-  }" class="min-h-screen w-screen overflow-x-hidden">
+  <UApp
+    :ui="{
+      notifications: { toaster: false },
+      container: { constrained: 'max-w-screen-2xl', padding: 'px-4 sm:px-6 lg:px-8' }
+    }"
+    class="min-h-screen w-screen overflow-x-hidden"
+  >
+    <!-- Notifications -->
     <template #notifications>
       <ClientOnly>
         <UToaster />
       </ClientOnly>
     </template>
 
-    <div class="min-h-screen w-full flex flex-col">
+    <!-- Layout Wrapper -->
+    <div class="flex flex-col min-h-screen w-full">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -22,50 +24,23 @@
 
 <script setup lang="ts">
 import { useThemeColor } from '~/composables/useThemeColor'
-import { onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { useSeoMeta, useHead } from '#imports'
 
-// Initialize theme
+// ---- Theme Initialization ----
 const { initFromStorage, current } = useThemeColor()
 
-// Add standard mobile web app capable meta tag
-useHead({
-  meta: [
-    { name: 'mobile-web-app-capable', content: 'yes' }
-  ]
-})
+onBeforeMount(() => initFromStorage())
 
-// Watch for theme changes to update meta theme-color
-watch(current, (newTheme) => {
-  if (process.client) {
-    const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim() || '#ffffff'
-    useSeoMeta({
-      themeColor
-    })
-  }
-}, { immediate: true })
+// ---- Dynamic ThemeColor Update ----
+if (process.client) {
+  watch(current, () => {
+    const themeColor =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--color-background')
+        .trim() || '#ffffff'
+    useSeoMeta({ themeColor })
+  }, { immediate: true })
+}
 
-// This ensures the page is scrolled to top on route change
-const route = useRoute()
-
-// Initialize theme on client-side
-onMounted(() => {
-  if (process.client) {
-    initFromStorage()
-  }
-})
-
-// Set up meta tags for SEO and mobile optimization
-useSeoMeta({
-  viewport: 'width=device-width, initial-scale=1',
-  themeColor: '#ffffff',
-  appleMobileWebAppCapable: 'yes',
-  appleMobileWebAppStatusBarStyle: 'black-translucent',
-  appleMobileWebAppTitle: 'LeaseDirector'
-} as const)
-
-// Add JSON-LD structured data
 useHead({
   script: [
     {
@@ -346,4 +321,11 @@ useHead({
 
 })
 
+useSeoMeta({
+  viewport: 'width=device-width, initial-scale=1',
+  themeColor: '#ffffff',
+  appleMobileWebAppCapable: 'yes',
+  appleMobileWebAppStatusBarStyle: 'black-translucent',
+  appleMobileWebAppTitle: 'LeaseDirector'
+})
 </script>
