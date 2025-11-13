@@ -63,8 +63,8 @@ export const blogPosts = [
   `,
   image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1350&q=80',
   category: 'Property Management',
-  date: 'Oct 15, 2024',
-  datetime: '2024-10-15', 
+  date: 'Oct 15, 2025',
+  datetime: '2025-10-15', 
   readingTime: '7 min',
   author: {
     name: 'Michael Anderson',
