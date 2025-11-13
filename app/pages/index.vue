@@ -8,7 +8,7 @@
       <div class="absolute inset-0 bg-gradient-to-b from-primary-50/60 via-white to-white"></div>
     </div>
 
-    <div class="space-y-12 sm:space-y-16 md:space-y-20 lg:space-y-24">
+    <div class="space-t-12 sm:space-t-16 md:space-t-20 lg:space-t-24">
       <HeroSection />
 
       <section class="py-4 md:py-8 bg-white/50 backdrop-blur-sm mb-4 md:mb-12">
@@ -65,7 +65,7 @@
 
       <StepsSection class=" md:py-16 mb-4 md:mb-12" />
 
-      <FinalCta class="py-12 sm:py-16 md:py-20" />
+      <FinalCta class="py-8 sm:py-12 md:py-16" />
     </div>
   </div>
 </template>

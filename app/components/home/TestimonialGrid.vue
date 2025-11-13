@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16 border-t border-gray-100">
+  <section class="border-t border-gray-100">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl md:text-4xl font-bold text-center">What early users say</h2>
       <div class="mt-10 grid md:grid-cols-3 gap-6">

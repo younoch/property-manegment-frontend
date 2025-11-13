@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16 md:py-24 bg-white" id="compare" aria-labelledby="comparison-heading">
+  <section class="bg-white" id="compare" aria-labelledby="comparison-heading">
     <div class="container mx-auto px-4">
       <h2 id="comparison-heading" class="text-3xl md:text-4xl font-extrabold text-center text-gray-900">
         Why LeaseDirector Outperforms Spreadsheets

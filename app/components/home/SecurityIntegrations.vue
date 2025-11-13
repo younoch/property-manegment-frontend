@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16">
+  <section class="">
     <div class="container mx-auto px-4 grid md:grid-cols-2 gap-6">
       <div class="p-6 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 shadow-sm">
         <h3 class="font-semibold text-lg">Security & Reliability</h3>

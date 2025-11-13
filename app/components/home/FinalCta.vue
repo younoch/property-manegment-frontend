@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16">
+  <section class="">
     <div class="container mx-auto px-4 text-center">
       <h3 class="text-2xl md:text-3xl font-bold">Ready to replace spreadsheets?</h3>
       <p class="mt-2 text-gray-600">Create your first lease and send an invoice in minutes.</p>

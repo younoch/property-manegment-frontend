@@ -1,5 +1,5 @@
 <template>
-  <section id="features" class="py-4 md:py-16">
+  <section id="features" class="">
     <div class="container mx-auto px-4">
       <header class="text-center" aria-labelledby="features-heading">
         <h2 id="features-heading" class="text-3xl md:text-4xl font-bold">Everything you need to run rentals</h2>

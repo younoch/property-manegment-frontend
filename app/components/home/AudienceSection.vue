@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16 border-t border-gray-100" id="audience" aria-labelledby="audience-heading">
+  <section class="border-t border-gray-100" id="audience" aria-labelledby="audience-heading">
     <div class="container mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
       <div>
         <h2 id="audience-heading" class="text-3xl md:text-4xl font-bold">Built for independent landlords & small teams</h2>
