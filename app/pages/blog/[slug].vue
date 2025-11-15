@@ -88,6 +88,31 @@
         prose-img:rounded-lg sm:prose-img:rounded-xl prose-img:shadow-md sm:prose-img:shadow-lg">
       </div>
 
+      <!-- Share Bar -->
+      <div class="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4">
+        <span class="text-sm text-gray-500 mr-2">Share:</span>
+        <a :href="twitterUrl" @click.prevent="openShare(twitterUrl)" target="_blank" rel="noopener nofollow" class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+          <UIcon name="i-heroicons-x-mark" class="w-4 h-4 mr-2" />
+          <span class="sr-only sm:not-sr-only">Twitter</span>
+        </a>
+        <a :href="facebookUrl" @click.prevent="openShare(facebookUrl)" target="_blank" rel="noopener nofollow" class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+          <UIcon name="i-mdi-facebook" class="w-4 h-4 mr-2" />
+          <span class="sr-only sm:not-sr-only">Facebook</span>
+        </a>
+        <a :href="linkedinUrl" @click.prevent="openShare(linkedinUrl)" target="_blank" rel="noopener nofollow" class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+          <UIcon name="i-mdi-linkedin" class="w-4 h-4 mr-2" />
+          <span class="sr-only sm:not-sr-only">LinkedIn</span>
+        </a>
+        <a :href="whatsappUrl" @click.prevent="openShare(whatsappUrl)" target="_blank" rel="noopener nofollow" class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200">
+          <UIcon name="i-mdi-whatsapp" class="w-4 h-4 mr-2" />
+          <span class="sr-only sm:not-sr-only">WhatsApp</span>
+        </a>
+        <button type="button" @click="copyLink" class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-primary-50 text-primary-700 hover:bg-primary-100">
+          <UIcon name="i-heroicons-link" class="w-4 h-4 mr-2" />
+          <span class="sr-only sm:not-sr-only">Copy link</span>
+        </button>
+      </div>
+
       <!-- Tags -->
       <div class="mt-8 sm:mt-10 md:mt-12 pt-6 sm:pt-8 border-t border-gray-100">
         <div class="flex flex-wrap gap-2">
@@ -169,10 +194,12 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useRuntimeConfig, useHead } from '#app';
 import { blogPosts } from '~/data/blogPosts';
+import { useApiToast } from '~/composables/useApiToast';
 
 const route = useRoute();
 const slug = route.params.slug;
 const runtimeConfig = useRuntimeConfig();
+const { success, error } = useApiToast();
 
 // Handle image loading errors
 const handleImageError = (event) => {
@@ -240,6 +267,65 @@ const breadcrumbUI = {
 const ogImage = computed(() => post.value.image || runtimeConfig.public.ogImage || '/og-image.png');
 const baseDomain = runtimeConfig.public.frontendDomain || 'leasedirector.com';
 const canonicalUrl = computed(() => `https://${baseDomain}/blog/${slug}`);
+const encodedUrl = computed(() => encodeURIComponent(canonicalUrl.value));
+const encodedTitle = computed(() => encodeURIComponent(post.value.title));
+const twitterUrl = computed(() => `https://twitter.com/intent/tweet?url=${encodedUrl.value}&text=${encodedTitle.value}`);
+const xUrl = computed(() => `https://x.com/intent/tweet?url=${encodedUrl.value}&text=${encodedTitle.value}`);
+const facebookUrl = computed(() => `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl.value}`);
+const linkedinUrl = computed(() => `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl.value}&title=${encodedTitle.value}`);
+const whatsappUrl = computed(() => `https://api.whatsapp.com/send?text=${encodedTitle.value}%20${encodedUrl.value}`);
+
+const copyLink = async () => {
+  try {
+    await navigator.clipboard.writeText(canonicalUrl.value);
+    await success('Link copied to clipboard');
+  } catch (e) {
+    await error('Failed to copy link');
+  }
+};
+
+const openShare = (urlComp) => {
+  const url = typeof urlComp === 'string' ? urlComp : urlComp?.value;
+  if (!url) return;
+  
+  // Use Web Share API on supported devices
+  if (typeof navigator !== 'undefined' && 'share' in navigator) {
+    navigator.share({ 
+      title: post.value.title, 
+      text: post.value.excerpt,
+      url: canonicalUrl.value 
+    }).catch(() => {
+      // Fallback to direct URL opening if share dialog is dismissed
+      openInNewTab(url);
+    });
+    return;
+  }
+  
+  // Handle Twitter/X URL
+  const finalUrl = url.includes('twitter.com') ? (xUrl.value || url) : url;
+  openInNewTab(finalUrl);
+};
+
+// Helper function to handle popup blockers
+const openInNewTab = (url) => {
+  // First try to open in a new tab directly
+  const newWindow = window.open('', '_blank', 'noopener,noreferrer');
+  
+  if (newWindow) {
+    // If window was opened successfully, set the location after a small delay
+    setTimeout(() => {
+      if (newWindow && !newWindow.closed) {
+        newWindow.location.href = url;
+      } else {
+        // If popup was blocked, fall back to direct window.open
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    }, 50);
+  } else {
+    // If popup was blocked, try to open in the same window
+    window.location.href = url;
+  }
+};
 
 useHead({
   title: `${post.value.title} | Blog - LeaseDirector`,
