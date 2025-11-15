@@ -28,6 +28,7 @@
               :src="post.image" 
               :alt="post.title" 
               class="w-full h-auto max-h-[400px] sm:max-h-[450px] object-cover transition-all duration-500 group-hover:scale-102"
+              loading="lazy"
             >
             <!-- Gradient Overlay -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl sm:rounded-2xl"></div>
@@ -44,7 +45,7 @@
 
         <!-- Author Info -->
         <div class="mt-8 flex items-center justify-center space-x-4">
-          <img class="h-12 w-12 rounded-full ring-2 ring-white" :src="post.author.image" :alt="post.author.name">
+          <img class="h-12 w-12 rounded-full ring-2 ring-white" :src="post.author.image" :alt="post.author.name" loading="lazy">
           <div class="text-left">
             <p class="text-base font-medium text-gray-900">{{ post.author.name }}</p>
             <div class="flex items-center space-x-2 text-sm text-gray-500">
@@ -103,6 +104,7 @@
         <img 
           class="h-16 w-16 rounded-full object-cover bg-gray-200" 
           :src="post.author.image || '/images/default-avatar.png'" 
+          loading="lazy"
           :alt="post.author.name"
           @error="handleImageError"
         >
@@ -126,7 +128,7 @@
           <div v-for="relatedPost in relatedPosts" :key="relatedPost.id"
             class="group relative bg-white overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200">
             <div class="h-48 bg-gray-100 overflow-hidden">
-              <img :src="relatedPost.image" :alt="relatedPost.title"
+              <img :src="relatedPost.image" :alt="relatedPost.title" loading="lazy"
                 class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105">
             </div>
             <div class="p-6">

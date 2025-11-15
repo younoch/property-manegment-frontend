@@ -26,6 +26,7 @@
             src="/reviewing-documents.webp" 
             alt="Small landlord reviewing property documents"
             class="h-full w-full object-cover"
+            loading="lazy"
             width="600"
             height="400"
           />
@@ -35,6 +36,7 @@
             src="/team-collabarating.webp" 
             alt="Team collaborating on property management"
             class="h-full w-full object-cover"
+            loading="lazy"
             width="600"
             height="400"
             format="webp"
@@ -45,6 +47,7 @@
             src="/whatsapp-notification.webp" 
             alt="WhatsApp notifications for property management"
             class="h-full w-full object-cover"
+            loading="lazy"
             width="600"
             height="400"
             format="webp"

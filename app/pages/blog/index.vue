@@ -24,7 +24,7 @@
         <!-- Blog post cards -->
         <article v-for="post in blogPosts" :key="post.id" class="flex flex-col overflow-hidden rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl">
           <div class="shrink-0">
-            <img class="h-48 w-full object-cover" :src="post.image" :alt="post.title">
+            <img class="h-48 w-full object-cover" :src="post.image" :alt="post.title" loading="lazy">
           </div>
           <div class="flex flex-1 flex-col justify-between bg-white p-6">
             <div class="flex-1">
@@ -43,7 +43,7 @@
             <div class="mt-6 flex items-center">
               <div class="shrink-0">
                 <span class="sr-only">{{ post.author.name }}</span>
-                <img class="h-10 w-10 rounded-full" :src="post.author.image" :alt="post.author.name">
+                <img class="h-10 w-10 rounded-full" :src="post.author.image" :alt="post.author.name" loading="lazy">
               </div>
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900">

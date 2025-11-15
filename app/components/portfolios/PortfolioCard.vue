@@ -98,6 +98,7 @@
                   :width="120"
                   :height="60"
                   format="webp"
+                  loading="lazy"
                   quality="80"
                   img-class="max-h-12 w-auto rounded border border-gray-200"
                 />

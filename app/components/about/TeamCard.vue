@@ -6,6 +6,7 @@
       class='w-full h-44 object-cover rounded-xl border border-gray-200'
       width="300"
       height="200"
+      loading="lazy"
     />
     <h3 class='mt-3 font-semibold'>{{ name }}</h3>
     <p class='text-xs text-gray-500'>{{ role }}</p>

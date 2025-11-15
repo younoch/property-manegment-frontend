@@ -8,6 +8,7 @@
           class="h-full w-full rounded-full object-cover border-2 border-white shadow-sm"
           width="48"
           height="48"
+          loading="lazy"
           format="webp"
         />
       </div>
