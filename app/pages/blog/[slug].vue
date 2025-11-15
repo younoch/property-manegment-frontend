@@ -28,7 +28,6 @@
               :src="post.image" 
               :alt="post.title" 
               class="w-full h-auto max-h-[400px] sm:max-h-[450px] object-cover transition-all duration-500 group-hover:scale-102"
-              loading="lazy"
             >
             <!-- Gradient Overlay -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl sm:rounded-2xl"></div>

@@ -44,7 +44,6 @@
                   sizes="(max-width: 640px) 45vw, 200px"
                   class="w-full h-full object-cover"
                   format="webp"
-                  loading="lazy"
                 />
               </div>
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
@@ -68,7 +67,6 @@
                 src="/LeaseDirector-workflow-demonstration.png" 
                 alt="LeaseDirector workflow demonstration"
                 class="max-w-full h-auto object-contain mx-auto"
-                loading="lazy"
                 width="1200"
                 height="800"
               />

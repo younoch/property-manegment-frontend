@@ -36,7 +36,6 @@
               class="w-full h-full object-cover"
               width="600"
               height="400"
-              loading="lazy"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
               <span class="text-white font-medium text-sm">Dashboard Overview</span>
@@ -50,7 +49,6 @@
               class="w-full h-full object-cover"
               width="300"
               height="400"
-              loading="lazy"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
               <span class="text-white font-medium text-sm">Mobile Payment Tracking</span>
