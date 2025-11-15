@@ -31,7 +31,7 @@
         <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <div class="relative h-48 sm:h-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-transform hover:scale-[1.02]">
             <img 
-              src="https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=870"
+              src="https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=600"
               alt="Property management dashboard preview showing key metrics and property listings"
               class="w-full h-full object-cover"
               width="600"
