@@ -86,7 +86,7 @@ export default defineNuxtConfig({
     buildAssetsDir: '/_nuxt/',
     head: {
       htmlAttrs: { lang: 'en' },
-      title: 'LeaseDirector | Property Management for Small Landlords',
+      title: 'LeaseDirector | AI-Powered Property Management for Small Landlords',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

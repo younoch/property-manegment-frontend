@@ -28,8 +28,8 @@
               label="Lease to Invoice"
             />
             <StatCard 
-              value="1000+" 
-              label="Properties Managed"
+              value="AI-Powered" 
+              label="Property Management"
             />
             <StatCard 
               value="Auto" 
@@ -98,8 +98,10 @@ const reqUrl = process.server ? useRequestURL() : null
 const currentPath = reqUrl ? reqUrl.pathname : '/'
 const canonicalUrl = siteUrl ? `${siteUrl}${currentPath}` : undefined
 
-const title = 'LeaseDirector | Property Management for Small Landlords'
-const description = 'Property management software for small landlords: manage leases, invoice automation track payments & maintenance, communicate with tenants — free to start.'
+const title = 'LeaseDirector | AI-Powered Property Management for Small Landlords'
+const description =
+  'AI-powered property management software for small landlords. Automate leasing, invoicing, rent collection, maintenance tracking, and tenant communication — start free.';
+
 const ogImage = runtimePublic.ogImage || runtimePublic.ogImageUrl || '/og-image.png'
 
 useHead({

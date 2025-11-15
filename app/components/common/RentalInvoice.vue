@@ -10,7 +10,7 @@
                 <Logo size="w-6 h-6" color="text-primary-600" />
                 <p class="ml-2 text-2xl font-extrabold font-inter text-primary-600">LeaseDirector</p>
             </div>
-          <p class="text-sm text-gray-500">Property Management for Small Landlords</p>
+          <p class="text-sm text-gray-500">AI-Powered Property Management for Small Landlords</p>
           <p class="text-sm text-gray-500">www.leasedirector.com</p>
         </div>
         <div class="text-right">
@@ -105,7 +105,7 @@
           <a href="https://www.leasedirector.com" class="text-primary-600 underline" target="_blank">
             LeaseDirector.com
           </a>
-          — Property Management for Small Landlords
+          — AI-Powered Property Management for Small Landlords
         </p>
         <p class="text-xs text-gray-600 mt-1">
           This is a computer-generated document. No signature required.
