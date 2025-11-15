@@ -8,9 +8,9 @@
           Start Managing Properties Now
         </UButton>
       </div>
-      <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+      <div class="mt-8 grid grid-cols-2 sm:grid-cols-2 gap-2 max-w-xl mx-auto">
         <img 
-          src="https://picsum.photos/300/200?random=21"
+          src="https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=870"
           alt="Property management dashboard preview"
           :width="300"
           :height="200"
@@ -18,24 +18,8 @@
           img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
         />
         <img 
-          src="https://picsum.photos/300/200?random=22"
+          src="/rent-collection-mobile.webp"
           alt="Mobile app interface for rent collection"
-          :width="300"
-          :height="200"
-          sizes="(max-width: 640px) 40vw, 150px"
-          img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
-        />
-        <img 
-          src="https://picsum.photos/300/200?random=23"
-          alt="Financial reports and analytics"
-          :width="300"
-          :height="200"
-          sizes="(max-width: 640px) 40vw, 150px"
-          img-class="h-24 w-full object-cover rounded-lg border border-gray-200"
-        />
-        <img 
-          src="https://picsum.photos/300/200?random=24"
-          alt="Tenant communication portal"
           :width="300"
           :height="200"
           sizes="(max-width: 640px) 40vw, 150px"

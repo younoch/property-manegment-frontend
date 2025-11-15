@@ -49,7 +49,7 @@
               </div>
               <div class="relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                 <img 
-                  src="https://picsum.photos/300/200?random=13"
+                  src="https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=870"
                   alt="Clean dashboard"
                   :width="400"
                   :height="300"
