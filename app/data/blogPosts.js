@@ -74,8 +74,10 @@ export const blogPosts = [
     readingTime: '3 min',
     author: {
       name: 'Sarah Thompson',
-      image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&h=256&q=80',
+      bio: 'Property coach helping first-time landlords build sustainable rentals.'
     },
+    tags: ['first-time landlord', 'lease', 'tenant screening', 'maintenance', 'legal'],
     content: `
     <p>Becoming a landlord can be one of the most rewarding financial decisions you’ll ever make — but it also comes with real challenges. Managing tenants, maintaining the property, and staying compliant with local laws can feel like a full-time job. Fortunately, with the right strategy and a little preparation, you can build a successful rental business that generates steady income while protecting your investment.</p>
 
@@ -111,6 +113,7 @@ export const blogPosts = [
 
     <h2>Final Thoughts</h2>
     <p>Becoming a landlord is more than collecting rent — it’s about running a small business with professionalism and care. By following these ten essential tips, you’ll not only reduce stress but also maximize your rental income and property value. Start small, stay organized, and keep learning — your success as a landlord will grow with every lease you sign.</p>
+    <p><strong>Further reading:</strong> Learn how to set rent confidently in <a href="/blog/how-to-price-your-rental-property">How to Price Your Rental Property</a> and streamline screening with our <a href="/blog/ultimate-tenant-screening-checklist">Tenant Screening Checklist</a>.</p>
   `,
   },
   {
@@ -125,8 +128,10 @@ export const blogPosts = [
     readingTime: '3 min',
     author: {
       name: 'David Miller',
-      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&h=256&q=80'
+      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&h=256&q=80',
+      bio: 'Analyst helping landlords price rentals with data-driven strategies.'
     },
+    tags: ['pricing', 'comparables', 'rental market', 'ROI', 'rent strategy'],
     content: `
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
       <p>
@@ -188,6 +193,7 @@ export const blogPosts = [
         Whether you’re managing a single apartment or building a rental portfolio, taking a data-driven approach to pricing will help you
         stay ahead of the competition and maximize your long-term returns.
       </p>
+      <p><strong>Further reading:</strong> Improve on-time payments with <a href="/blog/streamlining-rent-collection-best-practices">Streamlining Rent Collection</a> and see why software beats spreadsheets in <a href="/blog/property-management-software-vs-spreadsheets">Property Management Software vs Spreadsheets</a>.</p>
     </div>
   `,
   },
@@ -393,6 +399,7 @@ export const blogPosts = [
         Handling late rent professionally not only protects your income but also reinforces your reputation as a fair and consistent landlord. 
         With the right approach, you can maintain tenant trust while minimizing disruptions to your cash flow.
       </p>
+      <p><strong>Further reading:</strong> Set up a reliable process in <a href="/blog/streamlining-rent-collection-best-practices">Streamlining Rent Collection</a>.</p>
     </div>
   `,
     image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&q=80',
@@ -456,6 +463,7 @@ export const blogPosts = [
         By following these five maintenance tips, you’ll protect your investment, keep tenants satisfied, and ensure your rental property stays in excellent condition. 
         Happy tenants are more likely to renew leases, treat the property with respect, and recommend your rentals to others.
       </p>
+      <p><strong>Further reading:</strong> Use our <a href="/blog/seasonal-rental-maintenance-checklist">Seasonal Rental Maintenance Checklist</a> to plan the year.</p>
     </div>
   `,
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80',
@@ -466,7 +474,9 @@ export const blogPosts = [
     author: {
       name: 'Emma Wilson',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      bio: 'Property care specialist focused on retention and tenant experience.',
     },
+    tags: ['maintenance', 'tenant satisfaction', 'property care', 'retention', 'landlord tips'],
   },
   {
     id: 6,
@@ -527,6 +537,7 @@ By the end, you will be equipped with the knowledge to make an informed decision
       <p>
         By carefully evaluating features, integrations, pricing, and support, you can select a platform that optimizes your workflow, keeps tenants happy, and ensures your rental business thrives.
       </p>
+      <p><strong>Further reading:</strong> Compare tools in <a href="/blog/property-management-software-vs-spreadsheets">Property Management Software vs Spreadsheets</a> and improve collections in <a href="/blog/streamlining-rent-collection-best-practices">Streamlining Rent Collection</a>.</p>
     </div>
   `,
     image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80',
@@ -538,9 +549,9 @@ By the end, you will be equipped with the knowledge to make an informed decision
       name: 'Laura Stevens',
       image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&facepad=2&h=256&q=80',
       bio: 'Tech-savvy property manager helping landlords streamline operations with smart software.'
-    }
-  }
-  ,
+    },
+    tags: ['software', 'automation', 'integrations', 'landlord tools', 'property management'],
+  },
   {
     id: 7,
     title: 'Maximizing Rental Income with Smart Renovations',
@@ -593,6 +604,7 @@ By implementing smart renovations, landlords can maximize rental income, enhance
         By implementing these renovation strategies thoughtfully, landlords can turn each upgrade into a long-term investment that maximizes rental returns, 
         reduces turnover, and strengthens their competitive advantage in the rental market.
       </p>
+      <p><strong>Further reading:</strong> Price upgrades effectively with <a href="/blog/how-to-price-your-rental-property">How to Price Your Rental Property</a> and maintain long-term value with <a href="/blog/top-5-maintenance-tips-to-keep-tenants-happy">Maintenance Tips to Keep Tenants Happy</a>.</p>
     </div>
   `,
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80',
@@ -604,6 +616,236 @@ By implementing smart renovations, landlords can maximize rental income, enhance
       name: 'Sarah Thompson',
       image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
       bio: 'Property management expert with 10+ years of experience helping landlords succeed.'
-    }
-  }
+    },
+    tags: ['renovations', 'ROI', 'tenant satisfaction', 'property value', 'rental income'],
+  },
+  {
+  id: 9,
+  title: 'Streamlining Rent Collection: Best Practices for Landlords',
+  slug: 'streamlining-rent-collection-best-practices',
+  excerpt: `Efficient rent collection is crucial for any landlord seeking steady cash flow and tenant satisfaction. Delays, missed payments, or manual tracking can cause stress and financial loss. This guide covers proven strategies, tools, and tips to streamline rent collection, including digital payment options, automated reminders, and clear lease agreements. By implementing these practices, landlords can reduce late payments, enhance tenant relationships, and maintain consistent rental income.`,
+  content: `
+  <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
+    <p>
+      Collecting rent efficiently is one of the most critical responsibilities of a landlord. Poor systems can lead to late payments, disputes, and unnecessary stress. The goal is to create a process that is reliable, transparent, and easy for both landlord and tenant.
+    </p>
+
+    <h2>1. Set Clear Payment Terms in Lease Agreements</h2>
+    <p>
+      Define payment amounts, due dates, late fees, and acceptable payment methods clearly in the lease. Transparency reduces confusion and minimizes disputes. Make sure tenants sign off on these terms.
+    </p>
+
+    <h2>2. Use Digital Payment Systems</h2>
+    <p>
+      Platforms like online banking, PayPal, Stripe, or dedicated rent collection apps simplify payment tracking and ensure funds are received on time. Digital systems reduce human error and give both parties a record of transactions.
+    </p>
+
+    <h2>3. Automate Reminders and Notifications</h2>
+    <p>
+      Set up automated reminders before due dates and notifications for missed payments. Regular communication prevents late payments and reinforces accountability without being intrusive.
+    </p>
+
+    <h2>4. Offer Multiple Payment Options</h2>
+    <p>
+      Providing flexibility — such as bank transfer, credit card, or digital wallet — increases convenience for tenants and reduces excuses for delayed payments.
+    </p>
+
+    <h2>5. Keep Accurate Records</h2>
+    <p>
+      Maintain a detailed ledger of payments, late fees, and receipts. Accurate records protect landlords legally, support tax filings, and help identify recurring issues early.
+    </p>
+
+    <blockquote class="border-l-4 border-green-500 pl-4 italic text-gray-600">
+      “Efficient rent collection protects your income, builds trust with tenants, and reduces administrative headaches.”
+    </blockquote>
+
+    <p>
+      By implementing these rent collection strategies, landlords can maintain steady cash flow, reduce late payments, and create positive relationships with tenants — all while saving time and effort.
+    </p>
+  </div>
+  `,
+  image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80',
+  category: 'Rental Tips',
+  date: 'Nov 13, 2025',
+  datetime: '2025-11-13',
+  readingTime: '4 min',
+  author: {
+    name: 'Michael Carter',
+    image: 'https://images.unsplash.com/photo-1603415526960-f8f2e57e1e16?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    bio: 'Experienced property manager specializing in automated systems and tenant relations.'
+  },
+  tags: ['rent collection', 'automation', 'payments', 'reminders', 'cash flow'],
+},
+{
+  id: 10,
+  title: 'Landlord Tax Deductions: What You Can Write Off in 2025',
+  slug: 'landlord-tax-deductions-2025',
+  excerpt: `Knowing which expenses are deductible can dramatically improve your rental property ROI. This in-depth 2025 guide covers deductible categories like mortgage interest, depreciation, repairs vs. improvements, professional services, travel, home office, and more. Learn how to document expenses properly, avoid common IRS pitfalls, and plan ahead to reduce your tax burden without risking an audit.`,
+  content: `
+  <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
+    <p>
+      Smart tax planning can add thousands to your bottom line every year. The key is understanding <strong>which costs are deductible</strong>, how to categorize them, and how to keep airtight records.
+    </p>
+
+    <h2>1. Common Deductible Expenses</h2>
+    <ul>
+      <li>Mortgage interest on rental property loans</li>
+      <li>Property taxes and insurance premiums</li>
+      <li>Utilities paid by the landlord</li>
+      <li>HOA fees and property management fees</li>
+      <li>Advertising and tenant screening costs</li>
+      <li>Professional services (legal, accounting, tax prep)</li>
+    </ul>
+
+    <h2>2. Repairs vs. Improvements</h2>
+    <p>
+      Repairs restore something to its original condition and are <strong>deductible in the year paid</strong>. Improvements add value or extend life and are <strong>capitalized and depreciated</strong>.
+    </p>
+    <p>
+      Examples: fixing a leak (repair) vs. replacing the roof (improvement).
+    </p>
+
+    <h2>3. Depreciation Basics (MACRS)</h2>
+    <p>
+      Residential rental property is depreciated over 27.5 years, excluding land. Large improvements (HVAC, roof, windows) can be depreciated on their respective schedules.
+    </p>
+
+    <h2>4. Travel and Home Office</h2>
+    <p>
+      Track miles for property-related trips and keep receipts for airfare, lodging, and meals when applicable. A legitimate, regularly used home office can also be deductible.
+    </p>
+
+    <h2>5. Recordkeeping and Audit Readiness</h2>
+    <p>
+      Maintain digital copies of invoices, bank statements, and lease documents. Use accounting software or a property management platform to categorize expenses monthly.
+    </p>
+
+    <h2>FAQs</h2>
+    <h3>Can I deduct renovations done between tenants?</h3>
+    <p>
+      Yes, but classify correctly. Cosmetic touch-ups are often repairs; major upgrades are improvements and must be depreciated.
+    </p>
+    <h3>What if I occasionally use the property personally?</h3>
+    <p>
+      Mixed-use rules apply. Keep usage logs and consult your tax advisor to allocate expenses accurately.
+    </p>
+
+    <blockquote class="border-l-4 border-amber-500 pl-4 italic text-gray-600">
+      “The best tax strategy is consistent documentation and clear categorization throughout the year.”
+    </blockquote>
+  </div>
+  `,
+  image: 'https://images.unsplash.com/photo-1554224155-1696413565d3?auto=format&fit=crop&q=80',
+  category: 'Finance & Taxes',
+  date: 'Nov 10, 2025',
+  datetime: '2025-11-10',
+  readingTime: '8 min',
+  author: {
+    name: 'Karen Patel',
+    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    bio: 'CPA focused on real estate investors and small landlords.'
+  },
+  tags: ['tax', 'deductions', 'depreciation', 'rental property']
+},
+{
+  id: 11,
+  title: 'Seasonal Rental Property Maintenance Checklist',
+  slug: 'seasonal-rental-maintenance-checklist',
+  excerpt: `A proactive, seasonal maintenance plan prevents expensive repairs and keeps tenants safe and satisfied. Use this quarterly checklist to cover HVAC, plumbing, electrical, exterior care, safety devices, and weatherproofing.`,
+  content: `
+  <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
+    <p>
+      Preventive maintenance protects your asset and keeps tenants happy. This seasonal checklist helps you prioritize the right tasks at the right time.
+    </p>
+    <h2>Spring</h2>
+    <ul>
+      <li>Service HVAC and replace filters</li>
+      <li>Inspect roof, gutters, and downspouts</li>
+      <li>Test smoke/CO detectors and replace batteries</li>
+    </ul>
+    <h2>Summer</h2>
+    <ul>
+      <li>Check irrigation and landscaping drainage</li>
+      <li>Seal windows/doors and inspect exterior paint</li>
+      <li>Clean dryer vents and kitchen exhausts</li>
+    </ul>
+    <h2>Fall</h2>
+    <ul>
+      <li>Service heating systems and chimneys</li>
+      <li>Flush water heater; inspect plumbing for leaks</li>
+      <li>Trim trees away from structures</li>
+    </ul>
+    <h2>Winter</h2>
+    <ul>
+      <li>Insulate exposed pipes and weatherstrip doors</li>
+      <li>Check carbon monoxide risks from heating</li>
+      <li>Prepare for snow/ice removal where applicable</li>
+    </ul>
+    <blockquote class="border-l-4 border-blue-500 pl-4 italic text-gray-600">
+      “A seasonal plan reduces emergencies and builds tenant trust.”
+    </blockquote>
+  </div>
+  `,
+  image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80',
+  category: 'Property Care',
+  date: 'Oct 28, 2025',
+  datetime: '2025-10-28',
+  readingTime: '6 min',
+  author: {
+    name: 'Emma Wilson',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  },
+  tags: ['maintenance', 'checklist', 'seasonal']
+},
+{
+  id: 12,
+  title: 'Security Deposit Laws: A Practical Guide for Landlords',
+  slug: 'security-deposit-laws-guide',
+  excerpt: `Security deposits can be a legal minefield. This guide explains common rules for maximum amounts, timelines, itemized deductions, interest requirements, and documentation best practices—plus templates to standardize your process.`,
+  content: `
+  <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
+    <p>
+      While specifics vary by jurisdiction, most regions follow similar principles for collecting, holding, and returning security deposits.
+    </p>
+    <h2>1. Collection Limits and Storage</h2>
+    <p>
+      Many areas cap deposits at 1–2 months’ rent. Some require holding funds in a separate, interest-bearing account.
+    </p>
+    <h2>2. Move-In/Move-Out Documentation</h2>
+    <p>
+      Use a detailed checklist with photos at move-in and move-out. Share copies with tenants and keep records for compliance.
+    </p>
+    <h2>3. Timelines and Itemized Deductions</h2>
+    <p>
+      Return deposits within the legally required window and provide a clear, itemized list of any deductions with receipts.
+    </p>
+    <h2>4. Avoid Common Pitfalls</h2>
+    <ul>
+      <li>Charging for normal wear and tear</li>
+      <li>Missing the deadline to return funds</li>
+      <li>Failing to provide written itemization</li>
+    </ul>
+    <h2>FAQs</h2>
+    <h3>Do I have to pay interest on deposits?</h3>
+    <p>
+      Some jurisdictions require it. Check local law or consult an attorney.
+    </p>
+    <h3>Can I charge a non-refundable cleaning fee?</h3>
+    <p>
+      Rules vary. In many places, non-refundable fees are allowed if disclosed—but they do not replace deposit rules.
+    </p>
+  </div>
+  `,
+  image: 'https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&q=80',
+  category: 'Legal',
+  date: 'Nov 2, 2025',
+  datetime: '2025-11-02',
+  readingTime: '7 min',
+  author: {
+    name: 'Jennifer Lee',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    bio: 'Real estate attorney specializing in landlord-tenant law.'
+  },
+  tags: ['security deposit', 'legal', 'templates']
+}
 ];

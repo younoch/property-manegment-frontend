@@ -214,8 +214,13 @@ const post = computed(() => {
   return defaultPost;
 });
 
-// Related posts (exclude current)
-const relatedPosts = computed(() => blogPosts.filter(p => p.slug !== slug).slice(0, 3));
+// Related posts (same category, exclude current, max 3)
+const relatedPosts = computed(() => {
+  const currentCategory = post.value?.category;
+  return blogPosts
+    .filter(p => p.slug !== slug && p.category === currentCategory)
+    .slice(0, 6);
+});
 
 // Breadcrumb
 const breadcrumbItems = ref([
