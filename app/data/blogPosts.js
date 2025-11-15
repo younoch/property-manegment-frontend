@@ -11,7 +11,7 @@ export const blogPosts = [
     readingTime: '7 min',
     author: {
       name: 'Michael Anderson',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&h=256&q=80',
       bio: 'Experienced property manager helping landlords optimize operations with modern software.'
     },
     tags: ['property management', 'software', 'landlord tips', 'automation'],
@@ -125,7 +125,7 @@ export const blogPosts = [
     readingTime: '3 min',
     author: {
       name: 'David Miller',
-      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&h=256&q=80'
     },
     content: `
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
@@ -196,7 +196,7 @@ export const blogPosts = [
     title: 'The Ultimate Tenant Screening Checklist for Landlords',
     slug: 'ultimate-tenant-screening-checklist',
     excerpt: `Tenant screening is one of the most important parts of property management—yet many landlords rush through it, often with costly consequences. In this comprehensive guide, we'll walk you through every step of the tenant screening process, from crafting the perfect rental application to conducting thorough background and credit checks. You'll learn how to verify employment and income, contact previous landlords effectively, and spot potential red flags before they become major issues. We'll also cover the legal aspects of tenant screening, ensuring you stay compliant with fair housing laws while protecting your investment. With our detailed checklist and expert tips, you'll be able to identify reliable tenants who will pay rent on time and take good care of your property.`,
-    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80',
     category: 'Tenant Screening',
     date: 'Jul 12, 2025',
     datetime: '2025-07-12',
@@ -288,14 +288,14 @@ export const blogPosts = [
       </p>
     </div>
   `,
-    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80',
     category: 'Tenant Screening',
     date: 'Jul 12, 2025',
     datetime: '2025-07-12',
     readingTime: '3 min',
     author: {
       name: 'Olivia Perez',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&h=256&q=80',
     },
   },
 
@@ -304,14 +304,14 @@ export const blogPosts = [
     title: 'How to Handle Late Rent Payments Professionally',
     slug: 'how-to-handle-late-rent-payments',
     excerpt: `Even the best tenants can sometimes fall behind on rent, but how you handle these situations can make all the difference in maintaining positive landlord-tenant relationships while protecting your rental income. In this in-depth guide, we'll explore professional strategies for managing late payments, from the initial friendly reminder to more formal collection procedures. You'll learn how to establish clear late payment policies, create effective payment plans, and document all communications properly. We'll also cover when and how to issue official notices, the legal considerations of late fees, and when it might be time to involve a collections agency. With our expert advice, you'll be equipped to handle late payments with confidence and professionalism, minimizing financial impact while maintaining good tenant relations.`,
-    image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&q=80',
     category: 'Landlord Advice',
     date: 'Jan 15, 2025',
     datetime: '2025-01-15',
     readingTime: '5 min',
     author: {
       name: 'Robert Chen',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&h=256&q=80',
       bio: 'Financial advisor specializing in real estate investments and rental property management.'
     },
     tags: ['late payments', 'rent collection', 'landlord tips', 'tenant relations'],
@@ -395,14 +395,14 @@ export const blogPosts = [
       </p>
     </div>
   `,
-    image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&q=80',
     category: 'Landlord Advice',
     date: 'Jan 15, 2025',
     datetime: '2025-01-15',
     readingTime: '3 min',
     author: {
       name: 'James Carter',
-      image: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=facearea&facepad=2&h=256&q=80',
     },
   }
   ,
@@ -458,7 +458,7 @@ export const blogPosts = [
       </p>
     </div>
   `,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80',
     category: 'Property Care',
     date: 'Sep 20, 2025',
     datetime: '2025-09-20',
@@ -529,14 +529,14 @@ By the end, you will be equipped with the knowledge to make an informed decision
       </p>
     </div>
   `,
-    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80',
     category: 'Property Management',
     date: 'Oct 15, 2025',
     datetime: '2025-10-15',
     readingTime: '2 min',
     author: {
       name: 'Laura Stevens',
-      image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&facepad=2&h=256&q=80',
       bio: 'Tech-savvy property manager helping landlords streamline operations with smart software.'
     }
   }
@@ -595,7 +595,7 @@ By implementing smart renovations, landlords can maximize rental income, enhance
       </p>
     </div>
   `,
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1350&q=80',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80',
     category: 'Rental Tips',
     date: 'Apr 5, 2025',
     datetime: '2025-04-05',

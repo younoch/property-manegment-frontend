@@ -43,7 +43,7 @@
             <div class="mt-6 flex items-center">
               <div class="shrink-0">
                 <span class="sr-only">{{ post.author.name }}</span>
-                <img class="h-10 w-10 rounded-full" :src="post.author.image" :alt="post.author.name" loading="lazy">
+                <img class="h-10 w-10 rounded-full" :src="`${post.author.image}&w=40`" :alt="post.author.name" loading="lazy">
               </div>
               <div class="ml-3">
                 <p class="text-sm font-medium text-gray-900">
