@@ -19,6 +19,7 @@ export const sitemapConfig = {
       '/auth/**',
       '/blog',
       '/blog/**',
+      '/Mohammad-Younoch-Web-Developer.pdf',
     ],
   
     // 🚫 Exclude app-internal pages

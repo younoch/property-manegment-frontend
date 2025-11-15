@@ -4,15 +4,15 @@ export const blogPosts = [
     title: 'Why Property Management Software is Better Than Spreadsheets',
     slug: 'property-management-software-vs-spreadsheets',
     excerpt: 'Managing rental properties using spreadsheets can quickly become cumbersome, error-prone, and time-consuming, especially as your portfolio grows. Property management software automates rent collection, tracks maintenance requests, manages tenants, and generates accurate financial reports with ease. In this article, we explain why investing in a dedicated property management system saves time, reduces errors, improves tenant communication, and provides insights that spreadsheets simply cannot offer. From real-time dashboards to automated reminders, learn how modern software streamlines operations and empowers landlords to make smarter decisions.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1350&q=80',
+    image: '/blog/property-management-software-vs-spreadsheets.avif',
     category: 'Property Management',
-    date: 'Jun 25, 2025',
-    datetime: '2025-06-25',
-    readingTime: '5 min',
+    date: 'Oct 15, 2025',
+    datetime: '2025-10-15',
+    readingTime: '7 min',
     author: {
-      name: 'Alex Johnson',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&h=100&q=80',
-      bio: 'Property management expert with 10+ years of experience helping landlords streamline their operations.'
+      name: 'Michael Anderson',
+      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      bio: 'Experienced property manager helping landlords optimize operations with modern software.'
     },
     tags: ['property management', 'software', 'landlord tips', 'automation'],
     content: `
@@ -52,7 +52,7 @@ export const blogPosts = [
       </p>
 
       <blockquote class="border-l-4 border-blue-500 pl-4 italic text-gray-600">
-        “Investing in property management software transforms how landlords run their business, saving time, reducing errors, and improving tenant satisfaction.”
+        "Investing in property management software transforms how landlords run their business, saving time, reducing errors, and improving tenant satisfaction."
       </blockquote>
 
       <p>
@@ -60,23 +60,22 @@ export const blogPosts = [
         Modern systems provide tools to scale operations effortlessly while ensuring tenants have a smooth and professional rental experience.
       </p>
     </div>
-  `,
-  image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1350&q=80',
-  category: 'Property Management',
-  date: 'Oct 15, 2025',
-  datetime: '2025-10-15', 
-  readingTime: '7 min',
-  author: {
-    name: 'Michael Anderson',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    bio: 'Experienced property manager helping landlords optimize operations with modern software.'
-  }
-},
+  `
+  },
   {
     id: 1,
     title: '10 Essential Tips for First-Time Landlords',
     slug: '10-essential-tips-for-first-time-landlords',
     excerpt: `Becoming a landlord for the first time can be exciting—but it also comes with responsibilities that can feel overwhelming. From finding reliable tenants to understanding complex lease agreements, managing maintenance costs, and navigating local housing laws, there's a significant learning curve. In this comprehensive guide, we'll walk you through ten essential tips that every new landlord should know, including how to create a solid rental agreement, perform thorough background checks, set realistic rent prices, and build positive relationships with tenants. Whether you own one property or are planning to grow your rental portfolio, these beginner-friendly insights will help you stay compliant, reduce risks, and make your investment truly profitable.`,
+    image: '/blog/10-essential-tips-for-first-time-landlords.avif',
+    category: 'Property Management',
+    date: 'May 18, 2025',
+    datetime: '2025-05-18',
+    readingTime: '3 min',
+    author: {
+      name: 'Sarah Thompson',
+      image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    },
     content: `
     <p>Becoming a landlord can be one of the most rewarding financial decisions you’ll ever make — but it also comes with real challenges. Managing tenants, maintaining the property, and staying compliant with local laws can feel like a full-time job. Fortunately, with the right strategy and a little preparation, you can build a successful rental business that generates steady income while protecting your investment.</p>
 
@@ -113,21 +112,21 @@ export const blogPosts = [
     <h2>Final Thoughts</h2>
     <p>Becoming a landlord is more than collecting rent — it’s about running a small business with professionalism and care. By following these ten essential tips, you’ll not only reduce stress but also maximize your rental income and property value. Start small, stay organized, and keep learning — your success as a landlord will grow with every lease you sign.</p>
   `,
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1473&q=80',
-    category: 'Property Management',
-    date: 'May 18, 2025',
-    datetime: '2025-05-18',
-    readingTime: '3 min',
-    author: {
-      name: 'Sarah Thompson',
-      image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
   },
   {
     id: 2,
     title: 'How to Price Your Rental Property in a Competitive Market',
     slug: 'how-to-price-your-rental-property',
     excerpt: `Setting the right rental price can make or break your property's performance. Price too high, and you'll face long vacancies; price too low, and you're leaving money on the table. In this detailed analysis, we'll explore the art and science behind rental pricing strategies. You'll learn how to research comparable properties in your area, evaluate neighborhood demand, factor in unique amenities, and calculate the optimal return on investment. We'll also discuss how to adjust pricing based on seasonal trends and local market conditions. By the end of this guide, you'll have the tools to set competitive yet profitable rental rates that attract quality tenants while maximizing your investment returns.`,
+    image: '/blog/how-to-price-your-rental-property.avif',
+    category: 'Rental Tips',
+    date: 'Jul 12, 2025',
+    datetime: '2025-07-12',
+    readingTime: '3 min',
+    author: {
+      name: 'David Miller',
+      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    },
     content: `
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
       <p>
@@ -191,21 +190,23 @@ export const blogPosts = [
       </p>
     </div>
   `,
-    image: 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=1350&q=80',
-    category: 'Rental Tips',
-    date: 'Jul 12, 2025',
-    datetime: '2025-07-12',
-    readingTime: '3 min',
-    author: {
-      name: 'David Miller',
-      image: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-    }
   },
   {
     id: 3,
     title: 'The Ultimate Tenant Screening Checklist for Landlords',
     slug: 'ultimate-tenant-screening-checklist',
     excerpt: `Tenant screening is one of the most important parts of property management—yet many landlords rush through it, often with costly consequences. In this comprehensive guide, we'll walk you through every step of the tenant screening process, from crafting the perfect rental application to conducting thorough background and credit checks. You'll learn how to verify employment and income, contact previous landlords effectively, and spot potential red flags before they become major issues. We'll also cover the legal aspects of tenant screening, ensuring you stay compliant with fair housing laws while protecting your investment. With our detailed checklist and expert tips, you'll be able to identify reliable tenants who will pay rent on time and take good care of your property.`,
+    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1350&q=80',
+    category: 'Tenant Screening',
+    date: 'Jul 12, 2025',
+    datetime: '2025-07-12',
+    readingTime: '6 min',
+    author: {
+      name: 'Jennifer Lee',
+      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      bio: 'Real estate attorney specializing in landlord-tenant law and fair housing regulations.'
+    },
+    tags: ['tenant screening', 'landlord resources', 'rental applications', 'background checks'],
     content: `
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
       <p>
@@ -303,6 +304,17 @@ export const blogPosts = [
     title: 'How to Handle Late Rent Payments Professionally',
     slug: 'how-to-handle-late-rent-payments',
     excerpt: `Even the best tenants can sometimes fall behind on rent, but how you handle these situations can make all the difference in maintaining positive landlord-tenant relationships while protecting your rental income. In this in-depth guide, we'll explore professional strategies for managing late payments, from the initial friendly reminder to more formal collection procedures. You'll learn how to establish clear late payment policies, create effective payment plans, and document all communications properly. We'll also cover when and how to issue official notices, the legal considerations of late fees, and when it might be time to involve a collections agency. With our expert advice, you'll be equipped to handle late payments with confidence and professionalism, minimizing financial impact while maintaining good tenant relations.`,
+    image: 'https://images.unsplash.com/photo-1559526324-593bc073d938?auto=format&fit=crop&w=1350&q=80',
+    category: 'Landlord Advice',
+    date: 'Jan 15, 2025',
+    datetime: '2025-01-15',
+    readingTime: '5 min',
+    author: {
+      name: 'Robert Chen',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      bio: 'Financial advisor specializing in real estate investments and rental property management.'
+    },
+    tags: ['late payments', 'rent collection', 'landlord tips', 'tenant relations'],
     content: `
     <div class="prose prose-lg max-w-none prose-headings:font-semibold prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 hover:prose-a:text-blue-700 prose-img:rounded-xl prose-img:shadow-md leading-relaxed">
       <p>
@@ -455,8 +467,7 @@ export const blogPosts = [
       name: 'Emma Wilson',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     },
-  }
-  ,
+  },
   {
     id: 6,
     title: 'How to Choose the Right Property Management Software',
@@ -595,6 +606,4 @@ By implementing smart renovations, landlords can maximize rental income, enhance
       bio: 'Property management expert with 10+ years of experience helping landlords succeed.'
     }
   }
-
-
 ];

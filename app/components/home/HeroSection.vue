@@ -9,7 +9,7 @@
         <div
           class="rounded-full bg-white/10 text-white text-xs font-semibold px-3 py-1 ring-1 ring-white/20 shadow-sm mb-2 md:mb-4 backdrop-blur-sm text-center md:text-left">
           <span class="h-2 w-2 rounded-full bg-white"></span>
-          LeaseDirector · Smart Property Management Software
+          LeaseDirector · AI-Powered Property Management Software
         </div>
 
         <h1 class="text-center md:text-left text-2xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
@@ -22,8 +22,7 @@ for
 
         <p class="mt-2 md:mt-5 text-white/90 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl text-center md:text-left">
           Simplify leasing, invoicing, and rent collection with
-          <strong>LeaseDirector</strong>. Automate payments, manage tenants,
-          and track everything in one clean dashboard.
+          <strong>AI assistance</strong>. Generate rent reminders, summarize leases, automate payments, and manage tenants from one clean dashboard.
         </p>
 
         <div class="mt-4 md:mt-8 flex gap-2 md:gap-3 justify-center md:justify-start w-full md:w-auto">
