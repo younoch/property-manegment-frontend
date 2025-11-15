@@ -238,19 +238,63 @@ const breadcrumbUI = {
 
 // Open Graph / SEO
 const ogImage = computed(() => post.value.image || runtimeConfig.public.ogImage || '/og-image.png');
+const baseDomain = runtimeConfig.public.frontendDomain || 'leasedirector.com';
+const canonicalUrl = computed(() => `https://${baseDomain}/blog/${slug}`);
 
 useHead({
   title: `${post.value.title} | Blog - LeaseDirector`,
   meta: [
     { name: 'description', content: post.value.excerpt?.substring(0, 160) || 'Read our latest blog post' },
+    { name: 'keywords', content: (post.value.tags || []).join(', ') },
     { property: 'og:type', content: 'article' },
     { property: 'og:title', content: post.value.title },
     { property: 'og:description', content: post.value.excerpt?.substring(0, 160) },
     { property: 'og:image', content: ogImage.value },
+    { property: 'og:url', content: canonicalUrl.value },
+    { property: 'article:published_time', content: post.value.datetime || '' },
+    { property: 'article:section', content: post.value.category || 'Blog' },
+    { property: 'article:tag', content: (post.value.tags || []).join(', ') },
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: post.value.title },
     { name: 'twitter:description', content: post.value.excerpt?.substring(0, 160) },
     { name: 'twitter:image', content: ogImage.value }
+  ],
+  link: [
+    { rel: 'canonical', href: canonicalUrl.value }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: post.value.title,
+        description: post.value.excerpt?.substring(0, 160) || undefined,
+        image: ogImage.value,
+        datePublished: post.value.datetime || undefined,
+        author: { '@type': 'Person', name: post.value.author?.name || 'Unknown' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'LeaseDirector',
+          logo: { '@type': 'ImageObject', url: '/logo.svg' }
+        },
+        mainEntityOfPage: canonicalUrl.value,
+        articleSection: post.value.category || 'Blog',
+        keywords: (post.value.tags || []).join(', ')
+      })
+    },
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `https://${baseDomain}/` },
+          { '@type': 'ListItem', position: 2, name: 'Blog', item: `https://${baseDomain}/blog` },
+          { '@type': 'ListItem', position: 3, name: post.value.title, item: canonicalUrl.value }
+        ]
+      })
+    }
   ]
 });
 </script>
