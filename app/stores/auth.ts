@@ -332,6 +332,92 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    // Quick cookie/localStorage based auth presence check (no API call)
+    checkAuthFromCookies(): boolean {
+      try {
+        const hasLocal = typeof localStorage !== 'undefined' && !!localStorage.getItem('auth_token');
+        let hasCookie = false;
+        if (typeof document !== 'undefined') {
+          hasCookie = document.cookie.split(';').some((c) => c.trim().startsWith('auth_token='));
+        }
+        return hasLocal || hasCookie;
+      } catch (_) {
+        return false;
+      }
+    },
+
+    // Refresh access token using refresh endpoint
+    async refreshTokens() {
+      try {
+        const api = createApiClient();
+        const response = await api.post<{ accessToken: string; refreshToken?: string }>(
+          '/auth/refresh'
+        );
+
+        const data = response?.data;
+        if (!data?.accessToken) {
+          const error = 'No access token received from refresh endpoint';
+          this.setError(error);
+          return { success: false, error };
+        }
+
+        // Persist tokens
+        localStorage.setItem('auth_token', data.accessToken);
+        if (data.refreshToken) {
+          localStorage.setItem('refresh_token', data.refreshToken);
+        }
+
+        // Set/update cookies
+        if (typeof document !== 'undefined') {
+          const authCookie = `auth_token=${data.accessToken}; ` +
+            `Path=${cookieOptions.path}; ` +
+            `SameSite=${cookieOptions.sameSite}; ` +
+            `${cookieOptions.secure ? 'Secure; ' : ''}` +
+            `Max-Age=${cookieOptions.maxAge}`;
+          document.cookie = authCookie;
+
+          if (data.refreshToken) {
+            const refreshCookie = `refresh_token=${data.refreshToken}; ` +
+              `Path=${cookieOptions.path}; ` +
+              `SameSite=${cookieOptions.sameSite}; ` +
+              `${cookieOptions.secure ? 'Secure; ' : ''}` +
+              `Max-Age=${cookieOptions.maxAge}`;
+            document.cookie = refreshCookie;
+          }
+        }
+
+        return { success: true };
+      } catch (error: any) {
+        const errorMessage = error?.response?.data?.message || error.message || 'Failed to refresh tokens';
+        this.setError(errorMessage);
+        return { success: false, error: errorMessage };
+      }
+    },
+
+    // Initialize auth state
+    async initialize() {
+      try {
+        if (this.user) {
+          return { success: true, user: this.user };
+        }
+        const hasCreds = this.checkAuthFromCookies();
+        if (hasCreds) {
+          return await this.checkAuth();
+        }
+        return { success: false, error: 'No auth credentials present' };
+      } catch (error: any) {
+        const errorMessage = error?.response?.data?.message || error.message || 'Failed to initialize auth';
+        this.setError(errorMessage);
+        return { success: false, error: errorMessage };
+      }
+    },
+
+    // Alias used by composables
+    async signout() {
+      await this.logout();
+      return { success: true } as const;
+    },
+
     async logout() {
       try {
         // Only try to call server-side logout if we have a token
@@ -353,12 +439,13 @@ export const useAuthStore = defineStore('auth', {
         localStorage.removeItem('refresh_token');
         
         // Clear all cookies by setting them to expire in the past
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i];
-          const eqPos = cookie.indexOf('=');
-          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        if (typeof document !== 'undefined') {
+          const cookiePairs = document.cookie ? document.cookie.split(';') : [];
+          for (const c of cookiePairs) {
+            const eqPos = c.indexOf('=');
+            const name = eqPos > -1 ? c.substring(0, eqPos).trim() : c.trim();
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          }
         }
         
         // Clear session storage

@@ -1,8 +1,8 @@
-import { computed } from 'vue';
+import { computed, readonly } from 'vue';
 import { useCsrf } from './useCsrf';
 import { useAuthStore } from '@/stores/auth';
 import { useUserStore } from '@/stores/user';
-import type { User, AuthState } from '@/types/auth';
+import type { User } from '@/types/auth';
 
 export const useAuth = () => {
   const authStore = useAuthStore();
@@ -85,9 +85,7 @@ export const useAuth = () => {
   };
 
   // Quick authentication check using only cookies (no API call)
-  const checkAuthFromCookies = () => {
-    return authStore.checkAuthFromCookies();
-  };
+  const checkAuthFromCookies = () => authStore.checkAuthFromCookies();
 
   // Refresh access token - now uses auth store
   const refreshTokens = async () => {

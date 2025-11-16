@@ -1,3 +1,6 @@
+import { useThemeColor } from '#imports'
+import type { NuxtApp } from 'nuxt/app'
+
 export default defineNuxtPlugin(async (nuxtApp: NuxtApp) => {
   let uiComponentsReady = false;
   const { initFromStorage } = useThemeColor()
