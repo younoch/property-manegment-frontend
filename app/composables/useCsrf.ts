@@ -1,4 +1,3 @@
-import { createApiClient } from '@/utils/api';
 import { getCacheDuration } from '@/constants/cache';
 
 export interface CsrfState {
@@ -15,11 +14,8 @@ export const useCsrf = () => {
   const error = useState<string | null>('csrf-error', () => null);
   const lastFetch = useState<Date | null>('csrf-last-fetch', () => null);
   const cacheDuration = useState<number>('csrf-cache-duration', () => getCacheDuration('csrf'));
-
   const inFlight = useState<boolean>('csrf-inflight', () => false);
   const backoffUntil = useState<number | null>('csrf-backoff-until', () => null);
-
-  const apiClient = createApiClient();
 
   const isCacheValid = computed(() => {
     if (!lastFetch.value) return false;
