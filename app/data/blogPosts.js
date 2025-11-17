@@ -10,7 +10,7 @@ export const blogPosts = [
     datetime: '2025-10-15',
     readingTime: '7 min',
     author: {
-      name: 'Michael Anderson',
+      name: 'Abdul Aziz',
       image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&facepad=2&h=256&q=80',
       bio: 'Experienced property manager helping landlords optimize operations with modern software.'
     },

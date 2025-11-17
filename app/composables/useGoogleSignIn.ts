@@ -3,12 +3,6 @@ import { useAuthStore } from '~/stores/auth';
 import { useToast, useRuntimeConfig } from '#imports';
 import { useRouter } from 'vue-router';
 
-declare global {
-  interface Window {
-    google: any;
-  }
-}
-
 export function useGoogleSignIn() {
   const authStore = useAuthStore();
   const toast = useToast();
@@ -38,7 +32,8 @@ export function useGoogleSignIn() {
 
   /** Render Google Sign-In button */
   const renderGoogleButton = (element: HTMLElement, options: any = {}) => {
-    if (!window.google?.accounts || !element) return;
+    const w = window as any;
+    if (!w.google?.accounts || !element) return;
     const defaultOptions = {
       type: 'standard',
       theme: 'outline',
@@ -47,7 +42,7 @@ export function useGoogleSignIn() {
       width: 300,
       ...options
     };
-    window.google.accounts.id.renderButton(element, defaultOptions);
+    w.google.accounts.id.renderButton(element, defaultOptions);
   };
 
   /** Handle OAuth2 token flow */
@@ -64,7 +59,8 @@ export function useGoogleSignIn() {
       return;
     }
 
-    if (!window.google?.accounts) {
+    const w = window as any;
+    if (!w.google?.accounts) {
       toast.add({
         title: 'Error',
         description: 'Google Sign-In not available.',
@@ -75,7 +71,7 @@ export function useGoogleSignIn() {
       return;
     }
 
-    const client = window.google.accounts.oauth2.initTokenClient({
+    const client = w.google.accounts.oauth2.initTokenClient({
       client_id: clientId,
       scope: 'email profile',
       callback: async (response: any) => {

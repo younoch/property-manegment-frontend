@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useUserStore } from '~/stores/user';
 import type { KPI } from '~/types/dashboard';
 import type { Property, PropertyStats } from '~/types/properties';
@@ -103,10 +103,28 @@ const formatDateForApi = (date: Date): string =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
 const transformRevenueExpenses = (data: any): Array<Array<string | number>> => {
+  console.log('[DEBUG] transformRevenueExpenses input:', data);
   const result: Array<Array<string | number>> = [['Month', 'Revenue', 'Expenses']];
-  const revenueMap = new Map(data.monthlyRevenue.map((r: any) => [`${r.year}-${r.month}`, r]));
-  const expenseMap = new Map(data.monthlyExpenses.map((e: any) => [`${e.year}-${e.month}`, e]));
+  
+  if (!data?.monthlyRevenue || !data?.monthlyExpenses) {
+    console.error('[ERROR] Missing required data in transformRevenueExpenses');
+    return result;
+  }
+  
+  const revenueMap = new Map(data.monthlyRevenue.map((r: any) => {
+    const key = `${r.year}-${r.month}`;
+    console.log(`[DEBUG] Revenue item - Key: ${key}, Value:`, r);
+    return [key, r];
+  }));
+  
+  const expenseMap = new Map(data.monthlyExpenses.map((e: any) => {
+    const key = `${e.year}-${e.month}`;
+    console.log(`[DEBUG] Expense item - Key: ${key}, Value:`, e);
+    return [key, e];
+  }));
+  
   const allKeys = new Set<string>([...revenueMap.keys(), ...expenseMap.keys()]);
+  console.log('[DEBUG] All unique month keys:', Array.from(allKeys));
 
   const sortedKeys = Array.from(allKeys).sort((a, b) => {
     const [ayStr, amStr] = a.split('-');
@@ -181,6 +199,7 @@ const fetchProperties = async () => {
 
 const fetchPropertyStats = async (propertyId: string | null) => {
   if (!propertyId) {
+    console.log('[DEBUG] No property ID provided');
     propertyStats.value = {};
     return;
   }
@@ -190,8 +209,13 @@ const fetchPropertyStats = async (propertyId: string | null) => {
       startDate: formatDateForApi(currentStartDate.value),
       endDate: formatDateForApi(currentEndDate.value)
     };
+    console.log('[DEBUG] Fetching stats with params:', params);
+    
     const response = await api.get(`/dashboard/properties/${propertyId}/stats?${new URLSearchParams(params)}`);
+    console.log('[DEBUG] API Response:', response);
+    
     propertyStats.value = response?.data ?? response;
+    console.log('[DEBUG] Updated propertyStats:', propertyStats.value);
 
     // @ts-ignore - We know these properties exist from the API response
     kpis.value[0].value = propertyStats.value.totalUnits;
@@ -275,9 +299,32 @@ const handleRefresh = async () => {
 
 // LIFECYCLE
 onMounted(async () => {
+  console.log('[DEBUG] Dashboard mounted, checking for user portfolios...');
   if (user.value?.owned_portfolios?.length) {
+    console.log('[DEBUG] User has portfolios, fetching properties...');
     await fetchProperties();
+    
+    // Use nextTick to ensure the DOM is updated
+    await nextTick();
+    
+    console.log('[DEBUG] Properties loaded, selected property:', selectedProperty.value);
+    console.log('[DEBUG] Property options:', propertyOptions.value);
+    
+    // Force a refresh of the stats
+    if (selectedProperty.value) {
+      console.log('[DEBUG] Fetching stats for selected property...');
+      fetchPropertyStats(selectedProperty.value);
+    } else if (propertyOptions.value.length > 0 && propertyOptions.value[0]?.value) {
+      console.log('[DEBUG] No property selected, selecting first property...');
+      selectedProperty.value = propertyOptions.value[0].value;
+      // Fetch stats after setting the property
+      fetchPropertyStats(selectedProperty.value);
+    } else {
+      console.warn('[WARN] No properties available to select');
+      loading.value = false;
+    }
   } else {
+    console.warn('[WARN] User has no owned portfolios');
     loading.value = false;
   }
 });
@@ -375,7 +422,7 @@ onMounted(async () => {
           :items="recentActivities"
           :loading="loading"
           show-view-all
-          view-all-route="/activities"
+          view-all-route=""
         />
       </div>
 

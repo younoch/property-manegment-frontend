@@ -120,7 +120,10 @@ export default defineNuxtConfig({
       frontendDomain: env('NUXT_PUBLIC_FRONTEND_DOMAIN', 'leasedirector.com'),
       backendDomain: env('NUXT_PUBLIC_BACKEND_DOMAIN', 'api.leasedirector.com'),
       GTAG_ID: env('NUXT_PUBLIC_GTAG_ID'),
-      googleClientId: env('NUXT_PUBLIC_GOOGLE_CLIENT_ID')
+      googleClientId: env('NUXT_PUBLIC_GOOGLE_CLIENT_ID'),
+      // Allow overriding Google Charts loader URL(s) if blocked by network/adblock
+      googleChartsLoaderUrl: env('NUXT_PUBLIC_GOOGLE_CHARTS_LOADER_URL', 'https://www.gstatic.com/charts/loader.js'),
+      googleChartsAltLoaderUrl: env('NUXT_PUBLIC_GOOGLE_CHARTS_ALT_LOADER_URL', '')
     }
   },
 

@@ -1,9 +1,10 @@
 import { ref, onUnmounted } from 'vue';
+import { useRuntimeConfig } from '#imports';
 
 // Enhanced TypeScript types for Google Charts
 type GoogleCharts = {
   charts: {
-    load: (version: string, options: { packages: string[] }) => void;
+    load: (version: string, options: { packages: string[]; language?: string }) => void;
     setOnLoadCallback: (callback: () => void) => void;
   };
   visualization: {
@@ -15,12 +16,6 @@ type GoogleCharts = {
     [key: string]: any;
   };
 };
-
-declare global {
-  interface Window {
-    google?: GoogleCharts;
-  }
-}
 
 export interface GoogleChartOptions {
   packages?: string[];
@@ -48,6 +43,10 @@ export function useGoogleCharts(options: GoogleChartOptions = {}) {
   // Singleton promise for loading Google Charts
   let googleReadyPromise: Promise<boolean> | null = null;
   let resizeObservers: Map<Element, ResizeObserver> = new Map();
+  const config = useRuntimeConfig();
+  // Always use Google's official CDN loader (per Google Charts policy)
+  const primaryLoader = 'https://www.gstatic.com/charts/loader.js';
+  const altLoader = '';
 
   // Cleanup function to remove all listeners and observers
   const cleanup = () => {
@@ -97,35 +96,51 @@ export function useGoogleCharts(options: GoogleChartOptions = {}) {
     error.value = null;
 
     googleReadyPromise = new Promise((resolve, reject) => {
+      // SSR guard
+      if (typeof window === 'undefined') {
+        console.debug('[GoogleCharts] Skipping load on server');
+        isLoading.value = false;
+        return resolve(false);
+      }
+      const w = window as any;
       // Check if already loaded by another instance
-      if (window.google?.visualization) {
+      if (w.google?.visualization) {
         isGoogleChartsLoaded.value = true;
         isLoading.value = false;
+        console.debug('[GoogleCharts] Already loaded');
         return resolve(true);
       }
 
-      const script = document.createElement('script');
-      script.src = `https://www.gstatic.com/charts/loader.js`;
+      // Avoid injecting duplicate loader script
+      const existing = document.querySelector(`script[src="${primaryLoader}"]`);
+      const script = existing instanceof HTMLScriptElement ? existing : document.createElement('script');
+      script.src = primaryLoader;
       script.async = true;
       script.defer = true;
       script.fetchPriority = 'low';
-      script.crossOrigin = 'anonymous';
+      script.referrerPolicy = 'no-referrer';
+      // Avoid crossOrigin on script tag to prevent strict CORS blockers in some environments
       
       const onLoad = () => {
         try {
-          if (!window.google) {
+          const w = window as any;
+          if (!w.google) {
             throw new Error('Google Charts library not available');
           }
 
-          window.google.charts.load(mergedOptions.version, {
+          console.debug('[GoogleCharts] loader.js loaded, calling charts.load(...)');
+          w.google.charts.load(mergedOptions.version, {
             packages: mergedOptions.packages,
-            language: mergedOptions.language,
-            callback: () => {
-              isGoogleChartsLoaded.value = true;
-              isLoading.value = false;
-              mergedOptions.callback?.();
-              resolve(true);
-            }
+            language: mergedOptions.language
+          });
+
+          // Use setOnLoadCallback properly
+          w.google.charts.setOnLoadCallback(() => {
+            console.debug('[GoogleCharts] charts loaded');
+            isGoogleChartsLoaded.value = true;
+            isLoading.value = false;
+            try { mergedOptions.callback?.(); } catch {}
+            resolve(true);
           });
         } catch (err) {
           handleError(err);
@@ -156,11 +171,35 @@ export function useGoogleCharts(options: GoogleChartOptions = {}) {
         }
       };
       
-      script.onload = onLoad;
-      script.onerror = () => handleError(new Error('Failed to load Google Charts script'));
-      
-      // Add to document
-      document.head.appendChild(script);
+      // Attach listeners only if not already attached
+      if (!existing) {
+        script.onload = onLoad;
+        script.onerror = (e) => {
+          console.error('[GoogleCharts] loader.js failed to load', e);
+          handleError(new Error('Failed to load Google Charts script'))
+        };
+        // Add to document
+        document.head.appendChild(script);
+        // Safety timeout: if script reports "complete" but no load event fired
+        setTimeout(() => {
+          if ((script as any).readyState === 'complete' && !isGoogleChartsLoaded.value) {
+            console.debug('[GoogleCharts] loader readyState complete without onload, invoking onLoad');
+            onLoad();
+          }
+        }, 2500);
+      } else {
+        // If already present, assume it may be loaded soon
+        console.debug('[GoogleCharts] Loader script already present, waiting for load');
+        if ((existing as any).readyState === 'complete') {
+          onLoad();
+        } else {
+          existing.addEventListener('load', onLoad, { once: true });
+          existing.addEventListener('error', (e) => {
+            console.error('[GoogleCharts] existing loader.js error', e);
+            handleError(new Error('Existing Google Charts script failed'))
+          } , { once: true });
+        }
+      }
     });
 
     return googleReadyPromise;
@@ -170,13 +209,13 @@ export function useGoogleCharts(options: GoogleChartOptions = {}) {
   const createChart = async (element: HTMLElement, type: string, data: any[][], options: any = {}) => {
     try {
       await loadGoogleCharts();
-      
-      if (!window.google?.visualization) {
+      const w = window as any;
+      if (!w.google?.visualization) {
         throw new Error('Google Charts visualization module not available');
       }
 
-      const dataTable = window.google.visualization.arrayToDataTable(data, true);
-      const chart = new window.google.visualization[type](element);
+      const dataTable = w.google.visualization.arrayToDataTable(data, true);
+      const chart = new w.google.visualization[type](element);
       
       // Store the chart instance for cleanup
       chartInstances.value.add(chart);

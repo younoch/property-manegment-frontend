@@ -1,95 +1,64 @@
 
 export default defineNuxtPlugin((nuxtApp: any) => {
-  if (process.client) {
-    const config = useRuntimeConfig();
-    const gtmId = config.public.GTAG_ID || '';
-    
-    if (!gtmId) {
-      console.warn('GTM ID is not set. Please set NUXT_PUBLIC_GTAG_ID in your .env file');
-      return;
-    }
+  if (!process.client) return;
 
-    window.dataLayer = window.dataLayer || [];
-    
-    window.gtag = function() {
-      window.dataLayer.push(arguments);
-    };
-    
-    window.gtag('js', new Date());
-    window.gtag('config', gtmId, { 
-      'send_page_view': false,
-      'transport_url': 'https://www.google-analytics.com',
-      'first_party_collection': true
-    });
+  const config = useRuntimeConfig();
+  const id = config.public.GTAG_ID || '';
+  const isProd = (config.public.nodeEnv || process.env.NODE_ENV) === 'production';
 
-    const loadGTM = () => {
-      if (window.dataLayer.loaded) return;
-      
-      window.dataLayer.loaded = true;
-      
-      const script = document.createElement('script');
-      script.async = true;
-      script.fetchPriority = 'low';
-      script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
-      
-      if ('connection' in navigator && (navigator as any).connection.saveData) {
-        return;
-      }
-      
-      const loadScript = () => {
-        document.head.appendChild(script);
-        
-        script.onload = () => {
-          setTimeout(() => {
-            window.gtag('event', 'page_view');
-          }, 100);
-        };
-      };
-      
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(loadScript, { timeout: 3000 });
-      } else {
-        const delay = window.requestAnimationFrame ? 
-          window.requestAnimationFrame(loadScript) : 
-          setTimeout(loadScript, 800);
-      }
-      
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.googletagmanager.com/ns.html?id=${gtmId}`;
-      iframe.height = '0';
-      iframe.width = '0';
-      iframe.loading = 'lazy';
-      iframe.style.display = 'none';
-      iframe.style.visibility = 'hidden';
-      document.body.appendChild(iframe);
-    };
+  if (!id) {
+    console.warn('Analytics ID is not set. Please set NUXT_PUBLIC_GTAG_ID in your .env file');
+    return;
+  }
 
-    const loadOnInteraction = () => {
-      document.removeEventListener('DOMContentLoaded', loadOnInteraction);
-      window.removeEventListener('load', loadOnInteraction);
-      
-      setTimeout(loadGTM, 800);
-    };
+  // Disable analytics in non-production to avoid noisy errors and blocked requests
+  if (!isProd) {
+    console.info('[Analytics] Disabled in non-production environment');
+    return;
+  }
 
-    if (document.readyState === 'complete') {
-      loadOnInteraction();
-    } else {
-      const events = ['mousemove', 'scroll', 'keydown', 'touchstart'];
-      const onFirstInteraction = () => {
-        events.forEach(event => {
-          window.removeEventListener(event, onFirstInteraction, { passive: true });
-        });
-        loadOnInteraction();
-      };
-      
-      events.forEach(event => {
-        window.addEventListener(event as keyof WindowEventMap, onFirstInteraction, { 
-          passive: true, 
-          once: true 
-        } as AddEventListenerOptions);
+  // Initialize dataLayer and gtag helper
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function() {
+    window.dataLayer.push(arguments);
+  } as any;
+
+  const loadScript = (src: string, onload?: () => void) => {
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = src;
+    s.fetchPriority = 'low';
+    if (onload) s.onload = onload;
+    document.head.appendChild(s);
+  };
+
+  if (id.startsWith('GTM-')) {
+    // Load Google Tag Manager container (expects a GTM-XXXX id)
+    // ns iframe is optional for SPA; skip to minimize noise
+    const start = () => {
+      loadScript(`https://www.googletagmanager.com/gtm.js?id=${id}`, () => {
+        // Optionally push initial page_view via GTM configuration
       });
-      
-      window.addEventListener('load', loadOnInteraction, { once: true });
+    };
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(start, { timeout: 3000 });
+    } else {
+      setTimeout(start, 800);
     }
+  } else if (id.startsWith('G-')) {
+    // Load GA4 (gtag.js) correctly for measurement ID G-XXXX
+    const init = () => {
+      window.gtag('js', new Date());
+      window.gtag('config', id, {
+        send_page_view: false,
+        transport_type: 'beacon', // avoid CORS with credentials
+        anonymize_ip: true
+      });
+      // Example: manual page_view event after route change can be added elsewhere
+      // window.gtag('event', 'page_view');
+    };
+    loadScript(`https://www.googletagmanager.com/gtag/js?id=${id}`, init);
+  } else {
+    console.warn('[Analytics] Unknown ID format. Expected GTM-XXXX or G-XXXX.');
   }
 });

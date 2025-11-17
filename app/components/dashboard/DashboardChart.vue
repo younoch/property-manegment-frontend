@@ -104,21 +104,43 @@ const emit = defineEmits(['range-change']);
 
 // Draw the chart when data or container changes
 const drawChart = async () => {
-  if (!chartEl.value || !isGoogleChartsLoaded.value || !props.showChart) return;
+  console.log('[DEBUG] drawChart called', { 
+    hasChartEl: !!chartEl.value, 
+    isGoogleChartsLoaded: isGoogleChartsLoaded.value,
+    showChart: props.showChart,
+    chartData: props.chartData,
+    chartOptions: props.chartOptions
+  });
+  
+  if (!chartEl.value || !isGoogleChartsLoaded.value || !props.showChart) {
+    console.log('[DEBUG] drawChart aborted - missing requirements');
+    return;
+  }
   
   try {
     const { google } = window as any;
+    
+    // Validate chart data
+    if (!Array.isArray(props.chartData) || props.chartData.length <= 1) {
+      console.error('[ERROR] Invalid or empty chart data:', props.chartData);
+      return;
+    }
+    
+    console.log('[DEBUG] Creating chart with data:', props.chartData);
     
     // Convert chart data to DataTable format if it's not already
     const data = google.visualization.arrayToDataTable(props.chartData);
     
     // Create and draw the chart
+    console.log(`[DEBUG] Creating ${props.chartType} chart`);
     const chart = new google.visualization[props.chartType](
       chartEl.value,
       props.chartOptions
     );
     
+    console.log('[DEBUG] Drawing chart...');
     chart.draw(data, props.chartOptions);
+    console.log('[DEBUG] Chart drawn successfully');
     
     // Handle window resize
     const handleResize = () => {
