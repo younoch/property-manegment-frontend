@@ -203,7 +203,6 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async signin(credentials: LoginCredentials) {
-      console.log('Starting signin with credentials:', JSON.stringify(credentials, null, 2));
       const userStore = useUserStore();
       const apiClient = createApiClient();
       
@@ -211,7 +210,6 @@ export const useAuthStore = defineStore('auth', {
       this.clearError();
       
       try {
-        console.log('Sending login request to /auth/signin');
         const response = await apiClient.post<{
           id: string;
           email: string;
@@ -230,8 +228,6 @@ export const useAuthStore = defineStore('auth', {
           accessToken: string;
           refreshToken: string;
         }>('/auth/signin', credentials);
-
-        console.log('Raw API Response:', JSON.stringify(response.data, null, 2));
         
         // The response is the user data directly
         const userData = response.data;
@@ -240,20 +236,6 @@ export const useAuthStore = defineStore('auth', {
           console.error('No user data in response');
           throw new Error('No user data received from server');
         }
-          
-          console.log('Processing user data:', {
-            hasAccessToken: 'accessToken' in userData,
-            hasUserData: 'id' in userData,
-            userDataKeys: Object.keys(userData)
-          });
-
-          // Log token information (without logging actual tokens in production)
-          console.log('Token info:', {
-            hasAccessToken: !!userData.accessToken,
-            hasRefreshToken: !!userData.refreshToken,
-            accessTokenPrefix: userData.accessToken ? userData.accessToken.substring(0, 10) + '...' : 'none',
-            refreshTokenPrefix: userData.refreshToken ? userData.refreshToken.substring(0, 10) + '...' : 'none'
-          });
 
           // Store tokens
           if (!userData.accessToken) {
@@ -262,11 +244,9 @@ export const useAuthStore = defineStore('auth', {
           }
           
           localStorage.setItem('auth_token', userData.accessToken);
-          console.log('Access token stored in localStorage');
           
           if (userData.refreshToken) {
             localStorage.setItem('refresh_token', userData.refreshToken);
-            console.log('Refresh token stored in localStorage');
           } else {
             console.warn('No refresh token in response');
           }
@@ -289,22 +269,8 @@ export const useAuthStore = defineStore('auth', {
             owned_portfolios: userData.owned_portfolios || []
           };
 
-          console.log('Mapped user data:', {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            hasProfileImage: !!user.profile_image_url,
-            portfolioCount: user.owned_portfolios?.length || 0,
-            requiresOnboarding: user.requires_onboarding
-          });
-
-          // Update stores
-          console.log('Updating user store...');
           this.user = user;
           userStore.setUser(user);
-
-          console.log('Login successful, redirecting...');
           return {
             success: true,
             user,
@@ -470,7 +436,6 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async signInWithGoogle({ token, role = 'landlord' }: GoogleSignInData) {
-      console.log('Starting Google sign-in with token and role:', { hasToken: !!token, role });
       this.loading = true;
       this.error = null;
       const userStore = useUserStore();
@@ -482,10 +447,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const api = createApiClient();
         
-        console.log('Sending Google login request...');
         const response = await api.post('/auth/google/login', { token, role });
-        
-        console.log('Google Login API Response:', response);
         
         if (!response) {
           throw new Error('No response received from server');
@@ -528,8 +490,6 @@ export const useAuthStore = defineStore('auth', {
             document.cookie = refreshCookie;
           }
         }
-        
-        console.log('Authentication tokens stored successfully');
 
         // Map user data to our User type
         const user: User = {
@@ -549,29 +509,12 @@ export const useAuthStore = defineStore('auth', {
           owned_portfolios: userData.owned_portfolios || [],
           googleId: userData.google_id
         };
-        
-        console.log('Mapped user data:', {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          requiresOnboarding: user.requires_onboarding
-        });
 
-        console.log('Mapped Google user data:', {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          hasProfileImage: !!user.profile_image_url,
-          requiresOnboarding: user.requires_onboarding
-        });
 
         // Update stores
         this.user = user;
         userStore.setUser(user);
 
-        console.log('Google sign-in successful, redirecting...');
         return {
           success: true,
           user,

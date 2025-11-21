@@ -7,8 +7,7 @@ import { createProtectedApiClient } from '~/utils/api';
 import KPICard from '~/components/dashboard/KPICard.vue';
 import DashboardChart from '~/components/dashboard/DashboardChart.vue';
 import DataTable from '~/components/dashboard/DataTable.vue';
-type RangeValue = typeof ranges[number]['value'];
-
+type RangeValue = 'this_month' | 'last_month' | 'last_3_months' | 'this_year' | 'last_year' | 'all_time';
 // META
 definePageMeta({ middleware: ['auth'] });
 
@@ -35,8 +34,9 @@ const propertyOptions = computed(() => {
 const loadingStats = ref(false);
 const propertyStats = ref<Partial<PropertyStats>>({});
 
-const revenueData = ref<Array<Array<string | number>>>([['Month', 'Revenue', 'Expenses']]);
-const occupancyData = ref<Array<Array<string | number>>>([
+// Use loose typing for chart data to support Date objects and numbers
+const revenueData = ref<any[]>([['Month', 'Revenue', 'Expenses']]);
+const occupancyData = ref<any[]>([
   ['Month', 'Occupancy Rate'],
 ]);
 
@@ -56,23 +56,39 @@ const recentActivities = ref([
   { id: 4, type: 'inspection', description: 'Quarterly property inspection', date: '2023-06-13T14:20:00Z', status: 'scheduled', property: 'Mountain View Complex #8' }
 ]);
 
-// CHART OPTIONS
+// CHART OPTIONS - Updated for d3.js compatibility
 const revenueChartOptions = {
   title: 'Revenue vs Expenses',
-  curveType: 'function',
-  legend: { position: 'top' },
   colors: ['#4ade80', '#f87171'],
-  vAxis: { format: 'currency', title: 'Amount (BDT)' },
-  hAxis: { title: 'Month' }
+  vAxis: { 
+    title: 'Amount (BDT)',
+    gridlines: { count: 5 },
+    format: 'currency'
+  },
+  hAxis: { 
+    title: 'Month',
+    gridlines: { count: 12 },
+    format: 'MMM yyyy'
+  },
+  margin: { top: 30, right: 30, bottom: 80, left: 70 }
 };
 
 const occupancyChartOptions = {
   title: 'Occupancy Rate',
-  curveType: 'function',
-  legend: { position: 'none' },
   colors: ['#60a5fa'],
-  vAxis: { format: '#%', minValue: 0, maxValue: 1, title: 'Occupancy Rate' },
-  hAxis: { title: 'Month' }
+  vAxis: { 
+    title: 'Occupancy Rate',
+    gridlines: { count: 5 },
+    format: '#%',
+    minValue: 0,
+    maxValue: 1
+  },
+  hAxis: { 
+    title: 'Month',
+    gridlines: { count: 6 },
+    format: 'MMM yyyy'
+  },
+  margin: { top: 30, right: 30, bottom: 80, left: 70 }
 };
 
 // TABLE COLUMNS
@@ -102,22 +118,22 @@ const currentEndDate = ref<Date>(new Date());
 const formatDateForApi = (date: Date): string =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
-const transformRevenueExpenses = (data: any): Array<Array<string | number>> => {
+const transformRevenueExpenses = (data: any): any[] => {
   console.log('[DEBUG] transformRevenueExpenses input:', data);
-  const result: Array<Array<string | number>> = [['Month', 'Revenue', 'Expenses']];
+  const result: any[] = [['Month', 'Revenue', 'Expenses']];
   
   if (!data?.monthlyRevenue || !data?.monthlyExpenses) {
     console.error('[ERROR] Missing required data in transformRevenueExpenses');
     return result;
   }
   
-  const revenueMap = new Map(data.monthlyRevenue.map((r: any) => {
+  const revenueMap = new Map<string, any>(data.monthlyRevenue.map((r: any) => {
     const key = `${r.year}-${r.month}`;
     console.log(`[DEBUG] Revenue item - Key: ${key}, Value:`, r);
     return [key, r];
   }));
   
-  const expenseMap = new Map(data.monthlyExpenses.map((e: any) => {
+  const expenseMap = new Map<string, any>(data.monthlyExpenses.map((e: any) => {
     const key = `${e.year}-${e.month}`;
     console.log(`[DEBUG] Expense item - Key: ${key}, Value:`, e);
     return [key, e];
@@ -139,15 +155,55 @@ const transformRevenueExpenses = (data: any): Array<Array<string | number>> => {
   });
 
   for (const key of sortedKeys) {
-    const revenue = revenueMap.get(key);
-    const expense = expenseMap.get(key);
+    const revenue: any = revenueMap.get(key);
+    const expense: any = expenseMap.get(key);
+
+    // Prefer structured year/month from either revenue or expense entry
+    const year = (revenue?.year ?? expense?.year) as number | undefined;
+    const month = (revenue?.month ?? expense?.month) as number | undefined;
+
+    let xValue: Date | null = null;
+    if (typeof year === 'number' && typeof month === 'number') {
+      // Google Charts Date: month is 0-based
+      xValue = new Date(year, month - 1, 1);
+    }
+
+    // Fallback: if we somehow don't have year/month, skip this row
+    if (!xValue) continue;
+
     result.push([
-      revenue?.label || expense?.label || '',
+      xValue,
       revenue?.amount ?? 0,
       expense?.amount ?? 0
     ]);
   }
   return result;
+};
+
+const transformOccupancyHistory = (data: any): any[] => {
+  const historical = Array.isArray(data?.historicalOccupancy)
+    ? data.historicalOccupancy
+    : [];
+
+  const rows: any[] = [];
+
+  for (const entry of historical) {
+    if (!Array.isArray(entry) || entry.length < 2) continue;
+    const [label, value] = entry as [string, number];
+
+    // Try to parse label like "Nov, 2025" into a Date
+    const parsed = new Date(label);
+    if (isNaN(parsed.getTime())) {
+      continue;
+    }
+
+    rows.push([parsed, value]);
+  }
+
+  return [
+    ['Month', 'Occupancy Rate'],
+    ...rows
+  ];
 };
 
 const getDateRange = (range: string): { startDate: Date; endDate: Date } => {
@@ -212,22 +268,32 @@ const fetchPropertyStats = async (propertyId: string | null) => {
     console.log('[DEBUG] Fetching stats with params:', params);
     
     const response = await api.get(`/dashboard/properties/${propertyId}/stats?${new URLSearchParams(params)}`);
-    console.log('[DEBUG] API Response:', response);
-    
-    propertyStats.value = response?.data ?? response;
+    console.log('[DEBUG] API raw response:', response);
+
+    const stats = (response as any)?.data?.data ?? (response as any)?.data ?? response;
+    console.log('[DEBUG] Normalized stats object:', stats);
+
+    propertyStats.value = stats;
     console.log('[DEBUG] Updated propertyStats:', propertyStats.value);
 
-    // @ts-ignore - We know these properties exist from the API response
-    kpis.value[0].value = propertyStats.value.totalUnits;
+    // Update KPIs from normalized stats
+    // @ts-ignore - API guarantees these fields
+    kpis.value[0].value = stats.totalUnits ?? 0;
     // @ts-ignore
-    kpis.value[1].value = propertyStats.value.rentedUnits;
+    kpis.value[1].value = stats.rentedUnits ?? 0;
     // @ts-ignore
-    kpis.value[2].value = propertyStats.value.totalExpenses;
+    kpis.value[2].value = stats.totalExpenses ?? 0;
     // @ts-ignore
-    kpis.value[3].value = propertyStats.value.totalRevenue;
+    kpis.value[3].value = stats.totalRevenue ?? 0;
 
-    revenueData.value = transformRevenueExpenses(propertyStats.value);
-    occupancyData.value = occupancyData.value.concat(propertyStats.value.historicalOccupancy);
+    // Build chart data for Revenue vs Expenses
+    revenueData.value = transformRevenueExpenses(stats);
+
+    // Build chart data for Occupancy Rate (Date-based x-axis)
+    occupancyData.value = transformOccupancyHistory(stats);
+    console.log('Preview occupancyData and ckecking the data type', occupancyData.value);
+    console.log('Preview revenueData and checking the data type', revenueData.value);
+    
   } catch (e: any) {
     console.error('Failed to fetch property stats:', e);
     propertyStats.value = {};
@@ -398,6 +464,7 @@ onMounted(async () => {
         <DashboardChart
           :show-chart="revenueData.length > 1"
           title="Revenue vs Expenses"
+          chart-type="bar"
           :chart-data="revenueData"
           :chart-options="revenueChartOptions"
           :show-range-selector="false"
@@ -407,6 +474,7 @@ onMounted(async () => {
         <DashboardChart
           :show-chart="occupancyData.length > 1"
           title="Occupancy Rate"
+          chart-type="line"
           :chart-data="occupancyData"
           :chart-options="occupancyChartOptions"
           :show-range-selector="false"

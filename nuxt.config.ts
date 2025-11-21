@@ -55,19 +55,19 @@ export default defineNuxtConfig({
       '/**': {
         headers: {
           'X-Content-Type-Options': 'nosniff',
-          'X-Frame-Options': 'SAMEORIGIN',
           'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Content-Security-Policy': [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.google.com https://accounts.google.com https://apis.google.com https://www.gstatic.com",
-            "style-src 'self' 'unsafe-inline'",
+            // Allow Google Charts to load its own stylesheets (tooltip.css, table.css, util.css, etc.)
+            "style-src 'self' 'unsafe-inline' data: blob: https://www.gstatic.com https://www.google.com",
             "img-src 'self' data: blob: https: http: https://www.google.com https://www.google-analytics.com https://*.google-analytics.com https://*.google.com https://*.gstatic.com https://www.googletagmanager.com",
             "font-src 'self' data: https:",
-            `connect-src 'self' ${env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000')} wss: https: http: https://www.google-analytics.com https://*.google-analytics.com https://www.google.com https://www.googletagmanager.com https://*.googleapis.com`,
-            "frame-src 'self' https://accounts.google.com https://www.googletagmanager.com https://apis.google.com",
-            "frame-ancestors 'self'",
+            `connect-src 'self' ${env('NUXT_PUBLIC_API_BASE_URL', 'http://localhost:8000')} ws: wss: https: http: https://www.google-analytics.com https://*.google-analytics.com https://www.google.com https://www.googletagmanager.com https://*.googleapis.com`,
+            "frame-src 'self' about: data: blob: https://accounts.google.com https://www.googletagmanager.com https://apis.google.com https://*.google.com https://*.gstatic.com",
+            "frame-ancestors 'self' http://localhost:* http://127.0.0.1:*",
             "form-action 'self'",
             "media-src 'self' https: http:",
             "child-src 'self' blob: https://www.googletagmanager.com"
@@ -101,14 +101,6 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicon.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
-
-        // ✅ Improve Nuxt CSS load
-        {
-          rel: 'preload',
-          as: 'style',
-          href: '/_nuxt/entry.css',
-          onload: "this.onload=null;this.rel='stylesheet'"
-        }
       ]
     }
   },
