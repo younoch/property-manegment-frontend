@@ -1,11 +1,10 @@
-import { computed, readonly } from 'vue';
+import { computed, ref } from 'vue';
 import type { User } from '@/types/auth';
 
-// Lazy load stores and utilities
+// Lazy load stores
 const loadStores = () => Promise.all([
   import('@/stores/auth').then(m => m.useAuthStore()),
-  import('@/stores/user').then(m => m.useUserStore()),
-  import('./useCsrf').then(m => m.useCsrf())
+  import('@/stores/user').then(m => m.useUserStore())
 ]);
 
 // Cache for memoization
@@ -22,14 +21,13 @@ export const useAuth = () => {
   // Initialize state with null values that will be populated on first use
   let authStore: any = null;
   let userStore: any = null;
-  let csrf: any = null;
   
   // Lazy getter for stores
   const getStoresLazy = async () => {
-    if (!authStore || !userStore || !csrf) {
-      [authStore, userStore, csrf] = await getStores();
+    if (!authStore || !userStore) {
+      [authStore, userStore] = await getStores();
     }
-    return { authStore, userStore, csrf };
+    return { authStore, userStore };
   };
 
   // Computed properties that sync with stores

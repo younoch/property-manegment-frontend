@@ -14,6 +14,7 @@ export interface ChartOptions {
     left: number;
   };
   yFormat?: (d: any) => string;
+  title?: string;
 }
 
 export function useD3Charts() {
@@ -192,31 +193,80 @@ export function useD3Charts() {
           .text(options.yAxisLabel);
       }
       
-      // Add the lines
+      // Add the lines with theme-aware styling
+      const colorScale = d3.scaleOrdinal<string>()
+        .domain(series)
+        .range(options.colors || d3.schemeCategory10);
+      
+      // Add grid lines for better readability
+      const yGrid = d3.axisLeft(y)
+        .tickSize(-innerWidth)
+        .tickFormat(() => '')
+        .ticks(5);
+      
+      svg.append('g')
+        .attr('class', 'grid')
+        .call(yGrid)
+        .selectAll('line')
+          .style('stroke', 'var(--color-gray-100, #F3F4F6)') // Tailwind gray-100
+          .style('shape-rendering', 'crispEdges')
+          .style('stroke-dasharray', '2,2');
+      
+      // Add the lines with theme-aware styling
       series.forEach((s, i) => {
         const lineData = formattedData.map(d => ({
           date: d.date,
           value: d[s]
         }));
-        
+
+        const linePath = d3.line()
+          .x((d: any) => x(d.date))
+          .y((d: any) => y(d.value));
+
+        // Add the line path
         svg.append('path')
-          .data([lineData])
+          .datum(lineData)
           .attr('class', 'line')
           .style('fill', 'none')
-          .style('stroke', options.colors?.[i] || d3.schemeCategory10[i])
+          .style('stroke', colorScale(s))
           .style('stroke-width', 2)
-          .attr('d', line as any);
+          .style('stroke-linecap', 'round')
+          .style('stroke-linejoin', 'round')
+          .attr('d', linePath as any);
           
-        // Add dots for each data point
-        svg.selectAll(`.dot-${i}`)
-          .data(lineData)
-          .enter().append('circle')
-          .attr('class', `dot dot-${i}`)
-          .attr('cx', (d: any) => x(d.date))
-          .attr('cy', (d: any) => y(d.value))
-          .attr('r', 3.5)
-          .style('fill', options.colors?.[i] || d3.schemeCategory10[i])
-          .style('opacity', 0.8);
+        // Add interactive dots
+        const dotGroup = svg.append('g')
+          .attr('class', `dots-${i}`);
+        
+        dotGroup.selectAll(`.dot-${i}`)
+          .data(formattedData)
+          .enter()
+          .append('circle')
+            .attr('class', `dot dot-${i}`)
+            .attr('cx', (d: any) => x(d.date))
+            .attr('cy', (d: any) => y(d[s]))
+            .attr('r', 3)
+            .style('fill', options.colors?.[i] || d3.schemeCategory10[i])
+            .style('opacity', 0.8)
+            .style('stroke', 'white')
+            .style('stroke-width', 1.5);
+        
+        // Add hover effects
+        dotGroup.selectAll(`.dot-${i}`)
+          .on('mouseover', function() {
+            d3.select(this)
+              .transition()
+              .duration(150)
+              .attr('r', 5)
+              .style('opacity', 1);
+          })
+          .on('mouseout', function() {
+            d3.select(this)
+              .transition()
+              .duration(150)
+              .attr('r', 3)
+              .style('opacity', 0.8);
+          });
       });
       
       // Add a title

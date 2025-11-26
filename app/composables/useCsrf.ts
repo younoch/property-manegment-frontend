@@ -8,7 +8,10 @@ export interface CsrfState {
   cacheDuration: number;
 }
 
+// This ensures the composable is only called when needed
 export const useCsrf = () => {
+  // Ensure we're in a component context
+  const nuxtApp = useNuxtApp();
   const token = useState<string | null>('csrf-token', () => null);
   const loading = useState<boolean>('csrf-loading', () => false);
   const error = useState<string | null>('csrf-error', () => null);
@@ -31,13 +34,24 @@ export const useCsrf = () => {
     if (process.server) return null;
 
     try {
+      // Use dynamic import to avoid circular dependencies
       const { useAuth } = await import('./useAuth');
       const auth = useAuth();
+      
+      // Wait for auth to be ready if needed
+      if (auth.isAuthenticated?.value === undefined) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        return token.value;
+      }
+      
       if (!auth.isAuthenticated.value) {
         if (token.value) return token.value;
         return null;
       }
-    } catch {}
+    } catch (error) {
+      console.error('Error in CSRF auth check:', error);
+      return token.value; // Return current token if available
+    }
 
     if (!force && isBackoffActive()) return null;
 

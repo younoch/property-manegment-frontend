@@ -20,45 +20,54 @@
     </template>
 
     <div class="flex-1 overflow-hidden">
-      <UTable 
-        :rows="items" 
-        :columns="columns"
-        :loading="loading"
-        :loading-state="{
-          icon: 'i-heroicons-arrow-path',
-          label: 'Loading...',
-        }"
-        :empty-state="{
-          icon: 'i-heroicons-circle-stack-20-solid',
-          label: 'No items found.'
-        }"
-        :ui="{
-          wrapper: 'h-full',
-          tbody: 'divide-y divide-gray-200 dark:divide-gray-800',
-          th: { base: 'text-left rtl:text-right', padding: 'px-4 py-3', color: 'text-gray-500 dark:text-gray-400' },
-          td: { base: 'whitespace-nowrap', padding: 'px-4 py-3' }
-        }"
-      >
-        <template #empty-state>
-          <div class="flex flex-col items-center justify-center py-6">
-            <UIcon name="i-heroicons-inbox" class="w-12 h-12 text-gray-400 mb-2" />
-            <p class="text-gray-500 dark:text-gray-400">No data available</p>
-          </div>
-        </template>
-
-        <template #loading-state>
-          <div class="flex items-center justify-center py-6">
-            <UIcon name="i-heroicons-arrow-path" class="animate-spin w-6 h-6 text-primary-500 mr-2" />
-            <span>Loading...</span>
-          </div>
-        </template>
-
-        <template #empty>
-          <div class="flex items-center justify-center py-6 text-gray-500">
-            No data available
-          </div>
-        </template>
-      </UTable>
+      <div class="w-full overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-800">
+            <tr>
+              <th 
+                v-for="column in columns" 
+                :key="column.key"
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                :class="[column.class]"
+              >
+                {{ column.label }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            <tr v-if="loading">
+              <td :colspan="columns.length" class="px-6 py-4 text-center">
+                <div class="flex items-center justify-center">
+                  <UIcon name="i-heroicons-arrow-path" class="animate-spin w-5 h-5 text-primary-500 mr-2" />
+                  <span>Loading...</span>
+                </div>
+              </td>
+            </tr>
+            <tr v-else-if="!items || items.length === 0">
+              <td :colspan="columns.length" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                <div class="flex flex-col items-center justify-center py-6">
+                  <UIcon name="i-heroicons-inbox" class="w-12 h-12 text-gray-400 mb-2" />
+                  <p>No data available</p>
+                </div>
+              </td>
+            </tr>
+            <template v-else>
+              <tr v-for="(item, index) in items" :key="item.id || index" class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                <td 
+                  v-for="column in columns" 
+                  :key="column.key"
+                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                >
+                  <slot :name="column.key" :value="item[column.key]" :item="item">
+                    {{ item[column.key] }}
+                  </slot>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <template #footer>

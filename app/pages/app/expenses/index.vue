@@ -155,10 +155,8 @@
 
 
 <script setup lang="ts">
-import { h, resolveComponent, defineAsyncComponent, ref, computed, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { createProtectedApiClient } from '@/utils/api'
-import { useAuth } from '@/composables/useAuth'
 import { 
   getExpenseStatusColor, 
   getExpenseStatusByValue, 

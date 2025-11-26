@@ -5,8 +5,9 @@ import type { KPI } from '~/types/dashboard';
 import type { Property, PropertyStats } from '~/types/properties';
 import { createProtectedApiClient } from '~/utils/api';
 import KPICard from '~/components/dashboard/KPICard.vue';
-import DashboardChart from '~/components/dashboard/DashboardChart.vue';
 import DataTable from '~/components/dashboard/DataTable.vue';
+import RevenueExpensesChart from '~/components/dashboard/RevenueExpensesChart.vue';
+import OccupancyRateChart from '~/components/dashboard/OccupancyRateChart.vue';
 type RangeValue = 'this_month' | 'last_month' | 'last_3_months' | 'this_year' | 'last_year' | 'all_time';
 // META
 definePageMeta({ middleware: ['auth'] });
@@ -32,7 +33,32 @@ const propertyOptions = computed(() => {
   }));
 });
 const loadingStats = ref(false);
-const propertyStats = ref<Partial<PropertyStats>>({});
+interface MonthlyData {
+  year: number;
+  month: number;
+  amount: number;
+  label: string;
+}
+
+interface DashboardStats {
+  totalUnits?: number;
+  rentedUnits?: number;
+  activeTenants?: number;
+  totalRevenue?: number;
+  totalExpenses?: number;
+  overduePayments?: any[];
+  activeLeases?: number;
+  occupancyRate?: number;
+  monthlyRevenue: MonthlyData[];
+  monthlyExpenses: MonthlyData[];
+  historicalOccupancy: Array<[string, number]>;
+}
+
+const propertyStats = ref<Partial<DashboardStats>>({
+  monthlyRevenue: [],
+  monthlyExpenses: [],
+  historicalOccupancy: []
+});
 
 // Use loose typing for chart data to support Date objects and numbers
 const revenueData = ref<any[]>([['Month', 'Revenue', 'Expenses']]);
@@ -48,13 +74,62 @@ const kpis = ref<KPI[]>([
   { id: 'total_revenue', label: 'Monthly Revenue', value: 0, icon: 'i-heroicons-currency-dollar' }
 ]);
 
-// Activities
-const recentActivities = ref([
-  { id: 1, type: 'payment', description: 'Rent payment received', amount: 1200, date: '2023-06-15T10:30:00Z', status: 'completed', property: 'Sunset Villas #42' },
-  { id: 2, type: 'maintenance', description: 'AC repair request', date: '2023-06-14T15:45:00Z', status: 'in-progress', property: 'Downtown Loft #12' },
-  { id: 3, type: 'application', description: 'New tenant application', date: '2023-06-14T09:15:00Z', status: 'pending', property: 'Riverside Apartments #5' },
-  { id: 4, type: 'inspection', description: 'Quarterly property inspection', date: '2023-06-13T14:20:00Z', status: 'scheduled', property: 'Mountain View Complex #8' }
-]);
+// Recent Payments
+interface Payment {
+  id: string;
+  created_at: string;
+  amount: number;
+  payment_method: string;
+  payment_date: string;
+  status: string;
+  reference?: string;
+  notes?: string;
+  invoice: {
+    invoice_number: string;
+    lease_id: string;
+  };
+}
+
+const recentPayments = ref<Payment[]>([]);
+const loadingPayments = ref(false);
+
+// Fetch recent payments
+const fetchRecentPayments = async (propertyId: string | null) => {
+  if (!propertyId) return;
+  
+  loadingPayments.value = true;
+  try {
+    const queryParams = new URLSearchParams({
+      page: '1',
+      limit: '5',
+      sortOrder: 'DESC'
+    }).toString();
+    
+    const response = await api.get(`/payments/property/${propertyId}?${queryParams}`);
+    
+    if (response.success && response.data) {
+      // Extract the data array from the response
+      const responseData = Array.isArray(response.data) ? response.data : response.data.data || [];
+      
+      // Transform the data to match the DataTable's expected structure
+      recentPayments.value = responseData.map(payment => ({
+        id: payment.id,
+        invoice_number: payment.invoice?.invoice_number || 'N/A',
+        amount: payment.amount,
+        payment_method: payment.payment_method,
+        payment_date: payment.payment_date,
+        status: payment.status,
+        reference: payment.reference || '',
+        _raw: payment // Keep the original data in case it's needed
+      }));
+    }
+  } catch (err) {
+    console.error('Error fetching recent payments:', err);
+    error.value = 'Failed to load recent payments';
+  } finally {
+    loadingPayments.value = false;
+  }
+};
 
 // CHART OPTIONS - Updated for d3.js compatibility
 const revenueChartOptions = {
@@ -92,11 +167,12 @@ const occupancyChartOptions = {
 };
 
 // TABLE COLUMNS
-const activityColumns = [
-  { id: 'description', key: 'description', label: 'Activity', sortable: true },
-  { id: 'property', key: 'property', label: 'Property', sortable: true },
-  { id: 'date', key: 'date', label: 'Date', sortable: true },
-  { id: 'status', key: 'status', label: 'Status', sortable: true }
+const paymentColumns = [
+  { id: 'invoice_number', key: 'invoice_number', label: 'Invoice #', sortable: true, width: '20%' },
+  { id: 'amount', key: 'amount', label: 'Amount', sortable: true, width: '20%' },
+  { id: 'payment_method', key: 'payment_method', label: 'Method', sortable: true, width: '15%' },
+  { id: 'payment_date', key: 'payment_date', label: 'Date', sortable: true, width: '25%' },
+  { id: 'status', key: 'status', label: 'Status', sortable: true, width: '20%' }
 ];
 
 // DATE RANGES
@@ -115,11 +191,30 @@ const currentStartDate = ref<Date>(new Date());
 const currentEndDate = ref<Date>(new Date());
 
 // HELPERS
+const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BDT',
+    minimumFractionDigits: 2
+  }).format(amount);
+};
+
+const formatDate = (dateString: string): string => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
 const formatDateForApi = (date: Date): string =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
 const transformRevenueExpenses = (data: any): any[] => {
-  console.log('[DEBUG] transformRevenueExpenses input:', data);
   const result: any[] = [['Month', 'Revenue', 'Expenses']];
   
   if (!data?.monthlyRevenue || !data?.monthlyExpenses) {
@@ -129,18 +224,15 @@ const transformRevenueExpenses = (data: any): any[] => {
   
   const revenueMap = new Map<string, any>(data.monthlyRevenue.map((r: any) => {
     const key = `${r.year}-${r.month}`;
-    console.log(`[DEBUG] Revenue item - Key: ${key}, Value:`, r);
     return [key, r];
   }));
   
   const expenseMap = new Map<string, any>(data.monthlyExpenses.map((e: any) => {
     const key = `${e.year}-${e.month}`;
-    console.log(`[DEBUG] Expense item - Key: ${key}, Value:`, e);
     return [key, e];
   }));
   
   const allKeys = new Set<string>([...revenueMap.keys(), ...expenseMap.keys()]);
-  console.log('[DEBUG] All unique month keys:', Array.from(allKeys));
 
   const sortedKeys = Array.from(allKeys).sort((a, b) => {
     const [ayStr, amStr] = a.split('-');
@@ -180,30 +272,41 @@ const transformRevenueExpenses = (data: any): any[] => {
   return result;
 };
 
-const transformOccupancyHistory = (data: any): any[] => {
-  const historical = Array.isArray(data?.historicalOccupancy)
-    ? data.historicalOccupancy
-    : [];
-
-  const rows: any[] = [];
-
-  for (const entry of historical) {
-    if (!Array.isArray(entry) || entry.length < 2) continue;
-    const [label, value] = entry as [string, number];
-
-    // Try to parse label like "Nov, 2025" into a Date
-    const parsed = new Date(label);
-    if (isNaN(parsed.getTime())) {
-      continue;
-    }
-
-    rows.push([parsed, value]);
+const transformOccupancyHistory = (data: any): Array<{ label: string; value: number }> => {
+  const result = [];
+  
+  // Add current month's data if available
+  if (data?.occupancyRate !== undefined) {
+    const currentDate = new Date();
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const label = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    result.push({
+      label,
+      value: data.occupancyRate * 100 // Convert to percentage
+    });
   }
 
-  return [
-    ['Month', 'Occupancy Rate'],
-    ...rows
-  ];
+  // Add historical data if available
+  if (Array.isArray(data?.historicalOccupancy)) {
+    data.historicalOccupancy.forEach((entry: any) => {
+      if (Array.isArray(entry) && entry.length === 2 && typeof entry[0] === 'string' && typeof entry[1] === 'number') {
+        result.push({
+          label: entry[0],
+          value: entry[1] * 100 // Convert to percentage
+        });
+      }
+    });
+  }
+
+  // Ensure we have at least one data point
+  if (result.length === 0) {
+    result.push({
+      label: 'No Data',
+      value: 0
+    });
+  }
+
+  return result;
 };
 
 const getDateRange = (range: string): { startDate: Date; endDate: Date } => {
@@ -255,7 +358,6 @@ const fetchProperties = async () => {
 
 const fetchPropertyStats = async (propertyId: string | null) => {
   if (!propertyId) {
-    console.log('[DEBUG] No property ID provided');
     propertyStats.value = {};
     return;
   }
@@ -265,34 +367,21 @@ const fetchPropertyStats = async (propertyId: string | null) => {
       startDate: formatDateForApi(currentStartDate.value),
       endDate: formatDateForApi(currentEndDate.value)
     };
-    console.log('[DEBUG] Fetching stats with params:', params);
     
     const response = await api.get(`/dashboard/properties/${propertyId}/stats?${new URLSearchParams(params)}`);
-    console.log('[DEBUG] API raw response:', response);
 
     const stats = (response as any)?.data?.data ?? (response as any)?.data ?? response;
-    console.log('[DEBUG] Normalized stats object:', stats);
 
     propertyStats.value = stats;
-    console.log('[DEBUG] Updated propertyStats:', propertyStats.value);
 
-    // Update KPIs from normalized stats
-    // @ts-ignore - API guarantees these fields
-    kpis.value[0].value = stats.totalUnits ?? 0;
-    // @ts-ignore
-    kpis.value[1].value = stats.rentedUnits ?? 0;
-    // @ts-ignore
-    kpis.value[2].value = stats.totalExpenses ?? 0;
-    // @ts-ignore
-    kpis.value[3].value = stats.totalRevenue ?? 0;
-
-    // Build chart data for Revenue vs Expenses
-    revenueData.value = transformRevenueExpenses(stats);
+    // Update KPIs from normalized stats with nullish coalescing
+    kpis.value[0].value = stats?.totalUnits ?? 0;
+    kpis.value[1].value = stats?.rentedUnits ?? 0;
+    kpis.value[2].value = stats?.totalExpenses ?? 0;
+    kpis.value[3].value = stats?.totalRevenue ?? 0;
 
     // Build chart data for Occupancy Rate (Date-based x-axis)
     occupancyData.value = transformOccupancyHistory(stats);
-    console.log('Preview occupancyData and ckecking the data type', occupancyData.value);
-    console.log('Preview revenueData and checking the data type', revenueData.value);
     
   } catch (e: any) {
     console.error('Failed to fetch property stats:', e);
@@ -336,8 +425,11 @@ const getActionColor = (action: string) => {
   return colors[action.toLowerCase()] || 'gray';
 };
 
-const handlePropertyChange = (propertyId: string | null) => {
+const handlePropertyChange = async (propertyId: string | null) => {
   selectedProperty.value = propertyId;
+  if (propertyId) {
+    await fetchRecentPayments(propertyId);
+  }
 };
 
 const handleRangeChange = (range: string) => {
@@ -365,26 +457,25 @@ const handleRefresh = async () => {
 
 // LIFECYCLE
 onMounted(async () => {
-  console.log('[DEBUG] Dashboard mounted, checking for user portfolios...');
   if (user.value?.owned_portfolios?.length) {
-    console.log('[DEBUG] User has portfolios, fetching properties...');
     await fetchProperties();
     
     // Use nextTick to ensure the DOM is updated
     await nextTick();
     
-    console.log('[DEBUG] Properties loaded, selected property:', selectedProperty.value);
-    console.log('[DEBUG] Property options:', propertyOptions.value);
-    
-    // Force a refresh of the stats
+    // Force a refresh of the stats and fetch payments
     if (selectedProperty.value) {
-      console.log('[DEBUG] Fetching stats for selected property...');
-      fetchPropertyStats(selectedProperty.value);
+      await Promise.all([
+        fetchPropertyStats(selectedProperty.value),
+        fetchRecentPayments(selectedProperty.value)
+      ]);
     } else if (propertyOptions.value.length > 0 && propertyOptions.value[0]?.value) {
-      console.log('[DEBUG] No property selected, selecting first property...');
       selectedProperty.value = propertyOptions.value[0].value;
-      // Fetch stats after setting the property
-      fetchPropertyStats(selectedProperty.value);
+      // Fetch stats and payments after setting the property
+      await Promise.all([
+        fetchPropertyStats(selectedProperty.value),
+        fetchRecentPayments(selectedProperty.value)
+      ]);
     } else {
       console.warn('[WARN] No properties available to select');
       loading.value = false;
@@ -461,37 +552,60 @@ onMounted(async () => {
       <!-- Charts Row -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 w-full">
         <!-- Revenue vs Expenses Chart -->
-        <DashboardChart
-          :show-chart="revenueData.length > 1"
-          title="Revenue vs Expenses"
-          chart-type="bar"
-          :chart-data="revenueData"
-          :chart-options="revenueChartOptions"
-          :show-range-selector="false"
+        <RevenueExpensesChart
+          :monthly-revenue="propertyStats?.monthlyRevenue || []"
+          :monthly-expenses="propertyStats?.monthlyExpenses || []"
           class="h-[400px]"
         />
         <!-- Occupancy Rate Chart -->
-        <DashboardChart
-          :show-chart="occupancyData.length > 1"
-          title="Occupancy Rate"
-          chart-type="line"
-          :chart-data="occupancyData"
-          :chart-options="occupancyChartOptions"
-          :show-range-selector="false"
+        <OccupancyRateChart
+          :occupancy-data="occupancyData"
+          :occupancy-chart-options="occupancyChartOptions"
           class="h-[400px]"
         />
       </div>
 
-      <!-- Recent Activities -->
+      <!-- Recent Payments -->
       <div class="mb-8">
         <DataTable
-          title="Recent Activities"
-          :columns="activityColumns"
-          :items="recentActivities"
-          :loading="loading"
+          title="Recent Payments"
+          :columns="paymentColumns"
+          :items="recentPayments"
+          :loading="loadingPayments"
           show-view-all
-          view-all-route=""
-        />
+          view-all-route="/app/payments"
+        >
+          <template #invoice_number="{ value }">
+            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+              {{ value }}
+            </div>
+          </template>
+          <template #amount="{ value }">
+            <div class="text-sm text-gray-900 dark:text-gray-100">
+              {{ formatCurrency(value) }}
+            </div>
+          </template>
+          <template #payment_method="{ value }">
+            <div class="text-sm text-gray-900 dark:text-gray-100 capitalize">
+              {{ value.replace('_', ' ') }}
+            </div>
+          </template>
+          <template #payment_date="{ value }">
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+              {{ formatDate(value) }}
+            </div>
+          </template>
+          <template #status="{ value }">
+            <UBadge 
+              :color="value === 'succeeded' ? 'green' : 'red'"
+              variant="subtle"
+              size="xs"
+              class="capitalize"
+            >
+              {{ value }}
+            </UBadge>
+          </template>
+        </DataTable>
       </div>
 
       <!-- Additional Sections -->
