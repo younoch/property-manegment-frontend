@@ -41,12 +41,6 @@ useHead({
             "applicationSubCategory": "PropertyManagementSoftware",
             "operatingSystem": "Web",
             "softwareRequirements": "Modern web browser (Chrome, Firefox, Safari, Edge), Internet connection",
-            "softwareVersion": "1.0.1",
-            "interactionStatistic": {
-              "@type": "InteractionCounter",
-              "interactionType": "https://schema.org/UseAction",
-              "userInteractionCount": 1133
-            },
             "keywords": "property management, rent collection, tenant management, lease management, landlord software",
             "author": {
               "@type": "Organization",
@@ -61,18 +55,12 @@ useHead({
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
-              "price": "0",
               "priceCurrency": "USD",
               "availability": "https://schema.org/InStock",
-              "priceValidUntil": "2026-12-31",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
                 "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": [
-                  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-                  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-                  "PL", "PT", "RO", "SK", "SI", "ES", "SE"
-                ]
+                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
               }
             },
             "featureList": [
@@ -84,11 +72,6 @@ useHead({
               "Bank-grade data security",
               "Mobile-friendly interface for landlords and tenants"
             ],
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "25"
-            },
             "potentialAction": [
               {
                 "@type": "RegisterAction",
@@ -154,146 +137,70 @@ useHead({
           {
             "@type": "Product",
             "name": "LeaseDirector Free Plan",
-            "description": "Perfect for getting started — 1 property with up to 3 units. Basic property management, tenant & lease tracking, rent payment tracking, and email support (48h).",
+            "description": "Perfect for getting started — Basic property management, tenant & lease tracking, rent payment tracking, and email support.",
             "image": "https://www.leasedirector.com/LeaseDirector-free-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
-              "price": "0",
               "priceCurrency": "USD",
-              "priceValidUntil": "2026-12-31",
               "availability": "https://schema.org/InStock",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
                 "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": [
-                  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-                  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-                  "PL", "PT", "RO", "SK", "SI", "ES", "SE"
-                ]
+                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
               }
-            },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "5",
-              "reviewCount": "8"
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": { "@type": "Person", "name": "John M." },
-                "reviewBody": "Excellent free plan for managing a small property portfolio.",
-                "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-              }
-            ]
+            }
           },
           {
             "@type": "Product",
             "name": "LeaseDirector Early Bird Plan",
-            "description": "Limited to first 100 adopters — includes all Pro features, up to 20 units, automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging, and priority email support (24h).",
+            "description": "Includes all Pro features, automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging, and priority email support.",
             "image": "https://www.leasedirector.com/LeaseDirector-early-bird-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
-              "price": "7",
               "priceCurrency": "USD",
-              "priceValidUntil": "2025-12-31",
               "availability": "https://schema.org/InStock",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
                 "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": [
-                  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-                  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-                  "PL", "PT", "RO", "SK", "SI", "ES", "SE"
-                ]
+                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
               }
-            },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "12"
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": { "@type": "Person", "name": "Sarah K." },
-                "reviewBody": "Early Bird plan is a great deal — covers everything I need as a small landlord.",
-                "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-              }
-            ]
+            }
           },
           {
             "@type": "Product",
             "name": "LeaseDirector Pro Plan",
-            "description": "For growing landlords with up to 20 units — includes automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging & ledger export, and priority email support (24h).",
+            "description": "For growing landlords — includes automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging & ledger export, and priority email support.",
             "image": "https://www.leasedirector.com/LeaseDirector-pro-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
-              "price": "10",
               "priceCurrency": "USD",
-              "priceValidUntil": "2026-12-31",
               "availability": "https://schema.org/PreOrder",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
                 "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": [
-                  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-                  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-                  "PL", "PT", "RO", "SK", "SI", "ES", "SE"
-                ]
+                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
               }
-            },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "reviewCount": "15"
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": { "@type": "Person", "name": "James T." },
-                "reviewBody": "Solid plan for managing mid-size portfolios. Very reliable software.",
-                "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-              }
-            ]
+            }
           },
           {
             "@type": "Product",
             "name": "LeaseDirector Business Plan",
-            "description": "Unlimited units & advanced controls — multi-portfolio roles & permissions, advanced reports & exports, audit log & compliance tools, custom branding, and SLA support (8h).",
+            "description": "For large portfolios — includes multi-portfolio roles & permissions, advanced reports & exports, audit log & compliance tools, custom branding, and priority support.",
             "image": "https://www.leasedirector.com/LeaseDirector-business-plan.png",
             "offers": {
               "@type": "Offer",
               "url": "https://www.leasedirector.com/pricing",
-              "price": "30",
               "priceCurrency": "USD",
-              "priceValidUntil": "2026-12-31",
               "availability": "https://schema.org/PreOrder",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
                 "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": [
-                  "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-                  "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-                  "PL", "PT", "RO", "SK", "SI", "ES", "SE"
-                ]
+                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
               }
-            },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.9",
-              "reviewCount": "7"
-            },
-            "review": [
-              {
-                "@type": "Review",
-                "author": { "@type": "Person", "name": "Laura B." },
-                "reviewBody": "Powerful tools for managing larger portfolios — worth every dollar.",
-                "reviewRating": { "@type": "Rating", "ratingValue": "5" }
-              }
-            ]
+            }
           }
         ]
       })
