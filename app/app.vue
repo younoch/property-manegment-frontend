@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { createProtectedApiClient } from '~/utils/api';
+
 useHead({
   script: [
     {
@@ -217,4 +219,9 @@ useSeoMeta({
   appleMobileWebAppStatusBarStyle: 'black-translucent',
   appleMobileWebAppTitle: 'LeaseDirector'
 })
+const api = createProtectedApiClient();
+
+onMounted(()=> {
+  const response = api.get(`/health`);
+} )
 </script>
