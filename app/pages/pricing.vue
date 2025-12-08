@@ -10,72 +10,126 @@
 
     <!-- Hero -->
     <section class="container mx-auto px-4 pt-2 md:pt-20 text-center">
-      <h1 class="text-3xl md:text-4xl font-extrabold">Simple Pricing</h1>
-      <p class="mt-3 text-gray-600 max-w-2xl mx-auto">LeaseDirector is built for small landlords. Start free, then upgrade as you grow. Cancel anytime.</p>
-
-      <!-- Billing cycle toggle -->
-      <div class="mt-6 flex justify-center gap-3">
-        <UButton :variant="billing==='monthly' ? 'solid' : 'soft'" color="primary" @click="billing='monthly'">Monthly</UButton>
-        <UButton :variant="billing==='quarterly' ? 'solid' : 'soft'" color="primary" @click="billing='quarterly'">Quarterly <span class='hidden sm:inline'>(save 20%)</span></UButton>
-        <UButton :variant="billing==='yearly' ? 'solid' : 'soft'" color="primary" @click="billing='yearly'">Yearly <span class='hidden sm:inline'>(save 30%)</span></UButton>
-      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold">Simple, Transparent Pricing</h1>
+      <p class="mt-3 text-gray-600 max-w-2xl mx-auto">Choose the plan that works best for you. No hidden fees, cancel
+        anytime.</p>
     </section>
 
     <!-- Pricing plans (no inline components; safe for hydration) -->
-<section class="py-8 md:py-16">
-  <div class="container mx-auto px-4 grid sm:grid-cols-3 md:grid-cols-4 gap-8 relative">
-    <div
-      v-for="(plan, index) in plans"
-      :key="plan.name"
-      class="relative p-6 rounded-2xl border shadow-sm bg-white/80 backdrop-blur transition-all duration-300 hover:border-primary-500 hover:shadow-lg hover:md:scale-105 border-gray-200 flex flex-col"
-      :class="{ 'opacity-70 grayscale': index > 1 }"
-    >
-      <div v-if="index > 1" class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded-full">Coming Soon</div>
-      <h3 class="text-lg font-bold">{{ plan.name }}</h3>
-      <p class="text-sm text-gray-600 mt-1">{{ plan.desc }}</p>
+    <section class="py-8 md:py-16">
+      <div class="container mx-auto px-4 max-w-4xl">
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Free Plan -->
+          <div
+            class="relative p-8 rounded-2xl border-2 border-gray-200 bg-white/80 backdrop-blur transition-all duration-300 hover:border-primary-500 hover:shadow-lg">
+            <div class="absolute top-4 right-4 bg-gray-100 text-gray-800 text-xs font-bold px-3 py-1 rounded-full">With
+              Ads</div>
+            <h3 class="text-2xl font-bold">Free</h3>
+            <p class="text-gray-600 mt-2">Perfect for getting started</p>
 
-      <div class="mt-4 flex items-end justify-center gap-1">
-        <span class="text-3xl font-extrabold text-gray-900">
-          {{ plan.price[billing] }}
-        </span>
-        <span class="text-xs text-gray-600 mb-1">{{ periodLabel }}</span>
+            <div class="mt-6">
+              <template v-if="!loading">
+                <span class="text-4xl font-extrabold text-gray-900">{{ currency }}0</span>
+                <span class="text-gray-600">/month</span>
+              </template>
+              <USkeleton v-else class="h-10 w-20" />
+            </div>
+
+            <ul class="mt-6 space-y-3 text-gray-700">
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>1 property with up to 10 units</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>Basic property management</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>Tenant & lease tracking</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>Email support (48h response)</span>
+              </li>
+              <li class="flex items-center gap-2 text-gray-400">
+                <UIcon name="i-heroicons-x-circle" />
+                <span>Displays ads</span>
+              </li>
+            </ul>
+
+            <UButton color="gray" size="lg" class="w-full mt-8 font-semibold" variant="outline">
+              Get Started Free
+            </UButton>
+          </div>
+
+          <!-- Premium Plan -->
+          <div
+            class="relative p-8 rounded-2xl border-2 border-primary-500 bg-white/80 backdrop-blur transition-all duration-300 shadow-lg">
+            <div
+              class="absolute top-4 right-4 bg-primary-100 text-primary-800 text-xs font-bold px-3 py-1 rounded-full">
+              Popular
+            </div>
+            <h3 class="text-2xl font-bold">Premium</h3>
+            <p class="text-gray-600 mt-2">For serious landlords</p>
+
+            <div class="mt-6">
+              <template v-if="!loading">
+                <span class="text-4xl font-extrabold text-gray-900">{{ currency }}9</span>
+                <span class="text-gray-600">/month</span>
+              </template>
+              <USkeleton v-else class="h-10 w-20" />
+            </div>
+
+            <ul class="mt-6 space-y-3 text-gray-700">
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>2 properties with up to 50 units</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>All Free features included</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>Priority email support (24h)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>No ads</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <UIcon name="i-heroicons-check-circle" class="text-primary-600" />
+                <span>Advanced reporting</span>
+              </li>
+            </ul>
+
+            <UButton color="primary" size="lg" class="w-full mt-8 font-semibold" variant="solid">
+              Get Premium
+            </UButton>
+          </div>
+        </div>
       </div>
-
-      <ul class="mt-5 space-y-2 text-xs text-gray-700 flex-1">
-        <li v-for="f in plan.features" :key="f" class="flex items-center gap-2">
-          <UIcon name="i-heroicons-check-circle" class="text-primary-600" /> {{ f }}
-        </li>
-      </ul>
-
-      <div class="mt-6">
-        <UButton 
-          :color="index < 2 ? 'primary' : 'gray'" 
-          size="md" 
-          class="w-full font-semibold" 
-          :ui="{ base: 'justify-center' }"
-          :disabled="index > 1"
-          variant="solid"
-        >
-          {{ index < 2 ? plan.cta : 'Coming Soon' }}
-        </UButton>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <!-- Pricing model explanation -->
     <section class="py-8 md:py-16 border-t border-gray-100">
       <div class="container mx-auto px-4 max-w-3xl text-center">
-        <h2 class="text-xl md:text-2xl font-bold">How our pricing works</h2>
+        <h2 class="text-xl md:text-2xl font-bold">Simple & Transparent</h2>
         <p class="mt-3 text-gray-600">
-          LeaseDirector pricing is based on the number of <strong>units</strong> you manage,
-          not the number of users. Invite unlimited teammates at no extra cost. Start free with 3 units, upgrade as you grow.
+          We keep our pricing simple and fair. No hidden fees, no surprises.
+          Choose the plan that fits your needs and upgrade anytime.
         </p>
         <ul class="mt-6 text-gray-700 text-left max-w-md mx-auto space-y-2">
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Units drive pricing, not users</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Unlimited users per portfolio</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Cancel or upgrade anytime</li>
-          <li class="flex gap-2"><UIcon name="i-heroicons-check-circle" class="text-primary-600"/> Free forever for 3 units</li>
+          <li class="flex gap-2">
+            <UIcon name="i-heroicons-check-circle" class="text-primary-600" /> No credit card required to start
+          </li>
+          <li class="flex gap-2">
+            <UIcon name="i-heroicons-check-circle" class="text-primary-600" /> Cancel anytime, no questions asked
+          </li>
+          <li class="flex gap-2">
+            <UIcon name="i-heroicons-check-circle" class="text-primary-600" /> Secure payment processing
+          </li>
         </ul>
       </div>
     </section>
@@ -85,8 +139,8 @@
       <div class="container mx-auto px-4 max-w-6xl">
         <h2 class="text-xl md:text-2xl font-bold text-center">Pricing FAQ</h2>
         <div class="mt-6 grid md:grid-cols-2 gap-4">
-          <UAccordion :items="faqLeft" color="primary" variant="soft"/>
-          <UAccordion :items="faqRight" color="primary" variant="soft"/>
+          <UAccordion :items="faqLeft" color="primary" variant="soft" />
+          <UAccordion :items="faqRight" color="primary" variant="soft" />
         </div>
       </div>
     </section>
@@ -105,99 +159,66 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+const currency = ref('$')   // default USD
+const loading = ref(true)
+
+const currencyMap: Record<string, string> = {
+  'BD': '৳',    // Bangladesh
+  'IN': '₹',    // India
+  'PK': '₨',    // Pakistan
+  'LK': 'Rs',   // Sri Lanka
+  'NP': '₨',    // Nepal
+
+  'US': '$',
+  'GB': '£',
+  'EU': '€',
+  'CA': 'CA$',
+  'AU': 'A$',
+  'JP': '¥',
+  'CN': '¥',
+  'KR': '₩',
+  'TR': '₺',
+  'SA': '﷼',
+  'AE': 'د.إ',
+  'RU': '₽',
+  'BR': 'R$',
+  'MX': 'MX$',
+  'ZA': 'R',
+  'NG': '₦'
+}
+onMounted(async () => {
+  try {
+    // Browser-only fetch (no SSR)
+    const res = await fetch('https://ipapi.co/json/')
+    const data = await res.json()
+
+    const country = data.country || null
+
+    if (country && currencyMap[country]) {
+      currency.value = currencyMap[country]
+    } else {
+      currency.value = '$'  // fallback
+    }
+  } 
+  catch (err) {
+    console.error('Geo Location Error:', err)
+    currency.value = '$'
+  }
+  finally {
+    loading.value = false
+  }
+})
 definePageMeta({ layout: 'public' })
 
 useHead({
   title: 'Pricing | LeaseDirector: Property Management Software',
-  meta: [{ name: 'description', content: 'Simple pricing...' }]
+  meta: [
+    {
+      name: 'description',
+      content: 'Simple, transparent pricing for South Asia and global landlords.'
+    }
+  ]
 })
-
-
-const billing = ref<'monthly' | 'quarterly' | 'yearly'>('monthly')
-
-const periodLabel = computed(() => {
-  if (billing.value === 'monthly') return '/month'
-  if (billing.value === 'quarterly') return '/3 months'
-  return '/year'
-})
-
-const plans = [
-  {
-    name: 'Free',
-    desc: 'Perfect for getting started',
-    cta: 'Get Started Free',
-    highlight: false,
-    price: { monthly: '$0', quarterly: '$0', yearly: '$0' },
-    features: [
-      '1 property with up to 3 units',
-      'Basic property Management',
-      'Tenant & lease tracking',
-      'Rent payment tracking',
-      'Email support (48h)'
-    ],
-  },
-  {
-    name: 'Early Bird',
-    desc: 'Limited to first 100 adopters',
-    cta: 'Get Early Bird Deal',
-    highlight: false,
-    price: { monthly: '$7', quarterly: '$18', yearly: '$70' },
-    features: [
-      'Up to 20 units',
-      'All Pro features',
-      'Automatic late fees & grace',
-      'Credits & overpayments',
-      'Recurring rent invoices',
-      'A/R aging & ledger export',
-      'Priority email support (24h)',
-      'Limited to first 100 customers',
-      'Lock in this price forever'
-    ],
-  },
-  {
-    name: 'Pro',
-    desc: 'For growing landlords with up to 20 units',
-    cta: 'Upgrade to Pro',
-    highlight: false,
-    price: { monthly: '$10', quarterly: '$25', yearly: '$100' },
-    features: [
-      'Up to 20 units',
-      'Automatic late fees & grace',
-      'Credits & overpayments',
-      'Recurring rent invoices',
-      'A/R aging & ledger export',
-      'Priority email support (24h)'
-    ],
-  },
-  {
-    name: 'Business',
-    desc: 'Unlimited units & advanced controls',
-    cta: 'Talk to Sales',
-    highlight: false,
-    price: { monthly: '$33', quarterly: '$75', yearly: '$300' },
-    features: [
-      'Unlimited units',
-      'Multi-portfolio roles & permissions',
-      'Advanced reports & exports',
-      'Audit log & compliance tools',
-      'Custom branding',
-      'SLA support (8h)'
-    ],
-  },
-]
-
-const faqLeft = [
-  { label: 'Is there a free plan?', content: 'Yes—the Starter plan is free for up to 5 units.' },
-  { label: 'Can I cancel anytime?', content: 'Yes—you can cancel your subscription at any time from your account settings.' },
-  { label: 'Do you charge per user?', content: 'No—all plans include unlimited users per portfolio.' }
-]
-
-const faqRight = [
-  { label: 'Do you offer discounts?', content: 'We offer discounts for quarterly and yearly billing.' },
-  { label: 'What payment methods are supported?', content: 'We use secure payment processors and accept major credit/debit cards.' },
-  { label: 'Do you offer refunds?', content: 'All fees are non-refundable except where required by law.' }
-]
 </script>
-
-<style scoped>
-</style>

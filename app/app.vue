@@ -138,13 +138,22 @@ useHead({
           // --- Pricing Plans ---
           {
             "@type": "Product",
-            "name": "LeaseDirector Free Plan",
-            "description": "Perfect for getting started — Basic property management, tenant & lease tracking, rent payment tracking, and email support.",
-            "image": "https://www.leasedirector.com/LeaseDirector-free-plan.png",
+            "name": "Free",
+            "description": "Perfect for getting started — 1 property with up to 10 units, basic property management, tenant & lease tracking, and email support.",
+            "brand": {
+              "@type": "Brand",
+              "name": "LeaseDirector"
+            },
             "offers": {
               "@type": "Offer",
-              "url": "https://www.leasedirector.com/pricing",
               "priceCurrency": "USD",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "price": "0",
+                "priceCurrency": "USD",
+                "valueAddedTaxIncluded": false
+              },
+              "url": "https://www.leasedirector.com/pricing",
               "availability": "https://schema.org/InStock",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
@@ -155,13 +164,22 @@ useHead({
           },
           {
             "@type": "Product",
-            "name": "LeaseDirector Early Bird Plan",
-            "description": "Includes all Pro features, automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging, and priority email support.",
-            "image": "https://www.leasedirector.com/LeaseDirector-early-bird-plan.png",
+            "name": "Premium",
+            "description": "For serious landlords — 2 properties with up to 50 units, priority email support, advanced reporting, and no ads.",
+            "brand": {
+              "@type": "Brand",
+              "name": "LeaseDirector"
+            },
             "offers": {
               "@type": "Offer",
-              "url": "https://www.leasedirector.com/pricing",
               "priceCurrency": "USD",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "price": "9",
+                "priceCurrency": "USD",
+                "valueAddedTaxIncluded": false
+              },
+              "url": "https://www.leasedirector.com/pricing",
               "availability": "https://schema.org/InStock",
               "hasMerchantReturnPolicy": {
                 "@type": "MerchantReturnPolicy",
@@ -170,40 +188,6 @@ useHead({
               }
             }
           },
-          {
-            "@type": "Product",
-            "name": "LeaseDirector Pro Plan",
-            "description": "For growing landlords — includes automatic late fees & grace, credits & overpayments, recurring rent invoices, A/R aging & ledger export, and priority email support.",
-            "image": "https://www.leasedirector.com/LeaseDirector-pro-plan.png",
-            "offers": {
-              "@type": "Offer",
-              "url": "https://www.leasedirector.com/pricing",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/PreOrder",
-              "hasMerchantReturnPolicy": {
-                "@type": "MerchantReturnPolicy",
-                "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
-              }
-            }
-          },
-          {
-            "@type": "Product",
-            "name": "LeaseDirector Business Plan",
-            "description": "For large portfolios — includes multi-portfolio roles & permissions, advanced reports & exports, audit log & compliance tools, custom branding, and priority support.",
-            "image": "https://www.leasedirector.com/LeaseDirector-business-plan.png",
-            "offers": {
-              "@type": "Offer",
-              "url": "https://www.leasedirector.com/pricing",
-              "priceCurrency": "USD",
-              "availability": "https://schema.org/PreOrder",
-              "hasMerchantReturnPolicy": {
-                "@type": "MerchantReturnPolicy",
-                "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
-                "applicableCountry": ["AF", "BD", "BT", "IN", "MV", "NP", "PK", "LK"]
-              }
-            }
-          }
         ]
       })
     }
